@@ -14,11 +14,11 @@
 * direct messages between users
 * add user to friends
 * user has history of direct messages and messages in chatroom
-* send images (optional)
 * active users info
 * message encryption
 * show list of friends and chatrooms
-* add avatar (optional)
 * add admin user role in chatroom
-* add reaction to messages (optional)
+* add reaction to messages
+* add avatar (optional)
+* send images (optional)
 * add safe chatrooms e.g. visibility 30s (optional)
