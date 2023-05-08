@@ -12,8 +12,6 @@ v. 001
 
 ### User management:
 
-{:start="1"}
-
 1. register user
 1. user registered confirmation *(from server)*
 1. login user
@@ -25,9 +23,7 @@ v. 001
 
 ### Friend mechanism:
 
-{:start="7"}
-
-1. send friend proposition
+7. send friend proposition
 1. freind proposition send confirmation *(from server)*
 1. new freind proposition info *(from server)*
 1. friend proposition accept
@@ -41,9 +37,7 @@ v. 001
 
 ### Group mechanism:
 
-{:start="16"}
-
-1. create group
+16. create group
 1. create group confirmation *(from server)*
 1. send invitation to group
 1. send invitation to group confirmation *(from server)*
@@ -61,9 +55,7 @@ v. 001
 
 ### Messages & Reactions:
 
-{:start="29"}
-
-1. send message
+29. send message
 1. message send confirmation *(from server)*
 1. check new message
 1. new message response *(from server)*
