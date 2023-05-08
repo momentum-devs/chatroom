@@ -1,6 +1,10 @@
 set(EXECUTABLE_NAME server)
 
 set(SOURCES
+        domain/User.cpp
+        infrastructure/UserRepositoryImpl.cpp
+        infrastructure/DatabaseConnector.cpp
+        ../common/EnvironmentParser.cpp
         )
 
 set(UT_SOURCES
