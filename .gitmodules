@@ -7,3 +7,6 @@
 [submodule "externals/loguru"]
 	path = externals/loguru
 	url = https://github.com/emilk/loguru.git
+[submodule "externals/taopq"]
+	path = externals/taopq
+	url = https://github.com/taocpp/taopq.git

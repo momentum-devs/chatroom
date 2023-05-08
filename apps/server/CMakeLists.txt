@@ -8,13 +8,13 @@ set(UT_SOURCES
 
 add_executable(${EXECUTABLE_NAME} Main.cpp ${SOURCES})
 
-target_link_libraries(${EXECUTABLE_NAME} PUBLIC fmt loguru::loguru)
+target_link_libraries(${EXECUTABLE_NAME} PUBLIC fmt loguru::loguru taopq)
 
 target_include_directories(${EXECUTABLE_NAME} PUBLIC ${GMOCK_INCLUDE_DIR})
 
 #add_executable(${EXECUTABLE_NAME}UT ${UT_SOURCES} ${SOURCES})
 #
-#target_link_libraries(${EXECUTABLE_NAME}UT PUBLIC fmt gtest gmock_main)
+#target_link_libraries(${EXECUTABLE_NAME}UT PUBLIC fmt gtest gmock_main taopq)
 #
 #target_include_directories(${EXECUTABLE_NAME}UT PUBLIC ${GMOCK_INCLUDE_DIR})
 #
