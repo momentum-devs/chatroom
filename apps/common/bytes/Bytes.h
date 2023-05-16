@@ -46,5 +46,15 @@ struct Bytes : public std::basic_string<unsigned char>
     {
       return Bytes{substr(pos,n)};
     }
+
+    explicit inline operator u_int32_t()
+    {
+      u_int32_t value = 0;
+      value += static_cast<u_int32_t>(*this->begin()) << 24;
+      value += static_cast<u_int32_t>(*(this->begin() + 1)) << 16;
+      value += static_cast<u_int32_t>(*(this->begin() + 2)) << 8;
+      value += static_cast<u_int32_t>(*(this->begin() + 3));
+      return value;
+    }
 };
 }

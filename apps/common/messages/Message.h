@@ -15,18 +15,26 @@ struct Message{
 
     inline bytes::Bytes calculateCheckSum() const
     {
-        //TODO: implement
-        return bytes::Bytes{};
+        auto checksum = bytes::Bytes{0,0,0,0};
+
+        auto messageBody = bytes::Bytes{static_cast<unsigned char>(id)} + token + payload;
+
+        for(u_int32_t i = 0; i < messageBody.size(); ++i)
+        {
+            checksum[i % checksumSize] += messageBody[i];
+        }
+
+        return checksum;
     }
 
-    inline size_t size() const
+    inline u_int32_t size() const
     {
         return sizeof id + tokenSize + payload.size() + checksumSize;
     }
 
-    inline static constexpr size_t idSize = 1;
-    inline static constexpr size_t checksumSize = 40;
-    inline static constexpr size_t tokenSize = 4;
+    inline static constexpr u_int32_t idSize = 1;
+    inline static constexpr u_int32_t checksumSize = 4;
+    inline static constexpr u_int32_t tokenSize = 40;
 };
 
 inline std::ostream& operator<<(std::ostream& os, Message message)
