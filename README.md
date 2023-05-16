@@ -1,12 +1,19 @@
 # chatroom
 
-## TODO
+### Local development setup:
+
+```systemctl stop postgresql```
+
+```docker-compose up```
+
+### TODO:
+
 * create user
 * delete user
 * update user
-* create chatrooms
-* delete chatrooms
-* update chatrooms
+* create chatroom
+* delete chatroom
+* update chatroom
 * join chatroom
 * leave chatroom
 * send message to chatroom
@@ -19,6 +26,3 @@
 * show list of friends and chatrooms
 * add admin user role in chatroom
 * add reaction to messages
-* add avatar (optional)
-* send images (optional)
-* add safe chatrooms e.g. visibility 30s (optional)
