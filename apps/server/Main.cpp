@@ -1,7 +1,7 @@
 #include <memory>
 
-#include "../common/EnvironmentParser.h"
 #include "application/UserRepository.h"
+#include "common/environmentParser/EnvironmentParser.h"
 #include "infrastructure/DatabaseConfig.h"
 #include "infrastructure/DatabaseConnector.h"
 #include "infrastructure/UserRepositoryImpl.h"
@@ -13,7 +13,7 @@ int main(int argc, char* argv[])
 
     loguru::init(argc, argv);
 
-    common::EnvironmentParser environmentParser;
+    common::environmentParser::EnvironmentParser environmentParser;
 
     auto dbUsername = environmentParser.parseString("DB_USERNAME");
     auto dbPassword = environmentParser.parseString("DB_PASSWORD");

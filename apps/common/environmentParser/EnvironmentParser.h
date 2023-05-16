@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace common
+namespace common::environmentParser
 {
 class EnvironmentParser
 {

@@ -4,7 +4,6 @@ set(SOURCES
         domain/User.cpp
         infrastructure/UserRepositoryImpl.cpp
         infrastructure/DatabaseConnector.cpp
-        ../common/EnvironmentParser.cpp
         )
 
 set(UT_SOURCES
@@ -12,9 +11,9 @@ set(UT_SOURCES
 
 add_executable(${EXECUTABLE_NAME} Main.cpp ${SOURCES})
 
-target_link_libraries(${EXECUTABLE_NAME} PUBLIC fmt loguru::loguru taopq)
+target_link_libraries(${EXECUTABLE_NAME} PUBLIC fmt loguru::loguru taopq messages environmentParser)
 
-target_include_directories(${EXECUTABLE_NAME} PUBLIC ${GMOCK_INCLUDE_DIR})
+target_include_directories(${EXECUTABLE_NAME} PUBLIC ${GMOCK_INCLUDE_DIR} ..)
 
 #add_executable(${EXECUTABLE_NAME}UT ${UT_SOURCES} ${SOURCES})
 #
