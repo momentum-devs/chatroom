@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 namespace common::bytes
 {
@@ -18,6 +19,11 @@ struct Bytes : public std::basic_string<unsigned char>
           Bytes{std::string {str}}
     {}
 
+    explicit inline Bytes(const unsigned char data)
+    {
+        this->push_back(static_cast<unsigned char>(data));
+    }
+
     explicit inline Bytes(const u_int32_t data)
     {
         this->push_back(static_cast<unsigned char>(data >> 24));
@@ -26,18 +32,24 @@ struct Bytes : public std::basic_string<unsigned char>
         this->push_back(static_cast<unsigned char>(data));
     }
 
-    explicit inline operator std::string ()
+    explicit inline operator std::string () const
     {
         return {reinterpret_cast<const char *>(begin().base()), reinterpret_cast<const char *>(end().base())};
     }
 
-    inline Bytes operator+(const Bytes& rhs)
+    template <class T>
+    explicit inline operator std::vector<T> () const
+    {
+        return {reinterpret_cast<const char *>(begin().base()), reinterpret_cast<const char *>(end().base())};
+    }
+
+    inline Bytes operator+(const Bytes& rhs) const
     {
         return Bytes{static_cast<std::basic_string<unsigned char>>(*this) +
                      static_cast<std::basic_string<unsigned char>>(rhs)};
     }
 
-    inline Bytes operator+(const unsigned char rhs)
+    inline Bytes operator+(const unsigned char rhs) const
     {
         return Bytes{static_cast<std::basic_string<unsigned char>>(*this) + rhs};
     }
@@ -47,7 +59,7 @@ struct Bytes : public std::basic_string<unsigned char>
       return Bytes{substr(pos,n)};
     }
 
-    explicit inline operator u_int32_t()
+    explicit inline operator u_int32_t() const
     {
       u_int32_t value = 0;
       value += static_cast<u_int32_t>(*this->begin()) << 24;

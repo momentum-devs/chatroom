@@ -10,11 +10,13 @@ set(UT_SOURCES
 
 add_library(${LIBRARY_NAME} ${SOURCES})
 
+target_link_libraries(${LIBRARY_NAME} PUBLIC fmt)
+
 target_include_directories(${LIBRARY_NAME} PUBLIC ../..)
 
 add_executable(${LIBRARY_NAME}UT ${UT_SOURCES} ${SOURCES})
 
-target_link_libraries(${LIBRARY_NAME}UT PUBLIC gtest gmock_main)
+target_link_libraries(${LIBRARY_NAME}UT PUBLIC gtest gmock_main fmt)
 
 target_include_directories(${LIBRARY_NAME}UT PUBLIC ${GMOCK_INCLUDE_DIR} ../..)
 

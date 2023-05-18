@@ -1,13 +1,18 @@
 #include "MessageSerializerImpl.h"
 
+#include <vector>
+
+#include "fmt/format.h"
+#include "fmt/ranges.h"
+
+#include "errors/InvalidChecksumError.h"
+
 namespace common::messages
 {
 bytes::Bytes MessageSerializerImpl::serialize(const Message& message) const
 {
-    u_int32_t length = Message::idSize + Message::tokenSize + message.payload.size() + Message::checksumSize;
 
-    return bytes::Bytes(length)
-           + static_cast<unsigned char>(message.id)
+    return bytes::Bytes(static_cast<unsigned char>(message.id))
            + message.token
            + message.payload
            + message.calculateCheckSum();
@@ -16,17 +21,6 @@ bytes::Bytes MessageSerializerImpl::serialize(const Message& message) const
 Message MessageSerializerImpl::deserialize(const bytes::Bytes& messageBytes) const
 {
     size_t cumulativeSum = 0;
-
-
-    auto length = static_cast<u_int32_t>(messageBytes.subBytes(0, sizeof(u_int32_t)));
-
-    if(length + sizeof (u_int32_t) != messageBytes.size())
-    {
-        throw ; //TODO: implement
-    }
-
-    cumulativeSum += sizeof(u_int32_t);
-
 
     auto id = static_cast<MessageId>(messageBytes[cumulativeSum]);
 
@@ -50,7 +44,8 @@ Message MessageSerializerImpl::deserialize(const bytes::Bytes& messageBytes) con
 
     if(checksum != message.calculateCheckSum())
     {
-        throw ; //TODO: implement
+        throw InvalidChecksumError{fmt::format("Invalid checksum: calculated={::04x}, from bytes {::04x}",
+                                               static_cast<std::vector<char>>(message.calculateCheckSum()), static_cast<std::vector<char>>(checksum))};
     }
 
 

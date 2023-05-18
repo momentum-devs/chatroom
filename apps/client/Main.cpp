@@ -1,7 +1,10 @@
-#include "loguru.hpp"
-#include "common/messages/Message.h"
-
 #include <iostream>
+
+#include "fmt/format.h"
+#include <fmt/ranges.h>
+
+#include "common/messages/Message.h"
+#include "loguru.hpp"
 
 int main(int argc, char* argv[])
 {

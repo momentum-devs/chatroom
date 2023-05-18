@@ -37,7 +37,7 @@ struct Message{
     inline static constexpr u_int32_t tokenSize = 40;
 };
 
-inline std::ostream& operator<<(std::ostream& os, Message message)
+inline std::ostream& operator<<(std::ostream& os, const Message& message)
 {
     const auto previousSettings = os.setf(std::ios_base::dec);
 
@@ -56,5 +56,15 @@ inline std::ostream& operator<<(std::ostream& os, Message message)
     os.setf(previousSettings);
 
     return os;
+}
+
+inline bool operator==(const Message& lhs, const Message& rhs)
+{
+    auto tieStruct = [](const Message& message)
+    {
+        return std::tie(message.id, message.token, message.payload);
+    };
+
+    return tieStruct(lhs) == tieStruct(rhs);
 }
 }
