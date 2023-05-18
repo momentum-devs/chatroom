@@ -1,6 +1,8 @@
 set(EXECUTABLE_NAME server)
 
 set(SOURCES
+        api/SessionManager.cpp
+        api/SessionImpl.cpp
         domain/User.cpp
         infrastructure/UserRepositoryImpl.cpp
         infrastructure/DatabaseConnector.cpp

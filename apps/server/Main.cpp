@@ -1,4 +1,6 @@
 #include <memory>
+#include <thread>
+#include <boost/asio.hpp>
 
 #include "application/UserRepository.h"
 #include "common/environmentParser/EnvironmentParser.h"
@@ -6,6 +8,7 @@
 #include "infrastructure/DatabaseConnector.h"
 #include "infrastructure/UserRepositoryImpl.h"
 #include "loguru.hpp"
+#include "api/SessionManager.h"
 
 int main(int argc, char* argv[])
 {
@@ -21,6 +24,9 @@ int main(int argc, char* argv[])
     auto dbPort = environmentParser.parseString("DB_PORT");
     auto dbName = environmentParser.parseString("DB_NAME");
 
+    auto numberOfSupportedThreads = std::stoi(environmentParser.parseString("SUPPORTED_THREAD_NO"));
+    auto listenPort = std::stoi(environmentParser.parseString("CHATROOM_PORT"));
+
     const auto dbConfig = server::infrastructure::DatabaseConfig{
         dbUsername, dbPassword, dbHost, dbPort, dbName,
     };
@@ -30,6 +36,31 @@ int main(int argc, char* argv[])
 
     std::unique_ptr<server::application::UserRepository> userRepository =
         std::make_unique<server::infrastructure::UserRepositoryImpl>(std::move(databaseConnector));
+
+
+
+    boost::asio::io_context context;
+
+    std::unique_ptr<server::api::SessionManager> sessionManager = std::make_unique<server::api::SessionManager>(context, listenPort);
+
+    sessionManager->startAcceptingConnections();
+
+    std::vector<std::thread> threads;
+
+    threads.reserve(numberOfSupportedThreads);
+
+    for (unsigned int n = 0; n < numberOfSupportedThreads; ++n)
+    {
+        threads.emplace_back([&] { context.run(); });
+    }
+
+    for (auto& thread : threads)
+    {
+        if (thread.joinable())
+        {
+            thread.join();
+        }
+    }
 
     return 0;
 }
