@@ -45,7 +45,7 @@ IncludeBlocks: Regroup
 IncludeCategories:
   - Regex: '<.+>'
     Priority: 1
-  - Regex: '^"(gtest|gmock|boost|fmt|bencode|cpr)/'
+  - Regex: '^"(gtest|gmock|boost|bencode|cpr)/'
     Priority: 2
   - Regex: '^"Aa'
     Priority: 3

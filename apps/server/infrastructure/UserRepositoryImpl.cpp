@@ -1,6 +1,6 @@
 #include "UserRepositoryImpl.h"
 
-#include <fmt/core.h>
+#include <format>
 
 namespace server::infrastructure
 {
@@ -49,7 +49,7 @@ void UserRepositoryImpl::deleteUser(const std::string& id)
 {
     const auto connection = databaseConnector->getConnection();
 
-    const auto deleteUserQuery = fmt::format("DELETE FROM users WHERE id='{}'", id);
+    const auto deleteUserQuery = std::format("DELETE FROM users WHERE id='{}'", id);
 
     connection->execute(deleteUserQuery);
 }

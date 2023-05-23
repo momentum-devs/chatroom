@@ -1,4 +1,4 @@
-#include "fmt/core.h"
+#include <format>
 #include "gtest/gtest.h"
 
 #include "MessageSerializerImpl.h"

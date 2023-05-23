@@ -1,6 +1,5 @@
 #include <iostream>
 
-#include <fmt/format.h>
 #include <boost/asio.hpp>
 
 #include "common/messages/Message.h"

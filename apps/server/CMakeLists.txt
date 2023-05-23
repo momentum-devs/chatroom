@@ -23,7 +23,7 @@ target_include_directories(${EXECUTABLE_NAME} PRIVATE ${GMOCK_INCLUDE_DIR} ${DOT
 
 #add_executable(${EXECUTABLE_NAME}UT ${UT_SOURCES} ${SOURCES})
 #
-#target_link_libraries(${EXECUTABLE_NAME}UT PUBLIC fmt gtest gmock_main taopq)
+#target_link_libraries(${EXECUTABLE_NAME}UT PUBLIC gtest gmock_main taopq)
 #
 #target_include_directories(${EXECUTABLE_NAME}UT PUBLIC ${GMOCK_INCLUDE_DIR})
 #
