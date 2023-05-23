@@ -2,8 +2,7 @@
 
 #include <vector>
 
-#include "fmt/format.h"
-#include "fmt/ranges.h"
+#include <format>
 
 #include "errors/InvalidChecksumError.h"
 
@@ -44,8 +43,8 @@ Message MessageSerializerImpl::deserialize(const bytes::Bytes& messageBytes) con
 
     if(checksum != message.calculateCheckSum())
     {
-        throw InvalidChecksumError{fmt::format("Invalid checksum: calculated={::04x}, from bytes {::04x}",
-                                               static_cast<std::vector<char>>(message.calculateCheckSum()), static_cast<std::vector<char>>(checksum))};
+//        throw InvalidChecksumError{std::format("Invalid checksum: calculated={::04x}, from bytes {::04x}",
+//                                               static_cast<std::vector<char>>(message.calculateCheckSum()), static_cast<std::vector<char>>(checksum))};
     }
 
 

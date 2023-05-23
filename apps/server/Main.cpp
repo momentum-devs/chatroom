@@ -3,11 +3,8 @@
 #include <boost/asio.hpp>
 
 #include "api/SessionManager.h"
-#include "application/UserRepository.h"
 #include "common/environmentParser/EnvironmentParser.h"
-#include "infrastructure/DatabaseConfig.h"
 #include "loguru.hpp"
-#include "api/SessionManager.h"
 
 int main(int argc, char* argv[])
 {
@@ -24,10 +21,6 @@ int main(int argc, char* argv[])
     auto dbName = environmentParser.parseString("DB_NAME");
 
     auto listenPort = std::stoi(environmentParser.parseString("CHATROOM_PORT"));
-
-    const auto dbConfig = server::infrastructure::DatabaseConfig{
-        dbUsername, dbPassword, dbHost, dbPort, dbName,
-    };
 
     auto numberOfSupportedThreads = std::thread::hardware_concurrency();
 
