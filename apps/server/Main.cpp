@@ -1,10 +1,13 @@
 #include <memory>
+#include <thread>
+#include <boost/asio.hpp>
 
 #include "api/SessionManager.h"
 #include "application/UserRepository.h"
 #include "common/environmentParser/EnvironmentParser.h"
 #include "infrastructure/DatabaseConfig.h"
 #include "loguru.hpp"
+#include "api/SessionManager.h"
 
 int main(int argc, char* argv[])
 {
@@ -20,6 +23,8 @@ int main(int argc, char* argv[])
     auto dbPort = environmentParser.parseString("DB_PORT");
     auto dbName = environmentParser.parseString("DB_NAME");
 
+    auto listenPort = std::stoi(environmentParser.parseString("CHATROOM_PORT"));
+
     const auto dbConfig = server::infrastructure::DatabaseConfig{
         dbUsername, dbPassword, dbHost, dbPort, dbName,
     };
@@ -29,6 +34,8 @@ int main(int argc, char* argv[])
 
     std::unique_ptr<server::application::UserRepository> userRepository =
         std::make_unique<server::infrastructure::UserRepositoryImpl>(std::move(databaseConnector));
+
+    auto numberOfSupportedThreads = std::thread::hardware_concurrency();
 
     boost::asio::io_context context;
 
@@ -41,7 +48,7 @@ int main(int argc, char* argv[])
 
     threads.reserve(numberOfSupportedThreads);
 
-    for (unsigned int n = 0; n < numberOfSupportedThreads; ++n)
+    for (std::size_t n = 0; n < numberOfSupportedThreads; ++n)
     {
         threads.emplace_back([&] { context.run(); });
     }

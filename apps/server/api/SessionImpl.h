@@ -4,7 +4,7 @@
 
 namespace server::api
 {
-class SessionImpl : public Session
+class SessionImpl final: public Session
 {
 public:
     SessionImpl(boost::asio::io_context& contextInit);
