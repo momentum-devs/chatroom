@@ -8,7 +8,11 @@
 
 3. ```sudo apt install librange-v3-dev```
 
-4. Add qt to cmake prefix path ```-DCMAKE_PREFIX_PATH=/home/michal/Qt5/5.15.2/gcc_64```
+4. ```sudo apt install lld```
+
+5. ```sudo apt install clang-16```
+
+6. ```cd externals && ./build_TinyORM.sh```
 
 ### Run database:
 
