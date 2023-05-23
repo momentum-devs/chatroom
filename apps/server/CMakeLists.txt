@@ -19,7 +19,7 @@ target_link_libraries(${EXECUTABLE_NAME} PRIVATE
         messages
         environmentParser)
 
-target_include_directories(${EXECUTABLE_NAME} PRIVATE ${GMOCK_INCLUDE_DIR} ..)
+target_include_directories(${EXECUTABLE_NAME} PRIVATE ${GMOCK_INCLUDE_DIR} ${DOTENV_INCLUDE_DIR} ..)
 
 #add_executable(${EXECUTABLE_NAME}UT ${UT_SOURCES} ${SOURCES})
 #
