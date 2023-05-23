@@ -5,15 +5,20 @@
 #include "api/SessionManager.h"
 #include "common/environmentParser/EnvironmentParser.h"
 #include "loguru.hpp"
-#include <format>
+#include "laserpants/dotenv/dotenv.h"
 
 int main(int argc, char* argv[])
 {
+    dotenv::init("/home/michal/repos/chatroom/apps/server/.env");
+
+    common::environmentParser::EnvironmentParser environmentParser;
+
+    std::cerr << environmentParser.parseString("DB_HOST") << std::endl;
+
     loguru::g_preamble_date = false;
 
     loguru::init(argc, argv);
 
-    common::environmentParser::EnvironmentParser environmentParser;
 
     auto dbUsername = environmentParser.parseString("DB_USERNAME");
     auto dbPassword = environmentParser.parseString("DB_PASSWORD");
