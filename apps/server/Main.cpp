@@ -1,11 +1,10 @@
-#include <orm/db.hpp>
-#include <QDebug>
+#include <memory>
 
-#include "../common/EnvironmentParser.h"
+#include "api/SessionManager.h"
+#include "application/UserRepository.h"
+#include "common/environmentParser/EnvironmentParser.h"
 #include "infrastructure/DatabaseConfig.h"
 #include "loguru.hpp"
-
-using Orm::DB;
 
 int main(int argc, char* argv[])
 {
@@ -13,7 +12,7 @@ int main(int argc, char* argv[])
 
     loguru::init(argc, argv);
 
-    common::EnvironmentParser environmentParser;
+    common::environmentParser::EnvironmentParser environmentParser;
 
     auto dbUsername = environmentParser.parseString("DB_USERNAME");
     auto dbPassword = environmentParser.parseString("DB_PASSWORD");
@@ -25,16 +24,35 @@ int main(int argc, char* argv[])
         dbUsername, dbPassword, dbHost, dbPort, dbName,
     };
 
-    auto manager = DB::create({
-        {"driver", "QSQLITE"},
-        {"database", qEnvironmentVariable("DB_DATABASE", "HelloWorld.sqlite3")},
-        {"check_database_exists", true},
-    });
+    std::unique_ptr<server::infrastructure::DatabaseConnector> databaseConnector =
+        std::make_unique<server::infrastructure::DatabaseConnector>(dbConfig);
 
-    auto posts = DB::select("select * from posts");
+    std::unique_ptr<server::application::UserRepository> userRepository =
+        std::make_unique<server::infrastructure::UserRepositoryImpl>(std::move(databaseConnector));
 
-    while (posts.next())
-        qDebug() << posts.value("id").toULongLong() << posts.value("name").toString();
+    boost::asio::io_context context;
+
+    std::unique_ptr<server::api::SessionManager> sessionManager =
+        std::make_unique<server::api::SessionManager>(context, listenPort);
+
+    sessionManager->startAcceptingConnections();
+
+    std::vector<std::thread> threads;
+
+    threads.reserve(numberOfSupportedThreads);
+
+    for (unsigned int n = 0; n < numberOfSupportedThreads; ++n)
+    {
+        threads.emplace_back([&] { context.run(); });
+    }
+
+    for (auto& thread : threads)
+    {
+        if (thread.joinable())
+        {
+            thread.join();
+        }
+    }
 
     return 0;
 }

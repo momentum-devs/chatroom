@@ -1,7 +1,8 @@
 set(EXECUTABLE_NAME server)
 
 set(SOURCES
-        ../common/EnvironmentParser.cpp
+        api/SessionManager.cpp
+        api/SessionImpl.cpp
         )
 
 set(UT_SOURCES
@@ -10,15 +11,16 @@ set(UT_SOURCES
 add_executable(${EXECUTABLE_NAME} Main.cpp ${SOURCES})
 
 target_link_libraries(${EXECUTABLE_NAME} PUBLIC
-        loguru::loguru
         Qt5::Core
         Qt5::Gui
         Qt5::Widgets
         Qt5::Charts
         TinyOrm::TinyOrm
-        )
+        loguru::loguru
+        messages
+        environmentParser)
 
-target_include_directories(${EXECUTABLE_NAME} PUBLIC ${GMOCK_INCLUDE_DIR})
+target_include_directories(${EXECUTABLE_NAME} PUBLIC ${GMOCK_INCLUDE_DIR} ..)
 
 #add_executable(${EXECUTABLE_NAME}UT ${UT_SOURCES} ${SOURCES})
 #

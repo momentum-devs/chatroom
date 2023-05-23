@@ -8,9 +8,9 @@ set(UT_SOURCES
 
 add_executable(${EXECUTABLE_NAME} Main.cpp ${SOURCES})
 
-target_link_libraries(${EXECUTABLE_NAME} PUBLIC fmt loguru::loguru)
+target_link_libraries(${EXECUTABLE_NAME} PUBLIC fmt loguru::loguru messages)
 
-target_include_directories(${EXECUTABLE_NAME} PUBLIC ${GMOCK_INCLUDE_DIR})
+target_include_directories(${EXECUTABLE_NAME} PUBLIC ${GMOCK_INCLUDE_DIR} ..)
 
 #add_executable(${EXECUTABLE_NAME}UT ${UT_SOURCES} ${SOURCES})
 #

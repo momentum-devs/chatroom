@@ -4,7 +4,7 @@
 
 #include "errors/MissingEnvironmentVariableError.h"
 
-namespace common
+namespace common::environmentParser
 {
 
 std::string EnvironmentParser::parseString(const std::string& envName)

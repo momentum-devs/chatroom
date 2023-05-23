@@ -35,21 +35,21 @@ v. 001
 
 ------------
 
-### Group mechanism:
+### Channel mechanism:
 
-16. create group
-1. create group confirmation *(from server)*
-1. send invitation to group
-1. send invitation to group confirmation *(from server)*
-1. new invitation to group info *(from server)*
-1. invitation to group accept
-1. invitation to group accept confirmation *(from server)*
-1. new invitation to group accept info *(from server)*
-1. invitation to group reject
-1. invitation to group reject confirmation *(from server)*
-1. new invitation to group reject info *(from server)*
-1. leave group
-1. leave group confirmation *(from server)*
+16. create channel
+1. create channel confirmation *(from server)*
+1. send invitation to channel
+1. send invitation to channel confirmation *(from server)*
+1. new invitation to channel info *(from server)*
+1. invitation to channel accept
+1. invitation to channel accept confirmation *(from server)*
+1. new invitation to channel accept info *(from server)*
+1. invitation to channel reject
+1. invitation to channel reject confirmation *(from server)*
+1. new invitation to channel reject info *(from server)*
+1. leave channel
+1. leave channel confirmation *(from server)*
 
 ------------
 
