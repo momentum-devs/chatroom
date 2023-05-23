@@ -1,7 +1,5 @@
 #include "EnvironmentParser.h"
 
-#include <format>
-
 #include "errors/MissingEnvironmentVariableError.h"
 
 namespace common::environmentParser
@@ -13,7 +11,7 @@ std::string EnvironmentParser::parseString(const std::string& envName)
 
     if (!envValue)
     {
-        throw MissingEnvironmentVariableError(std::format("Error parsing env variable {}", envName));
+//        throw MissingEnvironmentVariableError(std::format("Error parsing env variable {}", envName));
     }
 
     return envValue;
@@ -25,7 +23,7 @@ int EnvironmentParser::parseInt(const std::string& envName)
 
     if (!envValue)
     {
-        throw MissingEnvironmentVariableError(std::format("Error parsing env variable {}", envName));
+//        throw MissingEnvironmentVariableError(std::format("Error parsing env variable {}", envName));
     }
 
     return std::stoi(envValue);

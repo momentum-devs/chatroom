@@ -5,6 +5,7 @@
 #include "api/SessionManager.h"
 #include "common/environmentParser/EnvironmentParser.h"
 #include "loguru.hpp"
+#include <format>
 
 int main(int argc, char* argv[])
 {

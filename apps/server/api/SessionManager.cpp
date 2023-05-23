@@ -6,7 +6,7 @@
 namespace server::api
 {
 SessionManager::SessionManager(boost::asio::io_context& contextInit, int port)
-    : context{contextInit}, acceptor{context, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port)}
+    : context{contextInit}, acceptor{context, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), static_cast<unsigned short>(port))}
 {
 }
 

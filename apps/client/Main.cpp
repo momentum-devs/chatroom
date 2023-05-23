@@ -16,10 +16,6 @@ int main(int argc, char* argv[])
                                       common::bytes::Bytes{"abc"},
                                       common::bytes::Bytes{"xyz"}};
 
-    boost::asio::ip::tcp::socket socket;
-
-    boost::asio::ip::tcp::endpoint endpoint{};
-
     std::cout << message <<std::endl;
 
     return 0;
