@@ -1,11 +1,11 @@
-#include <memory>
+#include <orm/db.hpp>
+#include <QDebug>
 
 #include "../common/EnvironmentParser.h"
-#include "application/UserRepository.h"
 #include "infrastructure/DatabaseConfig.h"
-#include "infrastructure/DatabaseConnector.h"
-#include "infrastructure/UserRepositoryImpl.h"
 #include "loguru.hpp"
+
+using Orm::DB;
 
 int main(int argc, char* argv[])
 {
@@ -25,11 +25,16 @@ int main(int argc, char* argv[])
         dbUsername, dbPassword, dbHost, dbPort, dbName,
     };
 
-    std::unique_ptr<server::infrastructure::DatabaseConnector> databaseConnector =
-        std::make_unique<server::infrastructure::DatabaseConnector>(dbConfig);
+    auto manager = DB::create({
+        {"driver", "QSQLITE"},
+        {"database", qEnvironmentVariable("DB_DATABASE", "HelloWorld.sqlite3")},
+        {"check_database_exists", true},
+    });
 
-    std::unique_ptr<server::application::UserRepository> userRepository =
-        std::make_unique<server::infrastructure::UserRepositoryImpl>(std::move(databaseConnector));
+    auto posts = DB::select("select * from posts");
+
+    while (posts.next())
+        qDebug() << posts.value("id").toULongLong() << posts.value("name").toString();
 
     return 0;
 }

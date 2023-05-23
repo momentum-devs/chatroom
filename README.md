@@ -1,6 +1,16 @@
 # chatroom
 
-### Local development setup:
+### Setup local development:
+
+1. ```sudo apt-get install build-essential```
+
+2. ```sudo apt-get install qtbase5-dev```
+
+3. ```sudo apt install librange-v3-dev```
+
+4. Add qt to cmake prefix path ```-DCMAKE_PREFIX_PATH=/home/michal/Qt5/5.15.2/gcc_64```
+
+### Run database:
 
 ```systemctl stop postgresql```
 
