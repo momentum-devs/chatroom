@@ -21,14 +21,14 @@ const auto payloadZeroes = bytes::Bytes{0,0,0,0};
 const auto checksumZeroes = bytes::Bytes{0,0,0,0};
 const auto messageZeroes = Message{idZeroes, tokenZeroes, payloadZeroes};
 
-const auto invalidSerializedMesage = bytes::Bytes{
+const auto invalidSerializedMessage = bytes::Bytes{
     0, // id
     1,2,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, // token
     0,0,0,0, // payload
     0,0,0,0 // checksum
 };
 
-const auto validSerializedMesage = bytes::Bytes{
+const auto validSerializedMessage = bytes::Bytes{
     0, // id
     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, // token
     1,2,3,4, // payload
@@ -60,12 +60,12 @@ TEST_F(MessageSerializerImplTest, giveSerializedMesageOfZeroes_shouldDeserialize
 
 TEST_F(MessageSerializerImplTest, giveInvalidSerializedMesage_shouldThrowInvalidChecksumError)
 {
-    EXPECT_THROW(messageSerializer.deserialize(invalidSerializedMesage), InvalidChecksumError);
+    EXPECT_THROW(messageSerializer.deserialize(invalidSerializedMessage), InvalidChecksumError);
 }
 
 TEST_F(MessageSerializerImplTest, giveValidSerializedMesage_shouldDeserializeMessage)
 {
-    const auto deserializedMessage = messageSerializer.deserialize(validSerializedMesage);
+    const auto deserializedMessage = messageSerializer.deserialize(validSerializedMessage);
 
     EXPECT_EQ(deserializedMessage.id, idZeroes);
     EXPECT_EQ(deserializedMessage.token, tokenZeroes);
@@ -78,7 +78,7 @@ TEST_F(MessageSerializerImplTest, giveValidMessage_shouldSerializeMessage)
 {
     const auto serializedMessage= messageSerializer.serialize(validMessage);
 
-    EXPECT_EQ(serializedMessage, validSerializedMesage);
+    EXPECT_EQ(serializedMessage, validSerializedMessage);
 }
 
 TEST_F(MessageSerializerImplTest, giveValidMessage_redeserializedMessageShouldBeSame)
@@ -91,7 +91,7 @@ TEST_F(MessageSerializerImplTest, giveValidMessage_redeserializedMessageShouldBe
 
 TEST_F(MessageSerializerImplTest, giveValidSerializedMessage_reserializedMessageShouldBeSame)
 {
-    const auto deserializedMessage = messageSerializer.deserialize(validSerializedMesage);
+    const auto deserializedMessage = messageSerializer.deserialize(validSerializedMessage);
     const auto serializedMessage= messageSerializer.serialize(deserializedMessage);
 
     EXPECT_EQ(deserializedMessage, validMessage);
