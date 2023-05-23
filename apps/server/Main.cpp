@@ -29,12 +29,6 @@ int main(int argc, char* argv[])
         dbUsername, dbPassword, dbHost, dbPort, dbName,
     };
 
-    std::unique_ptr<server::infrastructure::DatabaseConnector> databaseConnector =
-        std::make_unique<server::infrastructure::DatabaseConnector>(dbConfig);
-
-    std::unique_ptr<server::application::UserRepository> userRepository =
-        std::make_unique<server::infrastructure::UserRepositoryImpl>(std::move(databaseConnector));
-
     auto numberOfSupportedThreads = std::thread::hardware_concurrency();
 
     boost::asio::io_context context;
