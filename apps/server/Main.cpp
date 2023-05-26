@@ -1,12 +1,12 @@
+#include <boost/asio.hpp>
 #include <memory>
 #include <thread>
-#include <boost/asio.hpp>
 
 #include "api/SessionManager.h"
 #include "common/utils/environmentParser/EnvironmentParser.h"
-#include "loguru.hpp"
-#include "laserpants/dotenv/dotenv.h"
 #include "common/utils/fileSystem/GetProjectPath.h"
+#include "laserpants/dotenv/dotenv.h"
+#include "loguru.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -15,8 +15,6 @@ int main(int argc, char* argv[])
     dotenv::init(dotEnvPath.c_str());
 
     common::utils::EnvironmentParser environmentParser;
-
-    std::cerr << environmentParser.parseString("DB_HOST") << std::endl;
 
     loguru::g_preamble_date = false;
 

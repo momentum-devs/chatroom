@@ -1,7 +1,7 @@
 #pragma once
 
-#include <memory>
 #include <boost/asio.hpp>
+#include <memory>
 
 #include "Session.h"
 

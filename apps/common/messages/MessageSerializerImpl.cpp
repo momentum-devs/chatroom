@@ -1,7 +1,5 @@
 #include "MessageSerializerImpl.h"
 
-#include <vector>
-
 #include <format>
 
 #include "errors/InvalidChecksumError.h"
@@ -10,11 +8,8 @@ namespace common::messages
 {
 bytes::Bytes MessageSerializerImpl::serialize(const Message& message) const
 {
-
-    return bytes::Bytes(static_cast<unsigned char>(message.id))
-           + message.token
-           + message.payload
-           + message.calculateCheckSum();
+    return bytes::Bytes(static_cast<unsigned char>(message.id)) + message.token + message.payload +
+           message.calculateCheckSum();
 }
 
 Message MessageSerializerImpl::deserialize(const bytes::Bytes& messageBytes) const
@@ -25,11 +20,9 @@ Message MessageSerializerImpl::deserialize(const bytes::Bytes& messageBytes) con
 
     cumulativeSum += Message::idSize;
 
-
     auto token = messageBytes.subBytes(cumulativeSum, Message::tokenSize);
 
     cumulativeSum += Message::tokenSize;
-
 
     auto payloadFieldSize = messageBytes.size() - cumulativeSum - Message::checksumSize;
 
@@ -41,11 +34,10 @@ Message MessageSerializerImpl::deserialize(const bytes::Bytes& messageBytes) con
 
     auto checksum = messageBytes.subBytes(cumulativeSum, Message::checksumSize);
 
-    if(checksum != message.calculateCheckSum())
+    if (checksum != message.calculateCheckSum())
     {
         throw InvalidChecksumError{"Invalid checksum"};
     }
-
 
     return message;
 }

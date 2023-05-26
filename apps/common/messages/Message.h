@@ -1,25 +1,25 @@
 #pragma once
 
-#include "MessageId.h"
+#include <array>
 
 #include "common/bytes/Bytes.h"
-
-#include <array>
+#include "MessageId.h"
 
 namespace common::messages
 {
-struct Message{
+struct Message
+{
     MessageId id;
     bytes::Bytes token;
     bytes::Bytes payload;
 
     inline bytes::Bytes calculateCheckSum() const
     {
-        auto checksum = bytes::Bytes{0,0,0,0};
+        auto checksum = bytes::Bytes{0, 0, 0, 0};
 
         auto messageBody = bytes::Bytes{static_cast<unsigned char>(id)} + token + payload;
 
-        for(u_int32_t i = 0; i < messageBody.size(); ++i)
+        for (u_int32_t i = 0; i < messageBody.size(); ++i)
         {
             checksum[i % checksumSize] += messageBody[i];
         }
@@ -41,15 +41,13 @@ inline std::ostream& operator<<(std::ostream& os, const Message& message)
 {
     const auto previousSettings = os.setf(std::ios_base::dec);
 
-    os << message.id
-       << "\ttoken: "<< static_cast<std::string>(message.token)
-       << "\tpayload: " << static_cast<std::string>(message.payload)
-       << "\tchecksum: " << std::hex;
+    os << message.id << "\ttoken: " << static_cast<std::string>(message.token)
+       << "\tpayload: " << static_cast<std::string>(message.payload) << "\tchecksum: " << std::hex;
 
-    for(const auto& byte : message.calculateCheckSum())
+    for (const auto& byte : message.calculateCheckSum())
     {
         os.width(2);
-        os.fill( '0' );
+        os.fill('0');
         os << static_cast<int>(byte);
     }
 
@@ -60,10 +58,7 @@ inline std::ostream& operator<<(std::ostream& os, const Message& message)
 
 inline bool operator==(const Message& lhs, const Message& rhs)
 {
-    auto tieStruct = [](const Message& message)
-    {
-        return std::tie(message.id, message.token, message.payload);
-    };
+    auto tieStruct = [](const Message& message) { return std::tie(message.id, message.token, message.payload); };
 
     return tieStruct(lhs) == tieStruct(rhs);
 }
