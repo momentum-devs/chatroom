@@ -17,7 +17,7 @@ target_link_libraries(${EXECUTABLE_NAME} PRIVATE
         TinyOrm::TinyOrm
         loguru::loguru
         messages
-        environmentParser)
+        utils)
 
 target_include_directories(${EXECUTABLE_NAME} PRIVATE ${GMOCK_INCLUDE_DIR} ${DOTENV_INCLUDE_DIR} ..)
 

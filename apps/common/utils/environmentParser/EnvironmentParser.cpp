@@ -2,9 +2,9 @@
 
 #include <format>
 
-#include "errors/MissingEnvironmentVariableError.h"
+#include "common/utils/environmentParser/errors/MissingEnvironmentVariableError.h"
 
-namespace common::environmentParser
+namespace common::utils
 {
 
 std::string EnvironmentParser::parseString(const std::string& envName)

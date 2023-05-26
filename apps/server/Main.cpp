@@ -3,15 +3,18 @@
 #include <boost/asio.hpp>
 
 #include "api/SessionManager.h"
-#include "common/environmentParser/EnvironmentParser.h"
+#include "common/utils/environmentParser/EnvironmentParser.h"
 #include "loguru.hpp"
 #include "laserpants/dotenv/dotenv.h"
+#include "common/utils/fileSystem/GetProjectPath.h"
 
 int main(int argc, char* argv[])
 {
-    dotenv::init("/home/michal/repos/chatroom/apps/server/.env");
+    auto dotEnvPath = common::utils::getProjectPath("chatroom") + "apps/server/.env";
 
-    common::environmentParser::EnvironmentParser environmentParser;
+    dotenv::init(dotEnvPath.c_str());
+
+    common::utils::EnvironmentParser environmentParser;
 
     std::cerr << environmentParser.parseString("DB_HOST") << std::endl;
 

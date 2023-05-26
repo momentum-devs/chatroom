@@ -1,2 +1,2 @@
 add_subdirectory(messages)
-add_subdirectory(environmentParser)
+add_subdirectory(utils)
