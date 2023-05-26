@@ -13,3 +13,6 @@
 [submodule "externals/dotenv-cpp"]
 	path = externals/dotenv-cpp
 	url = https://github.com/laserpants/dotenv-cpp.git
+[submodule "externals/tabulate"]
+	path = externals/tabulate
+	url = https://github.com/p-ranav/tabulate.git

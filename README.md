@@ -2,15 +2,7 @@
 
 ### Setup local development:
 
-1. ```sudo apt-get install build-essential```
-
-2. ```sudo apt-get install qtbase5-dev```
-
-3. ```sudo apt install librange-v3-dev```
-
-4. ```sudo apt install lld```
-
-5. ```sudo apt install clang-16```
+1. ```sudo apt-get install build-essential qt6-base-dev librange-v3-dev lld clang-16```
 
 6. ```cd externals && ./build_TinyORM.sh```
 
@@ -19,6 +11,8 @@
 ```systemctl stop postgresql```
 
 ```docker-compose up```
+
+### [DOCS](docs/README.md)
 
 ### TODO:
 

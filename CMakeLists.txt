@@ -4,7 +4,7 @@ set(PROJECT_NAME chatroom)
 project(${PROJECT_NAME} CXX)
 
 find_package(Boost REQUIRED)
-find_package(Qt5 COMPONENTS Core Widgets Gui REQUIRED)
+find_package(Qt6 COMPONENTS Core Widgets Gui REQUIRED)
 find_package(TinyOrm 0.16.0 CONFIG REQUIRED)
 
 add_subdirectory(externals)

@@ -1,4 +1,4 @@
 # Docs
 
 * ## [Message Protocol](messageProtocol.md)
-* ## [Database Schema]()
+* ## [Database Schema](databaseSchema.md)

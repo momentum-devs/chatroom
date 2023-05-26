@@ -11,9 +11,9 @@ set(UT_SOURCES
 add_executable(${EXECUTABLE_NAME} Main.cpp ${SOURCES})
 
 target_link_libraries(${EXECUTABLE_NAME} PRIVATE
-        Qt5::Core
-        Qt5::Gui
-        Qt5::Widgets
+        Qt6::Core
+        Qt6::Gui
+        Qt6::Widgets
         TinyOrm::TinyOrm
         loguru::loguru
         messages
