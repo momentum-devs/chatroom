@@ -12,7 +12,7 @@ using namespace common::utils;
 namespace
 {
 const std::string testFilesDirectory{
-    std::format("{}src/libs/fileSystem/src/testFiles", getProjectPath("torrent-client"))};
+    std::format("{}apps/common/utils/fileSystem/testFiles", getProjectPath("chatroom"))};
 const std::string textToWrite{"write method"};
 const std::basic_string<unsigned char> textToWriteAtPosition{reinterpret_cast<const unsigned char*>("position data")};
 const std::string textToWriteAtPositionAsString{"position data"};

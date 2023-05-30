@@ -10,9 +10,9 @@ using namespace common::utils;
 
 namespace
 {
-const std::string validPathEnd{"torrent-client/"};
+const std::string validPathEnd{"chatroom/"};
 
-const std::string validProjectName{"torrent-client"};
+const std::string validProjectName{"chatroom"};
 const std::string invalidProjectName{"nasjxanxjqq"};
 }
 

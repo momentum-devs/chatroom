@@ -8,7 +8,7 @@ using namespace common::utils;
 
 namespace
 {
-const std::string testExecutableName{"fileSystemUT"};
+const std::string testExecutableName{"utilsUT"};
 }
 
 TEST(GetExecutablePathTest, shouldReturnAbsolutePathToProject)

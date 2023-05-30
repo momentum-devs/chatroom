@@ -1,6 +1,6 @@
 #include "GetProjectPath.h"
 
-#include "collection/StringHelper.h"
+#include "../collection/StringHelper.h"
 #include "errors/FileNotFound.h"
 #include "GetExecutablePath.h"
 

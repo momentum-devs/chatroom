@@ -2,7 +2,7 @@
 
 #include <format>
 
-#include "common/utils/environmentParser/errors/MissingEnvironmentVariableError.h"
+#include "errors/MissingEnvironmentVariableError.h"
 
 namespace common::utils
 {

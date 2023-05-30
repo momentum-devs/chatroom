@@ -18,7 +18,7 @@ set(UT_SOURCES
 
 add_library(${LIBRARY_NAME} ${SOURCES})
 
-target_include_directories(${LIBRARY_NAME} PUBLIC ../.. .)
+target_include_directories(${LIBRARY_NAME} PUBLIC)
 
 target_link_libraries(${LIBRARY_NAME} PUBLIC)
 
@@ -33,4 +33,4 @@ target_include_directories(${LIBRARY_NAME}UT
         ${GTEST_INCLUDE_DIR}
         )
 
-add_test(${LIBRARY_NAME}UT ${LIBRARY_NAME}UT --gtest_color=yes)
+add_test(NAME ${LIBRARY_NAME}UT COMMAND ${LIBRARY_NAME}UT WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY} --gtest_color=yes)

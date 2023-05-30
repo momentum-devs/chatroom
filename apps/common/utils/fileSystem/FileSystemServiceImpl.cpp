@@ -5,7 +5,7 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
-
+#include <sstream>
 #include <format>
 
 #include "errors/FileNotFound.h"
