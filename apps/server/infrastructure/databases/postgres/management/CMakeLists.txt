@@ -13,6 +13,8 @@ target_link_libraries(${EXECUTABLE_NAME} PRIVATE
         Qt6::Core
         Qt6::Gui
         Qt6::Widgets
-        utils)
+        environment
+        filesystem
+        )
 
 target_include_directories(${EXECUTABLE_NAME} PRIVATE ${TOM_INCLUDE_DIR} ${DOTENV_INCLUDE_DIR})

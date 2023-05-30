@@ -3,14 +3,14 @@
 #include <thread>
 
 #include "api/SessionManager.h"
-#include "common/utils/environmentParser/EnvironmentParser.h"
-#include "common/utils/fileSystem/GetProjectPath.h"
+#include "common/environment/EnvironmentParser.h"
+#include "common/filesystem/GetProjectPath.h"
 #include "laserpants/dotenv/dotenv.h"
 #include "loguru.hpp"
 
 int main(int argc, char* argv[])
 {
-    auto dotEnvPath = common::utils::getProjectPath("chatroom") + "apps/server/.env";
+    auto dotEnvPath = common::filesystem::getProjectPath("chatroom") + "apps/server/.env";
 
     dotenv::init(dotEnvPath.c_str());
 
@@ -18,12 +18,12 @@ int main(int argc, char* argv[])
 
     loguru::init(argc, argv);
 
-    auto databaseHost = common::utils::EnvironmentParser::parseString("DATABASE_HOST");
-    auto databaseName = common::utils::EnvironmentParser::parseString("DATABASE_NAME");
-    auto databaseUsername = common::utils::EnvironmentParser::parseString("DATABASE_USERNAME");
-    auto databasePassword = common::utils::EnvironmentParser::parseString("DATABASE_PASSWORD");
+    auto databaseHost = common::environment::EnvironmentParser::parseString("DATABASE_HOST");
+    auto databaseName = common::environment::EnvironmentParser::parseString("DATABASE_NAME");
+    auto databaseUsername = common::environment::EnvironmentParser::parseString("DATABASE_USERNAME");
+    auto databasePassword = common::environment::EnvironmentParser::parseString("DATABASE_PASSWORD");
 
-    auto listenPort = common::utils::EnvironmentParser::parseInt("CHATROOM_PORT");
+    auto listenPort = common::environment::EnvironmentParser::parseInt("CHATROOM_PORT");
 
     auto numberOfSupportedThreads = std::thread::hardware_concurrency();
 

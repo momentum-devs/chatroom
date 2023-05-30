@@ -2,10 +2,10 @@
 #include <orm/utils/configuration.hpp>
 #include <tom/application.hpp>
 
-#include "../../../../../common/utils/environmentParser/EnvironmentParser.h"
-#include "../../../../../common/utils/fileSystem/GetProjectPath.h"
-#include "laserpants/dotenv/dotenv.h"
+#include "../../../../../common/environment/EnvironmentParser.h"
+#include "../../../../../common/filesystem/GetProjectPath.h"
 #include "../migrations/2023_05_30_222822_create_users_table.hpp"
+#include "laserpants/dotenv/dotenv.h"
 
 using Orm::DatabaseManager;
 using Orm::DB;
@@ -14,7 +14,7 @@ std::shared_ptr<DatabaseManager> setupManager();
 
 int main(int argc, char *argv[])
 {
-    const auto projectPath = common::utils::getProjectPath("chatroom");
+    const auto projectPath = common::filesystem::getProjectPath("chatroom");
 
     const auto dotenvPath = projectPath + "apps/server/infrastructure/databases/postgres/management/.env";
 
@@ -56,10 +56,10 @@ std::shared_ptr<DatabaseManager> setupManager()
 {
     using namespace Orm::Constants;
 
-    auto databaseHost = common::utils::EnvironmentParser::parseString("DATABASE_HOST");
-    auto databaseName = common::utils::EnvironmentParser::parseString("DATABASE_NAME");
-    auto databaseUsername = common::utils::EnvironmentParser::parseString("DATABASE_USERNAME");
-    auto databasePassword = common::utils::EnvironmentParser::parseString("DATABASE_PASSWORD");
+    auto databaseHost = common::environment::EnvironmentParser::parseString("DATABASE_HOST");
+    auto databaseName = common::environment::EnvironmentParser::parseString("DATABASE_NAME");
+    auto databaseUsername = common::environment::EnvironmentParser::parseString("DATABASE_USERNAME");
+    auto databasePassword = common::environment::EnvironmentParser::parseString("DATABASE_PASSWORD");
 
     return DB::create({{QStringLiteral("postgres_management_connection"),
                        {

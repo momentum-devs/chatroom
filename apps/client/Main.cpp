@@ -1,17 +1,19 @@
 #include <boost/asio.hpp>
 
-#include "common/utils/environmentParser/EnvironmentParser.h"
-#include "common/utils/fileSystem/GetProjectPath.h"
+#include "api/SessionImpl.h"
+#include "common/environment/EnvironmentParser.h"
+#include "common/filesystem/GetProjectPath.h"
 #include "laserpants/dotenv/dotenv.h"
 #include "loguru.hpp"
+#include "messages/MessageSerializerImpl.h"
 
 int main(int argc, char* argv[])
 {
-    auto dotEnvPath = common::utils::getProjectPath("chatroom") + "apps/client/.env";
+    auto dotEnvPath = common::filesystem::getProjectPath("chatroom") + "apps/client/.env";
 
     dotenv::init(dotEnvPath.c_str());
 
-    common::utils::EnvironmentParser environmentParser;
+    common::environment::EnvironmentParser environmentParser;
 
     loguru::g_preamble_date = false;
 
@@ -21,15 +23,11 @@ int main(int argc, char* argv[])
 
     auto serverPort = static_cast<unsigned short>(std::stoi(environmentParser.parseString("SERVER_PORT")));
 
-    boost::asio::io_context context;
+    auto messageSerializer = std::make_shared<common::messages::MessageSerializerImpl>();
 
-    boost::asio::ip::tcp::socket socket{context};
+    auto session = std::make_unique<client::api::SessionImpl>(messageSerializer);
 
-    boost::asio::ip::tcp::endpoint endpoint{boost::asio::ip::make_address(serverHostname), serverPort};
-
-    socket.connect(endpoint);
-
-    LOG_S(INFO) << "Connected to " << socket.remote_endpoint().address();
+    session->connect(serverHostname, serverPort);
 
     return 0;
 }
