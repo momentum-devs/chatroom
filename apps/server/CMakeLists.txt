@@ -21,6 +21,8 @@ target_link_libraries(${EXECUTABLE_NAME} PRIVATE
 
 target_include_directories(${EXECUTABLE_NAME} PRIVATE ${GMOCK_INCLUDE_DIR} ${DOTENV_INCLUDE_DIR} ..)
 
+add_subdirectory(infrastructure/databases/postgres/management)
+
 #add_executable(${EXECUTABLE_NAME}UT ${UT_SOURCES} ${SOURCES})
 #
 #target_link_libraries(${EXECUTABLE_NAME}UT PUBLIC gtest gmock_main taopq)

@@ -14,20 +14,16 @@ int main(int argc, char* argv[])
 
     dotenv::init(dotEnvPath.c_str());
 
-    common::utils::EnvironmentParser environmentParser;
-
     loguru::g_preamble_date = false;
 
     loguru::init(argc, argv);
 
+    auto databaseHost = common::utils::EnvironmentParser::parseString("DATABASE_HOST");
+    auto databaseName = common::utils::EnvironmentParser::parseString("DATABASE_NAME");
+    auto databaseUsername = common::utils::EnvironmentParser::parseString("DATABASE_USERNAME");
+    auto databasePassword = common::utils::EnvironmentParser::parseString("DATABASE_PASSWORD");
 
-    auto dbUsername = environmentParser.parseString("DB_USERNAME");
-    auto dbPassword = environmentParser.parseString("DB_PASSWORD");
-    auto dbHost = environmentParser.parseString("DB_HOST");
-    auto dbPort = environmentParser.parseString("DB_PORT");
-    auto dbName = environmentParser.parseString("DB_NAME");
-
-    auto listenPort = std::stoi(environmentParser.parseString("CHATROOM_PORT"));
+    auto listenPort = common::utils::EnvironmentParser::parseInt("CHATROOM_PORT");
 
     auto numberOfSupportedThreads = std::thread::hardware_concurrency();
 

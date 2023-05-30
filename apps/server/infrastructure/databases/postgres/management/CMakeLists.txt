@@ -1,0 +1,18 @@
+set(EXECUTABLE_NAME management)
+
+set(SOURCES
+        )
+
+set(UT_SOURCES
+        )
+
+add_executable(${EXECUTABLE_NAME} Main.cpp ${SOURCES})
+
+target_link_libraries(${EXECUTABLE_NAME} PRIVATE
+        TinyOrm::TinyOrm
+        Qt6::Core
+        Qt6::Gui
+        Qt6::Widgets
+        utils)
+
+target_include_directories(${EXECUTABLE_NAME} PRIVATE ${TOM_INCLUDE_DIR} ${DOTENV_INCLUDE_DIR})

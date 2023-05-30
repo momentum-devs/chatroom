@@ -7,7 +7,7 @@ namespace common::utils
 class EnvironmentParser
 {
 public:
-    std::string parseString(const std::string& envName);
-    int parseInt(const std::string& envName);
+    static std::string parseString(const std::string& envName);
+    static int parseInt(const std::string& envName);
 };
 }
