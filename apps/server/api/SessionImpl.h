@@ -1,5 +1,7 @@
 #pragma once
 
+#include "common/messages/MessageReader.h"
+#include "common/messages/MessageSender.h"
 #include "Session.h"
 
 namespace server::api
@@ -7,11 +9,15 @@ namespace server::api
 class SessionImpl final : public Session
 {
 public:
-    SessionImpl(boost::asio::io_context& contextInit);
-    boost::asio::ip::tcp::socket& getSocket() override;
+    SessionImpl(std::unique_ptr<common::messages::MessageReader> messageReader,
+                std::unique_ptr<common::messages::MessageSender> messageSender);
+    void startSession() override;
 
 private:
-    boost::asio::io_context& context;
-    boost::asio::ip::tcp::socket socket;
+    void startReceivingMessage();
+    void handleMessage(const common::messages::Message& message);
+
+    std::unique_ptr<common::messages::MessageReader> messageReader;
+    std::unique_ptr<common::messages::MessageSender> messageSender;
 };
 }

@@ -29,13 +29,15 @@ struct Message
 
     inline u_int32_t size() const
     {
-        return sizeof id + tokenSize + payload.size() + checksumSize;
+        return sizeof id + tokenSize + static_cast<u_int32_t>(payload.size()) + checksumSize;
     }
 
     inline static constexpr u_int32_t idSize = 1;
     inline static constexpr u_int32_t checksumSize = 4;
     inline static constexpr u_int32_t tokenSize = 40;
 };
+
+inline const common::bytes::Bytes nullToken = common::bytes::Bytes{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
 inline std::ostream& operator<<(std::ostream& os, const Message& message)
 {

@@ -9,6 +9,6 @@ class Session
 public:
     virtual ~Session() = default;
 
-    virtual boost::asio::ip::tcp::socket& getSocket() = 0;
+    virtual void startSession() = 0;
 };
 }

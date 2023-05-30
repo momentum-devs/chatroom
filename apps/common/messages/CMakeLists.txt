@@ -2,6 +2,8 @@ set(LIBRARY_NAME messages)
 
 set(SOURCES
         MessageSerializerImpl.cpp
+        MessageReaderImpl.cpp
+        MessageSenderImpl.cpp
         )
 
 set(UT_SOURCES
@@ -10,7 +12,8 @@ set(UT_SOURCES
 
 add_library(${LIBRARY_NAME} ${SOURCES})
 
-target_link_libraries(${LIBRARY_NAME} PUBLIC)
+target_link_libraries(${LIBRARY_NAME} PUBLIC
+        loguru::loguru)
 
 target_include_directories(${LIBRARY_NAME} PUBLIC ../..)
 
