@@ -30,5 +30,7 @@ void SessionImpl::connect(const std::string& hostName, unsigned short portNumber
     };
 
     messageSender->sendMessage(message);
+
+    context.run();
 }
 }

@@ -57,7 +57,7 @@ void MessageReaderImpl::onReadMessage(boost::system::error_code error, std::size
 
         context.post([this, message]() { onReadMessageCallback(message); });
     }
-    catch (const InvalidChecksumError& e)
+    catch (const std::exception& e)
     {
         LOG_S(ERROR) << e.what();
     }

@@ -5,6 +5,12 @@ project(${PROJECT_NAME} CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 
+if(WSL)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20 -stdlib=libc++ -fexperimental-library")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -std=c++20 -stdlib=libc++ -lc++abi")
+endif(WSL)
+
+
 find_package(Boost REQUIRED)
 find_package(Qt6 COMPONENTS Core Widgets Gui REQUIRED)
 find_package(TinyOrm 0.16.0 CONFIG REQUIRED)
