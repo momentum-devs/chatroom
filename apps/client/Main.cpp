@@ -1,4 +1,7 @@
 #include <boost/asio.hpp>
+#include <QGuiApplication>
+#include <QQmlApplicationEngine>
+#include <QQmlContext>
 
 #include "api/SessionImpl.h"
 #include "common/environment/EnvironmentParser.h"
@@ -6,6 +9,7 @@
 #include "laserpants/dotenv/dotenv.h"
 #include "loguru.hpp"
 #include "messages/MessageSerializerImpl.h"
+#include "gui/MainView.h"
 
 int main(int argc, char* argv[])
 {
@@ -28,6 +32,21 @@ int main(int argc, char* argv[])
     auto session = std::make_unique<client::api::SessionImpl>(messageSerializer);
 
     session->connect(serverHostname, serverPort);
+
+    QGuiApplication app(argc, argv);
+
+    QQmlApplicationEngine engine;
+
+    client::gui::MainView mainView;
+
+    QObject::connect(&mainView, &client::gui::MainView::onRegisterRequest, 
+                     &mainView, &client::gui::MainView::handleRegisterRequest);
+
+    engine.rootContext()->setContextProperty("MainView", &mainView);
+
+    engine.load(QUrl(QStringLiteral("qrc:/chatroom/gui/qml/main.qml")));
+
+    return app.exec();
 
     return 0;
 }

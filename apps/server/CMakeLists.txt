@@ -12,8 +12,6 @@ add_executable(${EXECUTABLE_NAME} Main.cpp ${SOURCES})
 
 target_link_libraries(${EXECUTABLE_NAME} PRIVATE
         Qt6::Core
-        Qt6::Gui
-        Qt6::Widgets
         TinyOrm::TinyOrm
         loguru::loguru
         messages
