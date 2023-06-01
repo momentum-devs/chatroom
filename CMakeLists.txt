@@ -12,7 +12,7 @@ endif(WSL)
 
 
 find_package(Boost REQUIRED)
-find_package(Qt6 6.2 COMPONENTS Core Gui Widgets Quick QuickControls2 REQUIRED)
+find_package(Qt6 6.4 COMPONENTS Core Gui Widgets Quick QuickControls2 LinguistTools REQUIRED)
 find_package(TinyOrm 0.16.0 CONFIG REQUIRED)
 
 add_subdirectory(externals)

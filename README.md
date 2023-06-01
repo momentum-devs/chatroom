@@ -2,7 +2,9 @@
 
 ### Setup local development:
 
-1. ```sudo apt-get install build-essential qt6-base-dev libqt6sql6-psql librange-v3-dev lld clang-16```
+1. ```sudo apt install build-essential qt6-base-dev libqt6sql6-psql librange-v3-dev lld clang-16 ```
+
+3. ```sudo apt install qt6-base-dev qml6 qt6-declarative-dev qt6-tools-dev qml6-module-qtquick-controls qml6-module-qtqml-workerscript qml6-module-qtquick-templates```
 
 6. ```cd externals && ./build_TinyORM.sh```
 

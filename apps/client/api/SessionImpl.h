@@ -10,11 +10,12 @@ namespace client::api
 class SessionImpl: public Session
 {
 public:
-    SessionImpl(std::shared_ptr<common::messages::MessageSerializer> messageSerializer);
+    SessionImpl(boost::asio::io_context& context, std::shared_ptr<common::messages::MessageSerializer> messageSerializer);
     void connect(const std::string& hostName, unsigned short portNumber) override;
+    void sendMessage(const common::messages::Message& message) override;
 
 private:
-    boost::asio::io_context context;
+    boost::asio::io_context& context;
 
     std::unique_ptr<common::messages::MessageReader> messageReader;
     std::unique_ptr<common::messages::MessageSender> messageSender;

@@ -1,82 +1,78 @@
+import QtQuick 6.4
+import QtQuick.Controls 6.4
 
-import QtQuick 2.14
-// import QtQuick.Controls2 2.14
+Item {
+    height: 480
+    width: 720
 
-Rectangle{
-    anchors.fill: parent
+    Rectangle {
+        anchors.fill: parent
+        color: "grey"
 
-    MainView {
-        id: mainView
-    }
+        Column {
+            anchors.centerIn: parent
+            spacing: 10
 
-    Column {
-        anchors.centerIn: parent
-        spacing: 10
+            TextField {
+                id: usernameField
+                placeholderText: qsTr('User name')
+            }
+            TextField {
+                id: passwordField
+                echoMode: TextInput.Password
+                placeholderText: "Hasło"
+            }
+            TextField {
+                id: passwordRepeatField
+                echoMode: TextInput.Password
+                placeholderText: "Powtórz hasło"
+            }
+            Button {
+                anchors.horizontalCenter: passwordField.horizontalCenter
+                text: "Zarejestruj"
 
-        TextField {
-            id: usernameField
-            placeholderText: "Nazwa użytkownika"
-        }
-
-        TextField {
-            id: passwordField
-            placeholderText: "Hasło"
-            echoMode: TextInput.Password
-        }
-
-        TextField {
-            id: passwordRepeatField
-            placeholderText: "Powtórz hasło"
-            echoMode: TextInput.Password
-        }
-
-        Button {
-            text: "Zarejestruj"
-            anchors.horizontalCenter: passwordField.horizontalCenter
-            onClicked: {
-                var username = usernameField.text
-                var password = passwordField.text
-                var passwordRepeat = passwordRepeatField.text
-
-                if (password === passwordRepeat) {
-                    successPopup.open()
-
-                    //TODO: implement signal to client app
-                    console.log("Użytkownik: ", username)
-                    console.log("Hasło: ", password)
-                    mainView.onRegisterRequest()
-                } else {
-                    errorPopup.open()
+                onClicked: {
+                    var username = usernameField.text;
+                    var password = passwordField.text;
+                    var passwordRepeat = passwordRepeatField.text;
+                    if (password === passwordRepeat && username.length != 0 && password.length != 0) {
+                        successPopup.open();
+                        MainView.registerRequest(username, password);
+                    } else {
+                        errorPopup.open();
+                    }
                 }
             }
         }
-    }
+        Popup {
+            id: successPopup
+            height: 50
+            width: 200
+            x: Math.round((parent.width - width) / 2)
+            y: Math.round((parent.height - height) * 3 / 4)
 
-    Popup {
-        id: successPopup
-        width: 200
-        height: 50
-        anchors.centerIn: parent
-        contentItem: Text {
-            text: "Zalogowano pomyślnie!"
-            color: "green"
-            font.pixelSize: 16
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
+            contentItem: Text {
+                color: "green"
+                font.pixelSize: 16
+                horizontalAlignment: Text.AlignHCenter
+                text: "Zalogowano pomyślnie!"
+                verticalAlignment: Text.AlignVCenter
+            }
         }
-    }
+        Popup {
+            id: errorPopup
+            height: 50
+            width: 200
+            x: Math.round((parent.width - width) / 2)
+            y: Math.round((parent.height - height) * 3 / 4)
 
-    Popup {
-        id: errorPopup
-        width: 200
-        height: 50
-        anchors.centerIn: parent
-        contentItem: Text {
-            text: "Błąd logowania!"
-            color: "red"
-            font.pixelSize: 16
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
+            contentItem: Text {
+                color: "red"
+                font.pixelSize: 16
+                horizontalAlignment: Text.AlignHCenter
+                text: "Błąd logowania!"
+                verticalAlignment: Text.AlignVCenter
+            }
         }
     }
 }

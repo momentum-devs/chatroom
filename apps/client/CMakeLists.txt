@@ -9,12 +9,12 @@ set(SOURCES
         gui/MainView.cpp
         )
 
-set(QML
-        gui/qml/main.qml)
-
 set(UT_SOURCES
         api/SessionImplTest.cpp
         )
+
+set(QML
+        gui/qml/main.qml)
 
 qt_add_executable(${EXECUTABLE_NAME} Main.cpp ${SOURCES})
 
