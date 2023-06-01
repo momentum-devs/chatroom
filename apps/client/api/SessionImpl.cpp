@@ -6,8 +6,8 @@
 
 namespace client::api
 {
-SessionImpl::SessionImpl(std::shared_ptr<common::messages::MessageSerializer> messageSerializerInit)
-    : context{}, messageSerializer(std::move(messageSerializerInit))
+SessionImpl::SessionImpl(boost::asio::io_context& contextInit, std::shared_ptr<common::messages::MessageSerializer> messageSerializerInit)
+    : context{contextInit}, messageSerializer(std::move(messageSerializerInit))
 {
 }
 
@@ -19,18 +19,13 @@ void SessionImpl::connect(const std::string& hostName, unsigned short portNumber
 
     socket->connect(endpoint);
 
-    auto messageReader = std::make_unique<common::messages::MessageReaderImpl>(context, socket, messageSerializer);
+    messageReader = std::make_unique<common::messages::MessageReaderImpl>(context, socket, messageSerializer);
 
-    auto messageSender = std::make_unique<common::messages::MessageSenderImpl>(socket, messageSerializer);
+    messageSender = std::make_unique<common::messages::MessageSenderImpl>(socket, messageSerializer);
+}
 
-    common::messages::Message message{
-        common::messages::MessageId::Register,
-        common::messages::nullToken,
-        common::bytes::Bytes{"payload"}
-    };
-
+void SessionImpl::sendMessage(const common::messages::Message& message)
+{
     messageSender->sendMessage(message);
-
-    context.run();
 }
 }

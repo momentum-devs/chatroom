@@ -24,6 +24,6 @@ void SessionImpl::startReceivingMessage()
 
 void SessionImpl::handleMessage(const common::messages::Message& message)
 {
-    LOG_S(INFO) << "Read message: " << message;
+    LOG_S(INFO) << "Read message with payload: " << static_cast<std::string>(message.payload);
 }
 }

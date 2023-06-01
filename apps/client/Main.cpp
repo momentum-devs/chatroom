@@ -1,8 +1,14 @@
 #include <boost/asio.hpp>
+#include <QGuiApplication>
+#include <QQmlApplicationEngine>
+#include <QQmlContext>
+#include <QQuickView>
+#include <QTranslator>
 
 #include "api/SessionImpl.h"
 #include "common/environment/EnvironmentParser.h"
 #include "common/filesystem/GetProjectPath.h"
+#include "gui/MainView.h"
 #include "laserpants/dotenv/dotenv.h"
 #include "loguru.hpp"
 #include "messages/MessageSerializerImpl.h"
@@ -23,11 +29,32 @@ int main(int argc, char* argv[])
 
     auto serverPort = static_cast<unsigned short>(std::stoi(environmentParser.parseString("SERVER_PORT")));
 
+
     auto messageSerializer = std::make_shared<common::messages::MessageSerializerImpl>();
 
-    auto session = std::make_unique<client::api::SessionImpl>(messageSerializer);
+
+    boost::asio::io_context context;
+
+    auto session = std::make_shared<client::api::SessionImpl>(context, messageSerializer);
 
     session->connect(serverHostname, serverPort);
 
-    return 0;
+    QGuiApplication app(argc, argv);
+
+    QQuickView view;
+
+    client::gui::MainView mainView{session};
+
+    QObject::connect(&mainView, &client::gui::MainView::registerRequest,
+                     &mainView, &client::gui::MainView::handleRegisterRequest);
+
+    view.engine()->rootContext()->setContextProperty("MainView", &mainView);
+
+    view.setSource(QUrl::fromLocalFile("chatroom/gui/qml/main.qml"));
+
+    view.show();
+
+    context.run();
+
+    return app.exec();
 }
