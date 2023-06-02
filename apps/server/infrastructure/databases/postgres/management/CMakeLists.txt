@@ -1,6 +1,7 @@
 set(EXECUTABLE_NAME management)
 
 set(SOURCES
+        DatabaseManagerFactory.cpp
         )
 
 set(UT_SOURCES

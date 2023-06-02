@@ -6,11 +6,9 @@ namespace server::infrastructure
 {
 struct DatabaseConfig
 {
+    const std::string host;
+    const std::string databaseName;
     const std::string username;
     const std::string password;
-    const std::string host;
-    const std::string port;
-    const std::string databaseName;
 };
-
 }

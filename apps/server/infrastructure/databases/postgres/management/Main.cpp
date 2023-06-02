@@ -1,4 +1,3 @@
-#include <orm/db.hpp>
 #include <orm/utils/configuration.hpp>
 #include <tom/application.hpp>
 
@@ -6,23 +5,26 @@
 #include "../../../../../common/filesystem/GetProjectPath.h"
 #include "../migrations/2023_05_30_222822_create_users_table.hpp"
 #include "laserpants/dotenv/dotenv.h"
-
-using Orm::DatabaseManager;
-using Orm::DB;
-
-std::shared_ptr<DatabaseManager> setupManager();
+#include "DatabaseManagerFactory.h"
 
 int main(int argc, char *argv[])
 {
     const auto projectPath = common::filesystem::getProjectPath("chatroom");
 
-    const auto dotenvPath = projectPath + "apps/server/infrastructure/databases/postgres/management/.env";
+    const auto postgresPath = std::format("{}/apps/server/infrastructure/databases/postgres", projectPath);
 
-    const auto migrationsTargetPath = projectPath + "apps/server/infrastructure/databases/postgres/migrations";
+    const auto managementPath = std::format("{}/management", postgresPath);
 
-    const auto modelsTargetPath = projectPath + "apps/server/infrastructure/databases/postgres/models";
+    const auto migrationsTargetPath = std::format("{}/migrations", postgresPath);
 
-    dotenv::init(dotenvPath.c_str());
+    const auto modelsTargetPath = std::format("{}/models", postgresPath);
+
+    dotenv::init(std::format("{}/.env", managementPath).c_str());
+
+    const auto databaseHost = common::environment::EnvironmentParser::parseString("DATABASE_HOST");
+    const auto databaseName = common::environment::EnvironmentParser::parseString("DATABASE_NAME");
+    const auto databaseUsername = common::environment::EnvironmentParser::parseString("DATABASE_USERNAME");
+    const auto databasePassword = common::environment::EnvironmentParser::parseString("DATABASE_PASSWORD");
 
     try {
         const auto modelsPath = std::format("{}/{}", std::filesystem::current_path().string(), "/database/models");
@@ -32,7 +34,7 @@ int main(int argc, char *argv[])
             std::filesystem::remove_all(modelsPath);
         }
 
-        auto db = setupManager();
+        auto db = server::infrastructure::DatabaseManagerFactory::create({databaseHost, databaseName, databaseUsername, databasePassword});
 
         Tom::Application(argc, argv, std::move(db))
             .migrations<Migrations::CreateUsersTable>()
@@ -50,32 +52,4 @@ int main(int argc, char *argv[])
     }
 
     return EXIT_FAILURE;
-}
-
-std::shared_ptr<DatabaseManager> setupManager()
-{
-    using namespace Orm::Constants;
-
-    auto databaseHost = common::environment::EnvironmentParser::parseString("DATABASE_HOST");
-    auto databaseName = common::environment::EnvironmentParser::parseString("DATABASE_NAME");
-    auto databaseUsername = common::environment::EnvironmentParser::parseString("DATABASE_USERNAME");
-    auto databasePassword = common::environment::EnvironmentParser::parseString("DATABASE_PASSWORD");
-
-    return DB::create({{QStringLiteral("postgres_management_connection"),
-                       {
-                           {driver_, QPSQL},
-                           {application_name, QStringLiteral("management")},
-                           {host_, QString::fromStdString(databaseHost)},
-                           {port_, P5432},
-                           {database_, QString::fromStdString(databaseName)},
-                           {search_path, PUBLIC},
-                           {username_, QString::fromStdString(databaseUsername)},
-                           {password_, QString::fromStdString(databasePassword)},
-                           {charset_, UTF8},
-                           {timezone_, UTC},
-                           {qt_timezone, QVariant::fromValue(Qt::UTC)},
-                           {prefix_, EMPTY},
-                           {prefix_indexes, false},
-                           {options_, Orm::Utils::Configuration::postgresSslOptions()},
-                       }}}, "postgres_management_connection");
 }
