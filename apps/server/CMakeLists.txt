@@ -7,6 +7,7 @@ set(SOURCES
         infrastructure/repositories/userRepository/UserRepositoryImpl.cpp
         infrastructure/repositories/userRepository/userMapper/UserMapperImpl.cpp
         domain/entities/User.cpp
+        application/commandHandlers/CreateUserCommandHandlerImpl.cpp
         )
 
 set(UT_SOURCES

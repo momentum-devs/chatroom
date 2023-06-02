@@ -5,8 +5,14 @@
 #include "common/filesystem/GetProjectPath.h"
 #include "laserpants/dotenv/dotenv.h"
 #include "loguru.hpp"
+#include "server/application/commandHandlers/CreateUserCommandHandler.h"
+#include "server/application/commandHandlers/CreateUserCommandHandlerImpl.h"
+#include "server/domain/repositories/UserRepository.h"
 #include "server/infrastructure/databases/postgres/management/DatabaseManagerFactory.h"
 #include "server/infrastructure/databases/postgres/models/User.h"
+#include "server/infrastructure/repositories/userRepository/userMapper/UserMapper.h"
+#include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
+#include "server/infrastructure/repositories/userRepository/UserRepositoryImpl.h"
 
 int main(int argc, char* argv[])
 {
@@ -25,11 +31,16 @@ int main(int argc, char* argv[])
 
     const auto databaseManager = server::infrastructure::DatabaseManagerFactory::create({databaseHost, databaseName, databaseUsername, databasePassword});
 
-    Models::User user;
-    user.setAttribute("email", "michalovskyyy@gmail.com");
-    user.setAttribute("password", "123");
-    user.setAttribute("nickname", "michalovskyyy@gmail.com");
-    user.save();
+    std::unique_ptr<server::infrastructure::UserMapper> userMapper =
+        std::make_unique<server::infrastructure::UserMapperImpl>();
+
+    std::shared_ptr<server::domain::UserRepository> userRepository =
+        std::make_shared<server::infrastructure::UserRepositoryImpl>(std::move(userMapper));
+
+    std::unique_ptr<server::application::CreateUserCommandHandler> createUserCommandHandler =
+        std::make_unique<server::application::CreateUserCommandHandlerImpl>(userRepository);
+
+    createUserCommandHandler->execute({"michal.cieslar@gmail.com", "secret123"});
 
 //    const auto listenPort = common::environment::EnvironmentParser::parseInt("CHATROOM_PORT");
 //
