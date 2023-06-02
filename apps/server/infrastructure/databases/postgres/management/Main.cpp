@@ -13,13 +13,11 @@ int main(int argc, char *argv[])
 
     const auto postgresPath = std::format("{}/apps/server/infrastructure/databases/postgres", projectPath);
 
-    const auto managementPath = std::format("{}/management", postgresPath);
-
     const auto migrationsTargetPath = std::format("{}/migrations", postgresPath);
 
     const auto modelsTargetPath = std::format("{}/models", postgresPath);
 
-    dotenv::init(std::format("{}/.env", managementPath).c_str());
+    dotenv::init(std::format("{}/management/.env", postgresPath).c_str());
 
     const auto databaseHost = common::environment::EnvironmentParser::parseString("DATABASE_HOST");
     const auto databaseName = common::environment::EnvironmentParser::parseString("DATABASE_NAME");
@@ -34,16 +32,16 @@ int main(int argc, char *argv[])
             std::filesystem::remove_all(modelsPath);
         }
 
-        auto db = server::infrastructure::DatabaseManagerFactory::create({databaseHost, databaseName, databaseUsername, databasePassword});
+        auto databaseManager = server::infrastructure::DatabaseManagerFactory::create({databaseHost, databaseName, databaseUsername, databasePassword});
 
-        Tom::Application(argc, argv, std::move(db))
+        Tom::Application(argc, argv, std::move(databaseManager))
             .migrations<Migrations::CreateUsersTable>()
             .migrationsPath(migrationsTargetPath)
             .run();
 
         if (std::filesystem::exists(modelsPath))
         {
-            std::filesystem::copy(modelsPath, modelsTargetPath);
+            std::filesystem::copy(modelsPath, modelsTargetPath, std::filesystem::copy_options::overwrite_existing);
         }
 
     } catch (const std::exception &e) {

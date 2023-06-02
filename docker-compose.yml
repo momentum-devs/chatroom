@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   chatroom-postgres:
-    image: postgres:14
+    image: postgres:15
     container_name: chatroom-postgres
     environment:
       POSTGRES_USER: local

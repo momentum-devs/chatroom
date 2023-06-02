@@ -7,10 +7,11 @@ namespace server::domain
 class User
 {
 public:
-    User(std::string id, std::string email, std::string password, std::string nickname);
+    User(unsigned id, std::string email, std::string password, std::string nickname);
 
+    unsigned getId() const;
 private:
-    std::string id;
+    unsigned id;
     std::string email;
     std::string password;
     std::string nickname;
