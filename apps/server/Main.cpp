@@ -5,8 +5,8 @@
 #include "common/filesystem/GetProjectPath.h"
 #include "laserpants/dotenv/dotenv.h"
 #include "loguru.hpp"
-#include "server/application/commandHandlers/CreateUserCommandHandler.h"
-#include "server/application/commandHandlers/CreateUserCommandHandlerImpl.h"
+#include "server/application/commandHandlers/createUserCommandHandler/CreateUserCommandHandler.h"
+#include "server/application/commandHandlers/createUserCommandHandler/CreateUserCommandHandlerImpl.h"
 #include "server/infrastructure/database/management/DatabaseManagerFactory.h"
 #include "server/infrastructure/database/models/User.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapper.h"
@@ -28,7 +28,8 @@ int main(int argc, char* argv[])
     const auto databaseUsername = common::environment::EnvironmentParser::parseString("DATABASE_USERNAME");
     const auto databasePassword = common::environment::EnvironmentParser::parseString("DATABASE_PASSWORD");
 
-    const auto databaseManager = server::infrastructure::DatabaseManagerFactory::create({databaseHost, databaseName, databaseUsername, databasePassword});
+    const auto databaseManager = server::infrastructure::DatabaseManagerFactory::create(
+        {databaseHost, databaseName, databaseUsername, databasePassword});
 
     std::unique_ptr<server::infrastructure::UserMapper> userMapper =
         std::make_unique<server::infrastructure::UserMapperImpl>();
@@ -41,33 +42,33 @@ int main(int argc, char* argv[])
 
     createUserCommandHandler->execute({"michal.cieslar@gmail.com", "secret123"});
 
-//    const auto listenPort = common::environment::EnvironmentParser::parseInt("CHATROOM_PORT");
-//
-//    const auto numberOfSupportedThreads = std::thread::hardware_concurrency();
+    //    const auto listenPort = common::environment::EnvironmentParser::parseInt("CHATROOM_PORT");
+    //
+    //    const auto numberOfSupportedThreads = std::thread::hardware_concurrency();
 
-//    boost::asio::io_context context;
-//
-//    std::unique_ptr<server::api::SessionManager> sessionManager =
-//        std::make_unique<server::api::SessionManager>(context, listenPort);
-//
-//    sessionManager->startAcceptingConnections();
-//
-//    std::vector<std::thread> threads;
-//
-//    threads.reserve(numberOfSupportedThreads);
-//
-//    for (std::size_t n = 0; n < numberOfSupportedThreads; ++n)
-//    {
-//        threads.emplace_back([&] { context.run(); });
-//    }
-//
-//    for (auto& thread : threads)
-//    {
-//        if (thread.joinable())
-//        {
-//            thread.join();
-//        }
-//    }
+    //    boost::asio::io_context context;
+    //
+    //    std::unique_ptr<server::api::SessionManager> sessionManager =
+    //        std::make_unique<server::api::SessionManager>(context, listenPort);
+    //
+    //    sessionManager->startAcceptingConnections();
+    //
+    //    std::vector<std::thread> threads;
+    //
+    //    threads.reserve(numberOfSupportedThreads);
+    //
+    //    for (std::size_t n = 0; n < numberOfSupportedThreads; ++n)
+    //    {
+    //        threads.emplace_back([&] { context.run(); });
+    //    }
+    //
+    //    for (auto& thread : threads)
+    //    {
+    //        if (thread.joinable())
+    //        {
+    //            thread.join();
+    //        }
+    //    }
 
     return 0;
 }

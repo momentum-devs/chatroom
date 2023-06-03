@@ -7,13 +7,15 @@ set(SOURCES
         infrastructure/repositories/userRepository/UserRepositoryImpl.cpp
         infrastructure/repositories/userRepository/userMapper/UserMapperImpl.cpp
         domain/entities/User.cpp
-        application/commandHandlers/CreateUserCommandHandlerImpl.cpp
+        application/commandHandlers/createUserCommandHandler/CreateUserCommandHandlerImpl.cpp
+        application/commandHandlers/deleteUserCommandHandler/DeleteUserCommandHandlerImpl.cpp
         )
 
 set(UT_SOURCES
         )
 
 set(IT_SOURCES
+        infrastructure/repositories/userRepository/UserRepositoryIntegrationTest.cpp
         )
 
 add_executable(${EXECUTABLE_NAME} Main.cpp ${SOURCES})
