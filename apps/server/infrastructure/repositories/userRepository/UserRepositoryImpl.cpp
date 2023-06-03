@@ -1,7 +1,5 @@
 #include "UserRepositoryImpl.h"
 
-#include "server/infrastructure/databases/postgres/models/User.h"
-
 namespace server::infrastructure
 {
 UserRepositoryImpl::UserRepositoryImpl(std::unique_ptr<UserMapper> userMapperInit) : userMapper{std::move(userMapperInit)} {}

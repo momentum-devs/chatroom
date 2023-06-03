@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../../../domain/entities/User.h"
-#include "../../../databases/postgres/models/User.h"
+#include "../../../database/models/User.h"
 #include "UserMapper.h"
 
 namespace server::infrastructure

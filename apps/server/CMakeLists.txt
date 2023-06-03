@@ -3,7 +3,7 @@ set(EXECUTABLE_NAME server)
 set(SOURCES
         api/SessionManager.cpp
         api/SessionImpl.cpp
-        infrastructure/databases/postgres/management/DatabaseManagerFactory.cpp
+        infrastructure/database/management/DatabaseManagerFactory.cpp
         infrastructure/repositories/userRepository/UserRepositoryImpl.cpp
         infrastructure/repositories/userRepository/userMapper/UserMapperImpl.cpp
         domain/entities/User.cpp
@@ -30,7 +30,7 @@ target_link_libraries(${EXECUTABLE_NAME} PRIVATE
 
 target_include_directories(${EXECUTABLE_NAME} PRIVATE ${GMOCK_INCLUDE_DIR} ${DOTENV_INCLUDE_DIR} ..)
 
-add_subdirectory(infrastructure/databases/postgres/management)
+add_subdirectory(infrastructure/database/management)
 
 #add_executable(${EXECUTABLE_NAME}UT ${UT_SOURCES} ${SOURCES})
 #
