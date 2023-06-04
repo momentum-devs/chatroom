@@ -3,6 +3,7 @@ set(EXECUTABLE_NAME server)
 set(SOURCES
         api/SessionManager.cpp
         api/SessionImpl.cpp
+        api/SessionFactoryImpl.cpp
         infrastructure/database/management/DatabaseManagerFactory.cpp
         infrastructure/repositories/userRepository/UserRepositoryImpl.cpp
         infrastructure/repositories/userRepository/userMapper/UserMapperImpl.cpp
@@ -12,6 +13,7 @@ set(SOURCES
         )
 
 set(UT_SOURCES
+        api/SessionFactoryImplTest.cpp
         )
 
 set(IT_SOURCES
@@ -24,6 +26,8 @@ target_link_libraries(${EXECUTABLE_NAME} PRIVATE
         Qt6::Core
         TinyOrm::TinyOrm
         loguru::loguru
+        nlohmann_json::nlohmann_json
+
         messages
         filesystem
         environment
@@ -50,6 +54,8 @@ target_link_libraries(${EXECUTABLE_NAME}IT PRIVATE
         Qt6::Core
         TinyOrm::TinyOrm
         loguru::loguru
+        nlohmann_json::nlohmann_json
+
         messages
         filesystem
         environment

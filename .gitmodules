@@ -16,3 +16,6 @@
 [submodule "externals/tabulate"]
 	path = externals/tabulate
 	url = https://github.com/p-ranav/tabulate.git
+[submodule "externals/json"]
+	path = externals/json
+	url = https://github.com/nlohmann/json.git

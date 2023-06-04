@@ -2,8 +2,8 @@
 
 #include <boost/beast/core/tcp_stream.hpp>
 
-#include "loguru.hpp"
 #include "common/messages/errors/InvalidChecksumError.h"
+#include "loguru.hpp"
 
 namespace common::messages
 {
@@ -69,5 +69,10 @@ void MessageReaderImpl::asyncRead(std::size_t bytesToRead,
                                   std::function<void(boost::system::error_code, std::size_t)> readHandler)
 {
     boost::asio::async_read(*socket, response, boost::asio::transfer_exactly(bytesToRead), readHandler);
+}
+
+boost::asio::ip::tcp::socket& MessageReaderImpl::getSocket()
+{
+    return *socket;
 }
 }

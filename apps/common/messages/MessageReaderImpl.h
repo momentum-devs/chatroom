@@ -7,11 +7,13 @@
 
 namespace common::messages
 {
-class MessageReaderImpl: public MessageReader
+class MessageReaderImpl : public MessageReader
 {
 public:
-    MessageReaderImpl(boost::asio::io_context& context, std::shared_ptr<boost::asio::ip::tcp::socket> socket, std::shared_ptr<MessageSerializer> messageSerializer);
+    MessageReaderImpl(boost::asio::io_context& context, std::shared_ptr<boost::asio::ip::tcp::socket> socket,
+                      std::shared_ptr<MessageSerializer> messageSerializer);
     void startReadingMessages(std::function<void(const common::messages::Message&)> onReadMessage) override;
+    boost::asio::ip::tcp::socket& getSocket() override;
 
 private:
     void startReadingNewMessage();

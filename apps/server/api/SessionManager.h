@@ -3,15 +3,16 @@
 #include <boost/asio.hpp>
 #include <memory>
 
-#include "Session.h"
 #include "common/messages/MessageSerializer.h"
+#include "Session.h"
+#include "SessionFactory.h"
 
 namespace server::api
 {
 class SessionManager
 {
 public:
-    SessionManager(boost::asio::io_context& context, int port);
+    SessionManager(boost::asio::io_context& context, int port, std::unique_ptr<SessionFactory> sessionFactory);
     void startAcceptingConnections();
 
 private:
@@ -19,8 +20,8 @@ private:
 
     boost::asio::io_context& context;
     boost::asio::ip::tcp::acceptor acceptor;
-    
+
     std::vector<std::shared_ptr<Session>> sessions;
-    std::shared_ptr<common::messages::MessageSerializer> messageSerializer;
+    std::unique_ptr<SessionFactory> sessionFactory;
 };
 }

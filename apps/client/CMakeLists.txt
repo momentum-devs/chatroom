@@ -6,7 +6,7 @@ set(CMAKE_AUTOUIC ON)
 
 set(SOURCES
         api/SessionImpl.cpp
-        gui/MainView.cpp
+        gui/controllers/MainController.cpp
         )
 
 set(UT_SOURCES
@@ -14,16 +14,16 @@ set(UT_SOURCES
         )
 
 set(QML
-        gui/qml/main.qml)
+        gui/views/MainView.qml)
 
 qt_add_executable(${EXECUTABLE_NAME} Main.cpp ${SOURCES})
 
 qt_add_qml_module(${EXECUTABLE_NAME}
-    URI ${PROJECT_NAME}
-    VERSION 6.2
-    QML_FILES
+        URI ${PROJECT_NAME}
+        VERSION 6.2
+        QML_FILES
         ${QML}
-)
+        )
 
 target_link_libraries(${EXECUTABLE_NAME} PUBLIC
         Qt6::Core
@@ -31,6 +31,8 @@ target_link_libraries(${EXECUTABLE_NAME} PUBLIC
         Qt6::Quick
         Qt6::QuickControls2
         loguru::loguru
+        nlohmann_json::nlohmann_json
+
         messages
         environment
         filesystem

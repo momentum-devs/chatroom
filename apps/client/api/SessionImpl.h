@@ -15,6 +15,8 @@ public:
     void sendMessage(const common::messages::Message& message) override;
 
 private:
+    void handleMessage(const common::messages::Message& message);
+
     boost::asio::io_context& context;
 
     std::unique_ptr<common::messages::MessageReader> messageReader;

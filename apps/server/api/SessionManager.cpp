@@ -8,10 +8,11 @@
 
 namespace server::api
 {
-SessionManager::SessionManager(boost::asio::io_context& contextInit, int port)
+SessionManager::SessionManager(boost::asio::io_context& contextInit, int port,
+                               std::unique_ptr<SessionFactory> sessionFactoryInit)
     : context{contextInit},
       acceptor{context, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), static_cast<unsigned short>(port))},
-      messageSerializer{std::make_shared<common::messages::MessageSerializerImpl>()}
+      sessionFactory{std::move(sessionFactoryInit)}
 {
 }
 
@@ -19,15 +20,10 @@ void SessionManager::startAcceptingConnections()
 {
     LOG_S(INFO) << "Listening for new connection on port: " << acceptor.local_endpoint().port();
 
-    // TODO: implement session creation as a factory
-    auto socket = std::make_shared<boost::asio::ip::tcp::socket>(context);
-    auto messageReader = std::make_unique<common::messages::MessageReaderImpl>(context, socket, messageSerializer);
-    auto messageSender = std::make_unique<common::messages::MessageSenderImpl>(socket, messageSerializer);
-    std::shared_ptr<Session> newSession =
-        std::make_shared<SessionImpl>(std::move(messageReader), std::move(messageSender));
+    auto session = sessionFactory->create();
 
-    acceptor.async_accept(*socket, [this, newSession](const boost::system::error_code& error)
-                          { handleConnection(newSession, error); });
+    acceptor.async_accept(session->getSocket(), [this, session](const boost::system::error_code& error)
+                          { handleConnection(session, error); });
 }
 
 void SessionManager::handleConnection(std::shared_ptr<Session> newSession, const boost::system::error_code& error)

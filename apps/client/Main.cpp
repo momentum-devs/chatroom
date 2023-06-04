@@ -8,7 +8,7 @@
 #include "api/SessionImpl.h"
 #include "common/environment/EnvironmentParser.h"
 #include "common/filesystem/GetProjectPath.h"
-#include "gui/MainView.h"
+#include "gui/controllers/MainController.h"
 #include "laserpants/dotenv/dotenv.h"
 #include "loguru.hpp"
 #include "messages/MessageSerializerImpl.h"
@@ -29,9 +29,7 @@ int main(int argc, char* argv[])
 
     auto serverPort = static_cast<unsigned short>(std::stoi(environmentParser.parseString("SERVER_PORT")));
 
-
     auto messageSerializer = std::make_shared<common::messages::MessageSerializerImpl>();
-
 
     boost::asio::io_context context;
 
@@ -43,18 +41,18 @@ int main(int argc, char* argv[])
 
     QQuickView view;
 
-    client::gui::MainView mainView{session};
+    client::gui::MainController mainController{session};
 
-    QObject::connect(&mainView, &client::gui::MainView::registerRequest,
-                     &mainView, &client::gui::MainView::handleRegisterRequest);
+    QObject::connect(&mainController, &client::gui::MainController::registerRequest, &mainController,
+                     &client::gui::MainController::handleRegisterRequest);
 
-    view.engine()->rootContext()->setContextProperty("MainView", &mainView);
+    view.engine()->rootContext()->setContextProperty("mainController", &mainController);
 
-    view.setSource(QUrl::fromLocalFile("chatroom/gui/qml/main.qml"));
+    view.setSource(QUrl::fromLocalFile("chatroom/gui/views/MainView.qml"));
 
     view.show();
 
-    context.run();
+    std::thread api{[&] { context.run(); }};
 
     return app.exec();
 }

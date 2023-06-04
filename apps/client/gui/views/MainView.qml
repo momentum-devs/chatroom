@@ -15,29 +15,29 @@ Item {
 
             TextField {
                 id: usernameField
-                placeholderText: qsTr('User name')
+                placeholderText: qsTr('Email')
             }
             TextField {
                 id: passwordField
                 echoMode: TextInput.Password
-                placeholderText: "Hasło"
+                placeholderText: qsTr('Password')
             }
             TextField {
                 id: passwordRepeatField
                 echoMode: TextInput.Password
-                placeholderText: "Powtórz hasło"
+                placeholderText: qsTr('Repeat password')
             }
             Button {
                 anchors.horizontalCenter: passwordField.horizontalCenter
-                text: "Zarejestruj"
+                text: qsTr('Register')
 
                 onClicked: {
-                    var username = usernameField.text;
-                    var password = passwordField.text;
-                    var passwordRepeat = passwordRepeatField.text;
-                    if (password === passwordRepeat && username.length != 0 && password.length != 0) {
+                    const email = usernameField.text;
+                    const password = passwordField.text;
+                    const passwordRepeat = passwordRepeatField.text;
+                    if (password === passwordRepeat && email.length !== 0 && email.length !== 0) {
+                        mainController.registerRequest(email, password);
                         successPopup.open();
-                        MainView.registerRequest(username, password);
                     } else {
                         errorPopup.open();
                     }
@@ -55,7 +55,7 @@ Item {
                 color: "green"
                 font.pixelSize: 16
                 horizontalAlignment: Text.AlignHCenter
-                text: "Zalogowano pomyślnie!"
+                text: qsTr('Successfully register')
                 verticalAlignment: Text.AlignVCenter
             }
         }
@@ -70,7 +70,7 @@ Item {
                 color: "red"
                 font.pixelSize: 16
                 horizontalAlignment: Text.AlignHCenter
-                text: "Błąd logowania!"
+                text: qsTr('Register error!')
                 verticalAlignment: Text.AlignVCenter
             }
         }
