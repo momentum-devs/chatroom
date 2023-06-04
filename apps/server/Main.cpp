@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
     const auto databaseUsername = common::environment::EnvironmentParser::parseString("DATABASE_USERNAME");
     const auto databasePassword = common::environment::EnvironmentParser::parseString("DATABASE_PASSWORD");
 
-    const auto databaseManager = server::infrastructure::DatabaseManagerFactory::create(
+    auto databaseManager = server::infrastructure::DatabaseManagerFactory::create(
         {databaseHost, databaseName, databaseUsername, databasePassword});
 
     std::unique_ptr<server::infrastructure::UserMapper> userMapper =
@@ -60,7 +60,19 @@ int main(int argc, char* argv[])
 
     for (std::size_t n = 0; n < numberOfSupportedThreads; ++n)
     {
-        threads.emplace_back([&] { context.run(); });
+        threads.emplace_back(
+            [&]
+            {
+                server::infrastructure::DatabaseManagerFactory::addConnection(
+                    {databaseHost, databaseName, databaseUsername, databasePassword});
+
+                for (const auto& str : databaseManager->connectionNames())
+                {
+                    LOG_S(INFO) << str.toStdString();
+                }
+
+                context.run();
+            });
     }
 
     for (auto& thread : threads)
