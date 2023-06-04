@@ -31,16 +31,17 @@ public:
 
     std::shared_ptr<server::domain::UserRepository> userRepository =
         std::make_shared<server::infrastructure::UserRepositoryImpl>(std::move(userMapper));
-
-    std::unique_ptr<server::application::CreateUserCommandHandler> createUserCommandHandler =
-        std::make_unique<server::application::CreateUserCommandHandlerImpl>(userRepository);
 };
 
 TEST_F(UserRepositoryIntegrationTest, createUser)
 {
-    const auto deserializedResponse = createUserCommandHandler->execute({});
+    const auto email = "email@example.com";
+    const auto password = "password";
+    const auto nickname = "nickname";
 
-    ASSERT_EQ(deserializedResponse.interval, 900);
-    ASSERT_EQ(deserializedResponse.peersEndpoints.size(), 50);
-    ASSERT_EQ(deserializedResponse.peersEndpoints[0], peerEndpoint);
+    const auto user = userRepository->createUser({email, password, nickname});
+
+    ASSERT_EQ(user.getEmail(), email);
+    ASSERT_EQ(user.getPassword(), password);
+    ASSERT_EQ(user.getNickname(), nickname);
 }

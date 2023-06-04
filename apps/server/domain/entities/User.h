@@ -10,6 +10,10 @@ public:
     User(unsigned id, std::string email, std::string password, std::string nickname);
 
     unsigned getId() const;
+    std::string getEmail() const;
+    std::string getPassword() const;
+    std::string getNickname() const;
+
 private:
     unsigned id;
     std::string email;

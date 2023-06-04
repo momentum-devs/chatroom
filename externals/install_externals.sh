@@ -1,9 +1,3 @@
-cd cpp-faker || exit
-make -j 20
-mkdir -p docs/html
-sudo make install
-cd ..
-
 cd tabulate || exit
 rm build
 mkdir build

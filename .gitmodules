@@ -16,6 +16,3 @@
 [submodule "externals/tabulate"]
 	path = externals/tabulate
 	url = https://github.com/p-ranav/tabulate.git
-[submodule "externals/cpp-faker"]
-	path = externals/cpp-faker
-	url = https://github.com/jplflyer/cpp-faker.git
