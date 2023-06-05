@@ -6,12 +6,13 @@
 
 namespace server::api
 {
-SessionImpl::SessionImpl(std::unique_ptr<common::messages::MessageReader> messageReaderInit,
-                         std::unique_ptr<common::messages::MessageSender> messageSenderInit,
-                         std::unique_ptr<server::application::CreateUserCommandHandler> createUserCommandHandlerInit)
+SessionImpl::SessionImpl(
+    std::unique_ptr<common::messages::MessageReader> messageReaderInit,
+    std::unique_ptr<common::messages::MessageSender> messageSenderInit,
+    std::unique_ptr<server::application::RegisterUserCommandHandler> registerUserCommandHandlerInit)
     : messageReader{std::move(messageReaderInit)},
       messageSender{std::move(messageSenderInit)},
-      createUserCommandHandler{std::move(createUserCommandHandlerInit)}
+      registerUserCommandHandler{std::move(registerUserCommandHandlerInit)}
 {
 }
 
@@ -41,7 +42,7 @@ void SessionImpl::handleMessage(const common::messages::Message& message)
 
         auto password = payload["password"].get<std::string>();
 
-        createUserCommandHandler->execute({email, password});
+        registerUserCommandHandler->execute({email, password});
 
         // TODO: send response
     }

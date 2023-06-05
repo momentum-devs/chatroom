@@ -4,7 +4,7 @@
 
 namespace server::application
 {
-struct CreateUserCommandHandlerPayload
+struct RegisterUserCommandHandlerPayload
 {
     const std::string email;
     const std::string password;

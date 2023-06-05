@@ -6,7 +6,7 @@
 
 namespace server::application
 {
-struct CreateUserCommandHandlerResult
+struct RegisterUserCommandHandlerResult
 {
     domain::User user;
 };

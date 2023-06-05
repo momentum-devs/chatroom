@@ -7,7 +7,6 @@
 #include "loguru.hpp"
 #include "messages/MessageSerializerImpl.h"
 #include "server/api/SessionFactoryImpl.h"
-#include "server/application/commandHandlers/createUserCommandHandler/CreateUserCommandHandlerImpl.h"
 #include "server/config/ConfigProvider.h"
 #include "server/infrastructure/database/management/DatabaseManagerFactory.h"
 #include "server/infrastructure/database/models/User.h"

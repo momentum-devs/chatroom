@@ -5,7 +5,7 @@
 
 #include "common/messages/MessageReaderImpl.h"
 #include "common/messages/MessageSenderImpl.h"
-#include "server/application/commandHandlers/createUserCommandHandler/CreateUserCommandHandlerImpl.h"
+#include "server/application/commandHandlers/registerUserCommandHandler/RegisterUserCommandHandlerImpl.h"
 #include "SessionImpl.h"
 
 namespace server::api
@@ -13,7 +13,9 @@ namespace server::api
 SessionFactoryImpl::SessionFactoryImpl(boost::asio::io_context& contextInit,
                                        std::shared_ptr<common::messages::MessageSerializer> messageSerializerInit,
                                        std::shared_ptr<server::domain::UserRepository> userRepositoryInit)
-    : context{contextInit}, messageSerializer{std::move(messageSerializerInit)}, userRepository{userRepositoryInit}
+    : context{contextInit},
+      messageSerializer{std::move(messageSerializerInit)},
+      userRepository{std::move(userRepositoryInit)}
 {
 }
 
@@ -22,9 +24,10 @@ std::shared_ptr<Session> SessionFactoryImpl::create() const
     auto socket = std::make_shared<boost::asio::ip::tcp::socket>(context);
     auto messageReader = std::make_unique<common::messages::MessageReaderImpl>(context, socket, messageSerializer);
     auto messageSender = std::make_unique<common::messages::MessageSenderImpl>(socket, messageSerializer);
-    auto createUserCommandHandler = std::make_unique<server::application::CreateUserCommandHandlerImpl>(userRepository);
+    auto registerUserCommandHandler =
+        std::make_unique<server::application::RegisterUserCommandHandlerImpl>(userRepository);
 
     return std::make_shared<SessionImpl>(std::move(messageReader), std::move(messageSender),
-                                         std::move(createUserCommandHandler));
+                                         std::move(registerUserCommandHandler));
 }
 }

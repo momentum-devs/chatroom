@@ -10,7 +10,7 @@ set(SOURCES
         infrastructure/repositories/userRepository/UserRepositoryImpl.cpp
         infrastructure/repositories/userRepository/userMapper/UserMapperImpl.cpp
         domain/entities/User.cpp
-        application/commandHandlers/createUserCommandHandler/CreateUserCommandHandlerImpl.cpp
+        application/commandHandlers/registerUserCommandHandler/RegisterUserCommandHandlerImpl.cpp
         application/commandHandlers/deleteUserCommandHandler/DeleteUserCommandHandlerImpl.cpp
         )
 
