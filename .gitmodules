@@ -19,3 +19,6 @@
 [submodule "externals/json"]
 	path = externals/json
 	url = https://github.com/nlohmann/json.git
+[submodule "externals/jwt-cpp"]
+	path = externals/jwt-cpp
+	url = https://github.com/Thalhammer/jwt-cpp.git
