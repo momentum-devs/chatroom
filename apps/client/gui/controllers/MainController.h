@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QString>
 
-#include "api/Session.h"
+#include "client/api/Session.h"
 
 namespace client::gui
 {

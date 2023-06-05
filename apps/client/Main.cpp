@@ -6,11 +6,14 @@
 #include <QTranslator>
 
 #include "api/SessionImpl.h"
+#include "api/SocketConnectorImpl.h"
 #include "common/filesystem/GetProjectPath.h"
 #include "config/ConfigProvider.h"
 #include "gui/controllers/MainController.h"
 #include "laserpants/dotenv/dotenv.h"
 #include "loguru.hpp"
+#include "messages/MessageReaderImpl.h"
+#include "messages/MessageSenderImpl.h"
 #include "messages/MessageSerializerImpl.h"
 
 int main(int argc, char* argv[])
@@ -33,9 +36,18 @@ int main(int argc, char* argv[])
 
     boost::asio::io_context context;
 
-    const auto session = std::make_shared<client::api::SessionImpl>(context, messageSerializer);
+    auto socket = std::make_shared<boost::asio::ip::tcp::socket>(context);
 
-    session->connect(serverHost, serverPort);
+    auto messageReader = std::make_unique<common::messages::MessageReaderImpl>(context, socket, messageSerializer);
+
+    auto messageSender = std::make_unique<common::messages::MessageSenderImpl>(socket, messageSerializer);
+
+    auto socketConnector = std::make_unique<client::api::SocketConnectorImpl>(socket);
+
+    auto session = std::make_shared<client::api::SessionImpl>(std::move(messageReader), std::move(messageSender),
+                                                              std::move(socketConnector));
+
+    session->connect({serverHost, static_cast<unsigned short>(serverPort)});
 
     QGuiApplication app(argc, argv);
 
