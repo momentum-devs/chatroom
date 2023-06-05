@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-namespace server::config
+namespace server::config::errors
 {
 struct MissingEnvironmentVariableError : public std::runtime_error
 {

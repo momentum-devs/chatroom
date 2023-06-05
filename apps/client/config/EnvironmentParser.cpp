@@ -12,7 +12,7 @@ std::string EnvironmentParser::parseString(const std::string& envName)
 
     if (!envValue)
     {
-        throw MissingEnvironmentVariableError(std::format("Error parsing environment variable {}.", envName));
+        throw errors::MissingEnvironmentVariableError(std::format("Error parsing environment variable {}.", envName));
     }
 
     return envValue;
@@ -24,7 +24,7 @@ int EnvironmentParser::parseInt(const std::string& envName)
 
     if (!envValue)
     {
-        throw MissingEnvironmentVariableError(std::format("Error parsing environment variable {}.", envName));
+        throw errors::MissingEnvironmentVariableError(std::format("Error parsing environment variable {}.", envName));
     }
 
     return std::stoi(envValue);

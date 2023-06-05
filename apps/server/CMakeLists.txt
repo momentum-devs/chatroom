@@ -15,7 +15,7 @@ set(SOURCES
         )
 
 set(UT_SOURCES
-        api/SessionFactoryImplTest.cpp
+        infrastructure/repositories/userRepository/userMapper/UserMapperImplTest.cpp
         )
 
 set(IT_SOURCES
@@ -38,13 +38,23 @@ target_include_directories(${EXECUTABLE_NAME} PRIVATE ${GMOCK_INCLUDE_DIR} ${DOT
 
 add_subdirectory(infrastructure/database/management)
 
-#add_executable(${EXECUTABLE_NAME}UT ${UT_SOURCES} ${SOURCES})
-#
-#target_link_libraries(${EXECUTABLE_NAME}UT PUBLIC gtest gmock_main taopq)
-#
-#target_include_directories(${EXECUTABLE_NAME}UT PUBLIC ${GMOCK_INCLUDE_DIR})
-#
-#add_test(NAME ${EXECUTABLE_NAME}UT COMMAND ${EXECUTABLE_NAME}UT WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+add_executable(${EXECUTABLE_NAME}UT ${UT_SOURCES} ${SOURCES})
+
+target_link_libraries(${EXECUTABLE_NAME}UT PRIVATE
+        gtest
+        gmock_main
+        Qt6::Core
+        TinyOrm::TinyOrm
+        loguru::loguru
+        nlohmann_json::nlohmann_json
+        messages
+        filesystem
+        collection
+        )
+
+target_include_directories(${EXECUTABLE_NAME}UT PUBLIC ${GMOCK_INCLUDE_DIR})
+
+add_test(NAME ${EXECUTABLE_NAME}UT COMMAND ${EXECUTABLE_NAME}UT WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
 add_executable(${EXECUTABLE_NAME}IT ${IT_SOURCES} ${SOURCES})
 
@@ -55,10 +65,8 @@ target_link_libraries(${EXECUTABLE_NAME}IT PRIVATE
         TinyOrm::TinyOrm
         loguru::loguru
         nlohmann_json::nlohmann_json
-
         messages
         filesystem
-        environment
         collection
         )
 

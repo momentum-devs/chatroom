@@ -1,9 +1,9 @@
 #include <orm/utils/configuration.hpp>
 #include <tom/application.hpp>
 
+#include "../../../config/ConfigProvider.h"
 #include "../migrations/2023_05_30_222822_create_users_table.hpp"
 #include "DatabaseManagerFactory.h"
-#include "environment/EnvironmentParser.h"
 #include "filesystem/GetProjectPath.h"
 #include "laserpants/dotenv/dotenv.h"
 
@@ -19,10 +19,12 @@ int main(int argc, char* argv[])
 
     dotenv::init(std::format("{}/management/.env", postgresPath).c_str());
 
-    const auto databaseHost = common::environment::EnvironmentParser::parseString("DATABASE_HOST");
-    const auto databaseName = common::environment::EnvironmentParser::parseString("DATABASE_NAME");
-    const auto databaseUsername = common::environment::EnvironmentParser::parseString("DATABASE_USERNAME");
-    const auto databasePassword = common::environment::EnvironmentParser::parseString("DATABASE_PASSWORD");
+    server::config::ConfigProvider configProvider;
+
+    const auto databaseHost = configProvider.getDatabaseHost();
+    const auto databaseName = configProvider.getDatabaseName();
+    const auto databaseUsername = configProvider.getDatabaseUsername();
+    const auto databasePassword = configProvider.getDatabasePassword();
 
     try
     {
@@ -50,7 +52,7 @@ int main(int argc, char* argv[])
     {
 
         Tom::Application::logException(e);
-    }
 
-    return EXIT_FAILURE;
+        return EXIT_FAILURE;
+    }
 }

@@ -1,6 +1,8 @@
 set(EXECUTABLE_NAME management)
 
 set(SOURCES
+        ../../../config/ConfigProvider.cpp
+        ../../../config/EnvironmentParser.cpp
         DatabaseManagerFactory.cpp
         )
 
@@ -14,7 +16,6 @@ target_link_libraries(${EXECUTABLE_NAME} PRIVATE
         Qt6::Core
         Qt6::Gui
         Qt6::Widgets
-        environment
         filesystem
         )
 

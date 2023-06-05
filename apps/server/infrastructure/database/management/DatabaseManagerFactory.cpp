@@ -7,11 +7,21 @@
 
 namespace server::infrastructure
 {
+bool DatabaseManagerFactory::initialized = false;
+
 std::shared_ptr<Orm::DatabaseManager> DatabaseManagerFactory::create(const DatabaseConfig& databaseConfig)
 {
+    if (initialized)
+    {
+        addConnection(databaseConfig);
+
+        return nullptr;
+    }
+
     using namespace Orm::Constants;
 
-    return Orm::DB::create({{QStringLiteral("postgres_connection"),
+
+    const auto databaseManager = Orm::DB::create({{QStringLiteral("postgres_connection"),
                              {
                                  {driver_, QPSQL},
                                  {application_name, QStringLiteral("chatroom")},
@@ -29,6 +39,10 @@ std::shared_ptr<Orm::DatabaseManager> DatabaseManagerFactory::create(const Datab
                                  {options_, Orm::Utils::Configuration::postgresSslOptions()},
                              }}},
                            "postgres_connection");
+
+    initialized = true;
+
+    return databaseManager;
 }
 
 void DatabaseManagerFactory::addConnection(const DatabaseConfig& databaseConfig)
