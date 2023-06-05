@@ -13,6 +13,8 @@ public:
     std::string getEmail() const;
     std::string getPassword() const;
     std::string getNickname() const;
+    void setPassword(const std::string& newPassword);
+    void setNickname(const std::string& newNickname);
 
 private:
     unsigned id;

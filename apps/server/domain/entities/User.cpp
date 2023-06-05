@@ -26,4 +26,14 @@ std::string User::getNickname() const
 {
     return nickname;
 }
+
+void User::setPassword(const std::string& newPassword)
+{
+    password = newPassword;
+}
+
+void User::setNickname(const std::string& newNickname)
+{
+    nickname = newNickname;
+}
 }

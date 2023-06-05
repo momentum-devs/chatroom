@@ -89,7 +89,7 @@ TEST_F(UserRepositoryIntegrationTest, shouldDeleteExistingUser)
     ASSERT_FALSE(foundUser);
 }
 
-TEST_F(UserRepositoryIntegrationTest, givenNonExistingUser_shouldNotThrowAnyError)
+TEST_F(UserRepositoryIntegrationTest, delete_givenNonExistingUser_shouldThrowError)
 {
     const unsigned id = 1;
     const auto email = "email@example.com";
@@ -98,10 +98,10 @@ TEST_F(UserRepositoryIntegrationTest, givenNonExistingUser_shouldNotThrowAnyErro
 
     const auto user = domain::User{id, email, password, nickname};
 
-    ASSERT_NO_THROW(userRepository->deleteUser({user}));
+    ASSERT_ANY_THROW(userRepository->deleteUser({user}));
 }
 
-TEST_F(UserRepositoryIntegrationTest, shouldFindExistingUser)
+TEST_F(UserRepositoryIntegrationTest, shouldFindExistingUserByEmail)
 {
     const auto email = "email@example.com";
     const auto password = "password";
@@ -111,17 +111,82 @@ TEST_F(UserRepositoryIntegrationTest, shouldFindExistingUser)
                           {"password", QString::fromStdString(password)},
                           {"nickname", QString::fromStdString(nickname)}});
 
-    const auto user = userRepository->findUser({email});
+    const auto user = userRepository->findUserByEmail({email});
 
     ASSERT_TRUE(user);
     ASSERT_EQ(user->getEmail(), email);
 }
 
-TEST_F(UserRepositoryIntegrationTest, givenNonExistingUser_shouldNotFindAnyUser)
+TEST_F(UserRepositoryIntegrationTest, givenNonExistingUser_shouldNotFindAnyUserByEmail)
 {
     const auto email = "email@example.com";
 
-    const auto user = userRepository->findUser({email});
+    const auto user = userRepository->findUserByEmail({email});
 
     ASSERT_FALSE(user);
+}
+
+TEST_F(UserRepositoryIntegrationTest, shouldFindExistingUserById)
+{
+    const auto email = "email@example.com";
+    const auto password = "password";
+    const auto nickname = "nickname";
+
+    const auto userModel = Models::User::create({{"email", QString::fromStdString(email)},
+                                                 {"password", QString::fromStdString(password)},
+                                                 {"nickname", QString::fromStdString(nickname)}});
+
+    const auto userId = userModel.getAttributeValue("id").toUInt();
+
+    const auto user = userRepository->findUserById({userId});
+
+    ASSERT_TRUE(user);
+    ASSERT_EQ(user->getId(), userId);
+}
+
+TEST_F(UserRepositoryIntegrationTest, givenNonExistingUser_shouldNotFindAnyUserById)
+{
+    const auto userId = 5;
+
+    const auto user = userRepository->findUserById({userId});
+
+    ASSERT_FALSE(user);
+}
+
+TEST_F(UserRepositoryIntegrationTest, shouldUpdateExistingUser)
+{
+    const auto email = "email@example.com";
+    const auto password = "password1";
+    const auto updatedPassword = "password2";
+    const auto nickname = "nickname1";
+    const auto updatedNickname = "nickname2";
+
+    const auto modelUser = Models::User::create({{"email", QString::fromStdString(email)},
+                                                 {"password", QString::fromStdString(password)},
+                                                 {"nickname", QString::fromStdString(nickname)}});
+
+    auto user = userMapper->mapToDomainUser(modelUser);
+
+    user.setPassword(updatedPassword);
+    user.setNickname(updatedNickname);
+
+    userRepository->updateUser({user});
+
+    const auto updatedUser = Models::User::firstWhereEq("email", QString::fromStdString(email));
+
+    ASSERT_TRUE(updatedUser);
+    ASSERT_EQ(updatedUser->getAttributeValue("nickname").toString().toStdString(), updatedNickname);
+    ASSERT_EQ(updatedUser->getAttributeValue("password").toString().toStdString(), updatedPassword);
+}
+
+TEST_F(UserRepositoryIntegrationTest, update_givenNonExistingUser_shouldThrowError)
+{
+    const unsigned id = 1;
+    const auto email = "email@example.com";
+    const auto password = "password";
+    const auto nickname = "nickname";
+
+    const auto user = domain::User{id, email, password, nickname};
+
+    ASSERT_ANY_THROW(userRepository->updateUser({user}));
 }

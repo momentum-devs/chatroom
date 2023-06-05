@@ -13,7 +13,7 @@ DeleteUserCommandHandlerImpl::DeleteUserCommandHandlerImpl(std::shared_ptr<domai
 
 void DeleteUserCommandHandlerImpl::execute(const DeleteUserCommandHandlerPayload& payload)
 {
-    const auto existingUser = userRepository->findUser({payload.email});
+    const auto existingUser = userRepository->findUserByEmail({payload.email});
 
     if (!existingUser)
     {

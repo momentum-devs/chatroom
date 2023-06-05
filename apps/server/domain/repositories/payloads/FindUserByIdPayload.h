@@ -4,8 +4,8 @@
 
 namespace server::domain
 {
-struct FindUserPayload
+struct FindUserByIdPayload
 {
-    const std::string email;
+    const unsigned id;
 };
 }
