@@ -1,14 +1,15 @@
 #pragma once
 
+#include <map>
 #include <string>
 
 namespace server::application
 {
-class HashService
+class TokenService
 {
 public:
-    virtual ~HashService() = default;
+    virtual ~TokenService() = default;
 
-    virtual std::string hash(const std::string& data) const = 0;
+    virtual std::string createToken(const std::map<std::string, std::string>& data) const = 0;
 };
 }

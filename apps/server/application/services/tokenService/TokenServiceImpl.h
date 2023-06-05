@@ -1,12 +1,12 @@
 #pragma once
 
-#include "HashService.h"
+#include "TokenService.h"
 
 namespace server::application
 {
-class HashServiceImpl : public HashService
+class TokenServiceImpl : public TokenService
 {
 public:
-    std::string hash(const std::string& data) const override;
+    std::string createToken(const std::map<std::string, std::string>& data) const override;
 };
 }

@@ -1,15 +1,16 @@
-#include "HashServiceImpl.h"
+#include "TokenServiceImpl.h"
 
-#include <boost/compute/detail/sha1.hpp>
+#include <jwt-cpp/jwt.h>
 
 namespace server::application
 {
-std::string HashServiceImpl::hash(const std::string& data) const
+
+std::string TokenServiceImpl::createToken(const std::map<std::string, std::string>& data) const
 {
-    boost::compute::detail::sha1 dataHash;
-
-    dataHash.process(data);
-
-    return static_cast<std::string>(dataHash);
+    return jwt::create()
+        .set_issuer("auth0")
+        .set_type("JWS")
+        .set_payload_claim("sample", jwt::claim(std::string("test")))
+        .sign(jwt::algorithm::hs256{"secret"});
 }
 }
