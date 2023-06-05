@@ -13,7 +13,7 @@ public:
                        std::shared_ptr<common::messages::MessageSerializer> messageSerializer,
                        std::shared_ptr<server::domain::UserRepository> userRepository);
 
-    std::shared_ptr<Session> create() const override;
+    std::pair<std::shared_ptr<boost::asio::ip::tcp::socket>, std::shared_ptr<Session>> create() const override;
 
 private:
     boost::asio::io_context& context;

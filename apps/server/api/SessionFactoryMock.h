@@ -9,6 +9,7 @@ namespace server::api
 class SessionFactoryMock : public SessionFactory
 {
 public:
-    MOCK_METHOD(std::shared_ptr<Session>, create, (), (const override));
+    MOCK_METHOD((std::pair<std::shared_ptr<boost::asio::ip::tcp::socket>, std::shared_ptr<Session>>), create, (),
+                (const override));
 };
 }

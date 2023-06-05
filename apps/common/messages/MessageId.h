@@ -8,7 +8,9 @@ namespace common::messages
 {
 enum class MessageId : unsigned char
 {
-    Register
+    Error,
+    Register,
+    RegisterResponse,
 };
 
 inline std::string toString(MessageId messageId)

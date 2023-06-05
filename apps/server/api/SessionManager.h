@@ -16,7 +16,7 @@ public:
     void startAcceptingConnections();
 
 private:
-    void handleConnection(std::shared_ptr<Session> newSession, const boost::system::error_code& error);
+    void handleConnection(const std::shared_ptr<Session>& newSession, const boost::system::error_code& error);
 
     boost::asio::io_context& context;
     boost::asio::ip::tcp::acceptor acceptor;
