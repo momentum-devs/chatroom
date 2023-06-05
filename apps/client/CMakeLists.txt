@@ -6,6 +6,7 @@ set(CMAKE_AUTOUIC ON)
 
 set(SOURCES
         api/SessionImpl.cpp
+        api/SocketConnectorImpl.cpp
         gui/controllers/MainController.cpp
         )
 
@@ -38,11 +39,25 @@ target_link_libraries(${EXECUTABLE_NAME} PUBLIC
         filesystem
         collection)
 
-target_include_directories(${EXECUTABLE_NAME} PUBLIC ${GMOCK_INCLUDE_DIR} ${DOTENV_INCLUDE_DIR} ..)
+target_include_directories(${EXECUTABLE_NAME} PUBLIC ${GMOCK_INCLUDE_DIR} ${DOTENV_INCLUDE_DIR})
 
 add_executable(${EXECUTABLE_NAME}UT ${UT_SOURCES} ${SOURCES})
 
-target_link_libraries(${EXECUTABLE_NAME}UT PUBLIC gtest gmock_main)
+target_link_libraries(${EXECUTABLE_NAME}UT PUBLIC
+        gtest
+        gmock_main
+        Qt6::Core
+        Qt::Gui
+        Qt6::Quick
+        Qt6::QuickControls2
+        loguru::loguru
+        nlohmann_json::nlohmann_json
+
+        messages
+        environment
+        filesystem
+        collection)
+
 
 target_include_directories(${EXECUTABLE_NAME}UT PUBLIC ${GMOCK_INCLUDE_DIR})
 

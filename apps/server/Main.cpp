@@ -8,7 +8,6 @@
 #include "loguru.hpp"
 #include "messages/MessageSerializerImpl.h"
 #include "server/api/SessionFactoryImpl.h"
-#include "server/application/commandHandlers/createUserCommandHandler/CreateUserCommandHandler.h"
 #include "server/application/commandHandlers/createUserCommandHandler/CreateUserCommandHandlerImpl.h"
 #include "server/infrastructure/database/management/DatabaseManagerFactory.h"
 #include "server/infrastructure/database/models/User.h"
@@ -65,11 +64,6 @@ int main(int argc, char* argv[])
             {
                 server::infrastructure::DatabaseManagerFactory::addConnection(
                     {databaseHost, databaseName, databaseUsername, databasePassword});
-
-                for (const auto& str : databaseManager->connectionNames())
-                {
-                    LOG_S(INFO) << str.toStdString();
-                }
 
                 context.run();
             });

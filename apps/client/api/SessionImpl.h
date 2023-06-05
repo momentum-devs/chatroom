@@ -1,26 +1,32 @@
 #pragma once
 
+#include <map>
+
 #include "common/messages/MessageReader.h"
 #include "common/messages/MessageSender.h"
-#include "messages/MessageSerializer.h"
 #include "Session.h"
+#include "SocketConnector.h"
 
 namespace client::api
 {
-class SessionImpl: public Session
+class SessionImpl : public Session
 {
 public:
-    SessionImpl(boost::asio::io_context& context, std::shared_ptr<common::messages::MessageSerializer> messageSerializer);
-    void connect(const std::string& hostName, unsigned short portNumber) override;
+    SessionImpl(std::unique_ptr<common::messages::MessageReader> messageReader,
+                std::unique_ptr<common::messages::MessageSender> messageSender,
+                std::unique_ptr<SocketConnector> socketConnector);
+    void connect(const ConnectorPayload& connectorPayload) override;
     void sendMessage(const common::messages::Message& message) override;
+    void addMessageHandler(const MessageHandlerPayload& messageHandlerPayload) override;
+    void removeMessageHandler(const MessageHandlerPayload& messageHandlerPayload) override;
 
 private:
     void handleMessage(const common::messages::Message& message);
 
-    boost::asio::io_context& context;
-
     std::unique_ptr<common::messages::MessageReader> messageReader;
     std::unique_ptr<common::messages::MessageSender> messageSender;
-    std::shared_ptr<common::messages::MessageSerializer> messageSerializer;
+    std::unique_ptr<SocketConnector> socketConnector;
+    std::map<common::messages::MessageId, std::map<std::string, std::function<void(const common::messages::Message&)>>>
+        messageHandlers;
 };
 }
