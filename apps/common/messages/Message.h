@@ -1,7 +1,5 @@
 #pragma once
 
-#include <array>
-
 #include "common/bytes/Bytes.h"
 #include "MessageId.h"
 
@@ -37,7 +35,9 @@ struct Message
     inline static constexpr u_int32_t tokenSize = 40;
 };
 
-inline const common::bytes::Bytes nullToken = common::bytes::Bytes{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+inline const common::bytes::Bytes nullToken =
+    common::bytes::Bytes{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 inline std::ostream& operator<<(std::ostream& os, const Message& message)
 {

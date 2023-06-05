@@ -1,10 +1,6 @@
 #include "SessionManager.h"
 
 #include "loguru.hpp"
-#include "messages/MessageReaderImpl.h"
-#include "messages/MessageSenderImpl.h"
-#include "messages/MessageSerializerImpl.h"
-#include "SessionImpl.h"
 
 namespace server::api
 {
@@ -20,19 +16,19 @@ void SessionManager::startAcceptingConnections()
 {
     LOG_S(INFO) << "Listening for new connection on port: " << acceptor.local_endpoint().port();
 
-    auto session = sessionFactory->create();
+    auto [socket, session] = sessionFactory->create();
 
-    acceptor.async_accept(session->getSocket(), [this, session](const boost::system::error_code& error)
+    acceptor.async_accept(*socket, [this, session = std::move(session)](const boost::system::error_code& error)
                           { handleConnection(session, error); });
 }
 
-void SessionManager::handleConnection(std::shared_ptr<Session> newSession, const boost::system::error_code& error)
+void SessionManager::handleConnection(const std::shared_ptr<Session>& session, const boost::system::error_code& error)
 {
     if (!error)
     {
-        newSession->startSession();
+        session->startSession();
 
-        sessions.push_back(newSession);
+        sessions.push_back(session);
     }
     else
     {

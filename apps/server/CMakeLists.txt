@@ -6,6 +6,7 @@ set(SOURCES
         api/SessionManager.cpp
         api/SessionImpl.cpp
         api/SessionFactoryImpl.cpp
+        api/MessageHandlerImpl.cpp
         infrastructure/database/management/DatabaseManagerFactory.cpp
         infrastructure/repositories/userRepository/UserRepositoryImpl.cpp
         infrastructure/repositories/userRepository/userMapper/UserMapperImpl.cpp

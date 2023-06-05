@@ -4,9 +4,13 @@ v. 001
 
 ## Message schema:
 
-| **Field name:** |  Message length | Message ID | Token | Payload | Check Sum |
-|-----------------|:-------------:|:-------------:|:-------------:|:-------------:| ------------- |
-| **Length:** | 4 bytes | 1 byte | 40 bytes | ? bytes | 4 bytes |
+| **Field name:** | Message length | Message ID |  Token   | Payload | Check Sum |
+|-----------------|:--------------:|:----------:|:--------:|:-------:|-----------|
+| **Length:**     |    4 bytes     |   1 byte   | 40 bytes | ? bytes | 4 bytes   |
+
+## Schema of message handling by server
+
+![Schema](resources/serverMessageHandling.png)
 
 ## Message IDs:
 

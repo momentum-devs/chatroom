@@ -11,6 +11,6 @@ class SessionFactory
 public:
     virtual ~SessionFactory() = default;
 
-    virtual std::shared_ptr<Session> create() const = 0;
+    virtual std::pair<std::shared_ptr<boost::asio::ip::tcp::socket>, std::shared_ptr<Session>> create() const = 0;
 };
 }
