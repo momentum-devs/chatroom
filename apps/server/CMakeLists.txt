@@ -12,6 +12,7 @@ set(SOURCES
         domain/entities/User.cpp
         application/commandHandlers/registerUserCommandHandler/RegisterUserCommandHandlerImpl.cpp
         application/commandHandlers/deleteUserCommandHandler/DeleteUserCommandHandlerImpl.cpp
+        application/services/hashService/HashServiceImpl.cpp
         )
 
 set(UT_SOURCES
