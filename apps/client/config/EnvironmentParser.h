@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace common::environment
+namespace client::config
 {
 class EnvironmentParser
 {

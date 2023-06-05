@@ -1,6 +1,8 @@
 set(EXECUTABLE_NAME server)
 
 set(SOURCES
+        config/EnvironmentParser.cpp
+        config/ConfigProvider.cpp
         api/SessionManager.cpp
         api/SessionImpl.cpp
         api/SessionFactoryImpl.cpp
@@ -27,10 +29,8 @@ target_link_libraries(${EXECUTABLE_NAME} PRIVATE
         TinyOrm::TinyOrm
         loguru::loguru
         nlohmann_json::nlohmann_json
-
         messages
         filesystem
-        environment
         collection
         )
 

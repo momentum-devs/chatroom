@@ -3,7 +3,7 @@
 #include <memory>
 #include <orm/databasemanager.hpp>
 
-#include "DatabaseConfig.h"
+#include "../DatabaseConfig.h"
 
 namespace server::infrastructure
 {

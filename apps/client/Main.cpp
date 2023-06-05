@@ -6,8 +6,8 @@
 #include <QTranslator>
 
 #include "api/SessionImpl.h"
-#include "common/environment/EnvironmentParser.h"
 #include "common/filesystem/GetProjectPath.h"
+#include "config/ConfigProvider.h"
 #include "gui/controllers/MainController.h"
 #include "laserpants/dotenv/dotenv.h"
 #include "loguru.hpp"
@@ -19,23 +19,23 @@ int main(int argc, char* argv[])
 
     dotenv::init(dotEnvPath.c_str());
 
-    common::environment::EnvironmentParser environmentParser;
-
     loguru::g_preamble_date = false;
 
     loguru::init(argc, argv);
 
-    auto serverHostname = environmentParser.parseString("SERVER_HOSTNAME");
+    client::config::ConfigProvider configProvider;
 
-    auto serverPort = static_cast<unsigned short>(std::stoi(environmentParser.parseString("SERVER_PORT")));
+    const auto serverHost = configProvider.getServerHost();
 
-    auto messageSerializer = std::make_shared<common::messages::MessageSerializerImpl>();
+    const auto serverPort = configProvider.getServerPort();
+
+    const auto messageSerializer = std::make_shared<common::messages::MessageSerializerImpl>();
 
     boost::asio::io_context context;
 
-    auto session = std::make_shared<client::api::SessionImpl>(context, messageSerializer);
+    const auto session = std::make_shared<client::api::SessionImpl>(context, messageSerializer);
 
-    session->connect(serverHostname, serverPort);
+    session->connect(serverHost, serverPort);
 
     QGuiApplication app(argc, argv);
 

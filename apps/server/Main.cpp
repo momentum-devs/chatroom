@@ -2,20 +2,20 @@
 #include <thread>
 
 #include "api/SessionManager.h"
-#include "common/environment/EnvironmentParser.h"
 #include "common/filesystem/GetProjectPath.h"
 #include "laserpants/dotenv/dotenv.h"
 #include "loguru.hpp"
 #include "messages/MessageSerializerImpl.h"
 #include "server/api/SessionFactoryImpl.h"
-#include "server/application/commandHandlers/createUserCommandHandler/CreateUserCommandHandler.h"
 #include "server/application/commandHandlers/createUserCommandHandler/CreateUserCommandHandlerImpl.h"
+#include "server/config/ConfigProvider.h"
 #include "server/infrastructure/database/management/DatabaseManagerFactory.h"
 #include "server/infrastructure/database/models/User.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapper.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "server/infrastructure/repositories/userRepository/UserRepositoryImpl.h"
 
+// TODO: add application class
 int main(int argc, char* argv[])
 {
     const auto projectPath = common::filesystem::getProjectPath("chatroom");
@@ -26,10 +26,13 @@ int main(int argc, char* argv[])
 
     loguru::init(argc, argv);
 
-    const auto databaseHost = common::environment::EnvironmentParser::parseString("DATABASE_HOST");
-    const auto databaseName = common::environment::EnvironmentParser::parseString("DATABASE_NAME");
-    const auto databaseUsername = common::environment::EnvironmentParser::parseString("DATABASE_USERNAME");
-    const auto databasePassword = common::environment::EnvironmentParser::parseString("DATABASE_PASSWORD");
+    server::config::ConfigProvider configProvider;
+
+    const auto databaseHost = configProvider.getDatabaseHost();
+    const auto databaseName = configProvider.getDatabaseName();
+    const auto databaseUsername = configProvider.getDatabaseUsername();
+    const auto databasePassword = configProvider.getDatabasePassword();
+    const auto serverPort = configProvider.getServerPort();
 
     auto databaseManager = server::infrastructure::DatabaseManagerFactory::create(
         {databaseHost, databaseName, databaseUsername, databasePassword});
@@ -40,7 +43,6 @@ int main(int argc, char* argv[])
     std::shared_ptr<server::domain::UserRepository> userRepository =
         std::make_shared<server::infrastructure::UserRepositoryImpl>(std::move(userMapper));
 
-    const auto listenPort = common::environment::EnvironmentParser::parseInt("CHATROOM_PORT");
     const auto numberOfSupportedThreads = std::thread::hardware_concurrency();
 
     boost::asio::io_context context;
@@ -50,7 +52,7 @@ int main(int argc, char* argv[])
     auto sessionFactory = std::make_unique<server::api::SessionFactoryImpl>(context, messageSerializer, userRepository);
 
     std::unique_ptr<server::api::SessionManager> sessionManager =
-        std::make_unique<server::api::SessionManager>(context, listenPort, std::move(sessionFactory));
+        std::make_unique<server::api::SessionManager>(context, serverPort, std::move(sessionFactory));
 
     sessionManager->startAcceptingConnections();
 

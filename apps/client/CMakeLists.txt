@@ -5,6 +5,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 set(SOURCES
+        config/EnvironmentParser.cpp
+        config/ConfigProvider.cpp
         api/SessionImpl.cpp
         gui/controllers/MainController.cpp
         )
@@ -14,7 +16,8 @@ set(UT_SOURCES
         )
 
 set(QML
-        gui/views/MainView.qml)
+        gui/views/MainView.qml
+        )
 
 qt_add_executable(${EXECUTABLE_NAME} Main.cpp ${SOURCES})
 
@@ -32,11 +35,10 @@ target_link_libraries(${EXECUTABLE_NAME} PUBLIC
         Qt6::QuickControls2
         loguru::loguru
         nlohmann_json::nlohmann_json
-
         messages
-        environment
         filesystem
-        collection)
+        collection
+        )
 
 target_include_directories(${EXECUTABLE_NAME} PUBLIC ${GMOCK_INCLUDE_DIR} ${DOTENV_INCLUDE_DIR} ..)
 
