@@ -22,7 +22,7 @@ std::string getProjectPath(const std::string& projectName)
         throw errors::FileNotFound{fileNotFoundMessage + currentPath};
     }
 
-    auto projectPath = common::collection::substring(currentPath, 0, projectNamePosition + projectName.length() + 1);
+    auto projectPath = common::collection::substring(currentPath, 0, projectNamePosition + projectName.length());
 
     return projectPath;
 }

@@ -6,9 +6,6 @@ set(SOURCES
         DatabaseManagerFactory.cpp
         )
 
-set(UT_SOURCES
-        )
-
 add_executable(${EXECUTABLE_NAME} Main.cpp ${SOURCES})
 
 target_link_libraries(${EXECUTABLE_NAME} PRIVATE

@@ -11,10 +11,6 @@ class User final : public Model<User>
     friend Model;
     using Model::Model;
 
-    inline static const QStringList u_fillable {
-        "email",
-        "password",
-        "nickname"
-    };
+    inline static const QStringList u_fillable{"email", "password", "nickname"};
 };
 }

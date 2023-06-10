@@ -18,7 +18,7 @@
 
 int main(int argc, char* argv[])
 {
-    auto dotEnvPath = common::filesystem::getProjectPath("chatroom") + "apps/client/.env";
+    auto dotEnvPath = common::filesystem::getProjectPath("chatroom") + "/apps/client/.env";
 
     dotenv::init(dotEnvPath.c_str());
 

@@ -1,9 +1,9 @@
 #include "FileSystemServiceImpl.h"
 
 #include <format>
+
 #include "gtest/gtest.h"
 
-#include "errors/FileNotFound.h"
 #include "GetProjectPath.h"
 
 using namespace ::testing;
@@ -11,8 +11,7 @@ using namespace common::filesystem;
 
 namespace
 {
-const std::string testFilesDirectory{
-    std::format("{}apps/common/fileSystem/testFiles", getProjectPath("chatroom"))};
+const std::string testFilesDirectory{std::format("{}/apps/common/fileSystem/testFiles", getProjectPath("chatroom"))};
 const std::string textToWrite{"write method"};
 const std::basic_string<unsigned char> textToWriteAtPosition{reinterpret_cast<const unsigned char*>("position data")};
 const std::string textToWriteAtPositionAsString{"position data"};
