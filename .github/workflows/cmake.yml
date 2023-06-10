@@ -16,8 +16,7 @@ jobs:
     steps:
     - uses: actions/checkout@
 
-    - name: Git submodule init
-      run: git submodule update --init --recursive
+    - uses: textbook/git-checkout-submodule-action@master
     
     - name: Install apt-get dependencies
       run: sudo apt-get update && sudo apt-get install -y build-essential librange-v3-dev lld clang-15 qt6-base-dev libqt6sql6-psql libqt6qml6 qt6-declarative-dev qt6-tools-dev qml6-module-qtquick-controls qml6-module-qtqml-workerscript qml6-module-qtquick-templates
