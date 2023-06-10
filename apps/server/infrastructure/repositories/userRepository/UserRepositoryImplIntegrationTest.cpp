@@ -2,8 +2,6 @@
 
 #include "gtest/gtest.h"
 
-#include "server/application/commandHandlers/createUserCommandHandler/CreateUserCommandHandler.h"
-#include "server/application/commandHandlers/createUserCommandHandler/CreateUserCommandHandlerImpl.h"
 #include "server/infrastructure/database/management/DatabaseManagerFactory.h"
 #include "server/infrastructure/errors/UserRepositoryError.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"

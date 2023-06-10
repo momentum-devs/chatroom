@@ -27,7 +27,9 @@ set(UT_SOURCES
         )
 
 set(IT_SOURCES
-        infrastructure/repositories/userRepository/UserRepositoryIntegrationTest.cpp
+        infrastructure/repositories/userRepository/UserRepositoryImplIntegrationTest.cpp
+        application/services/tokenService/TokenServiceImplIntegrationTest.cpp
+        application/services/hashService/HashServiceImplIntegrationTest.cpp
         )
 
 add_executable(${EXECUTABLE_NAME} Main.cpp ${SOURCES})

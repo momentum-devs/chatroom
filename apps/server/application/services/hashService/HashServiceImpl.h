@@ -8,5 +8,6 @@ class HashServiceImpl : public HashService
 {
 public:
     std::string hash(const std::string& data) const override;
+    bool compare(const std::string& plainData, const std::string& hashedData) const override;
 };
 }
