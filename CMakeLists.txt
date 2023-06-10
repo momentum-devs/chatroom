@@ -5,8 +5,6 @@ project(${PROJECT_NAME} CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror")
-
 find_package(Boost REQUIRED)
 find_package(Qt6 6.4 COMPONENTS Core Gui Widgets Quick QuickControls2 LinguistTools REQUIRED)
 find_package(TinyOrm 0.16.0 CONFIG REQUIRED)
