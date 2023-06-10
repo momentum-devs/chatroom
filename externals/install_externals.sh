@@ -26,6 +26,7 @@ sudo make install
 cd ../..
 
 cd TinyORM || exit
+sed '146d' -i cmake/CommonModules/TinyCommon.cmake || exit
 rm build
 mkdir build
 cd build || exit

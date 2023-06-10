@@ -40,7 +40,6 @@ class MessageHandlerImplTest : public Test
 public:
     std::unique_ptr<server::application::RegisterUserCommandHandlerMock> registerUserCommandHandlerMockInit =
         std::make_unique<StrictMock<server::application::RegisterUserCommandHandlerMock>>();
-
     server::application::RegisterUserCommandHandlerMock* registerUserCommandHandlerMock =
         registerUserCommandHandlerMockInit.get();
 

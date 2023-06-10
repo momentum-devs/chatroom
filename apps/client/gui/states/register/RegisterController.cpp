@@ -1,4 +1,4 @@
-#include "MainController.h"
+#include "RegisterController.h"
 
 #include <nlohmann/json.hpp>
 
@@ -6,9 +6,13 @@
 
 namespace client::gui
 {
-MainController::MainController(std::shared_ptr<api::Session> sessionInit) : session{sessionInit} {}
+RegisterController::RegisterController(std::shared_ptr<api::Session> sessionInit, const StateFactory& stateFactoryInit,
+                                       std::shared_ptr<StateMachine> stateMachineInit)
+    : session{std::move(sessionInit)}, stateFactory{stateFactoryInit}, stateMachine{std::move(stateMachineInit)}
+{
+}
 
-void MainController::handleRegisterRequest(const QString& email, const QString& password)
+void RegisterController::handleRegisterRequest(const QString& email, const QString& password)
 {
 
     nlohmann::json payload{
