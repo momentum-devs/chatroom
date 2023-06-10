@@ -22,7 +22,7 @@ set(UT_SOURCES
         gui/states/StateMachineTest.cpp
         )
 
-set(QML
+set(QML_SOURCES
         gui/qml/MainView.qml
         gui/states/register/RegisterView.qml
         gui/states/login/LoginView.qml
@@ -34,7 +34,7 @@ qt_add_qml_module(${EXECUTABLE_NAME}
         URI ${PROJECT_NAME}
         VERSION 6.2
         QML_FILES
-        ${QML}
+        ${QML_SOURCES}
         )
 
 target_link_libraries(${EXECUTABLE_NAME} PUBLIC
