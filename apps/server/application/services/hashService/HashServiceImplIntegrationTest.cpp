@@ -1,33 +1,24 @@
 #include "gtest/gtest.h"
 
-#include "server/infrastructure/database/management/DatabaseManagerFactory.h"
-#include "server/infrastructure/errors/UserRepositoryError.h"
-#include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
-#include "TokenServiceImpl.h"
+#include "HashServiceImpl.h"
 
 using namespace ::testing;
 using namespace server;
 using namespace server::application;
 
-namespace
-{
-const auto jwtSecret = "12321313423565365654546654121890008";
-const auto jwtExpiresIn = 86400;
-}
-
-class TokenServiceImplIntegrationTest : public Test
+class HashServiceImplIntegrationTest : public Test
 {
 public:
-    TokenServiceImpl tokenService{jwtSecret, jwtExpiresIn};
+    HashServiceImpl hashService;
 };
 
-TEST_F(TokenServiceImplIntegrationTest, shouldCreateTokenAndHaveTheSameUserIdAfterVerifyingToken)
+TEST_F(HashServiceImplIntegrationTest, shouldHashData)
 {
-    const auto userId = 1;
+    const auto data = "123456";
 
-    const auto token = tokenService.createToken(userId);
+    const auto hashedData = hashService.hash(data);
 
-    const auto userIdFromToken = tokenService.getUserIdFromToken(token);
+    const auto hashesHaveSameValue = hashService.compare(data, hashedData);
 
-    ASSERT_EQ(userIdFromToken, userId);
+    ASSERT_TRUE(hashesHaveSameValue);
 }
