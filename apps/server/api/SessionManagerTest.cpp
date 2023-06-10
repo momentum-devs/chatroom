@@ -7,11 +7,6 @@
 using namespace ::testing;
 using namespace server::api;
 
-namespace
-{
-
-}
-
 class SessionManagerTest : public Test
 {
 public:

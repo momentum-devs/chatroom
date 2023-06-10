@@ -11,13 +11,12 @@ namespace server::application
 class RegisterUserCommandHandlerImpl : public RegisterUserCommandHandler
 {
 public:
-    explicit RegisterUserCommandHandlerImpl(std::shared_ptr<domain::UserRepository>,
-                                            std::shared_ptr<application::HashService>);
+    RegisterUserCommandHandlerImpl(std::shared_ptr<domain::UserRepository>, std::shared_ptr<HashService>);
 
     RegisterUserCommandHandlerResult execute(const RegisterUserCommandHandlerPayload&) const override;
 
 private:
     std::shared_ptr<domain::UserRepository> userRepository;
-    std::shared_ptr<application::HashService> hashService;
+    std::shared_ptr<HashService> hashService;
 };
 }

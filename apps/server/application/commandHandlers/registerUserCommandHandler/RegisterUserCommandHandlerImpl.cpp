@@ -7,8 +7,7 @@
 namespace server::application
 {
 RegisterUserCommandHandlerImpl::RegisterUserCommandHandlerImpl(
-    std::shared_ptr<domain::UserRepository> userRepositoryInit,
-    std::shared_ptr<application::HashService> hashServiceInit)
+    std::shared_ptr<domain::UserRepository> userRepositoryInit, std::shared_ptr<HashService> hashServiceInit)
     : userRepository{std::move(userRepositoryInit)}, hashService{std::move(hashServiceInit)}
 {
 }

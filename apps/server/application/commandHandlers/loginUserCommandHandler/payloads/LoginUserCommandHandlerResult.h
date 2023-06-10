@@ -6,8 +6,8 @@
 
 namespace server::application
 {
-struct RegisterUserCommandHandlerResult
+struct LoginUserCommandHandlerResult
 {
-    domain::User user;
+    std::string token;
 };
 }

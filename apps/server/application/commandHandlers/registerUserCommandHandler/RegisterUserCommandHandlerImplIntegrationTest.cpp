@@ -25,7 +25,7 @@ const std::string databasePassword = "local";
 class RegisterUserCommandImplIntegrationTest : public Test
 {
 public:
-    RegisterUserCommandImplIntegrationTest()
+    static void SetUpTestSuite()
     {
         server::infrastructure::DatabaseManagerFactory::create(
             {databaseHost, databaseName, databaseUsername, databasePassword});
@@ -36,6 +36,11 @@ public:
         Orm::DB::table("users")->truncate();
     }
 
+    void TearDown() override
+    {
+        Orm::DB::table("users")->truncate();
+    }
+    
     std::unique_ptr<UserMapper> userMapperInit = std::make_unique<UserMapperImpl>();
 
     std::shared_ptr<UserRepository> userRepository = std::make_shared<UserRepositoryImpl>(std::move(userMapperInit));

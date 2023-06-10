@@ -17,6 +17,7 @@ set(SOURCES
         infrastructure/repositories/userRepository/UserRepositoryImpl.cpp
         infrastructure/repositories/userRepository/userMapper/UserMapperImpl.cpp
         domain/entities/User.cpp
+        application/commandHandlers/loginUserCommandHandler/LoginUserCommandHandlerImpl.cpp
         )
 
 set(UT_SOURCES
@@ -30,6 +31,8 @@ set(IT_SOURCES
         infrastructure/repositories/userRepository/UserRepositoryImplIntegrationTest.cpp
         application/services/tokenService/TokenServiceImplIntegrationTest.cpp
         application/services/hashService/HashServiceImplIntegrationTest.cpp
+        application/commandHandlers/registerUserCommandHandler/RegisterUserCommandHandlerImplIntegrationTest.cpp
+        application/commandHandlers/loginUserCommandHandler/LoginUserCommandHandlerImplIntegrationTest.cpp
         )
 
 add_executable(${EXECUTABLE_NAME} Main.cpp ${SOURCES})

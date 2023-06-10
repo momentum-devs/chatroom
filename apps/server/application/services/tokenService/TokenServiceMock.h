@@ -2,14 +2,14 @@
 
 #include <gmock/gmock.h>
 
-#include "HashService.h"
+#include "TokenService.h"
 
 namespace server::application
 {
-class HashServiceMock : public HashService
+class TokenServiceMock : public TokenService
 {
 public:
-    MOCK_METHOD(std::string, hash, (const std::string& data), (const override));
-    MOCK_METHOD(bool, compare, (const std::string& plainData, const std::string& hashedData), (const override));
+    MOCK_METHOD(std::string, createToken, (const std::string& userId), (const override));
+    MOCK_METHOD(unsigned, getUserIdFromToken, (const std::string& token), (const override));
 };
 }

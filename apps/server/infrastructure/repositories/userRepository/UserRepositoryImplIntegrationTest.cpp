@@ -22,13 +22,18 @@ const std::string databasePassword = "local";
 class UserRepositoryIntegrationTest : public Test
 {
 public:
-    UserRepositoryIntegrationTest()
+    static void SetUpTestSuite()
     {
         server::infrastructure::DatabaseManagerFactory::create(
             {databaseHost, databaseName, databaseUsername, databasePassword});
     }
 
     void SetUp() override
+    {
+        Orm::DB::table("users")->truncate();
+    }
+
+    void TearDown() override
     {
         Orm::DB::table("users")->truncate();
     }
