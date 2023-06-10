@@ -36,7 +36,7 @@ Item {
                     const password = passwordField.text;
                     const passwordRepeat = passwordRepeatField.text;
                     if (password === passwordRepeat && email.length !== 0 && email.length !== 0) {
-                        mainController.registerRequest(email, password);
+                        registerController.registerRequest(email, password);
                         successPopup.open();
                     } else {
                         errorPopup.open();
