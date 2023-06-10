@@ -6,7 +6,7 @@ mkdir build
 cd build || exit
 cmake .. -DCMAKE_BUILD_TYPE:STRING=$BUILD_TYPE -DCMAKE_CXX_COMPILER=/usr/bin/clang++-15 -GNinja
 ninja -j 20
-sudo make install
+sudo ninja install
 cd ../..
 
 cd json || exit
@@ -15,7 +15,7 @@ mkdir build
 cd build || exit
 cmake .. -DCMAKE_BUILD_TYPE:STRING=$BUILD_TYPE -DCMAKE_CXX_COMPILER=/usr/bin/clang++-15 -GNinja
 ninja -j 20
-sudo make install
+sudo ninja install
 cd ../..
 
 cd tabulate || exit
@@ -24,7 +24,7 @@ mkdir build
 cd build || exit
 cmake .. -DUSE_CPP17=ON -DCMAKE_BUILD_TYPE:STRING=$BUILD_TYPE -DCMAKE_CXX_COMPILER=/usr/bin/clang++-15 -GNinja
 ninja -j 20
-sudo make install
+sudo ninja install
 cd ../..
 
 cd TinyORM || exit
@@ -34,4 +34,4 @@ mkdir build
 cd build || exit
 cmake .. -DTOM=ON -DCMAKE_BUILD_TYPE:STRING=$BUILD_TYPE -DCMAKE_CXX_COMPILER=/usr/bin/clang++-15 -GNinja
 ninja -j 20
-sudo make install
+sudo ninja install

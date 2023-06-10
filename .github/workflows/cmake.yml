@@ -23,7 +23,9 @@ jobs:
         id: cache-apt
         uses: actions/cache@v3
         with:
-          path: README.md
+          path: |
+            README.md
+            .github/workflows/cmake.yml
           key: ${{ runner.os }}-apt
 
       - name: Install apt-get dependencies
@@ -40,7 +42,7 @@ jobs:
         id: cache-external
         uses: actions/cache@v3
         with:
-          path: README.md
+          path: externals/
           key: ${{ runner.os }}-external
 
       - name: Install external CMake package
