@@ -6,6 +6,7 @@
 #include "laserpants/dotenv/dotenv.h"
 #include "loguru.hpp"
 #include "messages/MessageSerializerImpl.h"
+#include "server/api/ConnectionAcceptorImpl.h"
 #include "server/api/SessionFactoryImpl.h"
 #include "server/config/ConfigProvider.h"
 #include "server/infrastructure/database/management/DatabaseManagerFactory.h"
@@ -50,8 +51,11 @@ int main(int argc, char* argv[])
 
     auto sessionFactory = std::make_unique<server::api::SessionFactoryImpl>(context, messageSerializer, userRepository);
 
+    auto connectionAcceptor =
+        std::make_unique<server::api::ConnectionAcceptorImpl>(context, serverPort, std::move(sessionFactory));
+
     std::unique_ptr<server::api::SessionManager> sessionManager =
-        std::make_unique<server::api::SessionManager>(context, serverPort, std::move(sessionFactory));
+        std::make_unique<server::api::SessionManager>(std::move(connectionAcceptor));
 
     sessionManager->startAcceptingConnections();
 
