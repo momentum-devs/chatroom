@@ -1,44 +1,28 @@
 #include "TokenServiceImpl.h"
 
-#include <jwt-cpp/jwt.h>
-#include <utility>
-
-#include "jwt-cpp/traits/nlohmann-json/traits.h"
+#include "jwt/jwt.hpp"
 
 namespace server::application
 {
 TokenServiceImpl::TokenServiceImpl(std::string jwtSecretInit) : jwtSecret{std::move(jwtSecretInit)} {}
 
-std::string TokenServiceImpl::createToken(const std::map<std::string, std::string>& data) const
+std::string TokenServiceImpl::createToken(unsigned int userId) const
 {
-    using traits = jwt::traits::nlohmann_json;
-    using claim = jwt::basic_claim<traits>;
+    jwt::jwt_object jwtObject{jwt::params::algorithm("HS256"), jwt::params::secret(jwtSecret)};
 
-    auto tokenBuilder = jwt::create<traits>().set_issuer("auth0").set_type("JWT");
+    jwtObject.add_claim("userId", userId);
 
-    for (const auto& [key, value] : data)
-    {
-        tokenBuilder.set_payload_claim(key, claim(value));
-    }
+    auto token = jwtObject.signature();
 
-    return tokenBuilder.sign(jwt::algorithm::hs256{jwtSecret});
+    return token;
 }
 
-std::map<std::string, std::string> TokenServiceImpl::verifyToken(const std::string& token) const
+unsigned TokenServiceImpl::getUserIdFromToken(const std::string& token) const
 {
-    using traits = jwt::traits::nlohmann_json;
+    auto decoded = jwt::decode(token, jwt::params::algorithms({"HS256"}), jwt::params::secret("secret"),
+                               jwt::params::verify(true));
 
-    auto decodedToken = jwt::decode<traits>(token);
-
-    jwt::verify<traits>().allow_algorithm(jwt::algorithm::hs256{"secret"}).with_issuer("auth0").verify(decodedToken);
-
-    std::map<std::string, std::string> tokenPayload;
-
-    for (const auto& claim : decodedToken.get_payload_json())
-    {
-        tokenPayload.insert({claim.first, claim.second});
-    }
-
-    return tokenPayload;
+    return decoded.payload().get_claim_value<unsigned>("userId");
 }
+
 }

@@ -31,11 +31,11 @@ target_link_libraries(${EXECUTABLE_NAME} PRIVATE
         Qt6::Core
         TinyOrm::TinyOrm
         loguru::loguru
-        nlohmann_json
+        nlohmann_json::nlohmann_json
         messages
         filesystem
         collection
-        jwt-cpp
+        cpp-jwt
         )
 
 target_include_directories(${EXECUTABLE_NAME} PRIVATE ${GMOCK_INCLUDE_DIR} ${DOTENV_INCLUDE_DIR} ..)
@@ -50,11 +50,11 @@ target_link_libraries(${EXECUTABLE_NAME}UT PRIVATE
         Qt6::Core
         TinyOrm::TinyOrm
         loguru::loguru
-        nlohmann_json
+        nlohmann_json::nlohmann_json
         messages
         filesystem
         collection
-        jwt-cpp
+        cpp-jwt
         )
 
 target_include_directories(${EXECUTABLE_NAME}UT PUBLIC ${GMOCK_INCLUDE_DIR})
@@ -69,11 +69,11 @@ target_link_libraries(${EXECUTABLE_NAME}IT PRIVATE
         Qt6::Core
         TinyOrm::TinyOrm
         loguru::loguru
-        nlohmann_json
+        nlohmann_json::nlohmann_json
         messages
         filesystem
         collection
-        jwt-cpp
+        cpp-jwt
         )
 
 target_include_directories(${EXECUTABLE_NAME}IT PUBLIC ${GMOCK_INCLUDE_DIR})
