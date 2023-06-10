@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-namespace server::application
+namespace server::application::errors
 {
 struct UserNotFoundError : std::runtime_error
 {

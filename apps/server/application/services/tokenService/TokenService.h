@@ -10,6 +10,7 @@ class TokenService
 public:
     virtual ~TokenService() = default;
 
-    virtual std::string createToken(const std::map<std::string, std::string>& data) const = 0;
+    virtual std::string createToken(unsigned userId) const = 0;
+    virtual unsigned getUserIdFromToken(const std::string& token) const = 0;
 };
 }

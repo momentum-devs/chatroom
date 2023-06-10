@@ -6,28 +6,38 @@
 #include "common/messages/MessageReaderImpl.h"
 #include "common/messages/MessageSenderImpl.h"
 #include "MessageHandlerImpl.h"
+#include "messages/MessageSerializerImpl.h"
 #include "server/application/commandHandlers/registerUserCommandHandler/RegisterUserCommandHandlerImpl.h"
+#include "server/application/services/hashService/HashServiceImpl.h"
+#include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
+#include "server/infrastructure/repositories/userRepository/UserRepositoryImpl.h"
 #include "SessionImpl.h"
 
 namespace server::api
 {
-SessionFactoryImpl::SessionFactoryImpl(boost::asio::io_context& contextInit,
-                                       std::shared_ptr<common::messages::MessageSerializer> messageSerializerInit,
-                                       std::shared_ptr<server::domain::UserRepository> userRepositoryInit)
-    : context{contextInit},
-      messageSerializer{std::move(messageSerializerInit)},
-      userRepository{std::move(userRepositoryInit)}
-{
-}
+SessionFactoryImpl::SessionFactoryImpl(boost::asio::io_context& contextInit) : context{contextInit} {}
 
 std::pair<std::shared_ptr<boost::asio::ip::tcp::socket>, std::shared_ptr<Session>> SessionFactoryImpl::create() const
 {
     auto socket = std::make_shared<boost::asio::ip::tcp::socket>(context);
+
+    auto messageSerializer = std::make_shared<common::messages::MessageSerializerImpl>();
+
     auto messageReader = std::make_unique<common::messages::MessageReaderImpl>(context, socket, messageSerializer);
+
     auto messageSender = std::make_unique<common::messages::MessageSenderImpl>(socket, messageSerializer);
+
+    auto userMapper = std::make_unique<server::infrastructure::UserMapperImpl>();
+
+    auto userRepository = std::make_shared<server::infrastructure::UserRepositoryImpl>(std::move(userMapper));
+
+    const auto hashService = std::make_shared<server::application::HashServiceImpl>();
+
     auto registerUserCommandHandler =
-        std::make_unique<server::application::RegisterUserCommandHandlerImpl>(userRepository);
+        std::make_unique<server::application::RegisterUserCommandHandlerImpl>(userRepository, hashService);
+
     auto messageHandler = std::make_unique<MessageHandlerImpl>(std::move(registerUserCommandHandler));
+
     auto session =
         std::make_shared<SessionImpl>(std::move(messageReader), std::move(messageSender), std::move(messageHandler));
 

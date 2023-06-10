@@ -1,28 +1,38 @@
 set(EXECUTABLE_NAME server)
 
 set(SOURCES
-        config/EnvironmentParser.cpp
-        config/ConfigProvider.cpp
         api/SessionManager.cpp
         api/SessionImpl.cpp
         api/SessionFactoryImpl.cpp
         api/MessageHandlerImpl.cpp
-        infrastructure/database/management/DatabaseManagerFactory.cpp
-        infrastructure/repositories/userRepository/UserRepositoryImpl.cpp
-        infrastructure/repositories/userRepository/userMapper/UserMapperImpl.cpp
-        domain/entities/User.cpp
+        api/ConnectionAcceptorImpl.cpp
         application/commandHandlers/registerUserCommandHandler/RegisterUserCommandHandlerImpl.cpp
         application/commandHandlers/deleteUserCommandHandler/DeleteUserCommandHandlerImpl.cpp
         application/services/hashService/HashServiceImpl.cpp
         application/services/tokenService/TokenServiceImpl.cpp
+        config/EnvironmentParser.cpp
+        config/ConfigProvider.cpp
+        domain/entities/User.cpp
+        infrastructure/database/management/DatabaseManagerFactory.cpp
+        infrastructure/repositories/userRepository/UserRepositoryImpl.cpp
+        infrastructure/repositories/userRepository/userMapper/UserMapperImpl.cpp
+        domain/entities/User.cpp
+        application/commandHandlers/loginUserCommandHandler/LoginUserCommandHandlerImpl.cpp
         )
 
 set(UT_SOURCES
+        api/MessageHandlerImplTest.cpp
+        api/SessionImplTest.cpp
         infrastructure/repositories/userRepository/userMapper/UserMapperImplTest.cpp
+        api/SessionManagerTest.cpp
         )
 
 set(IT_SOURCES
-        infrastructure/repositories/userRepository/UserRepositoryIntegrationTest.cpp
+        infrastructure/repositories/userRepository/UserRepositoryImplIntegrationTest.cpp
+        application/services/tokenService/TokenServiceImplIntegrationTest.cpp
+        application/services/hashService/HashServiceImplIntegrationTest.cpp
+        application/commandHandlers/registerUserCommandHandler/RegisterUserCommandHandlerImplIntegrationTest.cpp
+        application/commandHandlers/loginUserCommandHandler/LoginUserCommandHandlerImplIntegrationTest.cpp
         )
 
 add_executable(${EXECUTABLE_NAME} Main.cpp ${SOURCES})
@@ -31,11 +41,11 @@ target_link_libraries(${EXECUTABLE_NAME} PRIVATE
         Qt6::Core
         TinyOrm::TinyOrm
         loguru::loguru
-        nlohmann_json
+        nlohmann_json::nlohmann_json
         messages
         filesystem
         collection
-        jwt-cpp
+        cpp-jwt
         )
 
 target_include_directories(${EXECUTABLE_NAME} PRIVATE ${GMOCK_INCLUDE_DIR} ${DOTENV_INCLUDE_DIR} ..)
@@ -50,11 +60,11 @@ target_link_libraries(${EXECUTABLE_NAME}UT PRIVATE
         Qt6::Core
         TinyOrm::TinyOrm
         loguru::loguru
-        nlohmann_json
+        nlohmann_json::nlohmann_json
         messages
         filesystem
         collection
-        jwt-cpp
+        cpp-jwt
         )
 
 target_include_directories(${EXECUTABLE_NAME}UT PUBLIC ${GMOCK_INCLUDE_DIR})
@@ -69,11 +79,11 @@ target_link_libraries(${EXECUTABLE_NAME}IT PRIVATE
         Qt6::Core
         TinyOrm::TinyOrm
         loguru::loguru
-        nlohmann_json
+        nlohmann_json::nlohmann_json
         messages
         filesystem
         collection
-        jwt-cpp
+        cpp-jwt
         )
 
 target_include_directories(${EXECUTABLE_NAME}IT PUBLIC ${GMOCK_INCLUDE_DIR})

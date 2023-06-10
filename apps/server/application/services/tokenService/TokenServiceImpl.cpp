@@ -1,16 +1,32 @@
 #include "TokenServiceImpl.h"
 
-#include <jwt-cpp/jwt.h>
+#include <chrono>
+
+#include "jwt/jwt.hpp"
 
 namespace server::application
 {
-
-std::string TokenServiceImpl::createToken(const std::map<std::string, std::string>& data) const
+TokenServiceImpl::TokenServiceImpl(std::string jwtSecretInit, unsigned jwtExpiresInInit)
+    : jwtSecret{std::move(jwtSecretInit)}, jwtExpiresIn{jwtExpiresInInit}
 {
-    return jwt::create()
-        .set_issuer("auth0")
-        .set_type("JWS")
-        .set_payload_claim("sample", jwt::claim(std::string("test")))
-        .sign(jwt::algorithm::hs256{"secret"});
 }
+
+std::string TokenServiceImpl::createToken(unsigned int userId) const
+{
+    jwt::jwt_object jwtObject{jwt::params::algorithm("HS256"), jwt::params::secret(jwtSecret)};
+
+    jwtObject.add_claim("userId", userId)
+        .add_claim("exp", std::chrono::system_clock::now() + std::chrono::seconds{jwtExpiresIn});
+
+    return jwtObject.signature();
+}
+
+unsigned TokenServiceImpl::getUserIdFromToken(const std::string& token) const
+{
+    auto decoded = jwt::decode(token, jwt::params::algorithms({"HS256"}), jwt::params::secret(jwtSecret),
+                               jwt::params::verify(true));
+
+    return decoded.payload().get_claim_value<unsigned>("userId");
+}
+
 }

@@ -36,6 +36,6 @@ void SessionImpl::handleMessage(const common::messages::Message& message)
 
     auto response = messageHandler->handleMessage(message);
 
-    messageSender->sendMessage(message);
+    messageSender->sendMessage(response);
 }
 }

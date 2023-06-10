@@ -2,6 +2,8 @@
 
 #include <boost/asio.hpp>
 
+#include "messages/Message.h"
+
 namespace server::api
 {
 class Session

@@ -4,37 +4,19 @@
 
 namespace server::api
 {
-SessionManager::SessionManager(boost::asio::io_context& contextInit, int port,
-                               std::unique_ptr<SessionFactory> sessionFactoryInit)
-    : context{contextInit},
-      acceptor{context, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), static_cast<unsigned short>(port))},
-      sessionFactory{std::move(sessionFactoryInit)}
+SessionManager::SessionManager(std::unique_ptr<ConnectionAcceptor> connectionAcceptorInit)
+    : connectionAcceptor{std::move(connectionAcceptorInit)}
 {
 }
 
 void SessionManager::startAcceptingConnections()
 {
-    LOG_S(INFO) << "Listening for new connection on port: " << acceptor.local_endpoint().port();
-
-    auto [socket, session] = sessionFactory->create();
-
-    acceptor.async_accept(*socket, [this, session = std::move(session)](const boost::system::error_code& error)
-                          { handleConnection(session, error); });
+    connectionAcceptor->startAcceptingConnections([this](const std::shared_ptr<Session>& session)
+                                                  { handleConnection(session); });
 }
 
-void SessionManager::handleConnection(const std::shared_ptr<Session>& session, const boost::system::error_code& error)
+void SessionManager::handleConnection(const std::shared_ptr<Session>& session)
 {
-    if (!error)
-    {
-        session->startSession();
-
-        sessions.push_back(session);
-    }
-    else
-    {
-        LOG_S(ERROR) << "Error: " << error.message();
-    }
-
-    startAcceptingConnections();
+    sessions.push_back(session);
 }
 }

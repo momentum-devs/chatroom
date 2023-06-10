@@ -10,7 +10,7 @@ using namespace common::filesystem;
 
 namespace
 {
-const std::string validPathEnd{"chatroom/"};
+const std::string validPathEnd{"chatroom"};
 
 const std::string validProjectName{"chatroom"};
 const std::string invalidProjectName{"nasjxanxjqq"};

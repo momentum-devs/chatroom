@@ -9,7 +9,10 @@
 #include "api/SocketConnectorImpl.h"
 #include "common/filesystem/GetProjectPath.h"
 #include "config/ConfigProvider.h"
-#include "gui/controllers/MainController.h"
+#include "gui/qml/LoaderController.h"
+#include "gui/states/register/RegisterController.h"
+#include "gui/states/StateFactory.h"
+#include "gui/states/StateMachine.h"
 #include "laserpants/dotenv/dotenv.h"
 #include "loguru.hpp"
 #include "messages/MessageReaderImpl.h"
@@ -18,7 +21,7 @@
 
 int main(int argc, char* argv[])
 {
-    auto dotEnvPath = common::filesystem::getProjectPath("chatroom") + "apps/client/.env";
+    auto dotEnvPath = common::filesystem::getProjectPath("chatroom") + "/apps/client/.env";
 
     dotenv::init(dotEnvPath.c_str());
 
@@ -51,18 +54,13 @@ int main(int argc, char* argv[])
 
     QGuiApplication app(argc, argv);
 
-    QQuickView view;
+    auto loaderController = std::make_shared<client::gui::LoaderController>();
 
-    client::gui::MainController mainController{session};
+    auto stateMachine = std::make_shared<client::gui::StateMachine>();
 
-    QObject::connect(&mainController, &client::gui::MainController::registerRequest, &mainController,
-                     &client::gui::MainController::handleRegisterRequest);
+    auto stateFactory = std::make_shared<client::gui::StateFactory>(session, stateMachine, loaderController);
 
-    view.engine()->rootContext()->setContextProperty("mainController", &mainController);
-
-    view.setSource(QUrl::fromLocalFile("chatroom/gui/views/MainView.qml"));
-
-    view.show();
+    stateMachine->addNextState(stateFactory->createDefaultState());
 
     std::thread api{[&] { context.run(); }};
 

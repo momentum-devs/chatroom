@@ -2,8 +2,6 @@
 
 #include "gtest/gtest.h"
 
-#include "server/application/commandHandlers/createUserCommandHandler/CreateUserCommandHandler.h"
-#include "server/application/commandHandlers/createUserCommandHandler/CreateUserCommandHandlerImpl.h"
 #include "server/infrastructure/database/management/DatabaseManagerFactory.h"
 #include "server/infrastructure/errors/UserRepositoryError.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
@@ -24,13 +22,18 @@ const std::string databasePassword = "local";
 class UserRepositoryIntegrationTest : public Test
 {
 public:
-    UserRepositoryIntegrationTest()
+    static void SetUpTestSuite()
     {
         server::infrastructure::DatabaseManagerFactory::create(
             {databaseHost, databaseName, databaseUsername, databasePassword});
     }
 
     void SetUp() override
+    {
+        Orm::DB::table("users")->truncate();
+    }
+
+    void TearDown() override
     {
         Orm::DB::table("users")->truncate();
     }

@@ -12,4 +12,10 @@ std::string HashServiceImpl::hash(const std::string& data) const
 
     return static_cast<std::string>(dataHash);
 }
+
+bool HashServiceImpl::compare(const std::string& plainData, const std::string& hashedData) const
+{
+    return hash(plainData) == hashedData;
+}
+
 }

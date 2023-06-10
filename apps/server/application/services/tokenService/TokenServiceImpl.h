@@ -7,6 +7,13 @@ namespace server::application
 class TokenServiceImpl : public TokenService
 {
 public:
-    std::string createToken(const std::map<std::string, std::string>& data) const override;
+    explicit TokenServiceImpl(std::string jwtSecret, unsigned jwtExpiresIn);
+
+    std::string createToken(unsigned userId) const override;
+    unsigned getUserIdFromToken(const std::string& token) const override;
+
+private:
+    std::string jwtSecret;
+    unsigned jwtExpiresIn;
 };
 }
