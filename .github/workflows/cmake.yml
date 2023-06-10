@@ -20,7 +20,7 @@ jobs:
         submodules: recursive
     
     - name: Install apt-get dependencies
-      run: sudo apt-get update && sudo apt-get install -y build-essential librange-v3-dev lld clang-15 qt6-base-dev libqt6sql6-psql libqt6qml6 qt6-declarative-dev qt6-tools-dev qml6-module-qtquick-controls qml6-module-qtqml-workerscript qml6-module-qtquick-templates
+      run: sudo apt-get update && sudo apt-get install -y build-essential libboost-all-dev librange-v3-dev lld clang-15 qt6-base-dev libqt6sql6-psql libqt6qml6 qt6-declarative-dev qt6-tools-dev qml6-module-qtquick-controls qml6-module-qtqml-workerscript qml6-module-qtquick-templates
 
     - name: Install external CMake package
       run: cd externals && ./install_externals.sh
@@ -28,7 +28,7 @@ jobs:
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_CXX_COMPILER=/usr/bin/clang++-15
 
     - name: Build
       # Build your program with the given configuration
