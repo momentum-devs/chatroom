@@ -19,16 +19,32 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Cache apt
+        id: cache-apt
+        uses: actions/cache@v3
+        with:
+          path: README.md
+          key: ${{ runner.os }}-apt
+
       - name: Install apt-get dependencies
+        if: steps.cache-apt.outputs.cache-hit != 'true'
         run: |
           sudo add-apt-repository ppa:mhier/libboost-latest -y \
             && sudo apt-get update -y \
-            && sudo apt-get install -y build-essential clang-15 libc++-15-dev libc++abi-15-dev lld ninja \
+            && sudo apt-get install -y build-essential clang-15 libc++-15-dev libc++abi-15-dev lld ninja-build \
               libboost1.82-dev libgl1-mesa-dev libglx-dev librange-v3-dev \
               qt6-base-dev libqt6sql6-psql libqt6qml6 qt6-declarative-dev qt6-tools-dev qt6-tools-dev-tools qt6-l10n-tools \
               qml6-module-qtquick-controls qml6-module-qtqml-workerscript qml6-module-qtquick-templates
 
+      - name: Cache externals
+        id: cache-external
+        uses: actions/cache@v3
+        with:
+          path: README.md
+          key: ${{ runner.os }}-external
+
       - name: Install external CMake package
+        if: steps.cache-external.outputs.cache-hit != 'true'
         run: cd externals && ./install_externals.sh
         env:
           BUILD_TYPE: ${{env.BUILD_TYPE}}
