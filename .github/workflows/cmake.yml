@@ -32,11 +32,11 @@ jobs:
         if: steps.cache-apt.outputs.cache-hit != 'true'
         run: |
           sudo add-apt-repository ppa:mhier/libboost-latest -y \
-            && sudo add-apt-repository ppa:trebelnik-stefina/launchpad-getkeys
+            && sudo add-apt-repository ppa:trebelnik-stefina/launchpad-getkeys \
             && sudo apt-get update \
             && sudo apt-get install launchpad-getkeys \
-            && sudo add-apt-repository 'deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-16 main'
-            && sudo launchpad-getkeys
+            && sudo add-apt-repository 'deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-16 main' \
+            && sudo launchpad-getkeys \
             && sudo apt-get update -y \
             && sudo apt-get install -y build-essential clang-16 libc++-16-dev libc++abi-16-dev lld ninja-build \
               libboost1.82-dev libgl1-mesa-dev libglx-dev librange-v3-dev \
