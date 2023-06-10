@@ -55,7 +55,6 @@ target_link_libraries(${EXECUTABLE_NAME}UT PUBLIC
         loguru::loguru
         nlohmann_json
         messages
-        environment
         filesystem
         collection)
 

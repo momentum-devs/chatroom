@@ -50,7 +50,7 @@ common::messages::Message MessageHandlerImpl::handleRegisterMessage(const common
 
     if (not std::regex_match(email, emailRegex))
     {
-        nlohmann::json responsePayload{"error", "wrong email address"};
+        nlohmann::json responsePayload{{"error", "wrong email address"}};
 
         return {common::messages::MessageId::RegisterResponse, nullToken, common::bytes::Bytes{responsePayload.dump()}};
     }
@@ -63,14 +63,11 @@ common::messages::Message MessageHandlerImpl::handleRegisterMessage(const common
     }
     catch (const std::exception& e)
     {
-        nlohmann::json responsePayload{"error", e.what()};
+        nlohmann::json responsePayload{{"error", e.what()}};
 
         return {common::messages::MessageId::RegisterResponse, nullToken, common::bytes::Bytes{responsePayload.dump()}};
     }
 
-    nlohmann::json responsePayload{"ok"};
-
-    return {common::messages::MessageId::RegisterResponse, getToken(),
-            common::bytes::Bytes{responsePayload.get<std::string>()}};
+    return {common::messages::MessageId::RegisterResponse, getToken(), common::bytes::Bytes{R"({"ok"})"}};
 }
 }

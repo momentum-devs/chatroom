@@ -1,24 +1,29 @@
 set(EXECUTABLE_NAME server)
 
 set(SOURCES
-        config/EnvironmentParser.cpp
-        config/ConfigProvider.cpp
         api/SessionManager.cpp
         api/SessionImpl.cpp
         api/SessionFactoryImpl.cpp
         api/MessageHandlerImpl.cpp
-        infrastructure/database/management/DatabaseManagerFactory.cpp
-        infrastructure/repositories/userRepository/UserRepositoryImpl.cpp
-        infrastructure/repositories/userRepository/userMapper/UserMapperImpl.cpp
-        domain/entities/User.cpp
+        api/ConnectionAcceptorImpl.cpp
         application/commandHandlers/registerUserCommandHandler/RegisterUserCommandHandlerImpl.cpp
         application/commandHandlers/deleteUserCommandHandler/DeleteUserCommandHandlerImpl.cpp
         application/services/hashService/HashServiceImpl.cpp
         application/services/tokenService/TokenServiceImpl.cpp
+        config/EnvironmentParser.cpp
+        config/ConfigProvider.cpp
+        domain/entities/User.cpp
+        infrastructure/database/management/DatabaseManagerFactory.cpp
+        infrastructure/repositories/userRepository/UserRepositoryImpl.cpp
+        infrastructure/repositories/userRepository/userMapper/UserMapperImpl.cpp
+        domain/entities/User.cpp
         )
 
 set(UT_SOURCES
+        api/MessageHandlerImplTest.cpp
+        api/SessionImplTest.cpp
         infrastructure/repositories/userRepository/userMapper/UserMapperImplTest.cpp
+        api/SessionManagerTest.cpp
         )
 
 set(IT_SOURCES
@@ -51,10 +56,10 @@ target_link_libraries(${EXECUTABLE_NAME}UT PRIVATE
         TinyOrm::TinyOrm
         loguru::loguru
         nlohmann_json
+        jwt-cpp
         messages
         filesystem
         collection
-        jwt-cpp
         )
 
 target_include_directories(${EXECUTABLE_NAME}UT PUBLIC ${GMOCK_INCLUDE_DIR})
@@ -70,10 +75,10 @@ target_link_libraries(${EXECUTABLE_NAME}IT PRIVATE
         TinyOrm::TinyOrm
         loguru::loguru
         nlohmann_json
+        jwt-cpp
         messages
         filesystem
         collection
-        jwt-cpp
         )
 
 target_include_directories(${EXECUTABLE_NAME}IT PUBLIC ${GMOCK_INCLUDE_DIR})
