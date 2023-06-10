@@ -24,6 +24,8 @@ jobs:
 
       - name: Install external CMake package
         run: cd externals && ./install_externals.sh
+        env:
+          BUILD_TYPE: ${{env.BUILD_TYPE}}
 
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
