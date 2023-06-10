@@ -19,11 +19,16 @@ get_filename_component(PARENT_DIR ../ ABSOLUTE)
 
 target_include_directories(${LIBRARY_NAME} PUBLIC ${PARENT_DIR})
 
-target_link_libraries(${LIBRARY_NAME} PUBLIC collection)
+target_link_libraries(${LIBRARY_NAME} PUBLIC
+        collection
+        )
 
 add_executable(${LIBRARY_NAME}UT ${SOURCES} ${UT_SOURCES})
 
-target_link_libraries(${LIBRARY_NAME}UT PRIVATE gtest_main collection)
+target_link_libraries(${LIBRARY_NAME}UT PRIVATE
+        gtest_main
+        collection
+        )
 
 target_include_directories(${LIBRARY_NAME}UT
         PRIVATE
