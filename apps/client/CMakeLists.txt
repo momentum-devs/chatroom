@@ -12,14 +12,20 @@ set(SOURCES
         gui/states/register/RegisterController.cpp
         gui/states/StateMachine.cpp
         gui/states/register/RegisterState.cpp
-        gui/states/StateFactory.cpp)
+        gui/states/StateFactory.cpp
+        gui/states/login/LoginState.cpp
+        gui/states/login/LoginController.cpp
+        gui/qml/LoaderController.cpp)
 
 set(UT_SOURCES
         api/SessionImplTest.cpp
+        gui/states/StateMachineTest.cpp
         )
 
 set(QML
+        gui/qml/MainView.qml
         gui/states/register/RegisterView.qml
+        gui/states/login/LoginView.qml
         )
 
 qt_add_executable(${EXECUTABLE_NAME} Main.cpp ${SOURCES})
@@ -45,7 +51,7 @@ target_link_libraries(${EXECUTABLE_NAME} PUBLIC
 
 target_include_directories(${EXECUTABLE_NAME} PUBLIC ${GMOCK_INCLUDE_DIR} ${DOTENV_INCLUDE_DIR})
 
-add_executable(${EXECUTABLE_NAME}UT ${UT_SOURCES} ${SOURCES} gui/states/StateMachineTest.cpp)
+add_executable(${EXECUTABLE_NAME}UT ${UT_SOURCES} ${SOURCES})
 
 target_link_libraries(${EXECUTABLE_NAME}UT PUBLIC
         gtest

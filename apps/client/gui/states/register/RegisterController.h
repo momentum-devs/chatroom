@@ -19,9 +19,11 @@ public:
                        std::shared_ptr<StateMachine> stateMachine);
 
     Q_INVOKABLE void handleRegisterRequest(const QString& email, const QString& password);
+    Q_INVOKABLE void handleGoBack();
 
 signals:
     void registerRequest(const QString& email, const QString& password);
+    void goBack();
 
 private:
     std::shared_ptr<api::Session> session;

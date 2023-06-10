@@ -9,6 +9,7 @@
 #include "api/SocketConnectorImpl.h"
 #include "common/filesystem/GetProjectPath.h"
 #include "config/ConfigProvider.h"
+#include "gui/qml/LoaderController.h"
 #include "gui/states/register/RegisterController.h"
 #include "gui/states/StateFactory.h"
 #include "gui/states/StateMachine.h"
@@ -53,11 +54,11 @@ int main(int argc, char* argv[])
 
     QGuiApplication app(argc, argv);
 
-    auto view = std::make_shared<QQuickView>();
+    auto loaderController = std::make_shared<client::gui::LoaderController>();
 
     auto stateMachine = std::make_shared<client::gui::StateMachine>();
 
-    auto stateFactory = std::make_shared<client::gui::StateFactory>(session, stateMachine, view);
+    auto stateFactory = std::make_shared<client::gui::StateFactory>(session, stateMachine, loaderController);
 
     stateMachine->addNextState(stateFactory->createDefaultState());
 

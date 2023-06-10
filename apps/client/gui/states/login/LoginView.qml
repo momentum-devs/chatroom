@@ -18,23 +18,17 @@ Rectangle {
             echoMode: TextInput.Password
             placeholderText: qsTr('Password')
         }
-        TextField {
-            id: passwordRepeatField
-            echoMode: TextInput.Password
-            placeholderText: qsTr('Repeat password')
-        }
         Row {
             anchors.horizontalCenter: passwordField.horizontalCenter
 
             Button {
-                text: qsTr('Register')
+                text: qsTr('Login')
 
                 onClicked: {
                     const email = usernameField.text;
                     const password = passwordField.text;
-                    const passwordRepeat = passwordRepeatField.text;
-                    if (password === passwordRepeat && email.length !== 0 && password.length !== 0) {
-                        registerController.registerRequest(email, password);
+                    if (email.length !== 0 && password.length !== 0) {
+                        loginController.loginRequest(email, password);
                         successPopup.open();
                     } else {
                         errorPopup.open();
@@ -42,10 +36,10 @@ Rectangle {
                 }
             }
             Button {
-                text: qsTr('Go back')
+                text: qsTr('Go to register')
 
                 onClicked: {
-                    registerController.goBack();
+                    loginController.goToRegisterState();
                 }
             }
         }
@@ -61,7 +55,7 @@ Rectangle {
             color: "green"
             font.pixelSize: 16
             horizontalAlignment: Text.AlignHCenter
-            text: qsTr('Successfully register')
+            text: qsTr('Successfully login')
             verticalAlignment: Text.AlignVCenter
         }
     }
@@ -76,9 +70,8 @@ Rectangle {
             color: "red"
             font.pixelSize: 16
             horizontalAlignment: Text.AlignHCenter
-            text: qsTr('Register error!')
+            text: qsTr('Login error!')
             verticalAlignment: Text.AlignVCenter
         }
     }
 }
-

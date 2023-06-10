@@ -3,29 +3,37 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 
+#include "loguru.hpp"
+
 namespace client::gui
 {
 RegisterState::RegisterState(std::unique_ptr<RegisterController> registerControllerInit,
-                             std::shared_ptr<QQuickView> viewInit)
-    : registerController{std::move(registerControllerInit)}, view{std::move(viewInit)}
+                             std::shared_ptr<LoaderController> loaderControllerInit)
+    : registerController{std::move(registerControllerInit)}, loaderController{std::move(loaderControllerInit)}
 {
 }
 
 void RegisterState::activate()
 {
+    LOG_S(INFO) << "Load RegisterState";
+
     QObject::connect(registerController.get(), &RegisterController::registerRequest, registerController.get(),
                      &RegisterController::handleRegisterRequest);
 
-    view->engine()->rootContext()->setContextProperty(componentName, registerController.get());
+    QObject::connect(registerController.get(), &RegisterController::goBack, registerController.get(),
+                     &RegisterController::handleGoBack);
 
-    view->setSource(qUrl);
+    loaderController->getEngine()->rootContext()->setContextProperty(componentName, registerController.get());
 
-    view->show();
+    loaderController->callLoadView(qUrl);
 }
 
 void RegisterState::deactivate()
 {
     QObject::disconnect(registerController.get(), &RegisterController::registerRequest, registerController.get(),
                         &RegisterController::handleRegisterRequest);
+
+    QObject::disconnect(registerController.get(), &RegisterController::goBack, registerController.get(),
+                        &RegisterController::handleGoBack);
 }
 }

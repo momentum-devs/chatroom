@@ -1,8 +1,7 @@
 #pragma once
 
-#include <QQuickView>
-
 #include "client/api/Session.h"
+#include "client/gui/qml/LoaderController.h"
 #include "State.h"
 #include "StateMachine.h"
 
@@ -12,13 +11,14 @@ class StateFactory
 {
 public:
     StateFactory(std::shared_ptr<client::api::Session> session, std::shared_ptr<StateMachine> stateMachine,
-                 std::shared_ptr<QQuickView> view);
+                 std::shared_ptr<LoaderController> view);
     std::shared_ptr<State> createDefaultState() const;
     std::shared_ptr<State> createRegisterState() const;
+    std::shared_ptr<State> createLoginState() const;
 
 private:
     std::shared_ptr<client::api::Session> session;
     std::shared_ptr<StateMachine> stateMachine;
-    std::shared_ptr<QQuickView> view;
+    std::shared_ptr<LoaderController> loaderController;
 };
 }
