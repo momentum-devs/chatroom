@@ -1,6 +1,6 @@
 # chatroom
 
-![example workflow](https://github.com/momentum-devs/chatroom/actions/workflows/cmake.yml/badge.svg)
+[![build and test](https://github.com/momentum-devs/chatroom/actions/workflows/cmake.yml/badge.svg?branch=main)](https://github.com/momentum-devs/chatroom/actions/workflows/cmake.yml?query=branch%3Amain)
 
 ### Setup local development:
 

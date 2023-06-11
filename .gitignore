@@ -37,7 +37,7 @@
 **/.idea
 **/dist
 .vscode
-cmake-build-debug
+cmake-build-*
 .idea
 **.zip
 .env
