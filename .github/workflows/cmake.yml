@@ -15,17 +15,7 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Cache apt
-        id: cache-apt
-        uses: actions/cache@v3
-        with:
-          path: |
-            README.md
-            .github/workflows/cmake.yml
-          key: ${{ runner.os }}-apt
-
       - name: Install apt-get dependencies
-        if: steps.cache-apt.outputs.cache-hit != 'true'
         run: |
           sudo add-apt-repository ppa:mhier/libboost-latest -y \
             && sudo add-apt-repository ppa:trebelnik-stefina/launchpad-getkeys \
@@ -40,15 +30,7 @@ jobs:
               qt6-base-dev libqt6sql6-psql libqt6qml6 qt6-declarative-dev qt6-tools-dev qt6-tools-dev-tools qt6-l10n-tools \
               qml6-module-qtquick-controls qml6-module-qtqml-workerscript qml6-module-qtquick-templates
 
-      - name: Cache externals
-        id: cache-external
-        uses: actions/cache@v3
-        with:
-          path: externals/
-          key: ${{ runner.os }}-external
-
       - name: Install external CMake package
-        if: steps.cache-external.outputs.cache-hit != 'true'
         run: cd externals && ./install_externals.sh
         env:
           BUILD_TYPE: ${{env.BUILD_TYPE}}
@@ -59,6 +41,7 @@ jobs:
             -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
             -DCMAKE_CXX_COMPILER=/usr/bin/clang++-16 \
             -DINTEGRATION_TESTS_BUILD=OFF \
+            -DENABLE_COVERAGE=ON \
             -GNinja
 
       - name: Build
@@ -66,4 +49,11 @@ jobs:
 
       - name: Test
         working-directory: ${{github.workspace}}/build
-        run: ctest -C ${{env.BUILD_TYPE}} -V
+        run: ctest -C ${{env.BUILD_TYPE}} -V && find . -name "*.gcd?"
+
+      - name: Codecov
+        uses: codecov/codecov-action@v3.1.4
+        with:
+          token: ${{ secrets.CODECOVTOKEN }}
+          directory: ${{github.workspace}}/build/apps
+
