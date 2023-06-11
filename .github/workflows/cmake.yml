@@ -55,5 +55,6 @@ jobs:
         uses: codecov/codecov-action@v3.1.4
         with:
           token: ${{ secrets.CODECOVTOKEN }}
-          directory: ${{github.workspace}}/build/apps
+          directory: ${{github.workspace}}/build
           gcov: true
+          gcov_include: ${{github.workspace}}/apps ${{github.workspace}}/build/apps ${{github.workspace}}/apps/* ${{github.workspace}}/build/apps/*
