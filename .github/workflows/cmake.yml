@@ -38,7 +38,7 @@ jobs:
             && sudo add-apt-repository 'deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-16 main' \
             && sudo launchpad-getkeys \
             && sudo apt-get update -y \
-            && sudo apt-get install -y build-essential clang-16 libc++-16-dev libc++abi-16-dev lld ninja-build \
+            && sudo apt-get install -y build-essential clang-16 clang-tools-16 libc++-16-dev libc++abi-16-dev libclang-16-dev lld-16 lldb-16 ninja-build \
               libboost1.82-dev libgl1-mesa-dev libglx-dev librange-v3-dev \
               qt6-base-dev libqt6sql6-psql libqt6qml6 qt6-declarative-dev qt6-tools-dev qt6-tools-dev-tools qt6-l10n-tools \
               qml6-module-qtquick-controls qml6-module-qtqml-workerscript qml6-module-qtquick-templates
@@ -63,7 +63,6 @@ jobs:
           cmake -B ${{github.workspace}}/build \
             -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
             -DCMAKE_CXX_COMPILER=/usr/bin/clang++-16 \
-            -DCMAKE_CXX_FLAGS="-std=c++20" \
             -GNinja
 
       - name: Build
