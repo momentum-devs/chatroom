@@ -67,7 +67,7 @@ jobs:
             -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
             -DCMAKE_CXX_COMPILER=/usr/bin/clang++-16 \
             -DCMAKE_CC_COMPILER=/usr/bin/clang-16 \
-            -DCMAKE_CXX_FLAGS="-nostdlib++ -isystem /usr/lib/llvm-16/include/c++/v1" \
+            -DCMAKE_CXX_FLAGS="-stdlib=libc++ -fc++-abi=libc++-abi" \
             -GNinja
 
       - name: Build
