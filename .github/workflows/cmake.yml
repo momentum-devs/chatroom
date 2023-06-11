@@ -38,7 +38,7 @@ jobs:
             && sudo add-apt-repository 'deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-16 main' \
             && sudo launchpad-getkeys \
             && sudo apt-get update -y \
-            && sudo apt-get install -y build-essential libc++-16-dev libc++abi-16-dev lld-16 lldb-16 ninja-build \
+            && sudo apt-get install -y libc++-16-dev libc++abi-16-dev lld-16 lldb-16 cmake ninja-build \
               clang-16 clang-tools-16 clang-16-doc libclang-common-16-dev libclang-16-dev libclang1-16 clang-format-16 \
               libllvm-16-ocaml-dev libllvm16 llvm-16 llvm-16-dev llvm-16-doc llvm-16-examples llvm-16-runtime \
               libboost1.82-dev libgl1-mesa-dev libglx-dev librange-v3-dev \
@@ -69,7 +69,7 @@ jobs:
 
       - name: Build
         # Build your program with the given configuration
-        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} -DCMAKE_CXX_FLAGS=-stdlib=libc++
 
       - name: Test
         working-directory: ${{github.workspace}}/build
