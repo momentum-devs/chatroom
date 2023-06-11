@@ -33,7 +33,7 @@ cd TinyORM || exit
 sudo rm -rf build
 mkdir build
 cd build || exit
-eval cmake .. -DTOM=ON $COMMON_CMAKE_FLAGS
+eval cmake .. -DTOM:BOOL=ON -D BUILD_TESTS:BOOL=OFF $COMMON_CMAKE_FLAGS
 ninja
 sudo ninja install
 cd ../..
