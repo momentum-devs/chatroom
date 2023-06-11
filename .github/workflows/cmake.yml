@@ -65,6 +65,8 @@ jobs:
           cmake -B ${{github.workspace}}/build \
             -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
             -DCMAKE_CXX_COMPILER=/usr/bin/clang++-16 \
+            -DCMAKE_CC_COMPILER=/usr/bin/clang-16 \
+            -DCMAKE_CXX_FLAGS=-stdlib=libc++ \
             -GNinja
 
       - name: Build
