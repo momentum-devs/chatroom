@@ -43,7 +43,10 @@ jobs:
               libllvm-16-ocaml-dev libllvm16 llvm-16 llvm-16-dev llvm-16-doc llvm-16-examples llvm-16-runtime \
               libboost1.82-dev libgl1-mesa-dev libglx-dev librange-v3-dev \
               qt6-base-dev libqt6sql6-psql libqt6qml6 qt6-declarative-dev qt6-tools-dev qt6-tools-dev-tools qt6-l10n-tools \
-              qml6-module-qtquick-controls qml6-module-qtqml-workerscript qml6-module-qtquick-templates
+              qml6-module-qtquick-controls qml6-module-qtqml-workerscript qml6-module-qtquick-templates \
+            && ls /usr/include/c++/13 \
+            && ls /usr/include/c++ \
+            && ls /usr/include \
 
       - name: Cache externals
         id: cache-external
@@ -66,7 +69,7 @@ jobs:
             -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
             -DCMAKE_CXX_COMPILER=/usr/bin/clang++-16 \
             -DCMAKE_CC_COMPILER=/usr/bin/clang-16 \
-            -DCMAKE_CXX_FLAGS="-isystem /usr/include/c++/13" \
+            -DCMAKE_CXX_FLAGS="-nostdlib++ -isystem /usr/include/c++/13" \
             -GNinja
 
       - name: Build
