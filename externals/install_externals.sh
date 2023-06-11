@@ -5,7 +5,7 @@ rm build
 mkdir build
 cd build || exit
 cmake .. -DCMAKE_BUILD_TYPE:STRING=$BUILD_TYPE -DCMAKE_CXX_COMPILER=/usr/bin/clang++-16 -GNinja
-ninja -j 20
+ninja
 sudo ninja install
 cd ../..
 
@@ -14,7 +14,7 @@ rm build
 mkdir build
 cd build || exit
 cmake .. -DCMAKE_BUILD_TYPE:STRING=$BUILD_TYPE -DCMAKE_CXX_COMPILER=/usr/bin/clang++-16 -GNinja
-ninja -j 20
+ninja
 sudo ninja install
 cd ../..
 
@@ -23,7 +23,7 @@ rm build
 mkdir build
 cd build || exit
 cmake .. -DUSE_CPP17=ON -DCMAKE_BUILD_TYPE:STRING=$BUILD_TYPE -DCMAKE_CXX_COMPILER=/usr/bin/clang++-16 -GNinja
-ninja -j 20
+ninja
 sudo ninja install
 cd ../..
 
@@ -33,5 +33,5 @@ rm build
 mkdir build
 cd build || exit
 cmake .. -DTOM=ON -DCMAKE_BUILD_TYPE:STRING=$BUILD_TYPE -DCMAKE_CXX_COMPILER=/usr/bin/clang++-16 -GNinja
-ninja -j 20
+ninja
 sudo ninja install
