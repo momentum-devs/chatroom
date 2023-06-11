@@ -56,4 +56,4 @@ jobs:
         with:
           token: ${{ secrets.CODECOVTOKEN }}
           directory: ${{github.workspace}}/build/apps
-
+          gcov: true
