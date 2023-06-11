@@ -22,7 +22,7 @@ set(DOTENV_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/externals/dotenv-cpp/include")
 set(TOM_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/externals/TinyORM/tom/include")
 
 enable_testing()
-option(ENABLE_COVERAGE "Enable coverage reporting for gcc/clang" FALSE)
+option(ENABLE_COVERAGE "Enable coverage reporting for gcc/clang" OFF)
 if (${ENABLE_COVERAGE})
     add_compile_options(--coverage -O0)
     link_libraries(--coverage)
