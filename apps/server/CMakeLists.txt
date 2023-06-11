@@ -71,21 +71,23 @@ target_include_directories(${EXECUTABLE_NAME}UT PUBLIC ${GMOCK_INCLUDE_DIR})
 
 add_test(NAME ${EXECUTABLE_NAME}UT COMMAND ${EXECUTABLE_NAME}UT WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
-add_executable(${EXECUTABLE_NAME}IT ${IT_SOURCES} ${SOURCES})
+if (INTEGRATION_TESTS_BUILD)
+    add_executable(${EXECUTABLE_NAME}IT ${IT_SOURCES} ${SOURCES})
 
-target_link_libraries(${EXECUTABLE_NAME}IT PRIVATE
-        gtest
-        gmock_main
-        Qt6::Core
-        TinyOrm::TinyOrm
-        loguru::loguru
-        nlohmann_json::nlohmann_json
-        cpp-jwt::cpp-jwt
-        messages
-        filesystem
-        collection
-        )
+    target_link_libraries(${EXECUTABLE_NAME}IT PRIVATE
+            gtest
+            gmock_main
+            Qt6::Core
+            TinyOrm::TinyOrm
+            loguru::loguru
+            nlohmann_json::nlohmann_json
+            cpp-jwt::cpp-jwt
+            messages
+            filesystem
+            collection
+            )
 
-target_include_directories(${EXECUTABLE_NAME}IT PUBLIC ${GMOCK_INCLUDE_DIR})
+    target_include_directories(${EXECUTABLE_NAME}IT PUBLIC ${GMOCK_INCLUDE_DIR})
 
-add_test(NAME ${EXECUTABLE_NAME}IT COMMAND ${EXECUTABLE_NAME}IT WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+    add_test(NAME ${EXECUTABLE_NAME}IT COMMAND ${EXECUTABLE_NAME}IT WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+endif ()

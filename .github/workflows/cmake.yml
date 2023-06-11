@@ -65,10 +65,8 @@ jobs:
           cmake -B ${{github.workspace}}/build \
             -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
             -DCMAKE_CXX_COMPILER=/usr/bin/clang++-16 \
+            -DINTEGRATION_TESTS_BUILD=OFF \
             -GNinja
-          #            -DCMAKE_C_COMPILER=/usr/bin/clang-16 \
-          #            -DCMAKE_CXX_FLAGS="-std=c++20  -stdlib=libc++ -fexperimental-library" \
-          #            -DCMAKE_EXE_LINKER_FLAGS="-std=c++20 -stdlib=libc++ -lc++ -lc++abi"\
 
       - name: Build
         # Build your program with the given configuration
