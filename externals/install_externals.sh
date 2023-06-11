@@ -30,6 +30,7 @@ sudo ninja install
 cd ../..
 
 cd TinyORM || exit
+sed -i '17,21{H;d};22{g;s/.*/#include <variant>\n/}' include/orm/ormconcepts.hpp
 sudo rm -rf build
 mkdir build
 cd build || exit
