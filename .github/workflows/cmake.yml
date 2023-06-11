@@ -15,17 +15,7 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Cache apt
-        id: cache-apt
-        uses: actions/cache@v3
-        with:
-          path: |
-            README.md
-            .github/workflows/cmake.yml
-          key: ${{ runner.os }}-apt
-
       - name: Install apt-get dependencies
-        if: steps.cache-apt.outputs.cache-hit != 'true'
         run: |
           sudo add-apt-repository ppa:mhier/libboost-latest -y \
             && sudo add-apt-repository ppa:trebelnik-stefina/launchpad-getkeys \
