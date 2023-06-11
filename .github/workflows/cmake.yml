@@ -1,4 +1,4 @@
-name: CMake
+name: Build + Unit Tests
 
 on: push
 
@@ -53,21 +53,17 @@ jobs:
         env:
           BUILD_TYPE: ${{env.BUILD_TYPE}}
 
-      - name: Install apt-get dependencies
-        if: steps.cache-apt.outputs.cache-hit != 'true'
+      - name: Configure CMake
         run: |
-          ls && ls chatroom
-#      - name: Configure CMake
-#        run: |
-#          cmake -B ${{github.workspace}}/build \
-#            -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
-#            -DCMAKE_CXX_COMPILER=/usr/bin/clang++-16 \
-#            -DINTEGRATION_TESTS_BUILD=OFF \
-#            -GNinja
-#
-#      - name: Build
-#        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
-#
-#      - name: Test
-#        working-directory: ${{github.workspace}}/build
-#        run: ctest -C ${{env.BUILD_TYPE}} -V
+          cmake -B ${{github.workspace}}/build \
+            -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
+            -DCMAKE_CXX_COMPILER=/usr/bin/clang++-16 \
+            -DINTEGRATION_TESTS_BUILD=OFF \
+            -GNinja
+
+      - name: Build
+        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+      - name: Test
+        working-directory: ${{github.workspace}}/build
+        run: ctest -C ${{env.BUILD_TYPE}} -V
