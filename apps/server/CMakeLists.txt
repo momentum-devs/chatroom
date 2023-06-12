@@ -18,6 +18,8 @@ set(SOURCES
         infrastructure/repositories/userRepository/userMapper/UserMapperImpl.cpp
         domain/entities/User.cpp
         application/commandHandlers/loginUserCommandHandler/LoginUserCommandHandlerImpl.cpp
+        core/database/driver.cpp
+        core/database/database.h
         )
 
 set(UT_SOURCES
@@ -35,7 +37,17 @@ set(IT_SOURCES
         application/commandHandlers/loginUserCommandHandler/LoginUserCommandHandlerImplIntegrationTest.cpp
         )
 
-add_executable(${EXECUTABLE_NAME} Main.cpp ${SOURCES})
+set(ODB_HEADERS
+        core/database/person.h
+        )
+
+odb_compile(OdbCMake_SOURCES FILES ${ODB_HEADERS} DB sqlite GENERATE_QUERY GENERATE_SESSION)
+
+add_executable(${EXECUTABLE_NAME}
+        Main.cpp
+        ${SOURCES}
+        ${ODB_HEADERS}
+        )
 
 target_link_libraries(${EXECUTABLE_NAME} PRIVATE
         Qt6::Core
@@ -46,11 +58,20 @@ target_link_libraries(${EXECUTABLE_NAME} PRIVATE
         messages
         filesystem
         collection
-        odb
-        libodb-pgsql
+        ${ODB_LIBRARIES}
         )
 
-target_include_directories(${EXECUTABLE_NAME} PRIVATE ${GMOCK_INCLUDE_DIR} ${DOTENV_INCLUDE_DIR} ..)
+target_include_directories(${EXECUTABLE_NAME} PRIVATE
+        ${ODB_INCLUDE_DIRS}
+        ${ODB_COMPILE_OUTPUT_DIR}
+        ${DOTENV_INCLUDE_DIR}
+        ..
+        )
+
+target_compile_definitions(${EXECUTABLE_NAME}
+        PRIVATE
+        DATABASE_PGSQL
+        )
 
 add_subdirectory(infrastructure/database/management)
 

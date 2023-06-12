@@ -14,7 +14,6 @@ target_link_libraries(${EXECUTABLE_NAME} PRIVATE
         Qt6::Gui
         Qt6::Widgets
         filesystem
-        odb
         )
 
 target_include_directories(${EXECUTABLE_NAME} PRIVATE ${TOM_INCLUDE_DIR} ${DOTENV_INCLUDE_DIR})
