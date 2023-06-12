@@ -14,7 +14,7 @@
 
 #### Install ODB:
 
-```sudo apt install libcutl-1.10 odb```
+```sudo apt install libcutl-1.10 postgresql libpq-dev sqlite3 libsqlite3-dev odb```
 
 #### Install libs:
 

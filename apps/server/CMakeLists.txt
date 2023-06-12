@@ -46,6 +46,8 @@ target_link_libraries(${EXECUTABLE_NAME} PRIVATE
         messages
         filesystem
         collection
+        odb
+        libodb-pgsql
         )
 
 target_include_directories(${EXECUTABLE_NAME} PRIVATE ${GMOCK_INCLUDE_DIR} ${DOTENV_INCLUDE_DIR} ..)

@@ -7,9 +7,6 @@
 [submodule "externals/TinyORM"]
 	path = externals/TinyORM
 	url = https://github.com/silverqx/TinyORM.git
-[submodule "externals/cpp-dotenv"]
-	path = externals/cpp-dotenv
-	url = https://github.com/adeharo9/cpp-dotenv.git
 [submodule "externals/dotenv-cpp"]
 	path = externals/dotenv-cpp
 	url = https://github.com/laserpants/dotenv-cpp.git
@@ -22,6 +19,3 @@
 [submodule "externals/cpp-jwt"]
 	path = externals/cpp-jwt
 	url = https://github.com/arun11299/cpp-jwt.git
-[submodule "externals/odb"]
-	path = externals/odb
-	url = https://github.com/dreamsxin/odb.git
