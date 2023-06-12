@@ -22,3 +22,6 @@
 [submodule "externals/cpp-jwt"]
 	path = externals/cpp-jwt
 	url = https://github.com/arun11299/cpp-jwt.git
+[submodule "externals/odb"]
+	path = externals/odb
+	url = https://github.com/dreamsxin/odb.git
