@@ -1,3 +1,7 @@
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
+
+include(ODB)
+
 set(EXECUTABLE_NAME server)
 
 set(SOURCES
@@ -35,22 +39,57 @@ set(IT_SOURCES
         application/commandHandlers/loginUserCommandHandler/LoginUserCommandHandlerImplIntegrationTest.cpp
         )
 
-set(ODB_SOURCES
-        core/database/driver.cpp
-        core/database/database.h
+set(odbcrs_headers
+        src/Branch.hpp
+        src/Employee.hpp
+        src/Person.hpp
+        src/Customer.hpp
+        src/Database.hpp
+        src/Date.hpp
+        src/Address.hpp
+        src/LicenseClass.hpp
         )
 
-set(ODB_HEADERS
-        core/database/person.h
+odb_compile(
+        HEADERS ${odbcrs_headers}
+        DB pgsql
+        STANDARD c++11
+        GENERATE_QUERY GENERATE_SESSION GENERATE_SCHEMA
+        HEADER_SUFFIX ".hpp"
+        INLINE_SUFFIX ".ipp"
+        SOURCE_SUFFIX ".cpp"
+        FILE_SUFFIX ".odb"
+        DEFAULT_POINTER "std::shared_ptr"
+)
+
+set(odbcrs_sources
+        src/Branch.cpp
+        src/Employee.cpp
+        src/Person.cpp
+        src/Customer.cpp
+        src/Database.cpp
+        src/Date.cpp
+        src/Address.cpp
+        src/LicenseClass.cpp
+        ${ODB_GENERATED_SOURCES}
         )
 
-odb_compile(ODB_SOURCES FILES ${ODB_HEADERS} DB sqlite GENERATE_QUERY GENERATE_SESSION)
+print_var(ODB_GENERATED_SOURCES)
+
+set(odbcrs_libraries
+        odb
+        odb-pgsql
+        )
+
+
+include_directories(src)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -std=c++11 -Wno-unknown-pragmas")
 
 add_executable(${EXECUTABLE_NAME}
         Main.cpp
         ${SOURCES}
-        ${ODB_SOURCES}
-        ${ODB_HEADERS}
+        ${odbcrs_sources}
         )
 
 target_link_libraries(${EXECUTABLE_NAME} PRIVATE
@@ -62,19 +101,12 @@ target_link_libraries(${EXECUTABLE_NAME} PRIVATE
         messages
         filesystem
         collection
-        ${ODB_LIBRARIES}
+        ${odbcrs_libraries}
         )
 
 target_include_directories(${EXECUTABLE_NAME} PRIVATE
-        ${ODB_INCLUDE_DIRS}
-        ${ODB_COMPILE_OUTPUT_DIR}
         ${DOTENV_INCLUDE_DIR}
         ..
-        )
-
-target_compile_definitions(${EXECUTABLE_NAME}
-        PRIVATE
-        DATABASE_PGSQL
         )
 
 add_subdirectory(infrastructure/database/management)

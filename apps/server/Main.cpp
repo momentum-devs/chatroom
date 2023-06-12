@@ -1,4 +1,6 @@
 #include <boost/asio.hpp>
+#include <odb/exception.hxx>
+#include <odb/pgsql/database.hxx>
 #include <thread>
 
 #include "api/SessionManager.h"
@@ -10,10 +12,37 @@
 #include "server/config/ConfigProvider.h"
 #include "server/infrastructure/database/management/DatabaseManagerFactory.h"
 #include "server/infrastructure/database/models/User.h"
+#include "server/src/Database.hpp"
+#include "src/Person.hpp"
 
 // TODO: add application class
 int main(int argc, char* argv[])
 {
+    try
+    {
+        std::unique_ptr<odb::database> db(new Database("test.db"));
+
+        std::string john_id, jane_id, joe_id;
+        {
+            Person john("John", Date(1969, 1, 1));
+            Person jane("Jane", Date(1969, 2, 4));
+            Person joe("Joe", Date(1969, 3, 9));
+
+            odb::transaction t(db->begin());
+
+            john_id = db->persist(john);
+            jane_id = db->persist(jane);
+            joe_id = db->persist(joe);
+
+            t.commit();
+        }
+    }
+    catch (const odb::exception& e)
+    {
+        std::cerr << "Error: " << e.what() << std::endl;
+        return 1;
+    }
+
     const auto projectPath = common::filesystem::getProjectPath("chatroom");
 
     dotenv::init(std::format("{}/apps/server/.env", projectPath).c_str());
