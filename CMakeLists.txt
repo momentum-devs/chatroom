@@ -28,5 +28,4 @@ if (${ENABLE_COVERAGE})
     link_libraries(--coverage)
 endif ()
 
-
 add_subdirectory(apps)
