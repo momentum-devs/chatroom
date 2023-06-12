@@ -1,3 +1,5 @@
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunknown-pragmas"
 #ifndef PERSON_HXX
 #define PERSON_HXX
 
@@ -61,3 +63,5 @@ struct person_stat
 };
 
 #endif // PERSON_HXX
+
+#pragma clang diagnostic pop

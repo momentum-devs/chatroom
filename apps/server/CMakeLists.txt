@@ -18,8 +18,6 @@ set(SOURCES
         infrastructure/repositories/userRepository/userMapper/UserMapperImpl.cpp
         domain/entities/User.cpp
         application/commandHandlers/loginUserCommandHandler/LoginUserCommandHandlerImpl.cpp
-        core/database/driver.cpp
-        core/database/database.h
         )
 
 set(UT_SOURCES
@@ -37,15 +35,21 @@ set(IT_SOURCES
         application/commandHandlers/loginUserCommandHandler/LoginUserCommandHandlerImplIntegrationTest.cpp
         )
 
+set(ODB_SOURCES
+        core/database/driver.cpp
+        core/database/database.h
+        )
+
 set(ODB_HEADERS
         core/database/person.h
         )
 
-odb_compile(OdbCMake_SOURCES FILES ${ODB_HEADERS} DB sqlite GENERATE_QUERY GENERATE_SESSION)
+odb_compile(ODB_SOURCES FILES ${ODB_HEADERS} DB sqlite GENERATE_QUERY GENERATE_SESSION)
 
 add_executable(${EXECUTABLE_NAME}
         Main.cpp
         ${SOURCES}
+        ${ODB_SOURCES}
         ${ODB_HEADERS}
         )
 
