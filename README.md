@@ -6,7 +6,7 @@
 
 #### Install build tools:
 
-```sudo apt install sccache clang-15 libc++-15-dev libc++abi-15-dev build-essential libboost-all-dev libgl1-mesa-dev libglx-dev librange-v3-dev lld ninja-build```
+```sudo apt install sccache clang-15 libc++-15-dev libc++abi-15-dev build-essential libboost-all-dev libgl1-mesa-dev libglx-dev lld ninja-build```
 
 #### Install Qt:
 
