@@ -11,6 +11,7 @@
 #include "server/api/SessionFactoryImpl.h"
 #include "server/config/ConfigProvider.h"
 #include "server/infrastructure/database/tables/userTable/User.h"
+#include "User.odb.h"
 
 // TODO: add application class
 int main(int argc, char* argv[])
