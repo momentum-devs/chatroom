@@ -27,3 +27,5 @@ target_include_directories(${LIBRARY_NAME}UT
         )
 
 add_test(NAME ${LIBRARY_NAME}UT COMMAND ${LIBRARY_NAME}UT WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+
+target_code_coverage(${LIBRARY_NAME}UT)
