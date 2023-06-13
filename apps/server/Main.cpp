@@ -21,9 +21,9 @@ int main(int argc, char* argv[])
         auto db = std::make_shared<odb::pgsql::database>("local", "local", "chatroom", "localhost", 5432);
 
         {
-            server::infrastructure::User john("John", "", "");
-            server::infrastructure::User jane("Jane", "", "");
-            server::infrastructure::User joe("Joe", "", "");
+            server::infrastructure::User john("uuid", "John", "", "");
+            server::infrastructure::User jane("uuid", "Jane", "", "");
+            server::infrastructure::User joe("uuid", "Joe", "", "");
 
             odb::transaction t(db->begin());
 

@@ -13,7 +13,7 @@ domain::User UserRepositoryImpl::createUser(const domain::CreateUserPayload& pay
 {
     try
     {
-        const auto user = User(payload.email, payload.password, payload.nickname);
+        const auto user = User("uuid", payload.email, payload.password, payload.nickname);
 
         return userMapper->mapToDomainUser(user);
     }

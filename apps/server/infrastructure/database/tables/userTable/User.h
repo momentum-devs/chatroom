@@ -9,42 +9,49 @@
 
 namespace server::infrastructure
 {
-
 #pragma db value(std::string) type("TEXT") id_type("VARCHAR(128)")
 
 #pragma db object
 class User
 {
 public:
-    User(std::string emailInit, std::string passwordInit, std::string nicknameInit)
-        : email_{std::move(emailInit)}, password_{std::move(passwordInit)}, nickname_{std::move(nicknameInit)}
+    User(std::string idInit, std::string emailInit, std::string passwordInit, std::string nicknameInit)
+        : id{std::move(idInit)},
+          email{std::move(emailInit)},
+          password{std::move(passwordInit)},
+          nickname{std::move(nicknameInit)}
     {
+    }
+
+    std::string getId() const
+    {
+        return this->id;
     }
 
     std::string getEmail() const
     {
-        return this->email_;
+        return this->email;
     }
 
     std::string getPassword() const
     {
-        return this->password_;
+        return this->password;
     }
 
     std::string getNickname() const
     {
-        return this->nickname_;
+        return this->nickname;
     }
 
 private:
     friend class odb::access;
 
-#pragma db id auto
-    unsigned long id_;
-
-    std::string email_;
-    std::string password_;
-    std::string nickname_;
+#pragma db id
+    std::string id;
+    
+    std::string email;
+    std::string password;
+    std::string nickname;
 };
 }
 
