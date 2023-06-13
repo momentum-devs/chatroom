@@ -10,9 +10,7 @@
 #include "server/api/ConnectionAcceptorImpl.h"
 #include "server/api/SessionFactoryImpl.h"
 #include "server/config/ConfigProvider.h"
-#include "server/infrastructure/database/management/DatabaseManagerFactory.h"
-#include "server/infrastructure/database/models/User.h"
-#include "src/Person.hpp"
+#include "src/User.h"
 
 // TODO: add application class
 int main(int argc, char* argv[])
@@ -23,9 +21,9 @@ int main(int argc, char* argv[])
 
         std::string john_id, jane_id, joe_id;
         {
-            Person john("John", Date(1969, 1, 1));
-            Person jane("Jane", Date(1969, 2, 4));
-            Person joe("Joe", Date(1969, 3, 9));
+            User john("John", "", "");
+            User jane("Jane", "", "");
+            User joe("Joe", "", "");
 
             odb::transaction t(db->begin());
 
@@ -58,9 +56,6 @@ int main(int argc, char* argv[])
     const auto databasePassword = configProvider.getDatabasePassword();
     const auto serverPort = configProvider.getServerPort();
 
-    auto databaseManager = server::infrastructure::DatabaseManagerFactory::create(
-        {databaseHost, databaseName, databaseUsername, databasePassword});
-
     const auto numberOfSupportedThreads = std::thread::hardware_concurrency();
 
     boost::asio::io_context context;
@@ -81,14 +76,7 @@ int main(int argc, char* argv[])
 
     for (std::size_t n = 0; n < numberOfSupportedThreads; ++n)
     {
-        threads.emplace_back(
-            [&]
-            {
-                server::infrastructure::DatabaseManagerFactory::addConnection(
-                    {databaseHost, databaseName, databaseUsername, databasePassword});
-
-                context.run();
-            });
+        threads.emplace_back([&] { context.run(); });
     }
 
     for (auto& thread : threads)

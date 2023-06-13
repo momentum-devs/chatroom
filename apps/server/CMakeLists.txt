@@ -17,7 +17,6 @@ set(SOURCES
         config/EnvironmentParser.cpp
         config/ConfigProvider.cpp
         domain/entities/User.cpp
-        infrastructure/database/management/DatabaseManagerFactory.cpp
         infrastructure/repositories/userRepository/UserRepositoryImpl.cpp
         infrastructure/repositories/userRepository/userMapper/UserMapperImpl.cpp
         domain/entities/User.cpp
@@ -39,42 +38,26 @@ set(IT_SOURCES
         application/commandHandlers/loginUserCommandHandler/LoginUserCommandHandlerImplIntegrationTest.cpp
         )
 
-set(odbcrs_headers
-        src/Branch.hpp
-        src/Employee.hpp
-        src/Person.hpp
-        src/Customer.hpp
-        src/Database.hpp
-        src/Date.hpp
-        src/Address.hpp
-        src/LicenseClass.hpp
+set(ODB_HEADERS
+        infrastructure/database/tables/userTable/User.h
         )
 
 odb_compile(
-        HEADERS ${odbcrs_headers}
+        HEADERS ${ODB_HEADERS}
         DB pgsql
-        STANDARD c++11
+        STANDARD c++14
         GENERATE_QUERY GENERATE_SESSION GENERATE_SCHEMA
-        HEADER_SUFFIX ".hpp"
-        INLINE_SUFFIX ".ipp"
+        HEADER_SUFFIX ".h"
+        INLINE_SUFFIX ".i"
         SOURCE_SUFFIX ".cpp"
         FILE_SUFFIX ".odb"
         DEFAULT_POINTER "std::shared_ptr"
 )
 
-set(odbcrs_sources
-        src/Branch.cpp
-        src/Employee.cpp
-        src/Person.cpp
-        src/Customer.cpp
-        src/Database.cpp
-        src/Date.cpp
-        src/Address.cpp
-        src/LicenseClass.cpp
+set(ODB_SOURCES
+        infrastructure/database/tables/userTable/User.cpp
         ${ODB_GENERATED_SOURCES}
         )
-
-print_var(ODB_GENERATED_SOURCES)
 
 set(odbcrs_libraries
         odb
@@ -82,14 +65,14 @@ set(odbcrs_libraries
         )
 
 
-include_directories(src)
+include_directories(infrastructure/database/tables/userTable)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -std=c++11 -Wno-unknown-pragmas")
 
 add_executable(${EXECUTABLE_NAME}
         Main.cpp
         ${SOURCES}
-        ${odbcrs_sources}
+        ${ODB_SOURCES}
         )
 
 target_link_libraries(${EXECUTABLE_NAME} PRIVATE
@@ -106,10 +89,7 @@ target_link_libraries(${EXECUTABLE_NAME} PRIVATE
 
 target_include_directories(${EXECUTABLE_NAME} PRIVATE
         ${DOTENV_INCLUDE_DIR}
-        ..
         )
-
-add_subdirectory(infrastructure/database/management)
 
 add_executable(${EXECUTABLE_NAME}UT ${UT_SOURCES} ${SOURCES})
 
