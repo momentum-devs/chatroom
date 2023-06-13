@@ -4,15 +4,9 @@
 [submodule "externals/loguru"]
 	path = externals/loguru
 	url = https://github.com/emilk/loguru.git
-[submodule "externals/TinyORM"]
-	path = externals/TinyORM
-	url = https://github.com/silverqx/TinyORM.git
 [submodule "externals/dotenv-cpp"]
 	path = externals/dotenv-cpp
 	url = https://github.com/laserpants/dotenv-cpp.git
-[submodule "externals/tabulate"]
-	path = externals/tabulate
-	url = https://github.com/p-ranav/tabulate.git
 [submodule "externals/json"]
 	path = externals/json
 	url = https://github.com/nlohmann/json.git

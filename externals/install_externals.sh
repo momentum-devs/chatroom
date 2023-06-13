@@ -26,24 +26,6 @@ ninja
 sudo ninja install
 cd ../..
 
-cd tabulate || exit
-sudo rm -rf build
-mkdir build
-cd build || exit
-eval cmake .. -DUSE_CPP17=ON "$COMMON_CMAKE_FLAGS"
-ninja
-sudo ninja install
-cd ../..
-
-cd TinyORM || exit
-sudo rm -rf build
-mkdir build
-cd build || exit
-eval cmake .. -DTOM:BOOL=ON -D BUILD_TESTS:BOOL=OFF "$COMMON_CMAKE_FLAGS"
-ninja
-sudo ninja install
-cd ../..
-
 cd cpp-jwt || exit
 sudo rm -rf build
 mkdir build

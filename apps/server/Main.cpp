@@ -12,7 +12,6 @@
 #include "server/config/ConfigProvider.h"
 #include "server/infrastructure/database/management/DatabaseManagerFactory.h"
 #include "server/infrastructure/database/models/User.h"
-#include "server/src/Database.hpp"
 #include "src/Person.hpp"
 
 // TODO: add application class
@@ -20,7 +19,7 @@ int main(int argc, char* argv[])
 {
     try
     {
-        std::unique_ptr<odb::database> db(new Database("test.db"));
+        auto db = std::make_shared<odb::pgsql::database>("local", "local", "chatroom", "localhost", 5432);
 
         std::string john_id, jane_id, joe_id;
         {

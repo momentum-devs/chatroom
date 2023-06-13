@@ -1,4 +1,3 @@
-add_subdirectory(googletest)
 set(LOGURU_WITH_STREAMS 1)
 set(LOGURU_THREADNAME_WIDTH 11)
 set(LOGURU_FILENAME_WIDTH 30)
