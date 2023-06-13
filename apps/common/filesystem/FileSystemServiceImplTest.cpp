@@ -11,7 +11,7 @@ using namespace common::filesystem;
 
 namespace
 {
-const std::string testFilesDirectory{"testFiles"};
+const std::string testFilesDirectory{std::format("{}/apps/common/filesystem/testFiles", getProjectPath("chatroom"))};
 const std::string textToWrite{"write method"};
 const std::basic_string<unsigned char> textToWriteAtPosition{reinterpret_cast<const unsigned char*>("position data")};
 const std::string textToWriteAtPositionAsString{"position data"};
@@ -55,6 +55,8 @@ TEST_F(FileSystemServiceImplTest, givenCorrectPath_shouldAppendToFile)
 
 TEST_F(FileSystemServiceImplTest, givenCorrectPath_shouldReturnContentOfFile)
 {
+    std::cout << pathForReading << std::endl;
+
     const auto actualFileContent = fileSystemService.read(pathForReading);
 
     ASSERT_EQ(actualFileContent, exampleContent);
