@@ -1,4 +1,4 @@
-name: CMake
+name: Build & Test
 
 on: push
 
@@ -52,12 +52,7 @@ jobs:
         run: ctest -C ${{env.BUILD_TYPE}} -V
 
       - name: Codecov
-        uses: codecov/codecov-action@v3.1.4
-        with:
-          token: ${{ secrets.CODECOVTOKEN }}
-          gcov: true
-          gcov_executable: "llvm-cov-16 gcov"
-#        run: |
-#          curl -S -f https://codecov.io/bash -o codecov \
-#            && chmod +x codecov \
-#            &&  ./codecov -x "llvm-cov-16 gcov" -Z -t ${{ secrets.CODECOVTOKEN }}
+        run: |
+          curl -S -f https://codecov.io/bash -o codecov \
+            && chmod +x codecov \
+            &&  ./codecov -x "llvm-cov-16 gcov" -Z -t ${{ secrets.CODECOVTOKEN }}
