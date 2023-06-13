@@ -51,12 +51,9 @@ jobs:
         working-directory: ${{github.workspace}}/build
         run: ctest -C ${{env.BUILD_TYPE}} -V
 
-      - name: Prepare coverage data
-        working-directory: ${{github.workspace}}/build
-        run: find . -type f -name '*.gcno' -exec llvm-cov-16 gcov -i {} \;
-
       - name: Codecov
         uses: codecov/codecov-action@v3.1.4
         with:
           token: ${{ secrets.CODECOVTOKEN }}
           gcov: true
+          gcov_executable: llvm-cov-16 gcov
