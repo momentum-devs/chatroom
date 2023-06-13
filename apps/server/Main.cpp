@@ -19,7 +19,6 @@ int main(int argc, char* argv[])
     {
         auto db = std::make_shared<odb::pgsql::database>("local", "local", "chatroom", "localhost", 5432);
 
-        std::string john_id, jane_id, joe_id;
         {
             server::infrastructure::User john("John", "", "");
             server::infrastructure::User jane("Jane", "", "");
@@ -27,9 +26,9 @@ int main(int argc, char* argv[])
 
             odb::transaction t(db->begin());
 
-            john_id = db->persist(john);
-            jane_id = db->persist(jane);
-            joe_id = db->persist(joe);
+            db->persist(john);
+            db->persist(jane);
+            db->persist(joe);
 
             t.commit();
         }

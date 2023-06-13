@@ -77,7 +77,6 @@ add_executable(${EXECUTABLE_NAME}
 
 target_link_libraries(${EXECUTABLE_NAME} PRIVATE
         Qt6::Core
-        TinyOrm::TinyOrm
         loguru::loguru
         nlohmann_json::nlohmann_json
         cpp-jwt::cpp-jwt
@@ -97,7 +96,6 @@ target_link_libraries(${EXECUTABLE_NAME}UT PRIVATE
         gtest
         gmock_main
         Qt6::Core
-        TinyOrm::TinyOrm
         loguru::loguru
         nlohmann_json::nlohmann_json
         cpp-jwt::cpp-jwt
@@ -117,7 +115,6 @@ if (INTEGRATION_TESTS_BUILD)
             gtest
             gmock_main
             Qt6::Core
-            TinyOrm::TinyOrm
             loguru::loguru
             nlohmann_json::nlohmann_json
             cpp-jwt::cpp-jwt
