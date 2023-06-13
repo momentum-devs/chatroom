@@ -18,10 +18,7 @@ TEST_F(UserMapperTest, givenUserModel_shouldMapToDomainUser)
     const auto password = "password";
     const auto nickname = "nickname";
 
-    Models::User userModel;
-    userModel.setAttribute("email", email);
-    userModel.setAttribute("password", password);
-    userModel.setAttribute("nickname", nickname);
+    User userModel(email, password, nickname);
 
     const auto domainUser = userMapper.mapToDomainUser(userModel);
 

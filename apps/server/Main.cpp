@@ -10,7 +10,7 @@
 #include "server/api/ConnectionAcceptorImpl.h"
 #include "server/api/SessionFactoryImpl.h"
 #include "server/config/ConfigProvider.h"
-#include "src/User.h"
+#include "server/infrastructure/database/tables/userTable/User.h"
 
 // TODO: add application class
 int main(int argc, char* argv[])
@@ -21,9 +21,9 @@ int main(int argc, char* argv[])
 
         std::string john_id, jane_id, joe_id;
         {
-            User john("John", "", "");
-            User jane("Jane", "", "");
-            User joe("Joe", "", "");
+            server::infrastructure::User john("John", "", "");
+            server::infrastructure::User jane("Jane", "", "");
+            server::infrastructure::User joe("Joe", "", "");
 
             odb::transaction t(db->begin());
 

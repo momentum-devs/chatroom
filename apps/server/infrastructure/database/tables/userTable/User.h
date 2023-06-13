@@ -22,6 +22,11 @@ public:
         return this->nickname;
     }
 
+    std::string getPassword() const
+    {
+        return this->password;
+    }
+
     std::string getEmail() const
     {
         return this->email;

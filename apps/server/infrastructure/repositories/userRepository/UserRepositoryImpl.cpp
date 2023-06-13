@@ -13,9 +13,7 @@ domain::User UserRepositoryImpl::createUser(const domain::CreateUserPayload& pay
 {
     try
     {
-        const auto user = Models::User::create({{"email", QString::fromStdString(payload.email)},
-                                                {"password", QString::fromStdString(payload.password)},
-                                                {"nickname", QString::fromStdString(payload.nickname)}});
+        const auto user = User(payload.email, payload.password, payload.nickname);
 
         return userMapper->mapToDomainUser(user);
     }
@@ -25,18 +23,11 @@ domain::User UserRepositoryImpl::createUser(const domain::CreateUserPayload& pay
     }
 }
 
-std::optional<domain::User> UserRepositoryImpl::findUserById(const domain::FindUserByIdPayload& payload) const
+std::optional<domain::User> UserRepositoryImpl::findUserById(const domain::FindUserByIdPayload&) const
 {
     try
     {
-        const auto user = Models::User::firstWhereEq("id", payload.id);
-
-        if (!user)
-        {
-            return std::nullopt;
-        }
-
-        return userMapper->mapToDomainUser(*user);
+        return std::nullopt;
     }
     catch (const std::exception& error)
     {
@@ -44,18 +35,11 @@ std::optional<domain::User> UserRepositoryImpl::findUserById(const domain::FindU
     }
 }
 
-std::optional<domain::User> UserRepositoryImpl::findUserByEmail(const domain::FindUserByEmailPayload& payload) const
+std::optional<domain::User> UserRepositoryImpl::findUserByEmail(const domain::FindUserByEmailPayload&) const
 {
     try
     {
-        const auto user = Models::User::firstWhereEq("email", QString::fromStdString(payload.email));
-
-        if (!user)
-        {
-            return std::nullopt;
-        }
-
-        return userMapper->mapToDomainUser(*user);
+        return std::nullopt;
     }
     catch (const std::exception& error)
     {
@@ -63,14 +47,10 @@ std::optional<domain::User> UserRepositoryImpl::findUserByEmail(const domain::Fi
     }
 }
 
-void UserRepositoryImpl::updateUser(const domain::UpdateUserPayload& payload) const
+void UserRepositoryImpl::updateUser(const domain::UpdateUserPayload&) const
 {
     try
     {
-        auto existingUser = Models::User::whereEq("id", payload.user.getId())->firstOrFail();
-
-        existingUser.update({{"password", QString::fromStdString(payload.user.getPassword())},
-                             {"nickname", QString::fromStdString(payload.user.getNickname())}});
     }
     catch (const std::exception& error)
     {
@@ -78,13 +58,10 @@ void UserRepositoryImpl::updateUser(const domain::UpdateUserPayload& payload) co
     }
 }
 
-void UserRepositoryImpl::deleteUser(const domain::DeleteUserPayload& payload) const
+void UserRepositoryImpl::deleteUser(const domain::DeleteUserPayload&) const
 {
     try
     {
-        auto existingUser = Models::User::whereEq("id", payload.user.getId())->firstOrFail();
-
-        existingUser.remove();
     }
     catch (const std::exception& error)
     {
