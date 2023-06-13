@@ -53,8 +53,8 @@ jobs:
 
       - name: Codecov
         run: |
-          curl -S -f https://codecov.io/bash -o codecov 
-            && chmod +x codecov
+          curl -S -f https://codecov.io/bash -o codecov \
+            && chmod +x codecov \
             &&  ./codecov -x "llvm-cov-16 gcov" -Z -t ${{ secrets.CODECOVTOKEN }}
 
 #        uses: codecov/codecov-action@v3.1.4
