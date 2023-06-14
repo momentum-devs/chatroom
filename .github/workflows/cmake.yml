@@ -50,10 +50,10 @@ jobs:
       - name: Test
         working-directory: ${{github.workspace}}/build
         run: |
-          ninja ccov-all-export
+          ninja ccov-all \
+          && llvm-cov-16 show `cat ccov/binaries.list` -instr-profile=ccov/all-merged.profdata > coverage.txt
 
       - name: Codecov
         uses: codecov/codecov-action@v3.1.4
         with:
           token: ${{ secrets.CODECOVTOKEN }}
-          files: ccov/coverage.json
