@@ -25,7 +25,7 @@ jobs:
             && sudo launchpad-getkeys \
             && sudo apt-get update -y \
             && sudo apt-get install -y lld-16 ninja-build  build-essential libstdc++-13-dev \
-              clang-16 clang-tools-16 llvm-16  \
+              clang-16 clang-tools-16 llvm-16 lcov \
               libboost1.82-dev libgl1-mesa-dev libglx-dev librange-v3-dev \
               qt6-base-dev libqt6sql6-psql libqt6qml6 qt6-declarative-dev qt6-tools-dev qt6-tools-dev-tools qt6-l10n-tools \
               qml6-module-qtquick-controls qml6-module-qtqml-workerscript qml6-module-qtquick-templates
@@ -40,8 +40,8 @@ jobs:
           cmake -B ${{github.workspace}}/build \
             -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
             -DCMAKE_CXX_COMPILER=/usr/bin/clang++-16 \
-            -DINTEGRATION_TESTS_BUILD=OFF \
-            -DENABLE_COVERAGE=ON \
+            -DCODE_COVERAGE:BOOL=ON \
+            -DINTEGRATION_TESTS_BUILD:BOOL=OFF \
             -GNinja
 
       - name: Build
@@ -49,10 +49,11 @@ jobs:
 
       - name: Test
         working-directory: ${{github.workspace}}/build
-        run: ctest -C ${{env.BUILD_TYPE}} -V
+        run: |
+          ninja ccov-all \
+          && llvm-cov-16 show `cat ccov/binaries.list` -instr-profile=ccov/all-merged.profdata > coverage.txt
 
       - name: Codecov
-        run: |
-          curl -S -f https://codecov.io/bash -o codecov \
-            && chmod +x codecov \
-            &&  ./codecov -x "llvm-cov-16 gcov" -Z -t ${{ secrets.CODECOVTOKEN }}
+        uses: codecov/codecov-action@v3.1.4
+        with:
+          token: ${{ secrets.CODECOVTOKEN }}
