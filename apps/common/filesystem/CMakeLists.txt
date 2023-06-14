@@ -39,4 +39,4 @@ target_include_directories(${LIBRARY_NAME}UT
 
 add_test(NAME ${LIBRARY_NAME}UT COMMAND ${LIBRARY_NAME}UT WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
 
-target_code_coverage(${LIBRARY_NAME}UT)
+target_code_coverage(${LIBRARY_NAME}UT ALL)

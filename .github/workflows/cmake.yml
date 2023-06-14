@@ -1,4 +1,4 @@
-name: CMake
+name: Build & Test
 
 on: push
 
@@ -40,7 +40,7 @@ jobs:
           cmake -B ${{github.workspace}}/build \
             -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
             -DCMAKE_CXX_COMPILER=/usr/bin/clang++-16 \
-            -DENABLE_COVERAGE:BOOL=ON \
+            -DCODE_COVERAGE:BOOL=ON \
             -DINTEGRATION_TESTS_BUILD:BOOL=OFF \
             -GNinja
 
@@ -50,10 +50,10 @@ jobs:
       - name: Test
         working-directory: ${{github.workspace}}/build
         run: |
-          ctest -C ${{env.BUILD_TYPE}} -V \
-          && ninja ccov-clean
+          ninja ccov-all-export
 
       - name: Codecov
         uses: codecov/codecov-action@v3.1.4
         with:
           token: ${{ secrets.CODECOVTOKEN }}
+          files: ccov/coverage.json
