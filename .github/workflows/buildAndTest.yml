@@ -55,7 +55,7 @@ jobs:
           mv apps/server/infrastructure/database/management/.env.example apps/server/infrastructure/database/management/.env \
           && mv apps/client/.env.example apps/client/.env \
           && mv apps/server/.env.example apps/server/.env \
-          && ./build/apps/server/infrastructure/database/management/management migrate:reset
+          && ./build/apps/server/infrastructure/database/management/management migrate
 
       - name: Test
         working-directory: ${{github.workspace}}/build
