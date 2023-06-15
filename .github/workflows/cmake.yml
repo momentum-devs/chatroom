@@ -50,9 +50,7 @@ jobs:
         run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
       - name: Docker Compose
-        uses: isbang/compose-action@v1.4.1
-        with:
-          compose-file: "docker-compose.yml"
+        run: docker-compose up
 
       - name: Prepare tests
         run: |
@@ -71,3 +69,7 @@ jobs:
         uses: codecov/codecov-action@v3.1.4
         with:
           token: ${{ secrets.CODECOVTOKEN }}
+
+      - name: Stop containers
+        if: always()
+        run: docker-compose down
