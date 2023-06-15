@@ -50,7 +50,7 @@ jobs:
         run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
       - name: Docker Compose
-        run: docker-compose up
+        run: docker-compose up -d
 
       - name: Prepare tests
         run: |
