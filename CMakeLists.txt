@@ -3,8 +3,6 @@ cmake_minimum_required(VERSION 3.23)
 set(PROJECT_NAME chatroom)
 project(${PROJECT_NAME} CXX)
 
-option(INTEGRATION_TESTS_BUILD "build and run integration tests" ON)
-
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED YES)
 

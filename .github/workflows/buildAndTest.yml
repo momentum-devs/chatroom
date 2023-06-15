@@ -45,7 +45,6 @@ jobs:
             -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
             -DCMAKE_CXX_COMPILER=/usr/bin/clang++-16 \
             -DCODE_COVERAGE:BOOL=ON \
-            -DINTEGRATION_TESTS_BUILD:BOOL=ON \
             -GNinja
 
       - name: Build
