@@ -3,8 +3,6 @@ cmake_minimum_required(VERSION 3.23)
 set(PROJECT_NAME chatroom)
 project(${PROJECT_NAME} CXX)
 
-option(INTEGRATION_TESTS_BUILD "build and run integration tests" ON)
-
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED YES)
 
@@ -22,11 +20,9 @@ set(DOTENV_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/externals/dotenv-cpp/include")
 set(TOM_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/externals/TinyORM/tom/include")
 
 enable_testing()
-option(ENABLE_COVERAGE "Enable coverage reporting for gcc/clang" OFF)
-if (${ENABLE_COVERAGE})
-    add_compile_options(--coverage -O0)
-    link_libraries(--coverage)
-endif ()
 
+set(target_code_coverage_ALL 1)
+include(cmake-coverage.cmake)
+add_code_coverage_all_targets()
 
 add_subdirectory(apps)

@@ -16,6 +16,7 @@ struct CreateChannelsTable : Migration
                            table.id();
                            table.timestamps();
                            table.text("name");
+                           table.bigInteger("creator_id");
                            table.foreign("creator_id").references("id").on("users");
                        });
     }
