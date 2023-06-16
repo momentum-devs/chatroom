@@ -1,9 +1,9 @@
-name: Build + Unit Tests
+name: Build & Test
 
 on: push
 
 env:
-  BUILD_TYPE: Release
+  BUILD_TYPE: Debug
 
 jobs:
   build:
@@ -17,18 +17,22 @@ jobs:
 
       - name: Install apt-get dependencies
         run: |
-          sudo add-apt-repository ppa:mhier/libboost-latest -y \
-            && sudo add-apt-repository ppa:trebelnik-stefina/launchpad-getkeys \
+           sudo add-apt-repository ppa:trebelnik-stefina/launchpad-getkeys \
             && sudo apt-get update \
             && sudo apt-get install launchpad-getkeys \
             && sudo add-apt-repository 'deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-16 main' \
             && sudo launchpad-getkeys \
             && sudo apt-get update -y \
             && sudo apt-get install -y lld-16 ninja-build  build-essential libstdc++-13-dev \
-              clang-16 clang-tools-16  \
-              libboost1.82-dev libgl1-mesa-dev libglx-dev librange-v3-dev \
+              clang-16 clang-tools-16 llvm-16 lcov \
+              libboost-dev libgl1-mesa-dev libglx-dev librange-v3-dev \
               qt6-base-dev libqt6sql6-psql libqt6qml6 qt6-declarative-dev qt6-tools-dev qt6-tools-dev-tools qt6-l10n-tools \
-              qml6-module-qtquick-controls qml6-module-qtqml-workerscript qml6-module-qtquick-templates
+              qml6-module-qtquick-controls qml6-module-qtqml-workerscript qml6-module-qtquick-templates \
+              postgresql \
+            && sudo systemctl stop postgresql
+
+      - name: Docker Compose
+        run: docker-compose up -d
 
       - name: Install external CMake package
         run: cd externals && ./install_externals.sh
@@ -40,19 +44,30 @@ jobs:
           cmake -B ${{github.workspace}}/build \
             -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
             -DCMAKE_CXX_COMPILER=/usr/bin/clang++-16 \
-            -DINTEGRATION_TESTS_BUILD=OFF \
-            -DENABLE_COVERAGE=ON \
+            -DCODE_COVERAGE:BOOL=ON \
             -GNinja
 
       - name: Build
         run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
+      - name: Prepare tests
+        run: |
+          mv apps/server/infrastructure/database/management/.env.example apps/server/infrastructure/database/management/.env \
+          && mv apps/client/.env.example apps/client/.env \
+          && mv apps/server/.env.example apps/server/.env \
+          && ./build/apps/server/infrastructure/database/management/management migrate
+
       - name: Test
         working-directory: ${{github.workspace}}/build
-        run: ctest -C ${{env.BUILD_TYPE}} -V
+        run: |
+          ninja ccov-all \
+          && llvm-cov-16 show `cat ccov/binaries.list` -instr-profile=ccov/all-merged.profdata > coverage.txt
 
       - name: Codecov
         uses: codecov/codecov-action@v3.1.4
         with:
           token: ${{ secrets.CODECOVTOKEN }}
 
+      - name: Stop containers
+        if: always()
+        run: docker-compose down

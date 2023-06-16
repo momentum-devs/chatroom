@@ -65,7 +65,6 @@ set(ODB_LIBRARIES
         odb-pgsql
         )
 
-
 include_directories(infrastructure/database/tables/userTable)
 
 add_executable(${EXECUTABLE_NAME}
@@ -112,27 +111,29 @@ target_include_directories(${EXECUTABLE_NAME}UT PUBLIC ${GMOCK_INCLUDE_DIR})
 
 add_test(NAME ${EXECUTABLE_NAME}UT COMMAND ${EXECUTABLE_NAME}UT WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
-if (INTEGRATION_TESTS_BUILD)
-    add_executable(${EXECUTABLE_NAME}IT
-            ${IT_SOURCES}
-            ${SOURCES}
-            ${ODB_SOURCES}
-            )
+target_code_coverage(${EXECUTABLE_NAME}UT ALL)
 
-    target_link_libraries(${EXECUTABLE_NAME}IT PRIVATE
-            gtest
-            gtest_main
-            Qt6::Core
-            loguru::loguru
-            nlohmann_json::nlohmann_json
-            cpp-jwt::cpp-jwt
-            messages
-            filesystem
-            collection
-            ${ODB_LIBRARIES}
-            )
+add_executable(${EXECUTABLE_NAME}IT
+        ${IT_SOURCES}
+        ${SOURCES}
+        ${ODB_SOURCES}
+        )
 
-    target_include_directories(${EXECUTABLE_NAME}IT PUBLIC ${GMOCK_INCLUDE_DIR})
+target_link_libraries(${EXECUTABLE_NAME}IT PRIVATE
+        gtest
+        gtest_main
+        Qt6::Core
+        loguru::loguru
+        nlohmann_json::nlohmann_json
+        cpp-jwt::cpp-jwt
+        messages
+        filesystem
+        collection
+        ${ODB_LIBRARIES}
+        )
 
-    add_test(NAME ${EXECUTABLE_NAME}IT COMMAND ${EXECUTABLE_NAME}IT WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-endif ()
+target_include_directories(${EXECUTABLE_NAME}IT PUBLIC ${GMOCK_INCLUDE_DIR})
+
+add_test(NAME ${EXECUTABLE_NAME}IT COMMAND ${EXECUTABLE_NAME}IT WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+
+target_code_coverage(${EXECUTABLE_NAME}IT ALL)
