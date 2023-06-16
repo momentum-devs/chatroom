@@ -19,7 +19,10 @@ RegisterUserCommandHandlerImpl::execute(const RegisterUserCommandHandlerPayload&
 
     const auto hashedPassword = hashService->hash(payload.password);
 
-    const auto user = userRepository->createUser({payload.email, hashedPassword, payload.email});
+    // TODO: generate uuid4
+    const auto uuid = "9ba2c731-63c8-4bee-b8ae-9aeba3091e67";
+
+    const auto user = userRepository->createUser({uuid, payload.email, hashedPassword, payload.email});
 
     LOG_S(INFO) << std::format("User with email \"{}\" registered.", payload.email);
 

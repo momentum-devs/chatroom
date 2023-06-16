@@ -14,17 +14,18 @@ public:
 
 TEST_F(UserMapperTest, givenUserModel_shouldMapToDomainUser)
 {
+    const auto id = "id";
     const auto email = "email@example.com";
     const auto password = "password";
     const auto nickname = "nickname";
     const auto createdAt = "2023-06-16";
     const auto updatedAt = "2023-06-16";
 
-    User userModel{"0", email, password, nickname, createdAt, updatedAt};
+    User userModel{id, email, password, nickname, createdAt, updatedAt};
 
     const auto domainUser = userMapper.mapToDomainUser(userModel);
 
-    ASSERT_EQ(domainUser.getId(), "0");
+    ASSERT_EQ(domainUser.getId(), id);
     ASSERT_EQ(domainUser.getEmail(), email);
     ASSERT_EQ(domainUser.getPassword(), password);
     ASSERT_EQ(domainUser.getNickname(), nickname);

@@ -105,9 +105,15 @@ TEST_F(UserRepositoryIntegrationTest, shouldDeleteExistingUser)
 
     typedef odb::query<User> query;
 
-    std::shared_ptr<User> foundUser(db->query_one<User>(query::id == id));
+    {
+        odb::transaction transaction(db->begin());
 
-    ASSERT_FALSE(foundUser);
+        std::shared_ptr<User> foundUser(db->query_one<User>(query::id == id));
+
+        ASSERT_FALSE(foundUser);
+
+        transaction.commit();
+    }
 }
 
 TEST_F(UserRepositoryIntegrationTest, delete_givenNonExistingUser_shouldThrowError)
@@ -220,13 +226,19 @@ TEST_F(UserRepositoryIntegrationTest, shouldUpdateExistingUser)
 
     userRepository->updateUser({domainUser});
 
-    typedef odb::query<User> query;
+    {
+        typedef odb::query<User> query;
 
-    std::shared_ptr<User> updatedUser(db->query_one<User>(query::id == id));
+        odb::transaction transaction(db->begin());
 
-    ASSERT_TRUE(updatedUser);
-    ASSERT_EQ(updatedUser->getNickname(), updatedNickname);
-    ASSERT_EQ(updatedUser->getPassword(), updatedPassword);
+        std::shared_ptr<User> updatedUser(db->query_one<User>(query::id == id));
+
+        transaction.commit();
+
+        ASSERT_TRUE(updatedUser);
+        ASSERT_EQ(updatedUser->getNickname(), updatedNickname);
+        ASSERT_EQ(updatedUser->getPassword(), updatedPassword);
+    }
 }
 
 TEST_F(UserRepositoryIntegrationTest, update_givenNonExistingUser_shouldThrowError)

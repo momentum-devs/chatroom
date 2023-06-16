@@ -43,9 +43,13 @@ std::optional<domain::User> UserRepositoryImpl::findUserById(const domain::FindU
 {
     try
     {
+        odb::transaction transaction(db->begin());
+
         typedef odb::query<User> query;
 
         std::shared_ptr<User> user(db->query_one<User>(query::id == payload.id));
+
+        transaction.commit();
 
         if (!user)
         {
@@ -64,14 +68,19 @@ std::optional<domain::User> UserRepositoryImpl::findUserByEmail(const domain::Fi
 {
     try
     {
+        odb::transaction transaction(db->begin());
+
         typedef odb::query<User> query;
 
         std::shared_ptr<User> user(db->query_one<User>(query::email == payload.email));
+
+        transaction.commit();
 
         if (!user)
         {
             return std::nullopt;
         }
+
 
         return userMapper->mapToDomainUser(*user);
     }
@@ -86,6 +95,8 @@ void UserRepositoryImpl::updateUser(const domain::UpdateUserPayload& payload) co
     try
     {
         {
+            odb::transaction transaction(db->begin());
+
             typedef odb::query<User> query;
 
             std::shared_ptr<User> user(db->query_one<User>(query::id == payload.user.getId()));
@@ -97,8 +108,6 @@ void UserRepositoryImpl::updateUser(const domain::UpdateUserPayload& payload) co
 
             user->setNickname(payload.user.getNickname());
             user->setPassword(payload.user.getPassword());
-
-            odb::transaction transaction(db->begin());
 
             db->update(*user);
 
@@ -115,11 +124,11 @@ void UserRepositoryImpl::deleteUser(const domain::DeleteUserPayload& payload) co
 {
     try
     {
-        odb::transaction t(db->begin());
+        odb::transaction transaction(db->begin());
 
         db->erase<User>(payload.user.getId());
 
-        t.commit();
+        transaction.commit();
     }
     catch (const std::exception& error)
     {
