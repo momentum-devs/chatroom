@@ -21,6 +21,7 @@ set(SOURCES
         infrastructure/repositories/userRepository/userMapper/UserMapperImpl.cpp
         domain/entities/User.cpp
         application/commandHandlers/loginUserCommandHandler/LoginUserCommandHandlerImpl.cpp
+        core/database/DatabaseConnectionFactory.cpp
         )
 
 set(UT_SOURCES

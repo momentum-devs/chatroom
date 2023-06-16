@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace server::infrastructure
+namespace server::core
 {
 struct DatabaseConfig
 {
