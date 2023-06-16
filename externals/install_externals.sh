@@ -1,6 +1,6 @@
 [ -z "$BUILD_TYPE" ] && export BUILD_TYPE='Debug'
 
-COMMON_CMAKE_FLAGS='-DCMAKE_BUILD_TYPE:STRING=$BUILD_TYPE -DCMAKE_CXX_COMPILER=/usr/bin/clang++-16 -GNinja'
+COMMON_CMAKE_FLAGS='-DCMAKE_BUILD_TYPE:STRING=$BUILD_TYPE -DCMAKE_CXX_COMPILER=/usr/bin/clang++-15 -GNinja'
 
 cd googletest || exit
 sudo rm -rf build

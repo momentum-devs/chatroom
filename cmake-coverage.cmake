@@ -80,8 +80,8 @@ option(
         OFF)
 
 # Programs
-find_program(LLVM_COV_PATH llvm-cov-16)
-find_program(LLVM_PROFDATA_PATH llvm-profdata-16)
+find_program(LLVM_COV_PATH llvm-cov-15)
+find_program(LLVM_PROFDATA_PATH llvm-profdata-15)
 find_program(LCOV_PATH lcov)
 find_program(GENHTML_PATH genhtml)
 # Hide behind the 'advanced' mode flag for GUI/ccmake
