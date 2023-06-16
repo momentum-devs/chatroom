@@ -17,8 +17,10 @@ TEST_F(UserMapperTest, givenUserModel_shouldMapToDomainUser)
     const auto email = "email@example.com";
     const auto password = "password";
     const auto nickname = "nickname";
+    const auto createdAt = "2023-06-16";
+    const auto updatedAt = "2023-06-16";
 
-    User userModel("0", email, password, nickname);
+    User userModel{"0", email, password, nickname, createdAt, updatedAt};
 
     const auto domainUser = userMapper.mapToDomainUser(userModel);
 
@@ -26,4 +28,6 @@ TEST_F(UserMapperTest, givenUserModel_shouldMapToDomainUser)
     ASSERT_EQ(domainUser.getEmail(), email);
     ASSERT_EQ(domainUser.getPassword(), password);
     ASSERT_EQ(domainUser.getNickname(), nickname);
+    ASSERT_EQ(domainUser.getCreatedAt(), "2023-06-16");
+    ASSERT_EQ(domainUser.getUpdatedAt(), "2023-06-16");
 }

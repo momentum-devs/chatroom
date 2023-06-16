@@ -1,6 +1,4 @@
 #pragma once
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunknown-pragmas"
 
 #include <memory>
 #include <odb/core.hxx>
@@ -15,11 +13,14 @@ namespace server::infrastructure
 class User
 {
 public:
-    User(std::string idInit, std::string emailInit, std::string passwordInit, std::string nicknameInit)
+    User(std::string idInit, std::string emailInit, std::string passwordInit, std::string nicknameInit,
+         std::string createdAtInit, std::string updatedAtInit)
         : id{std::move(idInit)},
           email{std::move(emailInit)},
           password{std::move(passwordInit)},
-          nickname{std::move(nicknameInit)}
+          nickname{std::move(nicknameInit)},
+          created_at{createdAtInit},
+          updated_at{updatedAtInit}
     {
     }
 
@@ -43,6 +44,16 @@ public:
         return nickname;
     }
 
+    std::string getCreatedAt() const
+    {
+        return created_at;
+    }
+
+    std::string getUpdatedAt() const
+    {
+        return updated_at;
+    }
+
     void setNickname(const std::string& nicknameInit)
     {
         nickname = nicknameInit;
@@ -60,11 +71,10 @@ private:
 
 #pragma db id
     std::string id;
-
     std::string email;
     std::string password;
     std::string nickname;
+    std::string created_at;
+    std::string updated_at;
 };
 }
-
-#pragma clang diagnostic pop

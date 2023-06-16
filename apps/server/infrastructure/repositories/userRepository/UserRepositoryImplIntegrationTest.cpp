@@ -64,8 +64,10 @@ TEST_F(UserRepositoryIntegrationTest, givenUserWithExistingEmail_shouldThrowErro
     const auto email = "email@example.com";
     const auto password = "password";
     const auto nickname = "nickname";
+    const auto createdAt = "2023-06-16";
+    const auto updatedAt = "2023-06-16";
 
-    User user{id1, email, password, nickname};
+    User user{id1, email, password, nickname, createdAt, updatedAt};
 
     {
         odb::transaction transaction(db->begin());
@@ -84,8 +86,10 @@ TEST_F(UserRepositoryIntegrationTest, shouldDeleteExistingUser)
     const auto email = "email@example.com";
     const auto password = "password";
     const auto nickname = "nickname";
+    const auto createdAt = "2023-06-16";
+    const auto updatedAt = "2023-06-16";
 
-    User user{id, email, password, nickname};
+    User user{id, email, password, nickname, createdAt, updatedAt};
 
     {
         odb::transaction transaction(db->begin());
@@ -95,7 +99,7 @@ TEST_F(UserRepositoryIntegrationTest, shouldDeleteExistingUser)
         transaction.commit();
     }
 
-    const auto domainUser = domain::User{id, email, password, nickname};
+    const auto domainUser = domain::User{id, email, password, nickname, createdAt, updatedAt};
 
     userRepository->deleteUser({domainUser});
 
@@ -112,8 +116,10 @@ TEST_F(UserRepositoryIntegrationTest, delete_givenNonExistingUser_shouldThrowErr
     const auto email = "email@example.com";
     const auto password = "password";
     const auto nickname = "nickname";
+    const auto createdAt = "2023-06-16";
+    const auto updatedAt = "2023-06-16";
 
-    const auto domainUser = domain::User{id, email, password, nickname};
+    const auto domainUser = domain::User{id, email, password, nickname, createdAt, updatedAt};
 
     ASSERT_ANY_THROW(userRepository->deleteUser({domainUser}));
 }
@@ -124,8 +130,10 @@ TEST_F(UserRepositoryIntegrationTest, shouldFindExistingUserByEmail)
     const auto email = "email@example.com";
     const auto password = "password";
     const auto nickname = "nickname";
+    const auto createdAt = "2023-06-16";
+    const auto updatedAt = "2023-06-16";
 
-    User user{id, email, password, nickname};
+    User user{id, email, password, nickname, createdAt, updatedAt};
 
     {
         odb::transaction transaction(db->begin());
@@ -156,8 +164,10 @@ TEST_F(UserRepositoryIntegrationTest, shouldFindExistingUserById)
     const auto email = "email@example.com";
     const auto password = "password";
     const auto nickname = "nickname";
+    const auto createdAt = "2023-06-16";
+    const auto updatedAt = "2023-06-16";
 
-    User user{id, email, password, nickname};
+    User user{id, email, password, nickname, createdAt, updatedAt};
 
     {
         odb::transaction transaction(db->begin());
@@ -190,8 +200,10 @@ TEST_F(UserRepositoryIntegrationTest, shouldUpdateExistingUser)
     const auto updatedPassword = "password2";
     const auto nickname = "nickname1";
     const auto updatedNickname = "nickname2";
+    const auto createdAt = "2023-06-16";
+    const auto updatedAt = "2023-06-16";
 
-    User user{id, email, password, nickname};
+    User user{id, email, password, nickname, createdAt, updatedAt};
 
     {
         odb::transaction transaction(db->begin());
@@ -201,7 +213,7 @@ TEST_F(UserRepositoryIntegrationTest, shouldUpdateExistingUser)
         transaction.commit();
     }
 
-    auto domainUser = domain::User{id, email, password, nickname};
+    auto domainUser = domain::User{id, email, password, nickname, createdAt, updatedAt};
 
     domainUser.setPassword(updatedPassword);
     domainUser.setNickname(updatedNickname);
@@ -223,8 +235,10 @@ TEST_F(UserRepositoryIntegrationTest, update_givenNonExistingUser_shouldThrowErr
     const auto email = "email@example.com";
     const auto password = "password";
     const auto nickname = "nickname";
+    const auto createdAt = "2023-06-16";
+    const auto updatedAt = "2023-06-16";
 
-    auto user = domain::User{id, email, password, nickname};
+    const auto domainUser = domain::User{id, email, password, nickname, createdAt, updatedAt};
 
-    ASSERT_ANY_THROW(userRepository->updateUser({user}));
+    ASSERT_ANY_THROW(userRepository->updateUser({domainUser}));
 }

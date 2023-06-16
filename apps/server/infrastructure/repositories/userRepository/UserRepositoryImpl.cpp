@@ -1,5 +1,6 @@
 #include "UserRepositoryImpl.h"
 
+#include <boost/date_time/posix_time/posix_time.hpp>
 #include <format>
 
 #include "server/infrastructure/errors/UserNotFoundError.h"
@@ -19,7 +20,9 @@ domain::User UserRepositoryImpl::createUser(const domain::CreateUserPayload& pay
     try
     {
         {
-            User user{payload.id, payload.email, payload.password, payload.nickname};
+            const auto currentDate = to_iso_string(boost::posix_time::second_clock::universal_time());
+
+            User user{payload.id, payload.email, payload.password, payload.nickname, currentDate, currentDate};
 
             odb::transaction transaction(db->begin());
 

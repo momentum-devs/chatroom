@@ -8,7 +8,9 @@ domain::User UserMapperImpl::mapToDomainUser(const User& user) const
     const auto email = user.getEmail();
     const auto password = user.getPassword();
     const auto nickname = user.getNickname();
+    const auto createdAt = user.getCreatedAt();
+    const auto updatedAt = user.getUpdatedAt();
 
-    return domain::User{id, email, password, nickname};
+    return domain::User{id, email, password, nickname, createdAt, updatedAt};
 }
 }
