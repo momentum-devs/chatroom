@@ -4,7 +4,6 @@
 
 #include "RegisterUserCommandHandlerImpl.h"
 #include "server/application/services/hashService/HashServiceImpl.h"
-#include "server/infrastructure/database/management/DatabaseManagerFactory.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "server/infrastructure/repositories/userRepository/UserRepositoryImpl.h"
 
@@ -14,36 +13,34 @@ using namespace server::infrastructure;
 using namespace server::application;
 using namespace server::domain;
 
-namespace
-{
-const std::string databaseHost = "localhost";
-const std::string databaseName = "chatroom";
-const std::string databaseUsername = "local";
-const std::string databasePassword = "local";
-}
-
 class RegisterUserCommandImplIntegrationTest : public Test
 {
 public:
-    static void SetUpTestSuite()
-    {
-        server::infrastructure::DatabaseManagerFactory::create(
-            {databaseHost, databaseName, databaseUsername, databasePassword});
-    }
-
     void SetUp() override
     {
-        Orm::DB::table("users")->truncate();
+        odb::transaction transaction(db->begin());
+
+        db->execute("DELETE FROM \"users\";");
+
+        transaction.commit();
     }
 
     void TearDown() override
     {
-        Orm::DB::table("users")->truncate();
+        odb::transaction transaction(db->begin());
+
+        db->execute("DELETE FROM \"users\";");
+
+        transaction.commit();
     }
-    
+
     std::unique_ptr<UserMapper> userMapperInit = std::make_unique<UserMapperImpl>();
 
-    std::shared_ptr<UserRepository> userRepository = std::make_shared<UserRepositoryImpl>(std::move(userMapperInit));
+    std::shared_ptr<odb::pgsql::database> db =
+        std::make_shared<odb::pgsql::database>("local", "local", "chatroom", "localhost", 5432);
+
+    std::shared_ptr<UserRepository> userRepository =
+        std::make_shared<UserRepositoryImpl>(db, std::move(userMapperInit));
 
     std::shared_ptr<HashService> hashService = std::make_shared<HashServiceImpl>();
 

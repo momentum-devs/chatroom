@@ -11,7 +11,7 @@ namespace server::infrastructure
 {
 #pragma db value(std::string) type("TEXT") id_type("VARCHAR(128)")
 
-#pragma db object
+#pragma db object table("users")
 class User
 {
 public:
@@ -25,22 +25,32 @@ public:
 
     std::string getId() const
     {
-        return this->id;
+        return id;
     }
 
     std::string getEmail() const
     {
-        return this->email;
+        return email;
     }
 
     std::string getPassword() const
     {
-        return this->password;
+        return password;
     }
 
     std::string getNickname() const
     {
-        return this->nickname;
+        return nickname;
+    }
+
+    void setNickname(const std::string& nicknameInit)
+    {
+        nickname = nicknameInit;
+    }
+
+    void setPassword(const std::string& passwordInit)
+    {
+        password = passwordInit;
     }
 
 private:

@@ -89,7 +89,11 @@ target_include_directories(${EXECUTABLE_NAME} PRIVATE
         ${DOTENV_INCLUDE_DIR}
         )
 
-add_executable(${EXECUTABLE_NAME}UT ${UT_SOURCES} ${SOURCES})
+add_executable(${EXECUTABLE_NAME}UT
+        ${UT_SOURCES}
+        ${SOURCES}
+        ${ODB_SOURCES}
+        )
 
 target_link_libraries(${EXECUTABLE_NAME}UT PRIVATE
         gtest
@@ -101,6 +105,7 @@ target_link_libraries(${EXECUTABLE_NAME}UT PRIVATE
         messages
         filesystem
         collection
+        ${ODB_LIBRARIES}
         )
 
 target_include_directories(${EXECUTABLE_NAME}UT PUBLIC ${GMOCK_INCLUDE_DIR})
@@ -108,11 +113,15 @@ target_include_directories(${EXECUTABLE_NAME}UT PUBLIC ${GMOCK_INCLUDE_DIR})
 add_test(NAME ${EXECUTABLE_NAME}UT COMMAND ${EXECUTABLE_NAME}UT WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
 if (INTEGRATION_TESTS_BUILD)
-    add_executable(${EXECUTABLE_NAME}IT ${IT_SOURCES} ${SOURCES})
+    add_executable(${EXECUTABLE_NAME}IT
+            ${IT_SOURCES}
+            ${SOURCES}
+            ${ODB_SOURCES}
+            )
 
     target_link_libraries(${EXECUTABLE_NAME}IT PRIVATE
             gtest
-            gmock_main
+            gtest_main
             Qt6::Core
             loguru::loguru
             nlohmann_json::nlohmann_json
@@ -120,6 +129,7 @@ if (INTEGRATION_TESTS_BUILD)
             messages
             filesystem
             collection
+            ${ODB_LIBRARIES}
             )
 
     target_include_directories(${EXECUTABLE_NAME}IT PUBLIC ${GMOCK_INCLUDE_DIR})

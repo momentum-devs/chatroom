@@ -1,5 +1,8 @@
 #include "UserRepositoryImpl.h"
 
+#include <format>
+
+#include "server/infrastructure/errors/UserNotFoundError.h"
 #include "server/infrastructure/errors/UserRepositoryError.h"
 #include "User.odb.h"
 
@@ -41,12 +44,12 @@ std::optional<domain::User> UserRepositoryImpl::findUserById(const domain::FindU
 
         std::shared_ptr<User> user(db->query_one<User>(query::id == payload.id));
 
-        if (user)
+        if (!user)
         {
-            return userMapper->mapToDomainUser(*user);
+            return std::nullopt;
         }
 
-        return std::nullopt;
+        return userMapper->mapToDomainUser(*user);
     }
     catch (const std::exception& error)
     {
@@ -62,12 +65,12 @@ std::optional<domain::User> UserRepositoryImpl::findUserByEmail(const domain::Fi
 
         std::shared_ptr<User> user(db->query_one<User>(query::email == payload.email));
 
-        if (user)
+        if (!user)
         {
-            return userMapper->mapToDomainUser(*user);
+            return std::nullopt;
         }
 
-        return std::nullopt;
+        return userMapper->mapToDomainUser(*user);
     }
     catch (const std::exception& error)
     {
@@ -75,10 +78,29 @@ std::optional<domain::User> UserRepositoryImpl::findUserByEmail(const domain::Fi
     }
 }
 
-void UserRepositoryImpl::updateUser(const domain::UpdateUserPayload&) const
+void UserRepositoryImpl::updateUser(const domain::UpdateUserPayload& payload) const
 {
     try
     {
+        {
+            typedef odb::query<User> query;
+
+            std::shared_ptr<User> user(db->query_one<User>(query::id == payload.user.getId()));
+
+            if (!user)
+            {
+                throw errors::UserNotFoundError{std::format("User with id \"{}\" not found.", payload.user.getId())};
+            }
+
+            user->setNickname(payload.user.getNickname());
+            user->setPassword(payload.user.getPassword());
+
+            odb::transaction transaction(db->begin());
+
+            db->update(*user);
+
+            transaction.commit();
+        }
     }
     catch (const std::exception& error)
     {
