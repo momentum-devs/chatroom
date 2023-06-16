@@ -1,11 +1,13 @@
 #include "UserRepositoryImpl.h"
 
 #include "server/infrastructure/errors/UserRepositoryError.h"
+#include "User.odb.h"
 
 namespace server::infrastructure
 {
-UserRepositoryImpl::UserRepositoryImpl(std::unique_ptr<UserMapper> userMapperInit)
-    : userMapper{std::move(userMapperInit)}
+UserRepositoryImpl::UserRepositoryImpl(std::shared_ptr<odb::pgsql::database> dbInit,
+                                       std::unique_ptr<UserMapper> userMapperInit)
+    : db{std::move(dbInit)}, userMapper{std::move(userMapperInit)}
 {
 }
 
@@ -13,9 +15,17 @@ domain::User UserRepositoryImpl::createUser(const domain::CreateUserPayload& pay
 {
     try
     {
-        const auto user = User("uuid", payload.email, payload.password, payload.nickname);
+        {
+            User user{payload.id, payload.email, payload.password, payload.nickname};
 
-        return userMapper->mapToDomainUser(user);
+            odb::transaction transaction(db->begin());
+
+            db->persist(user);
+
+            transaction.commit();
+
+            return userMapper->mapToDomainUser(user);
+        }
     }
     catch (const std::exception& error)
     {
@@ -23,10 +33,19 @@ domain::User UserRepositoryImpl::createUser(const domain::CreateUserPayload& pay
     }
 }
 
-std::optional<domain::User> UserRepositoryImpl::findUserById(const domain::FindUserByIdPayload&) const
+std::optional<domain::User> UserRepositoryImpl::findUserById(const domain::FindUserByIdPayload& payload) const
 {
     try
     {
+        typedef odb::query<User> query;
+
+        std::shared_ptr<User> user(db->query_one<User>(query::id == payload.id));
+
+        if (user)
+        {
+            return userMapper->mapToDomainUser(*user);
+        }
+
         return std::nullopt;
     }
     catch (const std::exception& error)
@@ -35,10 +54,19 @@ std::optional<domain::User> UserRepositoryImpl::findUserById(const domain::FindU
     }
 }
 
-std::optional<domain::User> UserRepositoryImpl::findUserByEmail(const domain::FindUserByEmailPayload&) const
+std::optional<domain::User> UserRepositoryImpl::findUserByEmail(const domain::FindUserByEmailPayload& payload) const
 {
     try
     {
+        typedef odb::query<User> query;
+
+        std::shared_ptr<User> user(db->query_one<User>(query::email == payload.email));
+
+        if (user)
+        {
+            return userMapper->mapToDomainUser(*user);
+        }
+
         return std::nullopt;
     }
     catch (const std::exception& error)
@@ -58,10 +86,15 @@ void UserRepositoryImpl::updateUser(const domain::UpdateUserPayload&) const
     }
 }
 
-void UserRepositoryImpl::deleteUser(const domain::DeleteUserPayload&) const
+void UserRepositoryImpl::deleteUser(const domain::DeleteUserPayload& payload) const
 {
     try
     {
+        odb::transaction t(db->begin());
+
+        db->erase<User>(payload.user.getId());
+
+        t.commit();
     }
     catch (const std::exception& error)
     {

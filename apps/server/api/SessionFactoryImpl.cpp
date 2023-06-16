@@ -15,7 +15,11 @@
 
 namespace server::api
 {
-SessionFactoryImpl::SessionFactoryImpl(boost::asio::io_context& contextInit) : context{contextInit} {}
+SessionFactoryImpl::SessionFactoryImpl(boost::asio::io_context& contextInit,
+                                       std::shared_ptr<odb::pgsql::database> dbInit)
+    : context{contextInit}, db{std::move(dbInit)}
+{
+}
 
 std::pair<std::shared_ptr<boost::asio::ip::tcp::socket>, std::shared_ptr<Session>> SessionFactoryImpl::create() const
 {
@@ -29,7 +33,7 @@ std::pair<std::shared_ptr<boost::asio::ip::tcp::socket>, std::shared_ptr<Session
 
     auto userMapper = std::make_unique<server::infrastructure::UserMapperImpl>();
 
-    auto userRepository = std::make_shared<server::infrastructure::UserRepositoryImpl>(std::move(userMapper));
+    auto userRepository = std::make_shared<server::infrastructure::UserRepositoryImpl>(db, std::move(userMapper));
 
     const auto hashService = std::make_shared<server::application::HashServiceImpl>();
 

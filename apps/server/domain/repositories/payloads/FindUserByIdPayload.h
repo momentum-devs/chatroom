@@ -6,6 +6,6 @@ namespace server::domain
 {
 struct FindUserByIdPayload
 {
-    const unsigned id;
+    std::string id;
 };
 }

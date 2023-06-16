@@ -1,13 +1,18 @@
 #include "User.h"
 
+#include <utility>
+
 namespace server::domain
 {
-User::User(unsigned idInit, std::string emailInit, std::string passwordInit, std::string nicknameInit)
-    : id{idInit}, email{std::move(emailInit)}, password{std::move(passwordInit)}, nickname{std::move(nicknameInit)}
+User::User(std::string idInit, std::string emailInit, std::string passwordInit, std::string nicknameInit)
+    : id{std::move(idInit)},
+      email{std::move(emailInit)},
+      password{std::move(passwordInit)},
+      nickname{std::move(nicknameInit)}
 {
 }
 
-unsigned User::getId() const
+std::string User::getId() const
 {
     return id;
 }

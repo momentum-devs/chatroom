@@ -11,7 +11,7 @@ TokenServiceImpl::TokenServiceImpl(std::string jwtSecretInit, unsigned jwtExpire
 {
 }
 
-std::string TokenServiceImpl::createToken(unsigned int userId) const
+std::string TokenServiceImpl::createToken(const std::string& userId) const
 {
     jwt::jwt_object jwtObject{jwt::params::algorithm("HS256"), jwt::params::secret(jwtSecret)};
 
@@ -21,12 +21,12 @@ std::string TokenServiceImpl::createToken(unsigned int userId) const
     return jwtObject.signature();
 }
 
-unsigned TokenServiceImpl::getUserIdFromToken(const std::string& token) const
+std::string TokenServiceImpl::getUserIdFromToken(const std::string& token) const
 {
     auto decoded = jwt::decode(token, jwt::params::algorithms({"HS256"}), jwt::params::secret(jwtSecret),
                                jwt::params::verify(true));
 
-    return decoded.payload().get_claim_value<unsigned>("userId");
+    return decoded.payload().get_claim_value<std::string>("userId");
 }
 
 }

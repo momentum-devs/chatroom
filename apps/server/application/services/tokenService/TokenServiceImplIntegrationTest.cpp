@@ -20,7 +20,7 @@ public:
 
 TEST_F(TokenServiceImplIntegrationTest, shouldCreateTokenAndHaveTheSameUserIdAfterVerifyingToken)
 {
-    const auto userId = 1;
+    const auto userId = "1";
 
     const auto token = tokenService.createToken(userId);
 

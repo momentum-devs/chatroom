@@ -10,36 +10,12 @@
 #include "server/api/ConnectionAcceptorImpl.h"
 #include "server/api/SessionFactoryImpl.h"
 #include "server/config/ConfigProvider.h"
+#include "server/core/database/DatabaseConnectionFactory.h"
 #include "server/infrastructure/database/tables/userTable/User.h"
-#include "User.odb.h"
 
 // TODO: add application class
 int main(int argc, char* argv[])
 {
-    try
-    {
-        auto db = std::make_shared<odb::pgsql::database>("local", "local", "chatroom", "localhost", 5432);
-
-        {
-            server::infrastructure::User john("uuid", "John", "", "");
-            server::infrastructure::User jane("uuid", "Jane", "", "");
-            server::infrastructure::User joe("uuid", "Joe", "", "");
-
-            odb::transaction t(db->begin());
-
-            db->persist(john);
-            db->persist(jane);
-            db->persist(joe);
-
-            t.commit();
-        }
-    }
-    catch (const odb::exception& e)
-    {
-        std::cerr << "Error: " << e.what() << std::endl;
-        return 1;
-    }
-
     const auto projectPath = common::filesystem::getProjectPath("chatroom");
 
     dotenv::init(std::format("{}/apps/server/.env", projectPath).c_str());
@@ -58,9 +34,12 @@ int main(int argc, char* argv[])
 
     const auto numberOfSupportedThreads = std::thread::hardware_concurrency();
 
+    auto db = server::core::DatabaseConnectionFactory::create(
+        {databaseHost, databaseName, databaseUsername, databasePassword});
+
     boost::asio::io_context context;
 
-    auto sessionFactory = std::make_unique<server::api::SessionFactoryImpl>(context);
+    auto sessionFactory = std::make_unique<server::api::SessionFactoryImpl>(context, db);
 
     auto connectionAcceptor =
         std::make_unique<server::api::ConnectionAcceptorImpl>(context, serverPort, std::move(sessionFactory));

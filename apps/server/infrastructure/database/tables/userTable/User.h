@@ -44,11 +44,13 @@ public:
     }
 
 private:
+    User() = default;
+
     friend class odb::access;
 
 #pragma db id
     std::string id;
-    
+
     std::string email;
     std::string password;
     std::string nickname;

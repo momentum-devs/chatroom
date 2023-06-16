@@ -18,11 +18,11 @@ TEST_F(UserMapperTest, givenUserModel_shouldMapToDomainUser)
     const auto password = "password";
     const auto nickname = "nickname";
 
-    User userModel(email, password, nickname);
+    User userModel("0", email, password, nickname);
 
     const auto domainUser = userMapper.mapToDomainUser(userModel);
 
-    ASSERT_EQ(domainUser.getId(), 0);
+    ASSERT_EQ(domainUser.getId(), "0");
     ASSERT_EQ(domainUser.getEmail(), email);
     ASSERT_EQ(domainUser.getPassword(), password);
     ASSERT_EQ(domainUser.getNickname(), nickname);
