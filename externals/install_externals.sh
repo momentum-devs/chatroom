@@ -3,11 +3,6 @@
 # shellcheck disable=SC2016
 COMMON_CMAKE_FLAGS='-DCMAKE_BUILD_TYPE:STRING=$BUILD_TYPE -DCMAKE_CXX_COMPILER=/usr/bin/clang++-16 -GNinja'
 
-cd odb || exit
-sudo ./configure.ac CXX=/usr/bin/clang++-16 || exit
-make install
-cd ../..
-
 cd googletest || exit
 sudo rm -rf build
 mkdir build
