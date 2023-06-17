@@ -95,8 +95,7 @@ add_executable(${EXECUTABLE_NAME}UT
         )
 
 target_link_libraries(${EXECUTABLE_NAME}UT PRIVATE
-        gtest
-        gmock_main
+        GTest::gmock_main
         Qt6::Core
         loguru::loguru
         nlohmann_json::nlohmann_json
@@ -120,8 +119,7 @@ add_executable(${EXECUTABLE_NAME}IT
         )
 
 target_link_libraries(${EXECUTABLE_NAME}IT PRIVATE
-        gtest
-        gtest_main
+        GTest::gtest_main
         Qt6::Core
         loguru::loguru
         nlohmann_json::nlohmann_json

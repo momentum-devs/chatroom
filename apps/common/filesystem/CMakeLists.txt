@@ -26,7 +26,7 @@ target_link_libraries(${LIBRARY_NAME} PUBLIC
 add_executable(${LIBRARY_NAME}UT ${SOURCES} ${UT_SOURCES})
 
 target_link_libraries(${LIBRARY_NAME}UT PRIVATE
-        gtest_main
+        GTest::gtest_main
         collection
         )
 

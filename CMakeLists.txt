@@ -10,6 +10,7 @@ find_package(Boost REQUIRED)
 find_package(Qt6 6.2 COMPONENTS Core Gui Widgets Quick QuickControls2 LinguistTools REQUIRED)
 find_package(nlohmann_json 3.2.0 REQUIRED)
 find_package(cpp-jwt REQUIRED)
+find_package(GTest REQUIRED)
 
 add_subdirectory(externals)
 

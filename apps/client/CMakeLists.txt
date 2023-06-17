@@ -54,8 +54,7 @@ target_include_directories(${EXECUTABLE_NAME} PUBLIC ${GMOCK_INCLUDE_DIR} ${DOTE
 add_executable(${EXECUTABLE_NAME}UT ${UT_SOURCES} ${SOURCES})
 
 target_link_libraries(${EXECUTABLE_NAME}UT PUBLIC
-        gtest
-        gmock_main
+        GTest::gmock_main
         Qt6::Core
         Qt::Gui
         Qt6::Quick
@@ -66,7 +65,6 @@ target_link_libraries(${EXECUTABLE_NAME}UT PUBLIC
         filesystem
         collection
         )
-
 
 target_include_directories(${EXECUTABLE_NAME}UT PUBLIC ${GMOCK_INCLUDE_DIR})
 

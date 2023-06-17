@@ -14,13 +14,15 @@ using namespace server::api;
 namespace
 {
 common::bytes::Bytes token{};
-const auto id = 0;
+const std::string id = "id";
 const std::string validEmail = "abc@abc.com";
 const std::string validPassword = "password";
+const std::string createdAt = "2023-06-16";
+const std::string updatedAt = "2023-06-16";
 const server::application::RegisterUserCommandHandlerPayload validRegisterUserCommandHandlerPayload{validEmail,
                                                                                                     validPassword};
 const server::application::RegisterUserCommandHandlerResult validRegisterUserCommandHandlerResult{
-    {id, validEmail, validPassword, validPassword}};
+    {id, validEmail, validPassword, validPassword, createdAt, updatedAt}};
 common::bytes::Bytes validRegisterPayload{
     std::format(R"({{"email":"{}","password":"{}"}})", validEmail, validPassword)};
 common::messages::Message validRegisterMessage{common::messages::MessageId::Register, token, validRegisterPayload};
