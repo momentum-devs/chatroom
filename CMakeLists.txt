@@ -8,7 +8,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED YES)
 
 find_package(Boost REQUIRED)
 find_package(Qt6 6.2 COMPONENTS Core Gui Widgets Quick QuickControls2 LinguistTools REQUIRED)
-find_package(TinyOrm 0.16.0 CONFIG REQUIRED)
 find_package(nlohmann_json 3.2.0 REQUIRED)
 find_package(cpp-jwt REQUIRED)
 
@@ -17,7 +16,6 @@ add_subdirectory(externals)
 set(GMOCK_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/externals/googletest/googlemock/include")
 set(GTEST_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/externals/googletest/googletest/include")
 set(DOTENV_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/externals/dotenv-cpp/include")
-set(TOM_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/externals/TinyORM/tom/include")
 
 enable_testing()
 
