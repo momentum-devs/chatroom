@@ -1,5 +1,3 @@
-#include <orm/db.hpp>
-
 #include "gtest/gtest.h"
 
 #include "RegisterUserCommandHandlerImpl.h"
