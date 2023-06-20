@@ -1,5 +1,4 @@
 #include <odb/pgsql/database.hxx>
-#include <orm/db.hpp>
 
 #include "gtest/gtest.h"
 

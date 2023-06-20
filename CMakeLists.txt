@@ -21,7 +21,7 @@ set(DOTENV_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/externals/dotenv-cpp/include")
 enable_testing()
 
 set(target_code_coverage_ALL 1)
-include(cmake-coverage.cmake)
+include("cmake/cmake-coverage.cmake")
 add_code_coverage_all_targets()
 
 add_subdirectory(apps)
