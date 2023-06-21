@@ -28,11 +28,11 @@ v. 001
 ### Friend mechanism:
 
 7. send friend proposition
-1. freind proposition send confirmation *(from server)*
-1. new freind proposition info *(from server)*
+1. friend proposition send confirmation *(from server)*
+1. new friend proposition info *(from server)*
 1. friend proposition accept
-1. freind proposition accept confirmation *(from server)*
-1. new freind proposition accept info *(from server)*
+1. friend proposition accept confirmation *(from server)*
+1. new friend proposition accept info *(from server)*
 1. friend proposition reject
 1. friend proposition reject confirmation *(from server)*
 1. new friend proposition reject info *(from server)*

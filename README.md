@@ -5,6 +5,12 @@
 
 ### Setup local development:
 
+#### Download project
+
+```git clone git@github.com:momentum-devs/chatroom.git```
+
+```git submodule init --update --recursive```
+
 #### Install build tools:
 
 ```sudo apt install sccache clang-15 libc++-15-dev libc++abi-15-dev build-essential libboost-all-dev libgl1-mesa-dev libglx-dev lld ninja-build```
@@ -19,15 +25,13 @@
 
 #### Install libs:
 
-```git submodule init --update --recursive```
-
 ```cd externals && ./install_externals.sh```
 
 ### Run database:
 
-```systemctl stop postgresql```
+```chmod 777 start_dev.sh```
 
-```docker-compose up```
+```./start_dev.sh```
 
 ### [DOCS](docs/README.md)
 
