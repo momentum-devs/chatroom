@@ -1,11 +1,12 @@
 #pragma once
 
 #include <string>
-#include "../../entities/User.h"
+
+#include "../../../entities/user/User.h"
 
 namespace server::domain
 {
-struct DeleteUserPayload
+struct UpdateUserPayload
 {
     User user;
 };

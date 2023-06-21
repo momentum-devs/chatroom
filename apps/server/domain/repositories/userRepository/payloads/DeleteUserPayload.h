@@ -2,11 +2,11 @@
 
 #include <string>
 
-#include "../../entities/User.h"
+#include "../../../entities/user/User.h"
 
 namespace server::domain
 {
-struct UpdateUserPayload
+struct DeleteUserPayload
 {
     User user;
 };
