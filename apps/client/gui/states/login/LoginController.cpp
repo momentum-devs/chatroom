@@ -14,7 +14,16 @@ LoginController::LoginController(std::shared_ptr<api::Session> sessionInit, cons
 
 void LoginController::handleLoginRequest(const QString& email, const QString& password)
 {
-    // TODO: send login message
+    nlohmann::json payload{
+        {"email", email.toStdString()},
+        {"password", password.toStdString()},
+    };
+
+    common::messages::Message message{common::messages::MessageId::Login, common::bytes::Bytes{payload.dump()}};
+
+    session->sendMessage(message);
+
+    LOG_S(INFO) << std::format("Sent login request for user {}", static_cast<std::string>(message.payload));
 }
 
 void LoginController::handleGoToRegisterState()

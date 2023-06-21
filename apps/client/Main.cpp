@@ -2,7 +2,6 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
-#include <QQuickView>
 #include <QTranslator>
 
 #include "api/SessionImpl.h"
@@ -10,7 +9,6 @@
 #include "common/filesystem/GetProjectPath.h"
 #include "config/ConfigProvider.h"
 #include "gui/qml/LoaderController.h"
-#include "gui/states/register/RegisterController.h"
 #include "gui/states/StateFactory.h"
 #include "gui/states/StateMachine.h"
 #include "laserpants/dotenv/dotenv.h"

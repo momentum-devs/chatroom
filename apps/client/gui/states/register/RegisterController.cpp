@@ -14,14 +14,12 @@ RegisterController::RegisterController(std::shared_ptr<api::Session> sessionInit
 
 void RegisterController::handleRegisterRequest(const QString& email, const QString& password)
 {
-
     nlohmann::json payload{
         {"email", email.toStdString()},
         {"password", password.toStdString()},
     };
 
-    common::messages::Message message{common::messages::MessageId::Register, common::messages::nullToken,
-                                      common::bytes::Bytes{payload.dump()}};
+    common::messages::Message message{common::messages::MessageId::Register, common::bytes::Bytes{payload.dump()}};
 
     session->sendMessage(message);
 
