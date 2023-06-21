@@ -2,7 +2,7 @@
 
 #include <boost/asio.hpp>
 
-#include "messages/Message.h"
+#include "common/messages/Message.h"
 
 namespace server::api
 {

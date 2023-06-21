@@ -2,7 +2,7 @@
 
 #include <odb/pgsql/database.hxx>
 
-#include "messages/MessageSerializer.h"
+#include "common/messages/MessageSerializer.h"
 #include "server/domain/repositories/UserRepository.h"
 #include "SessionFactory.h"
 

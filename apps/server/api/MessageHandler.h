@@ -1,6 +1,6 @@
 #pragma once
 
-#include "messages/Message.h"
+#include "common/messages/Message.h"
 
 namespace server::api
 {

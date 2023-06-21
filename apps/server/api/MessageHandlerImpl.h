@@ -16,7 +16,6 @@ public:
     common::messages::Message handleMessage(const common::messages::Message& message) override;
 
 private:
-    const common::bytes::Bytes& getToken();
     common::messages::Message handleRegisterMessage(const common::bytes::Bytes& payload);
 
     static inline const common::bytes::Bytes nullToken =

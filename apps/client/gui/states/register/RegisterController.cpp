@@ -20,8 +20,7 @@ void RegisterController::handleRegisterRequest(const QString& email, const QStri
         {"password", password.toStdString()},
     };
 
-    common::messages::Message message{common::messages::MessageId::Register, common::messages::nullToken,
-                                      common::bytes::Bytes{payload.dump()}};
+    common::messages::Message message{common::messages::MessageId::Register, common::bytes::Bytes{payload.dump()}};
 
     session->sendMessage(message);
 

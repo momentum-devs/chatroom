@@ -21,7 +21,7 @@ struct DummyMock
 
 const ConnectorPayload connectorPayload{"host", 123};
 const common::messages::MessageId messageId{common::messages::MessageId::Register};
-const common::messages::Message message{messageId, {}, {}};
+const common::messages::Message message{messageId, {}};
 }
 
 class SessionImplTest : public Test

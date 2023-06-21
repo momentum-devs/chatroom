@@ -21,23 +21,8 @@ common::messages::Message MessageHandlerImpl::handleMessage(const common::messag
         return handleRegisterMessage(message.payload);
     }
     default:
-        return {common::messages::MessageId::Error, {}, {}};
+        return {common::messages::MessageId::Error, {}};
     }
-}
-
-const common::bytes::Bytes& MessageHandlerImpl::getToken()
-{
-    if (not token)
-    {
-        token = common::bytes::Bytes{};
-
-        for (std::size_t i = 0; i < 40; ++i)
-        {
-            token->push_back(static_cast<unsigned char>(rand() % std::numeric_limits<unsigned char>::max()));
-        }
-    }
-
-    return *token;
 }
 
 common::messages::Message MessageHandlerImpl::handleRegisterMessage(const common::bytes::Bytes& payload)
@@ -52,7 +37,7 @@ common::messages::Message MessageHandlerImpl::handleRegisterMessage(const common
     {
         nlohmann::json responsePayload{{"error", "wrong email address"}};
 
-        return {common::messages::MessageId::RegisterResponse, nullToken, common::bytes::Bytes{responsePayload.dump()}};
+        return {common::messages::MessageId::RegisterResponse, common::bytes::Bytes{responsePayload.dump()}};
     }
 
     auto password = payloadJson["password"].get<std::string>();
@@ -65,9 +50,9 @@ common::messages::Message MessageHandlerImpl::handleRegisterMessage(const common
     {
         nlohmann::json responsePayload{{"error", e.what()}};
 
-        return {common::messages::MessageId::RegisterResponse, nullToken, common::bytes::Bytes{responsePayload.dump()}};
+        return {common::messages::MessageId::RegisterResponse, common::bytes::Bytes{responsePayload.dump()}};
     }
 
-    return {common::messages::MessageId::RegisterResponse, getToken(), common::bytes::Bytes{R"({"ok"})"}};
+    return {common::messages::MessageId::RegisterResponse, common::bytes::Bytes{R"({"ok"})"}};
 }
 }

@@ -1,7 +1,7 @@
 #include "SessionImpl.h"
 
+#include "common/messages/Message.h"
 #include "loguru.hpp"
-#include "messages/Message.h"
 #include "RemoveHandlerError.h"
 
 namespace client::api

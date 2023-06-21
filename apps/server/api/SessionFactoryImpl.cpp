@@ -5,8 +5,8 @@
 
 #include "common/messages/MessageReaderImpl.h"
 #include "common/messages/MessageSenderImpl.h"
+#include "common/messages/MessageSerializerImpl.h"
 #include "MessageHandlerImpl.h"
-#include "messages/MessageSerializerImpl.h"
 #include "server/application/commandHandlers/registerUserCommandHandler/RegisterUserCommandHandlerImpl.h"
 #include "server/application/services/hashService/HashServiceImpl.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"

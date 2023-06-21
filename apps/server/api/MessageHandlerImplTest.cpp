@@ -13,7 +13,6 @@ using namespace server::api;
 
 namespace
 {
-common::bytes::Bytes token{};
 const std::string id = "id";
 const std::string validEmail = "abc@abc.com";
 const std::string validPassword = "password";
@@ -25,14 +24,14 @@ const server::application::RegisterUserCommandHandlerResult validRegisterUserCom
     {id, validEmail, validPassword, validPassword, createdAt, updatedAt}};
 common::bytes::Bytes validRegisterPayload{
     std::format(R"({{"email":"{}","password":"{}"}})", validEmail, validPassword)};
-common::messages::Message validRegisterMessage{common::messages::MessageId::Register, token, validRegisterPayload};
+common::messages::Message validRegisterMessage{common::messages::MessageId::Register, validRegisterPayload};
 common::bytes::Bytes okResponse{R"({"ok"})"};
 
 const std::string invalidEmail = "invalidEmail";
 const std::string invalidPassword = "invalidPassword";
 common::bytes::Bytes registerPayloadWithInvalidEmail{
     std::format(R"({{"email":"{}","password":"{}"}})", invalidEmail, invalidPassword)};
-common::messages::Message registerMessagedWithInvalidEmail{common::messages::MessageId::Register, token,
+common::messages::Message registerMessagedWithInvalidEmail{common::messages::MessageId::Register,
                                                            registerPayloadWithInvalidEmail};
 common::bytes::Bytes wrongEmailResponse{nlohmann::json{{"error", "wrong email address"}}.dump()};
 }

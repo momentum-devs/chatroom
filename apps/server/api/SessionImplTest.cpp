@@ -13,11 +13,9 @@ using namespace server::api;
 
 namespace
 {
-const common::bytes::Bytes defaultToken{};
 const common::bytes::Bytes defaultPayload{};
-const common::messages::Message message{common::messages::MessageId::Register, defaultToken, defaultPayload};
-const common::messages::Message responseMessage{common::messages::MessageId::RegisterResponse, defaultToken,
-                                                defaultPayload};
+const common::messages::Message message{common::messages::MessageId::Register, defaultPayload};
+const common::messages::Message responseMessage{common::messages::MessageId::RegisterResponse, defaultPayload};
 }
 
 class SessionImplTest : public Test
