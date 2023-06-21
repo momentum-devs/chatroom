@@ -41,6 +41,7 @@ set(IT_SOURCES
 
 set(ODB_HEADERS
         infrastructure/database/tables/userTable/User.h
+        infrastructure/database/tables/channelTable/Channel.h
         )
 
 odb_compile(
@@ -57,6 +58,7 @@ odb_compile(
 
 set(ODB_SOURCES
         infrastructure/database/tables/userTable/User.cpp
+        infrastructure/database/tables/channelTable/Channel.cpp
         ${ODB_GENERATED_SOURCES}
         )
 
@@ -66,6 +68,7 @@ set(ODB_LIBRARIES
         )
 
 include_directories(infrastructure/database/tables/userTable)
+include_directories(infrastructure/database/tables/channelTable)
 
 add_executable(${EXECUTABLE_NAME}
         Main.cpp

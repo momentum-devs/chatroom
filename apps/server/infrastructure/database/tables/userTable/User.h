@@ -7,7 +7,7 @@
 
 namespace server::infrastructure
 {
-#pragma db value(std::string) type("TEXT") id_type("VARCHAR(128)")
+#pragma db value(std::string) type("TEXT") id_type("VARCHAR(32)")
 
 #pragma db object table("users")
 class User
