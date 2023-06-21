@@ -24,14 +24,14 @@ LoginUserCommandHandlerResult LoginUserCommandHandlerImpl::execute(const LoginUs
 
     if (!existingUser)
     {
-        throw errors::UserNotFoundError{std::format("User with email \"{}\" not found.", payload.email)};
+        throw errors::ResourceNotFoundError{std::format("User with email \"{}\" not found.", payload.email)};
     }
 
     const auto passwordIsValid = hashService->compare(payload.password, existingUser->getPassword());
 
     if (!passwordIsValid)
     {
-        throw errors::UserNotFoundError{std::format("User with email \"{}\" not found.", payload.email)};
+        throw errors::ResourceNotFoundError{std::format("User with email \"{}\" not found.", payload.email)};
     }
 
     const auto token = tokenService->createToken(existingUser->getId());

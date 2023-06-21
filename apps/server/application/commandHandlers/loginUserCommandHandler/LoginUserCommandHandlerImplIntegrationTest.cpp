@@ -3,7 +3,6 @@
 #include "../../errors/ResourceNotFoundError.h"
 #include "LoginUserCommandHandlerImpl.h"
 #include "server/application/services/hashService/HashServiceImpl.h"
-#include "server/application/services/tokenService/TokenService.h"
 #include "server/application/services/tokenService/TokenServiceImpl.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "server/infrastructure/repositories/userRepository/UserRepositoryImpl.h"
