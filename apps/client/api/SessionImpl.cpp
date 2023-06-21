@@ -29,7 +29,9 @@ void SessionImpl::sendMessage(const common::messages::Message& message)
 
 void SessionImpl::handleMessage(const common::messages::Message& message)
 {
-    LOG_S(INFO) << "Received message: " << message;
+    LOG_S(INFO) << std::format("Received message: (id: {0:}, payload: {1:}), id {0:} has {2:} handlers",
+                               toString(message.id), static_cast<std::string>(message.payload),
+                               (messageHandlers.contains(message.id) ? messageHandlers.at(message.id).size() : 0));
 
     if (messageHandlers.contains(message.id))
     {

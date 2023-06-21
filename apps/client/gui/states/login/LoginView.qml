@@ -31,6 +31,7 @@ Rectangle {
                         loginController.loginRequest(email, password);
                         successPopup.open();
                     } else {
+                        errorPopup.contentItem.text = "Email or password field is empty";
                         errorPopup.open();
                     }
                 }
@@ -44,6 +45,14 @@ Rectangle {
             }
         }
     }
+    Connections {
+        function onLoginFailure(message: string) {
+            errorPopup.contentItem.text = message;
+            errorPopup.open();
+        }
+
+        target: loginController
+    }
     Popup {
         id: successPopup
         height: 50
@@ -55,14 +64,14 @@ Rectangle {
             color: "green"
             font.pixelSize: 16
             horizontalAlignment: Text.AlignHCenter
-            text: qsTr('Successfully login')
+            text: qsTr('Send login request')
             verticalAlignment: Text.AlignVCenter
         }
     }
     Popup {
         id: errorPopup
         height: 50
-        width: 200
+        width: Math.round(parent.width / 2)
         x: Math.round((parent.width - width) / 2)
         y: Math.round((parent.height - height) * 3 / 4)
 

@@ -30,4 +30,40 @@ void LoginController::handleGoToRegisterState()
 {
     stateMachine->addNextState(stateFactory.createRegisterState());
 }
+
+void LoginController::activate()
+{
+    session->addMessageHandler({common::messages::MessageId::LoginResponse, loginResponseHandlerName,
+                                [this](const auto& msg) { handleLoginResponse(msg); }});
+}
+
+void LoginController::deactivate()
+{
+    session->removeMessageHandler({common::messages::MessageId::LoginResponse, loginResponseHandlerName});
+}
+
+void LoginController::handleLoginResponse(const common::messages::Message& message)
+{
+    auto responsePayload = static_cast<std::string>(message.payload);
+
+    auto responseJson = nlohmann::json::parse(responsePayload);
+
+    LOG_S(INFO) << "Handle login response";
+
+    if (responseJson.contains("error"))
+    {
+        auto errorMessage = std::format("Error while logging: {}", responseJson.at("error").get<std::string>());
+
+        emit loginFailure(QString::fromStdString(errorMessage));
+
+        LOG_S(ERROR) << errorMessage;
+    }
+
+    if (responseJson.contains("token"))
+    {
+        // TODO: handle success
+
+        LOG_S(INFO) << "Successfully logged";
+    }
+}
 }

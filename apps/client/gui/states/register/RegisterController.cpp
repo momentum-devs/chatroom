@@ -30,4 +30,40 @@ void RegisterController::handleGoBack()
 {
     stateMachine->returnToThePreviousState();
 }
+
+void RegisterController::activate()
+{
+    session->addMessageHandler({common::messages::MessageId::RegisterResponse, registerResponseHandlerName,
+                                [this](const auto& msg) { handleRegisterResponse(msg); }});
+}
+
+void RegisterController::deactivate()
+{
+    session->removeMessageHandler({common::messages::MessageId::LoginResponse, registerResponseHandlerName});
+}
+
+void RegisterController::handleRegisterResponse(const common::messages::Message& message)
+{
+    auto responsePayload = static_cast<std::string>(message.payload);
+
+    auto responseJson = nlohmann::json::parse(responsePayload);
+
+    LOG_S(INFO) << "Handle register response";
+
+    if (responseJson.contains("error"))
+    {
+        auto errorMessage = std::format("Error while register user: {}", responseJson.at("error").get<std::string>());
+
+        emit registerFailure(QString::fromStdString(errorMessage));
+
+        LOG_S(ERROR) << errorMessage;
+    }
+
+    if (responseJson.contains("ok"))
+    {
+        stateMachine->returnToThePreviousState();
+
+        LOG_S(INFO) << "Successfully register";
+    }
+}
 }

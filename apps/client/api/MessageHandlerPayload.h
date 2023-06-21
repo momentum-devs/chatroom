@@ -10,7 +10,7 @@ namespace client::api
 struct MessageHandlerPayload
 {
     common::messages::MessageId messageId;
-    std::string name;
+    const std::string& name;
     std::function<void(const common::messages::Message&)> handler;
 };
 

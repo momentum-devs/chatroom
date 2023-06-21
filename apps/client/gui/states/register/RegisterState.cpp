@@ -26,6 +26,8 @@ void RegisterState::activate()
     loaderController->getEngine()->rootContext()->setContextProperty(componentName, registerController.get());
 
     loaderController->callLoadView(qUrl);
+
+    registerController->activate();
 }
 
 void RegisterState::deactivate()
@@ -35,5 +37,7 @@ void RegisterState::deactivate()
 
     QObject::disconnect(registerController.get(), &RegisterController::goBack, registerController.get(),
                         &RegisterController::handleGoBack);
+
+    registerController->deactivate();
 }
 }

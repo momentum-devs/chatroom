@@ -23,7 +23,7 @@ set(UT_SOURCES
         )
 
 set(QML_SOURCES
-        gui/qml/MainView.qml
+        gui/qml/LoaderView.qml
         gui/states/register/RegisterView.qml
         gui/states/login/LoginView.qml
         )
