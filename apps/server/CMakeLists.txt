@@ -16,10 +16,10 @@ set(SOURCES
         application/services/tokenService/TokenServiceImpl.cpp
         config/EnvironmentParser.cpp
         config/ConfigProvider.cpp
-        domain/entities/User.cpp
+        domain/entities/user/User.cpp
+        domain/entities/channel/Channel.cpp
         infrastructure/repositories/userRepository/UserRepositoryImpl.cpp
         infrastructure/repositories/userRepository/userMapper/UserMapperImpl.cpp
-        domain/entities/User.cpp
         application/commandHandlers/loginUserCommandHandler/LoginUserCommandHandlerImpl.cpp
         core/database/DatabaseConnectionFactory.cpp
         )
