@@ -3,6 +3,8 @@
 #include <format>
 
 #include "loguru.hpp"
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
 
 namespace server::application
 {
@@ -19,10 +21,12 @@ RegisterUserCommandHandlerImpl::execute(const RegisterUserCommandHandlerPayload&
 
     const auto hashedPassword = hashService->hash(payload.password);
 
-    // TODO: generate uuid4
-    const auto uuid = "9ba2c731-63c8-4bee-b8ae-9aeba3091e67";
+    std::stringstream uuid;
+    uuid << boost::uuids::random_generator()();
 
-    const auto user = userRepository->createUser({uuid, payload.email, hashedPassword, payload.email});
+    const auto userId = uuid.str();
+
+    const auto user = userRepository->createUser({userId, payload.email, hashedPassword, payload.email});
 
     LOG_S(INFO) << std::format("User with email \"{}\" registered.", payload.email);
 

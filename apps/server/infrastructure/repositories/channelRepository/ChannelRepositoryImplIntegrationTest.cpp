@@ -1,5 +1,4 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/date_time/time_clock.hpp>
 #include <odb/pgsql/database.hxx>
 
 #include "gtest/gtest.h"

@@ -26,6 +26,7 @@ set(SOURCES
         domain/entities/channel/Channel.cpp
         infrastructure/repositories/channelRepository/ChannelRepositoryImpl.cpp
         infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.cpp
+        application/commandHandlers/createChannelCommandHandler/CreateChannelCommandHandlerImpl.cpp
         )
 
 set(UT_SOURCES
@@ -43,6 +44,7 @@ set(IT_SOURCES
         application/commandHandlers/registerUserCommandHandler/RegisterUserCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/loginUserCommandHandler/LoginUserCommandHandlerImplIntegrationTest.cpp
         infrastructure/repositories/channelRepository/ChannelRepositoryImplIntegrationTest.cpp
+        application/commandHandlers/createChannelCommandHandler/CreateChannelCommandHandlerImplIntegrationTest.cpp
         )
 
 set(ODB_HEADERS
