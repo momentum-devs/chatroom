@@ -2,7 +2,7 @@
 
 #include <format>
 
-#include "../../errors/UserNotFoundError.h"
+#include "../../errors/ResourceNotFoundError.h"
 #include "loguru.hpp"
 
 namespace server::application
@@ -33,7 +33,7 @@ LoginUserCommandHandlerResult LoginUserCommandHandlerImpl::execute(const LoginUs
     {
         throw errors::UserNotFoundError{std::format("User with email \"{}\" not found.", payload.email)};
     }
-    
+
     const auto token = tokenService->createToken(existingUser->getId());
 
     LOG_S(INFO) << std::format("User with email \"{}\" logged in.", payload.email);

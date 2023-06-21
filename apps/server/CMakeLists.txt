@@ -27,6 +27,7 @@ set(SOURCES
         infrastructure/repositories/channelRepository/ChannelRepositoryImpl.cpp
         infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.cpp
         application/commandHandlers/createChannelCommandHandler/CreateChannelCommandHandlerImpl.cpp
+        application/commandHandlers/deleteChannelCommandHandler/DeleteChannelCommandHandlerImpl.cpp
         )
 
 set(UT_SOURCES

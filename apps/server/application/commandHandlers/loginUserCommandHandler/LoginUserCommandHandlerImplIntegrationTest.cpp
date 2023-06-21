@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "../../errors/UserNotFoundError.h"
+#include "../../errors/ResourceNotFoundError.h"
 #include "LoginUserCommandHandlerImpl.h"
 #include "server/application/services/hashService/HashServiceImpl.h"
 #include "server/application/services/tokenService/TokenService.h"
@@ -99,7 +99,7 @@ TEST_F(LoginUserCommandImplIntegrationTest, loginExistingUserWithInvalidPassword
         transaction.commit();
     }
 
-    ASSERT_THROW(loginUserCommandHandler.execute({email, password}), errors::UserNotFoundError);
+    ASSERT_THROW(loginUserCommandHandler.execute({email, password}), errors::ResourceNotFoundError);
 }
 
 TEST_F(LoginUserCommandImplIntegrationTest, loginNotExistingUser)
@@ -107,5 +107,5 @@ TEST_F(LoginUserCommandImplIntegrationTest, loginNotExistingUser)
     const auto email = "email@example.com";
     const auto password = "password";
 
-    ASSERT_THROW(loginUserCommandHandler.execute({email, password}), errors::UserNotFoundError);
+    ASSERT_THROW(loginUserCommandHandler.execute({email, password}), errors::ResourceNotFoundError);
 }

@@ -2,7 +2,7 @@
 
 #include <format>
 
-#include "../../errors/UserNotFoundError.h"
+#include "../../errors/ResourceNotFoundError.h"
 
 namespace server::application
 {
@@ -17,7 +17,7 @@ void DeleteUserCommandHandlerImpl::execute(const DeleteUserCommandHandlerPayload
 
     if (!existingUser)
     {
-        throw errors::UserNotFoundError{std::format("User with email {} not found.", payload.email)};
+        throw errors::ResourceNotFoundError{std::format("User with email {} not found.", payload.email)};
     }
 
     userRepository->deleteUser({*existingUser});
