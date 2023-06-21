@@ -1,5 +1,8 @@
 #pragma once
 
+#include "../../../../domain/entities/channel/Channel.h"
+#include "../../../database/tables/channelTable/Channel.h"
+
 namespace server::infrastructure
 {
 class ChannelMapper

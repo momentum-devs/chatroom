@@ -1,6 +1,5 @@
 #include <boost/asio.hpp>
 #include <odb/exception.hxx>
-#include <odb/pgsql/database.hxx>
 #include <thread>
 
 #include "api/SessionManager.h"
@@ -11,7 +10,6 @@
 #include "server/api/SessionFactoryImpl.h"
 #include "server/config/ConfigProvider.h"
 #include "server/core/database/DatabaseConnectionFactory.h"
-#include "server/infrastructure/database/tables/userTable/User.h"
 
 // TODO: add application class
 int main(int argc, char* argv[])

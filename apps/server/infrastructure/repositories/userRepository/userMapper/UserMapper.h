@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../../domain/entities/User.h"
+#include "../../../../domain/entities/user/User.h"
 #include "../../../database/tables/userTable/User.h"
 
 namespace server::infrastructure

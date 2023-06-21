@@ -4,12 +4,12 @@
 #include <string>
 #include <vector>
 
-#include "../entities/User.h"
+#include "../../entities/user/User.h"
 #include "payloads/CreateUserPayload.h"
 #include "payloads/DeleteUserPayload.h"
 #include "payloads/UpdateUserPayload.h"
-#include "server/domain/repositories/payloads/FindUserByEmailPayload.h"
-#include "server/domain/repositories/payloads/FindUserByIdPayload.h"
+#include "server/domain/repositories/userRepository/payloads/FindUserByEmailPayload.h"
+#include "server/domain/repositories/userRepository/payloads/FindUserByIdPayload.h"
 
 namespace server::domain
 {

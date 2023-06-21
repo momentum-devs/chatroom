@@ -4,7 +4,7 @@
 #include <odb/pgsql/database.hxx>
 #include <vector>
 
-#include "../../../domain/repositories/UserRepository.h"
+#include "../../../domain/repositories/userRepository/UserRepository.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapper.h"
 
 namespace server::infrastructure

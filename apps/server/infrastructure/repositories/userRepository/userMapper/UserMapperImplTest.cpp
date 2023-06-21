@@ -29,6 +29,6 @@ TEST_F(UserMapperTest, givenUserModel_shouldMapToDomainUser)
     ASSERT_EQ(domainUser.getEmail(), email);
     ASSERT_EQ(domainUser.getPassword(), password);
     ASSERT_EQ(domainUser.getNickname(), nickname);
-    ASSERT_EQ(domainUser.getCreatedAt(), "2023-06-16");
-    ASSERT_EQ(domainUser.getUpdatedAt(), "2023-06-16");
+    ASSERT_EQ(domainUser.getCreatedAt(), createdAt);
+    ASSERT_EQ(domainUser.getUpdatedAt(), updatedAt);
 }

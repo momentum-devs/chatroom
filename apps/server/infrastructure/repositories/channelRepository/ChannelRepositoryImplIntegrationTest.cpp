@@ -1,3 +1,5 @@
+#include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/date_time/time_clock.hpp>
 #include <odb/pgsql/database.hxx>
 
 #include "gtest/gtest.h"
@@ -5,7 +7,9 @@
 #include "Channel.odb.h"
 #include "ChannelRepositoryImpl.h"
 #include "server/infrastructure/errors/ChannelRepositoryError.h"
-#include "server/infrastructure/repositories/userRepository/userMapper/ChannelMapperImpl.h"
+#include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
+#include "User.h"
+#include "User.odb.h"
 
 using namespace ::testing;
 using namespace server;
@@ -18,6 +22,7 @@ public:
     {
         odb::transaction transaction(db->begin());
 
+        db->execute("DELETE FROM \"channels\";");
         db->execute("DELETE FROM \"users\";");
 
         transaction.commit();
@@ -27,80 +32,83 @@ public:
     {
         odb::transaction transaction(db->begin());
 
+        db->execute("DELETE FROM \"channels\";");
         db->execute("DELETE FROM \"users\";");
 
         transaction.commit();
     }
 
-    std::unique_ptr<server::infrastructure::ChannelMapper> userMapperInit =
+    User createUser(const std::string& id, const std::string& email, const std::string& password)
+    {
+        const auto currentDate = to_iso_string(boost::posix_time::second_clock::universal_time());
+
+        User user{id, email, password, email, currentDate, currentDate};
+
+        odb::transaction transaction(db->begin());
+
+        db->persist(user);
+
+        transaction.commit();
+
+        return user;
+    }
+
+    std::unique_ptr<server::infrastructure::ChannelMapper> channelMapperInit =
         std::make_unique<server::infrastructure::ChannelMapperImpl>();
 
     std::shared_ptr<odb::pgsql::database> db =
         std::make_shared<odb::pgsql::database>("local", "local", "chatroom", "localhost", 5432);
 
-    std::shared_ptr<server::domain::ChannelRepository> userRepository =
-        std::make_shared<server::infrastructure::ChannelRepositoryImpl>(db, std::move(userMapperInit));
+    std::shared_ptr<server::domain::ChannelRepository> channelRepository =
+        std::make_shared<server::infrastructure::ChannelRepositoryImpl>(db, std::move(channelMapperInit));
 };
 
 TEST_F(ChannelRepositoryIntegrationTest, shouldCreateChannel)
 {
+    const auto userId = "userId";
+    const auto userEmail = "email@gmail.com";
+    const auto userPassword = "password";
+
+    const auto user = createUser(userId, userEmail, userPassword);
+
     const auto id = "id1";
-    const auto email = "email@example.com";
-    const auto password = "password";
-    const auto nickname = "nickname";
+    const auto name = "name";
+    const auto creatorId = user.getId();
 
-    const auto user = userRepository->createChannel({id, email, password, nickname});
+    const auto channel = channelRepository->createChannel({id, name, creatorId});
 
-    ASSERT_EQ(user.getEmail(), email);
-    ASSERT_EQ(user.getPassword(), password);
-    ASSERT_EQ(user.getNickname(), nickname);
-}
-
-TEST_F(ChannelRepositoryIntegrationTest, givenChannelWithExistingEmail_shouldThrowError)
-{
-    const auto id1 = "id1";
-    const auto id2 = "id2";
-    const auto email = "email@example.com";
-    const auto password = "password";
-    const auto nickname = "nickname";
-    const auto createdAt = "2023-06-16";
-    const auto updatedAt = "2023-06-16";
-
-    Channel user{id1, email, password, nickname, createdAt, updatedAt};
-
-    {
-        odb::transaction transaction(db->begin());
-
-        db->persist(user);
-
-        transaction.commit();
-    }
-
-    ASSERT_THROW(userRepository->createChannel({id2, email, password, nickname}), errors::ChannelRepositoryError);
+    ASSERT_EQ(channel.getId(), id);
+    ASSERT_EQ(channel.getName(), name);
+    ASSERT_EQ(channel.getCreatorId(), creatorId);
 }
 
 TEST_F(ChannelRepositoryIntegrationTest, shouldDeleteExistingChannel)
 {
-    const auto id = "id";
-    const auto email = "email@example.com";
-    const auto password = "password";
-    const auto nickname = "nickname";
+    const auto userId = "userId";
+    const auto userEmail = "email@gmail.com";
+    const auto userPassword = "password";
+
+    const auto user = createUser(userId, userEmail, userPassword);
+
+    const auto id = "id1";
+    const auto name = "name";
+    const auto creatorId = user.getId();
     const auto createdAt = "2023-06-16";
     const auto updatedAt = "2023-06-16";
 
-    Channel user{id, email, password, nickname, createdAt, updatedAt};
+    Channel channel{id, name, creatorId, createdAt, updatedAt};
 
     {
         odb::transaction transaction(db->begin());
 
-        db->persist(user);
+        db->persist(channel);
 
         transaction.commit();
     }
 
-    const auto domainChannel = domain::Channel{id, email, password, nickname, createdAt, updatedAt};
+    const auto domainChannel = domain::Channel{id, name, creatorId, createdAt, updatedAt};
 
-    userRepository->deleteChannel({domainChannel});
+    channelRepository->deleteChannel({domainChannel});
 
     typedef odb::query<Channel> query;
 
@@ -117,72 +125,42 @@ TEST_F(ChannelRepositoryIntegrationTest, shouldDeleteExistingChannel)
 
 TEST_F(ChannelRepositoryIntegrationTest, delete_givenNonExistingChannel_shouldThrowError)
 {
-    const auto id = "id";
-    const auto email = "email@example.com";
-    const auto password = "password";
-    const auto nickname = "nickname";
+    const auto id = "id1";
+    const auto name = "name";
+    const auto creatorId = "creatorId";
     const auto createdAt = "2023-06-16";
     const auto updatedAt = "2023-06-16";
 
-    const auto domainChannel = domain::Channel{id, email, password, nickname, createdAt, updatedAt};
+    const auto domainChannel = domain::Channel{id, name, creatorId, createdAt, updatedAt};
 
-    ASSERT_ANY_THROW(userRepository->deleteChannel({domainChannel}));
-}
-
-TEST_F(ChannelRepositoryIntegrationTest, shouldFindExistingChannelByEmail)
-{
-    const auto id = "id";
-    const auto email = "email@example.com";
-    const auto password = "password";
-    const auto nickname = "nickname";
-    const auto createdAt = "2023-06-16";
-    const auto updatedAt = "2023-06-16";
-
-    Channel user{id, email, password, nickname, createdAt, updatedAt};
-
-    {
-        odb::transaction transaction(db->begin());
-
-        db->persist(user);
-
-        transaction.commit();
-    }
-
-    const auto foundChannel = userRepository->findChannelByEmail({email});
-
-    ASSERT_TRUE(foundChannel);
-    ASSERT_EQ(foundChannel->getEmail(), email);
-}
-
-TEST_F(ChannelRepositoryIntegrationTest, givenNonExistingChannel_shouldNotFindAnyChannelByEmail)
-{
-    const auto email = "email@example.com";
-
-    const auto user = userRepository->findChannelByEmail({email});
-
-    ASSERT_FALSE(user);
+    ASSERT_ANY_THROW(channelRepository->deleteChannel({domainChannel}));
 }
 
 TEST_F(ChannelRepositoryIntegrationTest, shouldFindExistingChannelById)
 {
-    const auto id = "id";
-    const auto email = "email@example.com";
-    const auto password = "password";
-    const auto nickname = "nickname";
+    const auto userId = "userId";
+    const auto userEmail = "email@gmail.com";
+    const auto userPassword = "password";
+
+    const auto user = createUser(userId, userEmail, userPassword);
+
+    const auto id = "id1";
+    const auto name = "name";
+    const auto creatorId = user.getId();
     const auto createdAt = "2023-06-16";
     const auto updatedAt = "2023-06-16";
 
-    Channel user{id, email, password, nickname, createdAt, updatedAt};
+    Channel channel{id, name, creatorId, createdAt, updatedAt};
 
     {
         odb::transaction transaction(db->begin());
 
-        db->persist(user);
+        db->persist(channel);
 
         transaction.commit();
     }
 
-    const auto foundChannel = userRepository->findChannelById({id});
+    const auto foundChannel = channelRepository->findChannelById({id});
 
     ASSERT_TRUE(foundChannel);
     ASSERT_EQ(foundChannel->getId(), id);
@@ -192,64 +170,7 @@ TEST_F(ChannelRepositoryIntegrationTest, givenNonExistingChannel_shouldNotFindAn
 {
     const auto id = "id";
 
-    const auto user = userRepository->findChannelById({id});
+    const auto channel = channelRepository->findChannelById({id});
 
-    ASSERT_FALSE(user);
-}
-
-TEST_F(ChannelRepositoryIntegrationTest, shouldUpdateExistingChannel)
-{
-    const auto id = "id";
-    const auto email = "email@example.com";
-    const auto password = "password1";
-    const auto updatedPassword = "password2";
-    const auto nickname = "nickname1";
-    const auto updatedNickname = "nickname2";
-    const auto createdAt = "2023-06-16";
-    const auto updatedAt = "2023-06-16";
-
-    Channel user{id, email, password, nickname, createdAt, updatedAt};
-
-    {
-        odb::transaction transaction(db->begin());
-
-        db->persist(user);
-
-        transaction.commit();
-    }
-
-    auto domainChannel = domain::Channel{id, email, password, nickname, createdAt, updatedAt};
-
-    domainChannel.setPassword(updatedPassword);
-    domainChannel.setNickname(updatedNickname);
-
-    userRepository->updateChannel({domainChannel});
-
-    {
-        typedef odb::query<Channel> query;
-
-        odb::transaction transaction(db->begin());
-
-        std::shared_ptr<Channel> updatedChannel(db->query_one<Channel>(query::id == id));
-
-        transaction.commit();
-
-        ASSERT_TRUE(updatedChannel);
-        ASSERT_EQ(updatedChannel->getNickname(), updatedNickname);
-        ASSERT_EQ(updatedChannel->getPassword(), updatedPassword);
-    }
-}
-
-TEST_F(ChannelRepositoryIntegrationTest, update_givenNonExistingChannel_shouldThrowError)
-{
-    const auto id = "id";
-    const auto email = "email@example.com";
-    const auto password = "password";
-    const auto nickname = "nickname";
-    const auto createdAt = "2023-06-16";
-    const auto updatedAt = "2023-06-16";
-
-    const auto domainChannel = domain::Channel{id, email, password, nickname, createdAt, updatedAt};
-
-    ASSERT_ANY_THROW(userRepository->updateChannel({domainChannel}));
+    ASSERT_FALSE(channel);
 }

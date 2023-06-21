@@ -3,7 +3,7 @@
 #include <odb/pgsql/database.hxx>
 
 #include "messages/MessageSerializer.h"
-#include "server/domain/repositories/UserRepository.h"
+#include "server/domain/repositories/userRepository/UserRepository.h"
 #include "SessionFactory.h"
 
 namespace server::api

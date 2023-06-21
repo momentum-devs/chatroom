@@ -3,7 +3,7 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <format>
 
-#include "server/infrastructure/errors/UserNotFoundError.h"
+#include "server/infrastructure/errors/ResourceNotFoundError.h"
 #include "server/infrastructure/errors/UserRepositoryError.h"
 #include "User.odb.h"
 
@@ -81,7 +81,6 @@ std::optional<domain::User> UserRepositoryImpl::findUserByEmail(const domain::Fi
             return std::nullopt;
         }
 
-
         return userMapper->mapToDomainUser(*user);
     }
     catch (const std::exception& error)
@@ -103,7 +102,8 @@ void UserRepositoryImpl::updateUser(const domain::UpdateUserPayload& payload) co
 
             if (!user)
             {
-                throw errors::UserNotFoundError{std::format("User with id \"{}\" not found.", payload.user.getId())};
+                throw errors::ResourceNotFoundError{
+                    std::format("User with id \"{}\" not found.", payload.user.getId())};
             }
 
             user->setNickname(payload.user.getNickname());

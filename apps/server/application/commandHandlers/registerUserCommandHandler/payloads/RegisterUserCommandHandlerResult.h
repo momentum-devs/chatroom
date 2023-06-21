@@ -1,8 +1,6 @@
 #pragma once
 
-#include <string>
-
-#include "../../../../domain/entities/User.h"
+#include "../../../../domain/entities/user/User.h"
 
 namespace server::application
 {

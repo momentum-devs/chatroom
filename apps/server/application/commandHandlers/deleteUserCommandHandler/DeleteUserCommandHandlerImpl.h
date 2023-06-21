@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "DeleteUserCommandHandler.h"
-#include "server/domain/repositories/UserRepository.h"
+#include "server/domain/repositories/userRepository/UserRepository.h"
 
 namespace server::application
 {

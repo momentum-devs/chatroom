@@ -5,7 +5,7 @@
 #include "LoginUserCommandHandler.h"
 #include "server/application/services/hashService/HashService.h"
 #include "server/application/services/tokenService/TokenService.h"
-#include "server/domain/repositories/UserRepository.h"
+#include "server/domain/repositories/userRepository/UserRepository.h"
 
 namespace server::application
 {

@@ -8,6 +8,6 @@ namespace server::domain
 {
 struct DeleteChannelPayload
 {
-    Channel user;
+    Channel channel;
 };
 }

@@ -2,15 +2,14 @@
 
 namespace server::infrastructure
 {
-domain::Channel ChannelMapperImpl::mapToDomainChannel(const Channel& user) const
+domain::Channel ChannelMapperImpl::mapToDomainChannel(const Channel& channel) const
 {
-    const auto id = user.getId();
-    const auto email = user.getEmail();
-    const auto password = user.getPassword();
-    const auto nickname = user.getNickname();
-    const auto createdAt = user.getCreatedAt();
-    const auto updatedAt = user.getUpdatedAt();
+    const auto id = channel.getId();
+    const auto name = channel.getName();
+    const auto creatorId = channel.getCreatorId();
+    const auto createdAt = channel.getCreatedAt();
+    const auto updatedAt = channel.getUpdatedAt();
 
-    return domain::Channel{id, email, password, nickname, createdAt, updatedAt};
+    return domain::Channel{id, name, creatorId, createdAt, updatedAt};
 }
 }

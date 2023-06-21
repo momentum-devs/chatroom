@@ -15,20 +15,18 @@ public:
 TEST_F(ChannelMapperTest, givenChannelModel_shouldMapToDomainChannel)
 {
     const auto id = "id";
-    const auto email = "email@example.com";
-    const auto password = "password";
-    const auto nickname = "nickname";
+    const auto name = "name";
+    const auto creatorId = "creatorId";
     const auto createdAt = "2023-06-16";
     const auto updatedAt = "2023-06-16";
 
-    Channel userModel{id, email, password, nickname, createdAt, updatedAt};
+    Channel channelModel{id, name, creatorId, createdAt, updatedAt};
 
-    const auto domainChannel = userMapper.mapToDomainChannel(userModel);
+    const auto domainChannel = userMapper.mapToDomainChannel(channelModel);
 
     ASSERT_EQ(domainChannel.getId(), id);
-    ASSERT_EQ(domainChannel.getEmail(), email);
-    ASSERT_EQ(domainChannel.getPassword(), password);
-    ASSERT_EQ(domainChannel.getNickname(), nickname);
-    ASSERT_EQ(domainChannel.getCreatedAt(), "2023-06-16");
-    ASSERT_EQ(domainChannel.getUpdatedAt(), "2023-06-16");
+    ASSERT_EQ(domainChannel.getName(), name);
+    ASSERT_EQ(domainChannel.getCreatorId(), creatorId);
+    ASSERT_EQ(domainChannel.getCreatedAt(), createdAt);
+    ASSERT_EQ(domainChannel.getUpdatedAt(), updatedAt);
 }

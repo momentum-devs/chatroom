@@ -4,14 +4,13 @@
 #include <format>
 
 #include "Channel.odb.h"
-#include "server/infrastructure/errors/ChannelNotFoundError.h"
 #include "server/infrastructure/errors/ChannelRepositoryError.h"
 
 namespace server::infrastructure
 {
 ChannelRepositoryImpl::ChannelRepositoryImpl(std::shared_ptr<odb::pgsql::database> dbInit,
-                                             std::unique_ptr<ChannelMapper> userMapperInit)
-    : db{std::move(dbInit)}, userMapper{std::move(userMapperInit)}
+                                             std::unique_ptr<ChannelMapper> channelMapperInit)
+    : db{std::move(dbInit)}, channelMapper{std::move(channelMapperInit)}
 {
 }
 
@@ -22,15 +21,15 @@ domain::Channel ChannelRepositoryImpl::createChannel(const domain::CreateChannel
         {
             const auto currentDate = to_iso_string(boost::posix_time::second_clock::universal_time());
 
-            Channel user{payload.id, payload.email, payload.password, payload.nickname, currentDate, currentDate};
+            Channel channel{payload.id, payload.name, payload.creatorId, currentDate, currentDate};
 
             odb::transaction transaction(db->begin());
 
-            db->persist(user);
+            db->persist(channel);
 
             transaction.commit();
 
-            return userMapper->mapToDomainChannel(user);
+            return channelMapper->mapToDomainChannel(channel);
         }
     }
     catch (const std::exception& error)
@@ -48,73 +47,16 @@ ChannelRepositoryImpl::findChannelById(const domain::FindChannelByIdPayload& pay
 
         typedef odb::query<Channel> query;
 
-        std::shared_ptr<Channel> user(db->query_one<Channel>(query::id == payload.id));
+        std::shared_ptr<Channel> channel(db->query_one<Channel>(query::id == payload.id));
 
         transaction.commit();
 
-        if (!user)
+        if (!channel)
         {
             return std::nullopt;
         }
 
-        return userMapper->mapToDomainChannel(*user);
-    }
-    catch (const std::exception& error)
-    {
-        throw errors::ChannelRepositoryError{error.what()};
-    }
-}
-
-std::optional<domain::Channel>
-ChannelRepositoryImpl::findChannelByEmail(const domain::FindChannelByEmailPayload& payload) const
-{
-    try
-    {
-        odb::transaction transaction(db->begin());
-
-        typedef odb::query<Channel> query;
-
-        std::shared_ptr<Channel> user(db->query_one<Channel>(query::email == payload.email));
-
-        transaction.commit();
-
-        if (!user)
-        {
-            return std::nullopt;
-        }
-
-        return userMapper->mapToDomainChannel(*user);
-    }
-    catch (const std::exception& error)
-    {
-        throw errors::ChannelRepositoryError{error.what()};
-    }
-}
-
-void ChannelRepositoryImpl::updateChannel(const domain::UpdateChannelPayload& payload) const
-{
-    try
-    {
-        {
-            odb::transaction transaction(db->begin());
-
-            typedef odb::query<Channel> query;
-
-            std::shared_ptr<Channel> user(db->query_one<Channel>(query::id == payload.user.getId()));
-
-            if (!user)
-            {
-                throw errors::ChannelNotFoundError{
-                    std::format("Channel with id \"{}\" not found.", payload.user.getId())};
-            }
-
-            user->setNickname(payload.user.getNickname());
-            user->setPassword(payload.user.getPassword());
-
-            db->update(*user);
-
-            transaction.commit();
-        }
+        return channelMapper->mapToDomainChannel(*channel);
     }
     catch (const std::exception& error)
     {
@@ -128,7 +70,7 @@ void ChannelRepositoryImpl::deleteChannel(const domain::DeleteChannelPayload& pa
     {
         odb::transaction transaction(db->begin());
 
-        db->erase<Channel>(payload.user.getId());
+        db->erase<Channel>(payload.channel.getId());
 
         transaction.commit();
     }

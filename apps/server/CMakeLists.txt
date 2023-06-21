@@ -10,25 +10,30 @@ set(SOURCES
         api/SessionFactoryImpl.cpp
         api/MessageHandlerImpl.cpp
         api/ConnectionAcceptorImpl.cpp
-        application/commandHandlers/registerUserCommandHandler/RegisterUserCommandHandlerImpl.cpp
-        application/commandHandlers/deleteUserCommandHandler/DeleteUserCommandHandlerImpl.cpp
-        application/services/hashService/HashServiceImpl.cpp
-        application/services/tokenService/TokenServiceImpl.cpp
         config/EnvironmentParser.cpp
         config/ConfigProvider.cpp
+        core/database/DatabaseConnectionFactory.cpp
+
         domain/entities/user/User.cpp
-        domain/entities/channel/Channel.cpp
         infrastructure/repositories/userRepository/UserRepositoryImpl.cpp
         infrastructure/repositories/userRepository/userMapper/UserMapperImpl.cpp
+        application/services/hashService/HashServiceImpl.cpp
+        application/services/tokenService/TokenServiceImpl.cpp
+        application/commandHandlers/registerUserCommandHandler/RegisterUserCommandHandlerImpl.cpp
+        application/commandHandlers/deleteUserCommandHandler/DeleteUserCommandHandlerImpl.cpp
         application/commandHandlers/loginUserCommandHandler/LoginUserCommandHandlerImpl.cpp
-        core/database/DatabaseConnectionFactory.cpp
+
+        domain/entities/channel/Channel.cpp
+        infrastructure/repositories/channelRepository/ChannelRepositoryImpl.cpp
+        infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.cpp
         )
 
 set(UT_SOURCES
         api/MessageHandlerImplTest.cpp
         api/SessionImplTest.cpp
-        infrastructure/repositories/userRepository/userMapper/UserMapperImplTest.cpp
         api/SessionManagerTest.cpp
+        infrastructure/repositories/userRepository/userMapper/UserMapperImplTest.cpp
+        infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImplTest.cpp
         )
 
 set(IT_SOURCES
@@ -37,6 +42,7 @@ set(IT_SOURCES
         application/services/hashService/HashServiceImplIntegrationTest.cpp
         application/commandHandlers/registerUserCommandHandler/RegisterUserCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/loginUserCommandHandler/LoginUserCommandHandlerImplIntegrationTest.cpp
+        infrastructure/repositories/channelRepository/ChannelRepositoryImplIntegrationTest.cpp
         )
 
 set(ODB_HEADERS
