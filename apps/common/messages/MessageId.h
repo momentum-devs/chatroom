@@ -11,6 +11,8 @@ enum class MessageId : unsigned char
     Error,
     Register,
     RegisterResponse,
+    Login,
+    LoginResponse
 };
 
 inline std::string toString(MessageId messageId)

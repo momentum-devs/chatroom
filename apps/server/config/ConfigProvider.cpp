@@ -28,4 +28,14 @@ int ConfigProvider::getServerPort() const
 {
     return EnvironmentParser::parseInt("SERVER_PORT");
 }
+
+std::string ConfigProvider::getJwtSecret() const
+{
+    return EnvironmentParser::parseString("JWT_SECRET");
+}
+
+int ConfigProvider::getJwtExpireIn() const
+{
+    return EnvironmentParser::parseInt("JWT_EXPIRES_IN");
+}
 }

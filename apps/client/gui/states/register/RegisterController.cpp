@@ -14,7 +14,6 @@ RegisterController::RegisterController(std::shared_ptr<api::Session> sessionInit
 
 void RegisterController::handleRegisterRequest(const QString& email, const QString& password)
 {
-
     nlohmann::json payload{
         {"email", email.toStdString()},
         {"password", password.toStdString()},

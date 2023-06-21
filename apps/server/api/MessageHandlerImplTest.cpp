@@ -4,6 +4,7 @@
 #include <gtest/gtest.h>
 #include <regex>
 
+#include "server/application/commandHandlers/loginUserCommandHandler/LoginUserCommandHandlerMock.h"
 #include "server/application/commandHandlers/registerUserCommandHandler/RegisterUserCommandHandlerMock.h"
 
 #include "nlohmann/json.hpp"
@@ -29,11 +30,25 @@ common::bytes::Bytes okResponse{R"({"ok"})"};
 
 const std::string invalidEmail = "invalidEmail";
 const std::string invalidPassword = "invalidPassword";
-common::bytes::Bytes registerPayloadWithInvalidEmail{
+common::bytes::Bytes payloadWithInvalidEmail{
     std::format(R"({{"email":"{}","password":"{}"}})", invalidEmail, invalidPassword)};
 common::messages::Message registerMessagedWithInvalidEmail{common::messages::MessageId::Register,
-                                                           registerPayloadWithInvalidEmail};
+                                                           payloadWithInvalidEmail};
 common::bytes::Bytes wrongEmailResponse{nlohmann::json{{"error", "wrong email address"}}.dump()};
+
+const std::string errorMessage{"errorMessage"};
+std::runtime_error exception{errorMessage};
+common::bytes::Bytes exceptionResponse{nlohmann::json{{"error", errorMessage}}.dump()};
+
+const std::string token = "token123";
+const server::application::LoginUserCommandHandlerPayload validLoginUserCommandHandlerPayload{validEmail,
+                                                                                              validPassword};
+const server::application::LoginUserCommandHandlerResult validLoginUserCommandHandlerResult{token};
+common::bytes::Bytes validLoginPayload{std::format(R"({{"email":"{}","password":"{}"}})", validEmail, validPassword)};
+common::messages::Message validLoginMessage{common::messages::MessageId::Login, validLoginPayload};
+common::bytes::Bytes tokenResponse{std::format(R"({{"token":"{}"}})", token)};
+
+common::messages::Message loginMessagedWithInvalidEmail{common::messages::MessageId::Login, payloadWithInvalidEmail};
 }
 
 class MessageHandlerImplTest : public Test
@@ -44,7 +59,13 @@ public:
     server::application::RegisterUserCommandHandlerMock* registerUserCommandHandlerMock =
         registerUserCommandHandlerMockInit.get();
 
-    MessageHandlerImpl messageHandler{std::move(registerUserCommandHandlerMockInit)};
+    std::unique_ptr<server::application::LoginUserCommandHandlerMock> loginUserCommandHandlerMockInit =
+        std::make_unique<StrictMock<server::application::LoginUserCommandHandlerMock>>();
+    server::application::LoginUserCommandHandlerMock* loginUserCommandHandlerMock =
+        loginUserCommandHandlerMockInit.get();
+
+    MessageHandlerImpl messageHandler{std::move(registerUserCommandHandlerMockInit),
+                                      std::move(loginUserCommandHandlerMockInit)};
 };
 
 TEST_F(MessageHandlerImplTest, handleRegisterValidMessage)
@@ -54,12 +75,54 @@ TEST_F(MessageHandlerImplTest, handleRegisterValidMessage)
 
     auto response = messageHandler.handleMessage(validRegisterMessage);
 
+    EXPECT_EQ(response.id, common::messages::MessageId::RegisterResponse);
     EXPECT_EQ(response.payload, okResponse);
+}
+
+TEST_F(MessageHandlerImplTest, handleRegisterValidMessageRegisterCommandThrowException)
+{
+    EXPECT_CALL(*registerUserCommandHandlerMock, execute(validRegisterUserCommandHandlerPayload))
+        .WillOnce(Throw(exception));
+
+    auto response = messageHandler.handleMessage(validRegisterMessage);
+
+    EXPECT_EQ(response.id, common::messages::MessageId::RegisterResponse);
+    EXPECT_EQ(response.payload, exceptionResponse);
 }
 
 TEST_F(MessageHandlerImplTest, handleRegisterMessageWithInvalidEmail)
 {
     auto response = messageHandler.handleMessage(registerMessagedWithInvalidEmail);
 
+    EXPECT_EQ(response.id, common::messages::MessageId::RegisterResponse);
+    EXPECT_EQ(response.payload, wrongEmailResponse);
+}
+
+TEST_F(MessageHandlerImplTest, handleLoginValidMessage)
+{
+    EXPECT_CALL(*loginUserCommandHandlerMock, execute(validLoginUserCommandHandlerPayload))
+        .WillOnce(Return(validLoginUserCommandHandlerResult));
+
+    auto response = messageHandler.handleMessage(validLoginMessage);
+
+    EXPECT_EQ(response.id, common::messages::MessageId::LoginResponse);
+    EXPECT_EQ(response.payload, tokenResponse);
+}
+
+TEST_F(MessageHandlerImplTest, handleLoginValidMessageLoginCommandThrowException)
+{
+    EXPECT_CALL(*loginUserCommandHandlerMock, execute(validLoginUserCommandHandlerPayload)).WillOnce(Throw(exception));
+
+    auto response = messageHandler.handleMessage(validLoginMessage);
+
+    EXPECT_EQ(response.id, common::messages::MessageId::LoginResponse);
+    EXPECT_EQ(response.payload, exceptionResponse);
+}
+
+TEST_F(MessageHandlerImplTest, handleLoginMessageWithInvalidEmail)
+{
+    auto response = messageHandler.handleMessage(loginMessagedWithInvalidEmail);
+
+    EXPECT_EQ(response.id, common::messages::MessageId::LoginResponse);
     EXPECT_EQ(response.payload, wrongEmailResponse);
 }

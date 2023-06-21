@@ -8,6 +8,7 @@ namespace server::application
 {
 class LoginUserCommandHandlerMock : public LoginUserCommandHandler
 {
+public:
     MOCK_METHOD(LoginUserCommandHandlerResult, execute, (const LoginUserCommandHandlerPayload&), (const override));
 };
 }

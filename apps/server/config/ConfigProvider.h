@@ -12,5 +12,7 @@ public:
     std::string getDatabaseUsername() const;
     std::string getDatabasePassword() const;
     int getServerPort() const;
+    std::string getJwtSecret() const;
+    int getJwtExpireIn() const;
 };
 }
