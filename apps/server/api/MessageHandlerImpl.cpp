@@ -55,7 +55,7 @@ common::messages::Message MessageHandlerImpl::handleRegisterMessage(const common
         return {common::messages::MessageId::RegisterResponse, common::bytes::Bytes{responsePayload.dump()}};
     }
 
-    return {common::messages::MessageId::RegisterResponse, common::bytes::Bytes{R"({"ok"})"}};
+    return {common::messages::MessageId::RegisterResponse, common::bytes::Bytes{R"(["ok"])"}};
 }
 
 common::messages::Message MessageHandlerImpl::handleLoginMessage(const common::bytes::Bytes& payload)

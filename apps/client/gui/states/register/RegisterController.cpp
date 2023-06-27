@@ -59,7 +59,7 @@ void RegisterController::handleRegisterResponse(const common::messages::Message&
         LOG_S(ERROR) << errorMessage;
     }
 
-    if (responseJson.contains("ok"))
+    if (responseJson.is_array() and responseJson.at(0).get<std::string>() == "ok")
     {
         stateMachine->returnToThePreviousState();
 

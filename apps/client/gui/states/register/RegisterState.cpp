@@ -15,7 +15,7 @@ RegisterState::RegisterState(std::unique_ptr<RegisterController> registerControl
 
 void RegisterState::activate()
 {
-    LOG_S(INFO) << "Load RegisterState";
+    LOG_S(INFO) << "Activate RegisterState";
 
     QObject::connect(registerController.get(), &RegisterController::registerRequest, registerController.get(),
                      &RegisterController::handleRegisterRequest);

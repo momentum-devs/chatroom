@@ -15,7 +15,7 @@ MainState::MainState(std::unique_ptr<MainController> mainControllerInit,
 
 void MainState::activate()
 {
-    LOG_S(INFO) << "Load MainState";
+    LOG_S(INFO) << "Activate MainState";
 
     loaderController->getEngine()->rootContext()->setContextProperty(componentName, mainController.get());
 
