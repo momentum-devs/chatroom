@@ -1,9 +1,8 @@
 #include "LoginState.h"
 
+#include <glog/logging.h>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
-
-#include "loguru.hpp"
 
 namespace client::gui
 {
@@ -15,7 +14,7 @@ LoginState::LoginState(std::unique_ptr<LoginController> loginControllerInit,
 
 void LoginState::activate()
 {
-    LOG_S(INFO) << "Load LoginState";
+    VLOG(0) << "Load LoginState";
 
     QObject::connect(loginController.get(), &LoginController::loginRequest, loginController.get(),
                      &LoginController::handleLoginRequest);
@@ -39,7 +38,7 @@ void LoginState::deactivate()
                         &LoginController::handleGoToRegisterState);
 
     loaderController->getEngine()->rootContext()->setContextProperty(componentName, nullptr);
-    
+
     loginController->deactivate();
 }
 }

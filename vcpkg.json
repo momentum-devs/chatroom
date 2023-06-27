@@ -1,0 +1,24 @@
+{
+  "name" : "chatroom",
+  "version-string" : "1.0.0",
+  "builtin-baseline" : "288e8bebf4ca67c1f8ebd49366b03650cfd9eb7d",
+  "dependencies" : [ {
+    "name" : "gtest",
+    "version>=" : "1.13.0"
+  }, {
+    "name" : "cpp-jwt",
+    "version>=" : "2022-08-27#1"
+  }, {
+    "name" : "nlohmann-json",
+    "version>=" : "3.11.2"
+  }, {
+    "name" : "boost-asio",
+    "version>=" : "1.82.0#3"
+  }, {
+    "name" : "boost-uuid",
+    "version>=" : "1.82.0#2"
+  }, {
+    "name" : "glog",
+    "version>=" : "0.6.0#2"
+  } ]
+}

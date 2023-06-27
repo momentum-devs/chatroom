@@ -1,11 +1,11 @@
 #include <boost/asio.hpp>
+#include <glog/logging.h>
 #include <odb/exception.hxx>
 #include <thread>
 
 #include "api/SessionManager.h"
 #include "common/filesystem/GetProjectPath.h"
 #include "laserpants/dotenv/dotenv.h"
-#include "loguru.hpp"
 #include "server/api/ConnectionAcceptorImpl.h"
 #include "server/api/SessionFactoryImpl.h"
 #include "server/config/ConfigProvider.h"
@@ -18,9 +18,11 @@ int main(int argc, char* argv[])
 
     dotenv::init(std::format("{}/apps/server/.env", projectPath).c_str());
 
-    loguru::g_preamble_date = false;
+    google::ParseCommandLineFlags(&argc, &argv, true);
+    google::InitGoogleLogging(argv[0]);
 
-    loguru::init(argc, argv);
+    VLOG(0) << "Elo";
+    return 42;
 
     server::config::ConfigProvider configProvider;
 

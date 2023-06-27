@@ -1,7 +1,8 @@
 #include "SessionImpl.h"
 
+#include <glog/logging.h>
+
 #include "common/messages/Message.h"
-#include "loguru.hpp"
 #include "RemoveHandlerError.h"
 
 namespace client::api
@@ -29,9 +30,9 @@ void SessionImpl::sendMessage(const common::messages::Message& message)
 
 void SessionImpl::handleMessage(const common::messages::Message& message)
 {
-    LOG_S(INFO) << std::format("Received message: (id: {0:}, payload: {1:}), id {0:} has {2:} handlers",
-                               toString(message.id), static_cast<std::string>(message.payload),
-                               (messageHandlers.contains(message.id) ? messageHandlers.at(message.id).size() : 0));
+    VLOG(0) << std::format("Received message: (id: {0:}, payload: {1:}), id {0:} has {2:} handlers",
+                           toString(message.id), static_cast<std::string>(message.payload),
+                           (messageHandlers.contains(message.id) ? messageHandlers.at(message.id).size() : 0));
 
     if (messageHandlers.contains(message.id))
     {
@@ -44,8 +45,8 @@ void SessionImpl::handleMessage(const common::messages::Message& message)
 
 void SessionImpl::addMessageHandler(const MessageHandlerPayload& messageHandlerPayload)
 {
-    LOG_S(INFO) << std::format("Add handler for MessageID {} for name \"{}\"",
-                               common::messages::toString(messageHandlerPayload.messageId), messageHandlerPayload.name);
+    VLOG(0) << std::format("Add handler for MessageID {} for name \"{}\"",
+                           common::messages::toString(messageHandlerPayload.messageId), messageHandlerPayload.name);
 
     if (not messageHandlers.contains(messageHandlerPayload.messageId))
     {
@@ -58,8 +59,8 @@ void SessionImpl::addMessageHandler(const MessageHandlerPayload& messageHandlerP
 
 void SessionImpl::removeMessageHandler(const MessageHandlerPayload& messageHandlerPayload)
 {
-    LOG_S(INFO) << std::format("Remove handler for MessageID {} for name \"{}\"",
-                               common::messages::toString(messageHandlerPayload.messageId), messageHandlerPayload.name);
+    VLOG(0) << std::format("Remove handler for MessageID {} for name \"{}\"",
+                           common::messages::toString(messageHandlerPayload.messageId), messageHandlerPayload.name);
 
     if (not messageHandlers.contains(messageHandlerPayload.messageId) or
         not messageHandlers.at(messageHandlerPayload.messageId).contains(messageHandlerPayload.name))

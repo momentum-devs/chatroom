@@ -1,10 +1,9 @@
 #include "RegisterUserCommandHandlerImpl.h"
 
-#include <format>
-
-#include "loguru.hpp"
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
+#include <format>
+#include <glog/logging.h>
 
 namespace server::application
 {
@@ -17,7 +16,7 @@ RegisterUserCommandHandlerImpl::RegisterUserCommandHandlerImpl(
 RegisterUserCommandHandlerResult
 RegisterUserCommandHandlerImpl::execute(const RegisterUserCommandHandlerPayload& payload) const
 {
-    LOG_S(INFO) << std::format("Registering user with email \"{}\"...", payload.email);
+    VLOG(0) << std::format("Registering user with email \"{}\"...", payload.email);
 
     const auto hashedPassword = hashService->hash(payload.password);
 
@@ -28,7 +27,7 @@ RegisterUserCommandHandlerImpl::execute(const RegisterUserCommandHandlerPayload&
 
     const auto user = userRepository->createUser({userId, payload.email, hashedPassword, payload.email});
 
-    LOG_S(INFO) << std::format("User with email \"{}\" registered.", payload.email);
+    VLOG(0) << std::format("User with email \"{}\" registered.", payload.email);
 
     return {user};
 }

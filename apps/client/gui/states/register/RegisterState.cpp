@@ -1,9 +1,8 @@
 #include "RegisterState.h"
 
+#include <glog/logging.h>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
-
-#include "loguru.hpp"
 
 namespace client::gui
 {
@@ -15,7 +14,7 @@ RegisterState::RegisterState(std::unique_ptr<RegisterController> registerControl
 
 void RegisterState::activate()
 {
-    LOG_S(INFO) << "Load RegisterState";
+    VLOG(0) << "Load RegisterState";
 
     QObject::connect(registerController.get(), &RegisterController::registerRequest, registerController.get(),
                      &RegisterController::handleRegisterRequest);

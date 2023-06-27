@@ -1,4 +1,7 @@
+#define GOOGLE_STRIP_LOG 1
+
 #include <boost/asio.hpp>
+#include <glog/logging.h>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
@@ -12,7 +15,6 @@
 #include "gui/states/StateFactory.h"
 #include "gui/states/StateMachine.h"
 #include "laserpants/dotenv/dotenv.h"
-#include "loguru.hpp"
 #include "messages/MessageReaderImpl.h"
 #include "messages/MessageSenderImpl.h"
 #include "messages/MessageSerializerImpl.h"
@@ -23,9 +25,7 @@ int main(int argc, char* argv[])
 
     dotenv::init(dotEnvPath.c_str());
 
-    loguru::g_preamble_date = false;
-
-    loguru::init(argc, argv);
+    google::InitGoogleLogging(argv[0]);
 
     client::config::ConfigProvider configProvider;
 

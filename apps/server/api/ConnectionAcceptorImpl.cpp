@@ -1,6 +1,6 @@
 #include "ConnectionAcceptorImpl.h"
 
-#include "loguru.hpp"
+#include <glog/logging.h>
 
 namespace server::api
 {
@@ -14,7 +14,7 @@ ConnectionAcceptorImpl::ConnectionAcceptorImpl(boost::asio::io_context& context,
 void ConnectionAcceptorImpl::startAcceptingConnections(
     std::function<void(const std::shared_ptr<Session>&)> newSessionHandlerInit)
 {
-    LOG_S(INFO) << "Start accepting new connection on port: " << acceptor.local_endpoint().port();
+    VLOG(0) << "Start accepting new connection on port: " << acceptor.local_endpoint().port();
 
     newSessionHandler = newSessionHandlerInit;
 
@@ -35,7 +35,7 @@ void ConnectionAcceptorImpl::onNewConnection(const std::shared_ptr<Session>& new
 {
     if (!error)
     {
-        LOG_S(INFO) << "New connection from: " << socket->remote_endpoint();
+        VLOG(0) << "New connection from: " << socket->remote_endpoint();
 
         newSession->startSession();
 
@@ -43,7 +43,7 @@ void ConnectionAcceptorImpl::onNewConnection(const std::shared_ptr<Session>& new
     }
     else
     {
-        LOG_S(ERROR) << "Error: " << error.message();
+        VLOG(2) << "Error: " << error.message();
     }
 
     asyncAccept();

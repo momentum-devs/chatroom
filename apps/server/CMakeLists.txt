@@ -89,7 +89,7 @@ add_executable(${EXECUTABLE_NAME}
 
 target_link_libraries(${EXECUTABLE_NAME} PRIVATE
         Qt6::Core
-        loguru::loguru
+        glog::glog
         nlohmann_json::nlohmann_json
         cpp-jwt::cpp-jwt
         messages
@@ -111,7 +111,7 @@ add_executable(${EXECUTABLE_NAME}UT
 target_link_libraries(${EXECUTABLE_NAME}UT PRIVATE
         GTest::gmock_main
         Qt6::Core
-        loguru::loguru
+        glog::glog
         nlohmann_json::nlohmann_json
         cpp-jwt::cpp-jwt
         messages
@@ -135,7 +135,7 @@ add_executable(${EXECUTABLE_NAME}IT
 target_link_libraries(${EXECUTABLE_NAME}IT PRIVATE
         GTest::gtest_main
         Qt6::Core
-        loguru::loguru
+        glog::glog
         nlohmann_json::nlohmann_json
         cpp-jwt::cpp-jwt
         messages

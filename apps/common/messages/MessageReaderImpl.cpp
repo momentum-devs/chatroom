@@ -1,9 +1,9 @@
 #include "MessageReaderImpl.h"
 
 #include <boost/beast/core/tcp_stream.hpp>
+#include <glog/logging.h>
 
 #include "common/messages/errors/InvalidChecksumError.h"
-#include "loguru.hpp"
 
 namespace common::messages
 {
@@ -46,8 +46,7 @@ void MessageReaderImpl::onReadMessageLength(boost::system::error_code, std::size
               { onReadMessage(error, bytes, bytesToRead); });
 }
 
-void MessageReaderImpl::onReadMessage(boost::system::error_code, std::size_t,
-                                      std::size_t)
+void MessageReaderImpl::onReadMessage(boost::system::error_code, std::size_t, std::size_t)
 {
     const common::bytes::Bytes bytes{std::istreambuf_iterator<char>(&response), std::istreambuf_iterator<char>()};
 
@@ -59,7 +58,7 @@ void MessageReaderImpl::onReadMessage(boost::system::error_code, std::size_t,
     }
     catch (const std::exception& e)
     {
-        LOG_S(ERROR) << e.what();
+        VLOG(2) << e.what();
     }
 
     startReadingNewMessage();

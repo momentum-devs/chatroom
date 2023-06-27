@@ -1,6 +1,6 @@
 #include "SessionManager.h"
 
-#include "loguru.hpp"
+#include <glog/logging.h>
 
 namespace server::api
 {

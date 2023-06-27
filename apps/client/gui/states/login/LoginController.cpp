@@ -1,8 +1,7 @@
 #include "LoginController.h"
 
+#include <glog/logging.h>
 #include <nlohmann/json.hpp>
-
-#include "loguru.hpp"
 
 namespace client::gui
 {
@@ -23,7 +22,7 @@ void LoginController::handleLoginRequest(const QString& email, const QString& pa
 
     session->sendMessage(message);
 
-    LOG_S(INFO) << std::format("Sent login request for user {}", static_cast<std::string>(message.payload));
+    VLOG(0) << std::format("Sent login request for user {}", static_cast<std::string>(message.payload));
 }
 
 void LoginController::handleGoToRegisterState()
@@ -48,7 +47,7 @@ void LoginController::handleLoginResponse(const common::messages::Message& messa
 
     auto responseJson = nlohmann::json::parse(responsePayload);
 
-    LOG_S(INFO) << "Handle login response";
+    VLOG(0) << "Handle login response";
 
     if (responseJson.contains("error"))
     {
@@ -56,14 +55,14 @@ void LoginController::handleLoginResponse(const common::messages::Message& messa
 
         emit loginFailure(QString::fromStdString(errorMessage));
 
-        LOG_S(ERROR) << errorMessage;
+        VLOG(2) << errorMessage;
     }
 
     if (responseJson.contains("token"))
     {
         // TODO: handle success
 
-        LOG_S(INFO) << "Successfully logged";
+        VLOG(0) << "Successfully logged";
     }
 }
 }

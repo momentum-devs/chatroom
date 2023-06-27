@@ -3,8 +3,7 @@
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
 #include <format>
-
-#include "loguru.hpp"
+#include <glog/logging.h>
 
 namespace server::application
 {
@@ -17,7 +16,7 @@ CreateChannelCommandHandlerImpl::CreateChannelCommandHandlerImpl(
 CreateChannelCommandHandlerResult
 CreateChannelCommandHandlerImpl::execute(const CreateChannelCommandHandlerPayload& payload) const
 {
-    LOG_S(INFO) << std::format("Creating channel with name \"{}\"...", payload.name);
+    VLOG(0) << std::format("Creating channel with name \"{}\"...", payload.name);
 
     std::stringstream uuid;
     uuid << boost::uuids::random_generator()();
@@ -26,7 +25,7 @@ CreateChannelCommandHandlerImpl::execute(const CreateChannelCommandHandlerPayloa
 
     const auto channel = channelRepository->createChannel({channelId, payload.name, payload.creatorId});
 
-    LOG_S(INFO) << std::format("Channel with name \"{}\" created.", channel.getName());
+    VLOG(0) << std::format("Channel with name \"{}\" created.", channel.getName());
 
     return {channel};
 }

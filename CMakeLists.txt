@@ -6,11 +6,14 @@ project(${PROJECT_NAME} CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED YES)
 
+include(externals/vcpkg/scripts/buildsystems/vcpkg.cmake)
+
 find_package(Boost REQUIRED)
 find_package(Qt6 6.2 COMPONENTS Core Gui Widgets Quick QuickControls2 LinguistTools REQUIRED)
 find_package(nlohmann_json 3.2.0 REQUIRED)
 find_package(cpp-jwt REQUIRED)
 find_package(GTest REQUIRED)
+find_package(glog CONFIG REQUIRED)
 
 add_subdirectory(externals)
 

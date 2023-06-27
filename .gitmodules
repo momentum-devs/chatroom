@@ -1,15 +1,6 @@
-[submodule "externals/googletest"]
-	path = externals/googletest
-	url = https://github.com/google/googletest.git
-[submodule "externals/loguru"]
-	path = externals/loguru
-	url = https://github.com/emilk/loguru.git
 [submodule "externals/dotenv-cpp"]
 	path = externals/dotenv-cpp
 	url = https://github.com/laserpants/dotenv-cpp.git
-[submodule "externals/json"]
-	path = externals/json
-	url = https://github.com/nlohmann/json.git
-[submodule "externals/cpp-jwt"]
-	path = externals/cpp-jwt
-	url = https://github.com/arun11299/cpp-jwt.git
+[submodule "externals/vcpkg"]
+	path = externals/vcpkg
+	url = https://github.com/microsoft/vcpkg.git

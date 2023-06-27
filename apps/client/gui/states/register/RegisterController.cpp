@@ -1,8 +1,7 @@
 #include "RegisterController.h"
 
+#include <glog/logging.h>
 #include <nlohmann/json.hpp>
-
-#include "loguru.hpp"
 
 namespace client::gui
 {
@@ -23,7 +22,7 @@ void RegisterController::handleRegisterRequest(const QString& email, const QStri
 
     session->sendMessage(message);
 
-    LOG_S(INFO) << std::format("Sent register request for user {}", static_cast<std::string>(message.payload));
+    VLOG(0) << std::format("Sent register request for user {}", static_cast<std::string>(message.payload));
 }
 
 void RegisterController::handleGoBack()
@@ -48,7 +47,7 @@ void RegisterController::handleRegisterResponse(const common::messages::Message&
 
     auto responseJson = nlohmann::json::parse(responsePayload);
 
-    LOG_S(INFO) << "Handle register response";
+    VLOG(0) << "Handle register response";
 
     if (responseJson.contains("error"))
     {
@@ -56,14 +55,14 @@ void RegisterController::handleRegisterResponse(const common::messages::Message&
 
         emit registerFailure(QString::fromStdString(errorMessage));
 
-        LOG_S(ERROR) << errorMessage;
+        VLOG(2) << errorMessage;
     }
 
     if (responseJson.contains("ok"))
     {
         stateMachine->returnToThePreviousState();
 
-        LOG_S(INFO) << "Successfully register";
+        VLOG(0) << "Successfully register";
     }
 }
 }

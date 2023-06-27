@@ -1,9 +1,9 @@
 #include "LoginUserCommandHandlerImpl.h"
 
 #include <format>
+#include <glog/logging.h>
 
 #include "../../errors/ResourceNotFoundError.h"
-#include "loguru.hpp"
 
 namespace server::application
 {
@@ -18,7 +18,7 @@ LoginUserCommandHandlerImpl::LoginUserCommandHandlerImpl(std::shared_ptr<domain:
 
 LoginUserCommandHandlerResult LoginUserCommandHandlerImpl::execute(const LoginUserCommandHandlerPayload& payload) const
 {
-    LOG_S(INFO) << std::format("Logging user \"{}\" in...", payload.email);
+    VLOG(0) << std::format("Logging user \"{}\" in...", payload.email);
 
     const auto existingUser = userRepository->findUserByEmail({payload.email});
 
@@ -36,7 +36,7 @@ LoginUserCommandHandlerResult LoginUserCommandHandlerImpl::execute(const LoginUs
 
     const auto token = tokenService->createToken(existingUser->getId());
 
-    LOG_S(INFO) << std::format("User with email \"{}\" logged in.", payload.email);
+    VLOG(0) << std::format("User with email \"{}\" logged in.", payload.email);
 
     return {token};
 }

@@ -1,6 +1,6 @@
 #include "SessionImpl.h"
 
-#include "loguru.hpp"
+#include <glog/logging.h>
 
 namespace server::api
 {
@@ -25,14 +25,14 @@ void SessionImpl::sendMessage(const common::messages::Message& message)
 
 void SessionImpl::startReceivingMessage()
 {
-    LOG_S(INFO) << "Start reading messages";
+    VLOG(0) << "Start reading messages";
 
     messageReader->startReadingMessages([this](const common::messages::Message& message) { handleMessage(message); });
 }
 
 void SessionImpl::handleMessage(const common::messages::Message& message)
 {
-    LOG_S(INFO) << "Read message with payload: " << static_cast<std::string>(message.payload);
+    VLOG(0) << "Read message with payload: " << static_cast<std::string>(message.payload);
 
     auto response = messageHandler->handleMessage(message);
 

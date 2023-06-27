@@ -42,7 +42,7 @@ target_link_libraries(${EXECUTABLE_NAME} PUBLIC
         Qt::Gui
         Qt6::Quick
         Qt6::QuickControls2
-        loguru::loguru
+        glog::glog
         nlohmann_json::nlohmann_json
         messages
         filesystem
@@ -59,7 +59,7 @@ target_link_libraries(${EXECUTABLE_NAME}UT PUBLIC
         Qt::Gui
         Qt6::Quick
         Qt6::QuickControls2
-        loguru::loguru
+        glog::glog
         nlohmann_json::nlohmann_json
         messages
         filesystem
