@@ -2,6 +2,7 @@
 
 #include <map>
 
+#include "common//bytes/Bytes.h"
 #include "common/messages/MessageReader.h"
 #include "common/messages/MessageSender.h"
 #include "Session.h"
@@ -19,6 +20,7 @@ public:
     void sendMessage(const common::messages::Message& message) override;
     void addMessageHandler(const MessageHandlerPayload& messageHandlerPayload) override;
     void removeMessageHandler(const MessageHandlerPayload& messageHandlerPayload) override;
+    void storeToken(const std::string& token) override;
 
 private:
     void handleMessage(const common::messages::Message& message);
@@ -28,5 +30,8 @@ private:
     std::unique_ptr<SocketConnector> socketConnector;
     std::map<common::messages::MessageId, std::map<std::string, std::function<void(const common::messages::Message&)>>>
         messageHandlers;
+    std::optional<common::bytes::Bytes> token;
+    std::mutex lock;
+    std::vector<MessageHandlerPayload> messageHandlersToDelete;
 };
 }

@@ -15,7 +15,7 @@ set(SOURCES
         gui/states/StateFactory.cpp
         gui/states/login/LoginState.cpp
         gui/states/login/LoginController.cpp
-        gui/qml/LoaderController.cpp)
+        gui/qml/LoaderController.cpp gui/states/main/MainState.cpp gui/states/main/MainController.cpp)
 
 set(UT_SOURCES
         api/SessionImplTest.cpp
@@ -26,6 +26,7 @@ set(QML_SOURCES
         gui/qml/LoaderView.qml
         gui/states/register/RegisterView.qml
         gui/states/login/LoginView.qml
+        gui/states/main/MainView.qml
         )
 
 qt_add_executable(${EXECUTABLE_NAME} Main.cpp ${SOURCES})

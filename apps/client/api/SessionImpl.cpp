@@ -1,6 +1,5 @@
 #include "SessionImpl.h"
 
-#include "common/messages/Message.h"
 #include "loguru.hpp"
 #include "RemoveHandlerError.h"
 
@@ -29,6 +28,8 @@ void SessionImpl::sendMessage(const common::messages::Message& message)
 
 void SessionImpl::handleMessage(const common::messages::Message& message)
 {
+    std::lock_guard<std::mutex> guard(lock);
+
     LOG_S(INFO) << std::format("Received message: (id: {0:}, payload: {1:}), id {0:} has {2:} handlers",
                                toString(message.id), static_cast<std::string>(message.payload),
                                (messageHandlers.contains(message.id) ? messageHandlers.at(message.id).size() : 0));
@@ -38,6 +39,16 @@ void SessionImpl::handleMessage(const common::messages::Message& message)
         for (auto [_, handler] : messageHandlers.at(message.id))
         {
             handler(message);
+        }
+    }
+
+    for (const auto& messageHandlerToDelete : messageHandlersToDelete)
+    {
+        messageHandlers.at(messageHandlerToDelete.messageId).erase(messageHandlerToDelete.name);
+
+        if (messageHandlers.at(messageHandlerToDelete.messageId).empty())
+        {
+            messageHandlers.erase(messageHandlerToDelete.messageId);
         }
     }
 }
@@ -69,11 +80,25 @@ void SessionImpl::removeMessageHandler(const MessageHandlerPayload& messageHandl
                         common::messages::toString(messageHandlerPayload.messageId), messageHandlerPayload.name)};
     }
 
-    messageHandlers.at(messageHandlerPayload.messageId).erase(messageHandlerPayload.name);
+    std::unique_lock<std::mutex> guard(lock, std::try_to_lock);
 
-    if (messageHandlers.at(messageHandlerPayload.messageId).empty())
+    if (guard.owns_lock())
     {
-        messageHandlers.erase(messageHandlerPayload.messageId);
+        messageHandlers.at(messageHandlerPayload.messageId).erase(messageHandlerPayload.name);
+
+        if (messageHandlers.at(messageHandlerPayload.messageId).empty())
+        {
+            messageHandlers.erase(messageHandlerPayload.messageId);
+        }
     }
+    else
+    {
+        messageHandlersToDelete.push_back(messageHandlerPayload);
+    }
+}
+
+void SessionImpl::storeToken(const std::string& tokenInit)
+{
+    token = common::bytes::Bytes{tokenInit};
 }
 }

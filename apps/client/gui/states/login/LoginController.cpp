@@ -61,9 +61,11 @@ void LoginController::handleLoginResponse(const common::messages::Message& messa
 
     if (responseJson.contains("token"))
     {
-        // TODO: handle success
-
         LOG_S(INFO) << "Successfully logged";
+        
+        session->storeToken(responseJson.at("token").get<std::string>());
+
+        stateMachine->setNewRootState(stateFactory.createMainState());
     }
 }
 }
