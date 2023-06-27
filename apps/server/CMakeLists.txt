@@ -28,6 +28,10 @@ set(SOURCES
         infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.cpp
         application/commandHandlers/createChannelCommandHandler/CreateChannelCommandHandlerImpl.cpp
         application/commandHandlers/deleteChannelCommandHandler/DeleteChannelCommandHandlerImpl.cpp
+
+        domain/entities/userChannel/UserChannel.cpp
+        infrastructure/repositories/userChannelRepository/UserChannelRepositoryImpl.cpp
+        infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapperImpl.cpp
         )
 
 set(UT_SOURCES
@@ -36,6 +40,7 @@ set(UT_SOURCES
         api/SessionManagerTest.cpp
         infrastructure/repositories/userRepository/userMapper/UserMapperImplTest.cpp
         infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImplTest.cpp
+        infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapperImplTest.cpp
         )
 
 set(IT_SOURCES
@@ -53,6 +58,7 @@ set(IT_SOURCES
 set(ODB_HEADERS
         infrastructure/database/tables/userTable/User.h
         infrastructure/database/tables/channelTable/Channel.h
+        infrastructure/database/tables/userChannelTable/UserChannel.h
         )
 
 odb_compile(
@@ -70,6 +76,7 @@ odb_compile(
 set(ODB_SOURCES
         infrastructure/database/tables/userTable/User.cpp
         infrastructure/database/tables/channelTable/Channel.cpp
+        infrastructure/database/tables/userChannelTable/UserChannel.cpp
         ${ODB_GENERATED_SOURCES}
         )
 
@@ -80,6 +87,7 @@ set(ODB_LIBRARIES
 
 include_directories(infrastructure/database/tables/userTable)
 include_directories(infrastructure/database/tables/channelTable)
+include_directories(infrastructure/database/tables/userChannelTable)
 
 add_executable(${EXECUTABLE_NAME}
         Main.cpp
