@@ -37,6 +37,8 @@ void RegisterState::deactivate()
 
     QObject::disconnect(registerController.get(), &RegisterController::goBack, registerController.get(),
                         &RegisterController::handleGoBack);
+    
+    loaderController->getEngine()->rootContext()->setContextProperty(componentName, nullptr);
 
     registerController->deactivate();
 }

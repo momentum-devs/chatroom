@@ -2,7 +2,6 @@ import QtQuick 6.4
 import QtQuick.Controls 6.4
 
 Rectangle {
-    anchors.fill: parent
     color: "grey"
 
     Row {
@@ -17,19 +16,26 @@ Rectangle {
             Button {
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: qsTr('Create channel')
+
+                onClicked: {
+                    mainController.goToCreateChannelRequest();
+                    console.log("create channel from qml");
+                }
             }
             Button {
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: qsTr('Logout')
+
+                onClicked: {
+                    mainController.logoutRequest();
+                    console.log("logout from qml");
+                }
             }
         }
         Rectangle {
             color: 'black'
+            height: parent.height
             width: 2
-
-            anchors {
-                height: parent.height
-            }
         }
     }
 }

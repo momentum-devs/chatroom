@@ -24,5 +24,12 @@ void MainState::activate()
     mainController->activate();
 }
 
-void MainState::deactivate() {}
+void MainState::deactivate()
+{
+    LOG_S(INFO) << "Deactivate MainState";
+
+    loaderController->getEngine()->rootContext()->setContextProperty(componentName, nullptr);
+
+    mainController->deactivate();
+}
 }

@@ -1,5 +1,7 @@
 #include "StateFactory.h"
 
+#include "createChannel/CreateChannelController.h"
+#include "createChannel/CreateChannelState.h"
 #include "login/LoginController.h"
 #include "login/LoginState.h"
 #include "main/MainController.h"
@@ -42,5 +44,12 @@ std::shared_ptr<State> StateFactory::createMainState() const
     auto controller = std::make_unique<MainController>(session, *this, stateMachine);
 
     return std::make_shared<MainState>(std::move(controller), loaderController);
+}
+
+std::shared_ptr<State> StateFactory::createCreateChannelState() const
+{
+    auto controller = std::make_unique<CreateChannelController>(session, *this, stateMachine);
+
+    return std::make_shared<CreateChannelState>(std::move(controller), loaderController);
 }
 }

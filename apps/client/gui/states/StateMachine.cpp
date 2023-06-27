@@ -41,8 +41,6 @@ void StateMachine::setNewRootState(std::shared_ptr<State> state)
         states.pop();
     }
 
-    states.push(std::move(state));
-
-    states.top()->activate();
+    addNextState(std::move(state));
 }
 }

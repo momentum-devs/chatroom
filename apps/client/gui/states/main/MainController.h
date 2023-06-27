@@ -20,8 +20,8 @@ public:
 
     void activate();
     void deactivate();
-
-signals:
+    Q_INVOKABLE void logoutRequest();
+    Q_INVOKABLE void goToCreateChannelRequest();
 
 private:
     std::shared_ptr<api::Session> session;

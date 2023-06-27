@@ -21,9 +21,7 @@ Rectangle {
             anchors.horizontalCenter: passwordField.horizontalCenter
 
             Button {
-                text: qsTr('Login')
-
-                onClicked: {
+                function activate() {
                     const email = usernameField.text;
                     const password = passwordField.text;
                     if (email.length !== 0 && password.length !== 0) {
@@ -34,6 +32,12 @@ Rectangle {
                         errorPopup.open();
                     }
                 }
+
+                text: qsTr('Login')
+
+                Keys.onEnterPressed: activate()
+                Keys.onReturnPressed: activate()
+                onClicked: activate()
             }
             Button {
                 text: qsTr('Go to register')
