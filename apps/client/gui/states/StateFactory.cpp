@@ -2,6 +2,8 @@
 
 #include "login/LoginController.h"
 #include "login/LoginState.h"
+#include "main/MainController.h"
+#include "main/MainState.h"
 #include "register/RegisterController.h"
 #include "register/RegisterState.h"
 
@@ -33,5 +35,12 @@ std::shared_ptr<State> StateFactory::createLoginState() const
     auto controller = std::make_unique<LoginController>(session, *this, stateMachine);
 
     return std::make_shared<LoginState>(std::move(controller), loaderController);
+}
+
+std::shared_ptr<State> StateFactory::createMainState() const
+{
+    auto controller = std::make_unique<MainController>(session, *this, stateMachine);
+
+    return std::make_shared<MainState>(std::move(controller), loaderController);
 }
 }

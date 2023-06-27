@@ -18,16 +18,22 @@ public:
     LoginController(std::shared_ptr<api::Session> session, const StateFactory& stateFactory,
                     std::shared_ptr<StateMachine> stateMachine);
 
+    void activate();
+    void deactivate();
     Q_INVOKABLE void handleLoginRequest(const QString& email, const QString& password);
     Q_INVOKABLE void handleGoToRegisterState();
 
 signals:
     void loginRequest(const QString& email, const QString& password);
     void goToRegisterState();
+    void loginFailure(const QString& message);
 
 private:
+    void handleLoginResponse(const common::messages::Message& message);
+
     std::shared_ptr<api::Session> session;
     const StateFactory& stateFactory;
     std::shared_ptr<StateMachine> stateMachine;
+    inline const static std::string loginResponseHandlerName{"loginResponseHandlerName"};
 };
 }

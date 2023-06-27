@@ -15,7 +15,12 @@ set(SOURCES
         gui/states/StateFactory.cpp
         gui/states/login/LoginState.cpp
         gui/states/login/LoginController.cpp
-        gui/qml/LoaderController.cpp)
+        gui/qml/LoaderController.cpp
+        gui/states/main/MainState.cpp
+        gui/states/main/MainController.cpp
+        gui/states/createChannel/CreateChannelState.cpp
+        gui/states/createChannel/CreateChannelController.cpp
+        )
 
 set(UT_SOURCES
         api/SessionImplTest.cpp
@@ -23,9 +28,11 @@ set(UT_SOURCES
         )
 
 set(QML_SOURCES
-        gui/qml/MainView.qml
+        gui/qml/LoaderView.qml
         gui/states/register/RegisterView.qml
         gui/states/login/LoginView.qml
+        gui/states/main/MainView.qml
+        gui/states/createChannel/CreateChannelView.qml
         )
 
 qt_add_executable(${EXECUTABLE_NAME} Main.cpp ${SOURCES})

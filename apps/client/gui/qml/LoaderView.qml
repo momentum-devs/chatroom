@@ -1,17 +1,18 @@
 import QtQuick 6.2
 import QtQuick.Controls 6.2
 
-Item {
-    height: 480
-    width: 720
+Window {
+    height: 720
+    width: 1280
 
     Loader {
         id: loader
         anchors.fill: parent
+        asynchronous: true
     }
     Connections {
         function onLoadView(qUrl: url) {
-            loader.source = qUrl;
+            loader.setSource(qUrl);
         }
 
         target: loaderController

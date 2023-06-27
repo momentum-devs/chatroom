@@ -15,7 +15,7 @@ LoginState::LoginState(std::unique_ptr<LoginController> loginControllerInit,
 
 void LoginState::activate()
 {
-    LOG_S(INFO) << "Load LoginState";
+    LOG_S(INFO) << "Activate LoginState";
 
     QObject::connect(loginController.get(), &LoginController::loginRequest, loginController.get(),
                      &LoginController::handleLoginRequest);
@@ -26,6 +26,8 @@ void LoginState::activate()
     loaderController->getEngine()->rootContext()->setContextProperty(componentName, loginController.get());
 
     loaderController->callLoadView(qUrl);
+
+    loginController->activate();
 }
 
 void LoginState::deactivate()
@@ -35,5 +37,9 @@ void LoginState::deactivate()
 
     QObject::disconnect(loginController.get(), &LoginController::goToRegisterState, loginController.get(),
                         &LoginController::handleGoToRegisterState);
+
+    loaderController->getEngine()->rootContext()->setContextProperty(componentName, nullptr);
+
+    loginController->deactivate();
 }
 }

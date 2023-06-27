@@ -15,7 +15,7 @@ RegisterState::RegisterState(std::unique_ptr<RegisterController> registerControl
 
 void RegisterState::activate()
 {
-    LOG_S(INFO) << "Load RegisterState";
+    LOG_S(INFO) << "Activate RegisterState";
 
     QObject::connect(registerController.get(), &RegisterController::registerRequest, registerController.get(),
                      &RegisterController::handleRegisterRequest);
@@ -26,6 +26,8 @@ void RegisterState::activate()
     loaderController->getEngine()->rootContext()->setContextProperty(componentName, registerController.get());
 
     loaderController->callLoadView(qUrl);
+
+    registerController->activate();
 }
 
 void RegisterState::deactivate()
@@ -35,5 +37,7 @@ void RegisterState::deactivate()
 
     QObject::disconnect(registerController.get(), &RegisterController::goBack, registerController.get(),
                         &RegisterController::handleGoBack);
+
+    registerController->deactivate();
 }
 }

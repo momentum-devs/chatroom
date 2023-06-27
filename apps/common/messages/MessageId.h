@@ -18,7 +18,11 @@ enum class MessageId : unsigned char
 inline std::string toString(MessageId messageId)
 {
     const std::unordered_map<MessageId, std::string> messageIdsToStringMapping{
+        {MessageId::Error, "Error"},
         {MessageId::Register, "Register"},
+        {MessageId::RegisterResponse, "RegisterResponse"},
+        {MessageId::Login, "Login"},
+        {MessageId::LoginResponse, "LoginResponse"},
     };
 
     try

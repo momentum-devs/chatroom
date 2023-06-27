@@ -15,6 +15,7 @@ public:
     std::shared_ptr<State> createDefaultState() const;
     std::shared_ptr<State> createRegisterState() const;
     std::shared_ptr<State> createLoginState() const;
+    std::shared_ptr<State> createMainState() const;
 
 private:
     std::shared_ptr<client::api::Session> session;
