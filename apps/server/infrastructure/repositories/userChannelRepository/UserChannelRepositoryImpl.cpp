@@ -1,7 +1,6 @@
 #include "UserChannelRepositoryImpl.h"
 
 #include <boost/date_time/posix_time/posix_time.hpp>
-#include <format>
 
 #include "server/infrastructure/errors/ResourceNotFoundError.h"
 #include "server/infrastructure/errors/UserChannelRepositoryError.h"
@@ -54,7 +53,7 @@ UserChannelRepositoryImpl::findUsersChannelsByUserId(const domain::FindUsersChan
 
         std::vector<domain::UserChannel> domainUserChannels;
 
-        for (auto& userChannel: result)
+        for (auto& userChannel : result)
         {
             domainUserChannels.push_back(userChannelMapper->mapToDomainUserChannel(userChannel));
         }
@@ -67,8 +66,8 @@ UserChannelRepositoryImpl::findUsersChannelsByUserId(const domain::FindUsersChan
     }
 }
 
-std::vector<domain::UserChannel>
-UserChannelRepositoryImpl::findUsersChannelsByChannelId(const domain::FindUsersChannelsByChannelIdPayload& payload) const
+std::vector<domain::UserChannel> UserChannelRepositoryImpl::findUsersChannelsByChannelId(
+    const domain::FindUsersChannelsByChannelIdPayload& payload) const
 {
     try
     {
@@ -82,7 +81,7 @@ UserChannelRepositoryImpl::findUsersChannelsByChannelId(const domain::FindUsersC
 
         std::vector<domain::UserChannel> domainUserChannels;
 
-        for (auto& userChannel: result)
+        for (auto& userChannel : result)
         {
             domainUserChannels.push_back(userChannelMapper->mapToDomainUserChannel(userChannel));
         }

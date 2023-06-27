@@ -53,6 +53,7 @@ set(IT_SOURCES
         infrastructure/repositories/channelRepository/ChannelRepositoryImplIntegrationTest.cpp
         application/commandHandlers/createChannelCommandHandler/CreateChannelCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/deleteChannelCommandHandler/DeleteChannelCommandHandlerImplIntegrationTest.cpp
+        infrastructure/repositories/userChannelRepository/UserChannelRepositoryImplIntegrationTest.cpp
         )
 
 set(ODB_HEADERS
