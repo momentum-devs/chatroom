@@ -17,7 +17,7 @@ CreateUserChannelCommandHandlerImpl::CreateUserChannelCommandHandlerImpl(
 CreateUserChannelCommandHandlerResult
 CreateUserChannelCommandHandlerImpl::execute(const CreateUserChannelCommandHandlerPayload& payload) const
 {
-    LOG_S(INFO) << std::format("Creating user channel... {{userId: {},channelId: {}}}", payload.userId,
+    LOG_S(INFO) << std::format("Creating user channel... {{userId: {}, channelId: {}}}", payload.userId,
                                payload.channelId);
 
     std::stringstream uuid;
@@ -28,7 +28,7 @@ CreateUserChannelCommandHandlerImpl::execute(const CreateUserChannelCommandHandl
     const auto userChannel =
         userChannelRepository->createUserChannel({userChannelId, payload.userId, payload.channelId});
 
-    LOG_S(INFO) << std::format("User channel created. {{userId: {},channelId: {}}}", userChannel.getUserId(),
+    LOG_S(INFO) << std::format("User channel created. {{userId: {}, channelId: {}}}", userChannel.getUserId(),
                                userChannel.getChannelId());
 
     return {userChannel};

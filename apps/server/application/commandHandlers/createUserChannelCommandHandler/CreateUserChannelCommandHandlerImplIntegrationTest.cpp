@@ -2,12 +2,12 @@
 
 #include "gtest/gtest.h"
 
+#include "Channel.h"
+#include "Channel.odb.h"
 #include "CreateUserChannelCommandHandlerImpl.h"
 #include "server/application/services/hashService/HashServiceImpl.h"
 #include "server/infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapperImpl.h"
 #include "server/infrastructure/repositories/userChannelRepository/UserChannelRepositoryImpl.h"
-#include "Channel.h"
-#include "Channel.odb.h"
 #include "User.h"
 #include "User.odb.h"
 #include "UserChannel.h"
@@ -115,7 +115,7 @@ TEST_F(CreateUserChannelCommandImplIntegrationTest, createUserChannel)
 
     const auto channel = createChannel(channelId, name, creatorId);
 
-    const auto [userChannel] = createUserChannelCommandHandler.execute({name, creatorId});
+    const auto [userChannel] = createUserChannelCommandHandler.execute({userId, channelId});
 
     ASSERT_EQ(userChannel.getUserId(), userId);
     ASSERT_EQ(userChannel.getChannelId(), channelId);
