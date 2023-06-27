@@ -14,13 +14,13 @@ DeleteUserChannelCommandHandlerImpl::DeleteUserChannelCommandHandlerImpl(
 
 void DeleteUserChannelCommandHandlerImpl::execute(const DeleteUserChannelCommandHandlerPayload& payload)
 {
-    const auto existingUserChannel = userChannelRepository->fin({payload.channelId});
+    const auto existingUserChannel = userChannelRepository->findUserChannelById({payload.userChannelId});
 
     if (!existingUserChannel)
     {
-        throw errors::ResourceNotFoundError{std::format("UserChannel with id {} not found.", payload.channelId)};
+        throw errors::ResourceNotFoundError{std::format("UserChannel with id {} not found.", payload.userChannelId)};
     }
 
-    channelRepository->deleteUserChannel({*existingUserChannel});
+    userChannelRepository->deleteUserChannel({*existingUserChannel});
 }
 }
