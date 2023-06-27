@@ -45,11 +45,9 @@ UserChannelRepositoryImpl::findUsersChannelsByUserId(const domain::FindUsersChan
     {
         odb::transaction transaction(db->begin());
 
-        typedef odb::query<UserChannel> query;
+        typedef odb::query<UserChannel> Query;
 
-        auto result = db->query<UserChannel>(query::user_id == payload.userId);
-
-        transaction.commit();
+        auto result = db->query<UserChannel>(Query::user_id == payload.userId);
 
         std::vector<domain::UserChannel> domainUserChannels;
 
@@ -57,6 +55,8 @@ UserChannelRepositoryImpl::findUsersChannelsByUserId(const domain::FindUsersChan
         {
             domainUserChannels.push_back(userChannelMapper->mapToDomainUserChannel(userChannel));
         }
+
+        transaction.commit();
 
         return domainUserChannels;
     }
@@ -73,18 +73,20 @@ std::vector<domain::UserChannel> UserChannelRepositoryImpl::findUsersChannelsByC
     {
         odb::transaction transaction(db->begin());
 
-        typedef odb::query<UserChannel> query;
+        typedef odb::query<UserChannel> Query;
 
-        auto result = db->query<UserChannel>(query::channel_id == payload.channelId);
+        typedef odb::result<UserChannel> Result;
 
-        transaction.commit();
+        Result result = db->query<UserChannel>(Query::channel_id == payload.channelId);
 
         std::vector<domain::UserChannel> domainUserChannels;
 
-        for (auto& userChannel : result)
+        for (const auto& userChannel : result)
         {
             domainUserChannels.push_back(userChannelMapper->mapToDomainUserChannel(userChannel));
         }
+
+        transaction.commit();
 
         return domainUserChannels;
     }

@@ -215,7 +215,7 @@ TEST_F(UserChannelRepositoryIntegrationTest, shouldFindUsersChannelsByChannelId)
 
     const auto userChannel = createUserChannel(id, userId, channelId);
 
-    const auto foundUsersChannels = userChannelRepository->findUsersChannelsByUserId({channelId});
+    const auto foundUsersChannels = userChannelRepository->findUsersChannelsByChannelId({channelId});
 
     ASSERT_TRUE(foundUsersChannels.size());
     ASSERT_EQ(foundUsersChannels[0].getId(), userChannel.getId());
