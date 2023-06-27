@@ -39,7 +39,7 @@ void RegisterController::activate()
 
 void RegisterController::deactivate()
 {
-    session->removeMessageHandler({common::messages::MessageId::LoginResponse, registerResponseHandlerName});
+    session->removeMessageHandler({common::messages::MessageId::RegisterResponse, registerResponseHandlerName});
 }
 
 void RegisterController::handleRegisterResponse(const common::messages::Message& message)

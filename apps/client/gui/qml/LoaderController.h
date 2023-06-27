@@ -24,6 +24,5 @@ private:
     inline static const QString componentName{"loaderController"};
     inline static const QUrl qUrl{QUrl::fromLocalFile("chatroom/gui/qml/MainView.qml")};
     QQuickView view;
-    QObject* loader;
 };
 }
