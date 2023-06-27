@@ -4,7 +4,7 @@
 
 #include "Channel.h"
 #include "Channel.odb.h"
-#include "FindUsersChannelsByChannelIdQueryHandlerImpl.h"
+#include "FindUsersChannelsByUserIdQueryHandlerImpl.h"
 #include "server/application/services/hashService/HashServiceImpl.h"
 #include "server/infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapperImpl.h"
 #include "server/infrastructure/repositories/userChannelRepository/UserChannelRepositoryImpl.h"
@@ -18,7 +18,7 @@ using namespace server;
 using namespace server::infrastructure;
 using namespace server::application;
 
-class FindUsersChannelsByChannelIdQueryImplIntegrationTest : public Test
+class FindUsersChannelsByUserIdQueryImplIntegrationTest : public Test
 {
 public:
     void SetUp() override
@@ -98,10 +98,10 @@ public:
 
     std::shared_ptr<HashService> hashService = std::make_shared<HashServiceImpl>();
 
-    FindUsersChannelsByChannelIdQueryHandlerImpl findUsersChannelsByChannelIdQueryHandler{channelRepository};
+    FindUsersChannelsByUserIdQueryHandlerImpl findUsersChannelsByIdQueryHandler{channelRepository};
 };
 
-TEST_F(FindUsersChannelsByChannelIdQueryImplIntegrationTest, findUsersChannelsByChannelId)
+TEST_F(FindUsersChannelsByUserIdQueryImplIntegrationTest, findUsersChannelsByUserId)
 {
     const auto userId1 = "userId1";
     const auto userEmail1 = "email1@gmail.com";
@@ -127,14 +127,14 @@ TEST_F(FindUsersChannelsByChannelIdQueryImplIntegrationTest, findUsersChannelsBy
 
     const auto channel2 = createChannel(channelId2, name2, creatorId2);
 
-    const auto userChannelId1 = "userChannelId1";
-    const auto userChannelId2 = "userChannelId2";
+    const auto userUserId1 = "userUserId1";
+    const auto userUserId2 = "userUserId2";
 
-    const auto userChannel1 = createUserChannel(userChannelId1, userId1, channelId1);
-    const auto userChannel2 = createUserChannel(userChannelId2, userId2, channelId2);
+    const auto userChannel1 = createUserChannel(userUserId1, userId1, channelId1);
+    const auto userChannel2 = createUserChannel(userUserId2, userId2, channelId2);
 
-    const auto [usersChannels] = findUsersChannelsByChannelIdQueryHandler.execute({channelId2});
+    const auto [usersChannels] = findUsersChannelsByIdQueryHandler.execute({userId1});
 
     ASSERT_EQ(usersChannels.size(), 1);
-    ASSERT_EQ(usersChannels[0].getId(), userChannelId2);
+    ASSERT_EQ(usersChannels[0].getId(), userUserId1);
 }
