@@ -38,6 +38,32 @@ domain::UserChannel UserChannelRepositoryImpl::createUserChannel(const domain::C
     }
 }
 
+std::optional<domain::UserChannel>
+UserChannelRepositoryImpl::findUserChannelById(const domain::FindUserChannelByIdPayload& payload) const
+{
+    try
+    {
+        odb::transaction transaction(db->begin());
+
+        typedef odb::query<UserChannel> Query;
+
+        std::shared_ptr<UserChannel> userChannel(db->query_one<UserChannel>(Query::id == payload.id));
+
+        transaction.commit();
+
+        if (!userChannel)
+        {
+            return std::nullopt;
+        }
+
+        return userChannelMapper->mapToDomainUserChannel(*userChannel);
+    }
+    catch (const std::exception& error)
+    {
+        throw errors::UserChannelRepositoryError{error.what()};
+    }
+}
+
 std::vector<domain::UserChannel>
 UserChannelRepositoryImpl::findUsersChannelsByUserId(const domain::FindUsersChannelsByUserIdPayload& payload) const
 {
@@ -111,4 +137,5 @@ void UserChannelRepositoryImpl::deleteUserChannel(const domain::DeleteUserChanne
         throw errors::UserChannelRepositoryError{error.what()};
     }
 }
+
 }
