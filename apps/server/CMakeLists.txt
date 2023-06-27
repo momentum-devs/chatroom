@@ -34,6 +34,7 @@ set(SOURCES
         infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapperImpl.cpp
         application/commandHandlers/createUserChannelCommandHandler/CreateUserChannelCommandHandlerImpl.cpp
         application/commandHandlers/deleteUserChannelCommandHandler/DeleteUserChannelCommandHandlerImpl.cpp
+        application/queryHandlers/findUsersChannelsByChannelIdQueryHandler/FindUsersChannelsByChannelIdQueryHandlerImpl.cpp
         )
 
 set(UT_SOURCES
@@ -58,6 +59,7 @@ set(IT_SOURCES
         infrastructure/repositories/userChannelRepository/UserChannelRepositoryImplIntegrationTest.cpp
         application/commandHandlers/createUserChannelCommandHandler/CreateUserChannelCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/deleteUserChannelCommandHandler/DeleteUserChannelCommandHandlerImplIntegrationTest.cpp
+        application/queryHandlers/findUsersChannelsByChannelIdQueryHandler/FindUsersChannelsByChannelIdQueryHandlerImplIntegrationTest.cpp
         )
 
 set(ODB_HEADERS
