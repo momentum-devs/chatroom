@@ -31,6 +31,21 @@ Rectangle {
                     console.log("logout from qml");
                 }
             }
+            ListView {
+                contentWidth: 320
+                height: 200
+                width: 180
+
+                delegate: Text {
+                    text: '<b>Channel:</b> ' + name
+                }
+                highlight: Rectangle {
+                    color: "lightsteelblue"
+                    radius: 5
+                }
+                model: ListModel {
+                }
+            }
         }
         Rectangle {
             color: 'black'

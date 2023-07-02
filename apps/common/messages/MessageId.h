@@ -15,6 +15,8 @@ enum class MessageId : unsigned char
     LoginResponse,
     CreateChannel,
     CreateChannelResponse,
+    GetUserChannels,
+    GetUserChannelsResponse,
 };
 
 inline std::string toString(MessageId messageId)
@@ -27,6 +29,8 @@ inline std::string toString(MessageId messageId)
         {MessageId::LoginResponse, "LoginResponse"},
         {MessageId::CreateChannel, "CreateChannel"},
         {MessageId::CreateChannelResponse, "CreateChannelResponse"},
+        {MessageId::GetUserChannels, "GetUserChannels"},
+        {MessageId::GetUserChannelsResponse, "GetUserChannelsResponse"},
     };
 
     try

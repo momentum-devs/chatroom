@@ -24,8 +24,12 @@ public:
     Q_INVOKABLE void goToCreateChannel();
 
 private:
+    void handleGetUserChannelsResponse(const common::messages::Message& message);
+
     std::shared_ptr<api::Session> session;
     const StateFactory& stateFactory;
     std::shared_ptr<StateMachine> stateMachine;
+
+    inline static const std::string getUserChannelsResponseHandlerName{"getUserChannelsResponseHandlerName"};
 };
 }

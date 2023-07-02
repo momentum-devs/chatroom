@@ -27,7 +27,7 @@ signals:
     void createChannelFailure(const QString& error) const;
 
 private:
-    void handleCreateChannelResponse(const common::messages::Message& message) const;
+    void handleCreateChannelResponse(const common::messages::Message& message);
 
     std::shared_ptr<api::Session> session;
     const StateFactory& stateFactory;

@@ -4,8 +4,11 @@
 #include <gtest/gtest.h>
 #include <regex>
 
+#include "server/application/commandHandlers/createChannelCommandHandler/CreateChannelCommandHandlerMock.h"
 #include "server/application/commandHandlers/loginUserCommandHandler/LoginUserCommandHandlerMock.h"
 #include "server/application/commandHandlers/registerUserCommandHandler/RegisterUserCommandHandlerMock.h"
+#include "server/application/queryHandlers/findUsersChannelsByUserIdQueryHandler/FindUsersChannelsByUserIdQueryHandlerMock.h"
+#include "server/application/services/tokenService/TokenServiceMock.h"
 
 #include "nlohmann/json.hpp"
 
@@ -26,7 +29,7 @@ const server::application::RegisterUserCommandHandlerResult validRegisterUserCom
 common::bytes::Bytes validRegisterPayload{
     std::format(R"({{"email":"{}","password":"{}"}})", validEmail, validPassword)};
 common::messages::Message validRegisterMessage{common::messages::MessageId::Register, validRegisterPayload};
-common::bytes::Bytes okResponse{R"({"ok"})"};
+common::bytes::Bytes okResponse{R"(["ok"])"};
 
 const std::string invalidEmail = "invalidEmail";
 const std::string invalidPassword = "invalidPassword";
@@ -54,6 +57,9 @@ common::messages::Message loginMessagedWithInvalidEmail{common::messages::Messag
 class MessageHandlerImplTest : public Test
 {
 public:
+    std::shared_ptr<server::application::TokenServiceMock> tokenServiceMock =
+        std::make_shared<StrictMock<server::application::TokenServiceMock>>();
+
     std::unique_ptr<server::application::RegisterUserCommandHandlerMock> registerUserCommandHandlerMockInit =
         std::make_unique<StrictMock<server::application::RegisterUserCommandHandlerMock>>();
     server::application::RegisterUserCommandHandlerMock* registerUserCommandHandlerMock =
@@ -64,8 +70,20 @@ public:
     server::application::LoginUserCommandHandlerMock* loginUserCommandHandlerMock =
         loginUserCommandHandlerMockInit.get();
 
-    MessageHandlerImpl messageHandler{std::move(registerUserCommandHandlerMockInit),
-                                      std::move(loginUserCommandHandlerMockInit)};
+    std::unique_ptr<server::application::CreateChannelCommandHandlerMock> createChannelCommandHandlerMockInit =
+        std::make_unique<StrictMock<server::application::CreateChannelCommandHandlerMock>>();
+    server::application::CreateChannelCommandHandlerMock* createChannelCommandHandlerMock =
+        createChannelCommandHandlerMockInit.get();
+
+    std::unique_ptr<server::application::FindUsersChannelsByUserIdQueryHandlerMock>
+        findUsersChannelsByUserIdQueryHandlerMockInit =
+            std::make_unique<StrictMock<server::application::FindUsersChannelsByUserIdQueryHandlerMock>>();
+    server::application::FindUsersChannelsByUserIdQueryHandlerMock* findUsersChannelsByUserIdQueryHandlerMock =
+        findUsersChannelsByUserIdQueryHandlerMockInit.get();
+
+    MessageHandlerImpl messageHandler{
+        tokenServiceMock, std::move(registerUserCommandHandlerMockInit), std::move(loginUserCommandHandlerMockInit),
+        std::move(createChannelCommandHandlerMockInit), std::move(findUsersChannelsByUserIdQueryHandlerMockInit)};
 };
 
 TEST_F(MessageHandlerImplTest, handleRegisterValidMessage)
@@ -102,6 +120,7 @@ TEST_F(MessageHandlerImplTest, handleLoginValidMessage)
 {
     EXPECT_CALL(*loginUserCommandHandlerMock, execute(validLoginUserCommandHandlerPayload))
         .WillOnce(Return(validLoginUserCommandHandlerResult));
+    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(id));
 
     auto response = messageHandler.handleMessage(validLoginMessage);
 

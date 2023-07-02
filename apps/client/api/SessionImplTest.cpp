@@ -3,6 +3,7 @@
 #include <boost/beast/_experimental/test/stream.hpp>
 #include <gtest/gtest.h>
 
+#include "MessageFactoryMock.h"
 #include "messages/MessageReaderMock.h"
 #include "messages/MessageSenderMock.h"
 #include "SocketConnectorMock.h"
@@ -38,10 +39,11 @@ public:
     std::unique_ptr<SocketConnectorMock> socketConnectorMockInit = std::make_unique<StrictMock<SocketConnectorMock>>();
     SocketConnectorMock* socketConnectorMock = socketConnectorMockInit.get();
 
-    std::shared_ptr<DummyMock> dummyMock = std::make_shared<StrictMock<DummyMock>>();
+    std::unique_ptr<MessageFactoryMock> messageFactoryMockInit = std::make_unique<StrictMock<MessageFactoryMock>>();
+    MessageFactoryMock* messageFactoryMock = messageFactoryMockInit.get();
 
     SessionImpl session{std::move(messageReaderMockInit), std::move(messageSenderMockInit),
-                        std::move(socketConnectorMockInit)};
+                        std::move(socketConnectorMockInit), std::move(messageFactoryMockInit)};
 
     std::function<void(const common::messages::Message&)> messageHandler;
 
@@ -52,6 +54,8 @@ public:
 
         session.connect(connectorPayload);
     }
+
+    std::shared_ptr<DummyMock> dummyMock = std::make_shared<StrictMock<DummyMock>>();
 };
 
 TEST_F(SessionImplTest, connectSession)

@@ -12,11 +12,14 @@ MessageHandlerImpl::MessageHandlerImpl(
     std::shared_ptr<server::application::TokenService> tokenServiceInit,
     std::unique_ptr<server::application::RegisterUserCommandHandler> registerUserCommandHandlerInit,
     std::unique_ptr<server::application::LoginUserCommandHandler> loginUserCommandHandlerInit,
-    std::unique_ptr<server::application::CreateChannelCommandHandler> createChannelCommandHandlerInit)
+    std::unique_ptr<server::application::CreateChannelCommandHandler> createChannelCommandHandlerInit,
+    std::unique_ptr<server::application::FindUsersChannelsByUserIdQueryHandler>
+        findUsersChannelsByUserIdQueryHandlerInit)
     : tokenService{std::move(tokenServiceInit)},
       registerUserCommandHandler{std::move(registerUserCommandHandlerInit)},
       loginUserCommandHandler{std::move(loginUserCommandHandlerInit)},
-      createChannelCommandHandler{std::move(createChannelCommandHandlerInit)}
+      createChannelCommandHandler{std::move(createChannelCommandHandlerInit)},
+      findUsersChannelsByUserIdQueryHandler{std::move(findUsersChannelsByUserIdQueryHandlerInit)}
 {
 }
 
@@ -30,6 +33,8 @@ common::messages::Message MessageHandlerImpl::handleMessage(const common::messag
         return handleLoginMessage(message.payload);
     case common::messages::MessageId::CreateChannel:
         return handleCreateChannelRequest(message.payload);
+    case common::messages::MessageId::GetUserChannels:
+        return handleGetUserChannelsRequest(message.payload);
     default:
         return {common::messages::MessageId::Error, {}};
     }
@@ -134,6 +139,38 @@ common::messages::Message MessageHandlerImpl::handleCreateChannelRequest(const c
         nlohmann::json responsePayload{{"error", e.what()}};
 
         return {common::messages::MessageId::CreateChannelResponse, common::bytes::Bytes{responsePayload.dump()}};
+    }
+}
+
+common::messages::Message MessageHandlerImpl::handleGetUserChannelsRequest(const common::bytes::Bytes& payload) const
+{
+    try
+    {
+        auto payloadJson = nlohmann::json::parse(static_cast<std::string>(payload));
+
+        auto token = payloadJson["token"].get<std::string>();
+
+        auto userId = tokenService->getUserIdFromToken(token);
+
+        const auto& [userChannels] = findUsersChannelsByUserIdQueryHandler->execute({userId});
+
+        nlohmann::json responsePayload = nlohmann::json::array();
+
+        for (const auto& userChannel : userChannels)
+        {
+            responsePayload.push_back(userChannel.getChannelId());
+        }
+
+        auto message = common::messages::Message{common::messages::MessageId::GetUserChannelsResponse,
+                                                 common::bytes::Bytes{responsePayload.dump()}};
+
+        return message;
+    }
+    catch (const std::exception& e)
+    {
+        nlohmann::json responsePayload{{"error", e.what()}};
+
+        return {common::messages::MessageId::GetUserChannelsResponse, common::bytes::Bytes{responsePayload.dump()}};
     }
 }
 }

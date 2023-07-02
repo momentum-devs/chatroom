@@ -14,12 +14,17 @@ MainController::MainController(std::shared_ptr<api::Session> sessionInit, const 
 
 void MainController::activate()
 {
-    // TODO: implement
+    session->addMessageHandler({common::messages::MessageId::GetUserChannelsResponse,
+                                getUserChannelsResponseHandlerName,
+                                [this](const auto& msg) { handleGetUserChannelsResponse(msg); }});
+
+    session->sendMessage(common::messages::MessageId::GetUserChannels, {});
 }
 
 void MainController::deactivate()
 {
-    // TODO: implement
+    session->removeMessageHandler(
+        {common::messages::MessageId::GetUserChannelsResponse, getUserChannelsResponseHandlerName});
 }
 
 void MainController::logout()
@@ -35,4 +40,6 @@ void MainController::goToCreateChannel()
 
     stateMachine->addNextState(stateFactory.createCreateChannelState());
 }
+
+void MainController::handleGetUserChannelsResponse(const common::messages::Message& message) {}
 }

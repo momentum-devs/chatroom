@@ -42,7 +42,7 @@ void CreateChannelController::createChannel(const QString& channelName)
     session->sendMessage(common::messages::MessageId::CreateChannel, data);
 }
 
-void CreateChannelController::handleCreateChannelResponse(const common::messages::Message& message) const
+void CreateChannelController::handleCreateChannelResponse(const common::messages::Message& message)
 {
     auto responsePayload = static_cast<std::string>(message.payload);
 
