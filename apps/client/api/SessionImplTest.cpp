@@ -23,6 +23,9 @@ struct DummyMock
 const ConnectorPayload connectorPayload{"host", 123};
 const common::messages::MessageId messageId{common::messages::MessageId::Register};
 const common::messages::Message message{messageId, {}};
+const nlohmann::json data{};
+const std::optional<std::string> token{"token"};
+const std::optional<std::string> emptyToken{std::nullopt};
 }
 
 class SessionImplTest : public Test
@@ -100,4 +103,22 @@ TEST_F(SessionImplTest, removeNonExistingHandler_shouldThrow)
 TEST_F(SessionImplTest, removeNonExistingMessageIdHandler_shouldThrow)
 {
     EXPECT_THROW(session.removeMessageHandler({messageId, "notExisting", {}}), RemoveHandlerError);
+}
+
+TEST_F(SessionImplTest, sendMessageWithMessageIdAndDataWithoutToken)
+{
+    EXPECT_CALL(*messageFactoryMock, createMessage(messageId, data, emptyToken)).WillOnce(Return(message));
+    EXPECT_CALL(*messageSenderMock, sendMessage(message));
+
+    session.sendMessage(messageId, data);
+}
+
+TEST_F(SessionImplTest, sendMessageWithMessageIdAndDataWithToken)
+{
+    EXPECT_CALL(*messageFactoryMock, createMessage(messageId, data, token)).WillOnce(Return(message));
+    EXPECT_CALL(*messageSenderMock, sendMessage(message));
+
+    session.storeToken(token.value());
+
+    session.sendMessage(messageId, data);
 }
