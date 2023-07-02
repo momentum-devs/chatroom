@@ -17,6 +17,7 @@ public:
     std::shared_ptr<State> createLoginState() const;
     std::shared_ptr<State> createMainState() const;
     std::shared_ptr<State> createCreateChannelState() const;
+    std::shared_ptr<State> createSendFriendRequestState() const;
 
 private:
     std::shared_ptr<client::api::Session> session;

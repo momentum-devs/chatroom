@@ -17,13 +17,12 @@ TEST_F(UserChannelMapperTest, givenUserChannelModel_shouldMapToDomainUserChannel
     const auto id = "id";
     const auto userId = "userId";
     const auto channelId = "channelId";
-    const auto nickname = "nickname";
     const auto createdAt = "2023-06-16";
     const auto updatedAt = "2023-06-16";
 
-    UserChannel userChannelModel{id, email, password, nickname, createdAt, updatedAt};
+    UserChannel userChannelModel{id, userId, channelId, createdAt, updatedAt};
 
-    const auto domainUserChannel = userMapper.mapToDomainUser(userModel);
+    const auto domainUserChannel = userChannelMapper.mapToDomainUserChannel(userChannelModel);
 
     ASSERT_EQ(domainUserChannel.getId(), id);
     ASSERT_EQ(domainUserChannel.getUserId(), userId);

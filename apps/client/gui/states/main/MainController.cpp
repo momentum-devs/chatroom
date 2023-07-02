@@ -42,4 +42,11 @@ void MainController::goToCreateChannel()
 }
 
 void MainController::handleGetUserChannelsResponse(const common::messages::Message& message) {}
+
+void MainController::goToSendFriendRequest()
+{
+    LOG_S(INFO) << "Handle go to send friend request";
+
+    stateMachine->addNextState(stateFactory.createSendFriendRequestState());
+}
 }

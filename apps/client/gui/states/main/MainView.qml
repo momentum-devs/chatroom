@@ -19,7 +19,14 @@ Rectangle {
 
                 onClicked: {
                     mainController.goToCreateChannel();
-                    console.log("create channel from qml");
+                }
+            }
+            Button {
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: qsTr('Send friend request')
+
+                onClicked: {
+                    mainController.goToSendFriendRequest();
                 }
             }
             Button {

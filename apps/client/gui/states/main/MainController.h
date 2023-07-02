@@ -22,6 +22,7 @@ public:
     void deactivate();
     Q_INVOKABLE void logout();
     Q_INVOKABLE void goToCreateChannel();
+    Q_INVOKABLE void goToSendFriendRequest();
 
 private:
     void handleGetUserChannelsResponse(const common::messages::Message& message);
