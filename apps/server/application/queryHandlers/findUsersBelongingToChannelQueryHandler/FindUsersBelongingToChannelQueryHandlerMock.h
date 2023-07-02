@@ -6,10 +6,10 @@
 
 namespace server::application
 {
-class FindUsersChannelsByChannelIdQueryHandlerMock : public FindUsersChannelsByChannelIdQueryHandler
+class FindUsersBelongingToChannelQueryHandlerMock : public FindUsersBelongingToChannelQueryHandler
 {
 public:
-    MOCK_METHOD(FindUsersChannelsByChannelIdQueryHandlerResult, execute,
-                (const FindUsersChannelsByChannelIdQueryHandlerPayload&), (const override));
+    MOCK_METHOD(FindUsersBelongingToChannelQueryHandlerResult, execute,
+                (const FindUsersBelongingToChannelQueryHandlerPayload&), (const override));
 };
 }

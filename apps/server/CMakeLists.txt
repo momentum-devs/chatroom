@@ -35,7 +35,7 @@ set(SOURCES
         application/commandHandlers/createUserChannelCommandHandler/CreateUserChannelCommandHandlerImpl.cpp
         application/commandHandlers/deleteUserChannelCommandHandler/DeleteUserChannelCommandHandlerImpl.cpp
         application/queryHandlers/findUsersBelongingToChannelQueryHandler/FindUsersBelongingToChannelQueryHandlerImpl.cpp
-        application/queryHandlers/findUsersChannelsByUserIdQueryHandler/FindUsersChannelsByUserIdQueryHandlerImpl.cpp
+        application/queryHandlers/findChannelsToWhichUserBelongsQueryHandler/FindChannelsToWhichUserBelongsQueryHandlerImpl.cpp
         )
 
 set(UT_SOURCES
@@ -61,7 +61,7 @@ set(IT_SOURCES
         application/commandHandlers/createUserChannelCommandHandler/CreateUserChannelCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/deleteUserChannelCommandHandler/DeleteUserChannelCommandHandlerImplIntegrationTest.cpp
         application/queryHandlers/findUsersBelongingToChannelQueryHandler/FindUsersBelongingToChannelQueryHandlerImplIntegrationTest.cpp
-        application/queryHandlers/findUsersChannelsByUserIdQueryHandler/FindUsersChannelsByUserIdQueryHandlerImplIntegrationTest.cpp
+        application/queryHandlers/findChannelsToWhichUserBelongsQueryHandler/FindChannelsToWhichUserBelongsQueryHandlerImplIntegrationTest.cpp
         )
 
 set(ODB_HEADERS

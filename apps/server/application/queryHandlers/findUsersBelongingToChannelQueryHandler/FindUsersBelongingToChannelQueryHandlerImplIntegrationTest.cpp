@@ -20,7 +20,7 @@ using namespace server;
 using namespace server::infrastructure;
 using namespace server::application;
 
-class FindUsersChannelsByChannelIdQueryImplIntegrationTest : public Test
+class FindUsersBelongingToChannelQueryHandlerImplIntegrationTest : public Test
 {
 public:
     void SetUp() override
@@ -105,10 +105,10 @@ public:
 
     std::shared_ptr<HashService> hashService = std::make_shared<HashServiceImpl>();
 
-    FindUsersBelongingToChannelQueryHandlerImpl findUsersChannelsByChannelIdQueryHandler{channelRepository};
+    FindUsersBelongingToChannelQueryHandlerImpl findUsersBelongingToChannelQueryHandler{channelRepository};
 };
 
-TEST_F(FindUsersChannelsByChannelIdQueryImplIntegrationTest, findUsersChannelsByChannelId)
+TEST_F(FindUsersBelongingToChannelQueryHandlerImplIntegrationTest, findUsersChannelsByChannelId)
 {
     const auto userId1 = "userId1";
     const auto userEmail1 = "email1@gmail.com";
@@ -140,8 +140,8 @@ TEST_F(FindUsersChannelsByChannelIdQueryImplIntegrationTest, findUsersChannelsBy
     const auto userChannel1 = createUserChannel(userChannelId1, user1, channel1);
     const auto userChannel2 = createUserChannel(userChannelId2, user2, channel2);
 
-    const auto [usersChannels] = findUsersChannelsByChannelIdQueryHandler.execute({channelId2});
+    const auto [users] = findUsersBelongingToChannelQueryHandler.execute({channelId2});
 
-    ASSERT_EQ(usersChannels.size(), 1);
-    ASSERT_EQ(usersChannels[0].getId(), userChannelId2);
+    ASSERT_EQ(users.size(), 1);
+    ASSERT_EQ(users[0].getId(), userId2);
 }

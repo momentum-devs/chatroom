@@ -7,7 +7,7 @@
 #include "server/application/commandHandlers/createChannelCommandHandler/CreateChannelCommandHandlerMock.h"
 #include "server/application/commandHandlers/loginUserCommandHandler/LoginUserCommandHandlerMock.h"
 #include "server/application/commandHandlers/registerUserCommandHandler/RegisterUserCommandHandlerMock.h"
-#include "server/application/queryHandlers/findUsersChannelsByUserIdQueryHandler/FindUsersChannelsByUserIdQueryHandlerMock.h"
+#include "server/application/queryHandlers/findChannelsToWhichUserBelongsQueryHandler/FindChannelsToWhichUserBelongsQueryHandlerMock.h"
 #include "server/application/services/tokenService/TokenServiceMock.h"
 
 #include "nlohmann/json.hpp"
@@ -75,15 +75,15 @@ public:
     server::application::CreateChannelCommandHandlerMock* createChannelCommandHandlerMock =
         createChannelCommandHandlerMockInit.get();
 
-    std::unique_ptr<server::application::FindUsersChannelsByUserIdQueryHandlerMock>
-        findUsersChannelsByUserIdQueryHandlerMockInit =
-            std::make_unique<StrictMock<server::application::FindUsersChannelsByUserIdQueryHandlerMock>>();
-    server::application::FindUsersChannelsByUserIdQueryHandlerMock* findUsersChannelsByUserIdQueryHandlerMock =
-        findUsersChannelsByUserIdQueryHandlerMockInit.get();
+    std::unique_ptr<server::application::FindChannelsToWhichUserBelongsQueryHandlerMock>
+        findChannelsToWhichUserBelongsQueryHandlerMockInit =
+            std::make_unique<StrictMock<server::application::FindChannelsToWhichUserBelongsQueryHandlerMock>>();
+    server::application::FindChannelsToWhichUserBelongsQueryHandlerMock*
+        findChannelsToWhichUserBelongsQueryHandlerMock = findChannelsToWhichUserBelongsQueryHandlerMockInit.get();
 
     MessageHandlerImpl messageHandler{
         tokenServiceMock, std::move(registerUserCommandHandlerMockInit), std::move(loginUserCommandHandlerMockInit),
-        std::move(createChannelCommandHandlerMockInit), std::move(findUsersChannelsByUserIdQueryHandlerMockInit)};
+        std::move(createChannelCommandHandlerMockInit), std::move(findChannelsToWhichUserBelongsQueryHandlerMockInit)};
 };
 
 TEST_F(MessageHandlerImplTest, handleRegisterValidMessage)

@@ -10,7 +10,7 @@
 #include "server/application/commandHandlers/createChannelCommandHandler/CreateChannelCommandHandlerImpl.h"
 #include "server/application/commandHandlers/loginUserCommandHandler/LoginUserCommandHandlerImpl.h"
 #include "server/application/commandHandlers/registerUserCommandHandler/RegisterUserCommandHandlerImpl.h"
-#include "server/application/queryHandlers/findUsersChannelsByUserIdQueryHandler/FindUsersChannelsByUserIdQueryHandlerImpl.h"
+#include "server/application/queryHandlers/findChannelsToWhichUserBelongsQueryHandler/FindChannelsToWhichUserBelongsQueryHandlerImpl.h"
 #include "server/application/services/hashService/HashServiceImpl.h"
 #include "server/application/services/tokenService/TokenServiceImpl.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
@@ -43,9 +43,9 @@ std::pair<std::shared_ptr<boost::asio::ip::tcp::socket>, std::shared_ptr<Session
 
     auto messageSender = std::make_unique<common::messages::MessageSenderImpl>(socket, messageSerializer);
 
-    auto userMapper = std::make_unique<server::infrastructure::UserMapperImpl>();
+    auto userMapper = std::make_shared<server::infrastructure::UserMapperImpl>();
 
-    auto userRepository = std::make_shared<server::infrastructure::UserRepositoryImpl>(db, std::move(userMapper));
+    auto userRepository = std::make_shared<server::infrastructure::UserRepositoryImpl>(db, userMapper);
 
     auto registerUserCommandHandler =
         std::make_unique<server::application::RegisterUserCommandHandlerImpl>(userRepository, hashService);
@@ -53,25 +53,24 @@ std::pair<std::shared_ptr<boost::asio::ip::tcp::socket>, std::shared_ptr<Session
     auto loginUserCommandHandler =
         std::make_unique<server::application::LoginUserCommandHandlerImpl>(userRepository, hashService, tokenService);
 
-    auto channelMapper = std::make_unique<server::infrastructure::ChannelMapperImpl>();
+    auto channelMapper = std::make_shared<server::infrastructure::ChannelMapperImpl>();
 
-    auto channelRepository =
-        std::make_shared<server::infrastructure::ChannelRepositoryImpl>(db, std::move(channelMapper));
+    auto channelRepository = std::make_shared<server::infrastructure::ChannelRepositoryImpl>(db, channelMapper);
 
     auto createChannelCommandHandler =
         std::make_unique<server::application::CreateChannelCommandHandlerImpl>(channelRepository);
 
-    auto userChannelMapper = std::make_unique<server::infrastructure::UserChannelMapperImpl>();
+    auto userChannelMapper = std::make_shared<server::infrastructure::UserChannelMapperImpl>(userMapper, channelMapper);
 
-    auto userChannelRepository =
-        std::make_shared<server::infrastructure::UserChannelRepositoryImpl>(db, std::move(userChannelMapper));
+    auto userChannelRepository = std::make_shared<server::infrastructure::UserChannelRepositoryImpl>(
+        db, userChannelMapper, userMapper, channelMapper);
 
-    auto findUsersChannelsByUserIdQueryHandler =
-        std::make_unique<server::application::FindUsersChannelsByUserIdQueryHandlerImpl>(userChannelRepository);
+    auto findChannelsToWhichUserBelongsQueryHandler =
+        std::make_unique<server::application::FindChannelsToWhichUserBelongsQueryHandlerImpl>(userChannelRepository);
 
     auto messageHandler = std::make_unique<MessageHandlerImpl>(
         tokenService, std::move(registerUserCommandHandler), std::move(loginUserCommandHandler),
-        std::move(createChannelCommandHandler), std::move(findUsersChannelsByUserIdQueryHandler));
+        std::move(createChannelCommandHandler), std::move(findChannelsToWhichUserBelongsQueryHandler));
 
     auto session =
         std::make_shared<SessionImpl>(std::move(messageReader), std::move(messageSender), std::move(messageHandler));

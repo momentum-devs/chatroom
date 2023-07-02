@@ -7,7 +7,7 @@
 #include "server/application/commandHandlers/createChannelCommandHandler/CreateChannelCommandHandler.h"
 #include "server/application/commandHandlers/loginUserCommandHandler/LoginUserCommandHandler.h"
 #include "server/application/commandHandlers/registerUserCommandHandler/RegisterUserCommandHandler.h"
-#include "server/application/queryHandlers/findUsersChannelsByUserIdQueryHandler/FindUsersChannelsByUserIdQueryHandler.h"
+#include "server/application/queryHandlers/findChannelsToWhichUserBelongsQueryHandler/FindChannelsToWhichUserBelongsQueryHandler.h"
 #include "server/application/services/tokenService/TokenService.h"
 
 namespace server::api
@@ -15,12 +15,11 @@ namespace server::api
 class MessageHandlerImpl : public MessageHandler
 {
 public:
-    MessageHandlerImpl(std::shared_ptr<server::application::TokenService> tokenService,
-                       std::unique_ptr<server::application::RegisterUserCommandHandler> registerUserCommandHandler,
-                       std::unique_ptr<server::application::LoginUserCommandHandler> loginUserCommandHandler,
-                       std::unique_ptr<server::application::CreateChannelCommandHandler> createChannelCommandHandler,
-                       std::unique_ptr<server::application::FindUsersChannelsByUserIdQueryHandler>
-                           findUsersChannelsByUserIdQueryHandler);
+    MessageHandlerImpl(std::shared_ptr<server::application::TokenService>,
+                       std::unique_ptr<server::application::RegisterUserCommandHandler>,
+                       std::unique_ptr<server::application::LoginUserCommandHandler>,
+                       std::unique_ptr<server::application::CreateChannelCommandHandler>,
+                       std::unique_ptr<server::application::FindChannelsToWhichUserBelongsQueryHandler>);
 
     common::messages::Message handleMessage(const common::messages::Message& message) override;
 
@@ -34,6 +33,7 @@ private:
     std::unique_ptr<server::application::RegisterUserCommandHandler> registerUserCommandHandler;
     std::unique_ptr<server::application::LoginUserCommandHandler> loginUserCommandHandler;
     std::unique_ptr<server::application::CreateChannelCommandHandler> createChannelCommandHandler;
-    std::unique_ptr<server::application::FindUsersChannelsByUserIdQueryHandler> findUsersChannelsByUserIdQueryHandler;
+    std::unique_ptr<server::application::FindChannelsToWhichUserBelongsQueryHandler>
+        findChannelsToWhichUserBelongsQueryHandler;
 };
 }

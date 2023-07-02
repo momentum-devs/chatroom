@@ -1,9 +1,11 @@
 #include "gtest/gtest.h"
 
 #include "RegisterUserCommandHandlerImpl.h"
+#include "server/application/errors/ResourceAlreadyExistsError.h"
 #include "server/application/services/hashService/HashServiceImpl.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "server/infrastructure/repositories/userRepository/UserRepositoryImpl.h"
+#include "User.odb.h"
 
 using namespace ::testing;
 using namespace server;
@@ -55,4 +57,26 @@ TEST_F(RegisterUserCommandImplIntegrationTest, registerUser)
 
     ASSERT_EQ(user.getEmail(), email);
     ASSERT_EQ(user.getPassword(), expectedHashPassword);
+}
+
+TEST_F(RegisterUserCommandImplIntegrationTest, givenUserWithSameEmail_shouldThrow)
+{
+    const auto id = "id";
+    const auto email = "email@example.com";
+    const auto password = "password";
+    const auto nickname = "nickname";
+    const auto createdAt = "2023-06-16";
+    const auto updatedAt = "2023-06-16";
+
+    infrastructure::User existingUser{id, email, password, nickname, createdAt, updatedAt};
+
+    {
+        odb::transaction transaction(db->begin());
+
+        db->persist(existingUser);
+
+        transaction.commit();
+    }
+
+    ASSERT_THROW(registerUserCommandHandler.execute({email, password}), errors::ResourceAlreadyExistsError);
 }

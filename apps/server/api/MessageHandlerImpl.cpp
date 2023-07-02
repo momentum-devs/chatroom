@@ -1,7 +1,6 @@
 #include "MessageHandlerImpl.h"
 
 #include <format>
-#include <limits>
 #include <loguru.hpp>
 #include <nlohmann/json.hpp>
 #include <regex>
@@ -13,13 +12,13 @@ MessageHandlerImpl::MessageHandlerImpl(
     std::unique_ptr<server::application::RegisterUserCommandHandler> registerUserCommandHandlerInit,
     std::unique_ptr<server::application::LoginUserCommandHandler> loginUserCommandHandlerInit,
     std::unique_ptr<server::application::CreateChannelCommandHandler> createChannelCommandHandlerInit,
-    std::unique_ptr<server::application::FindUsersChannelsByUserIdQueryHandler>
-        findUsersChannelsByUserIdQueryHandlerInit)
+    std::unique_ptr<server::application::FindChannelsToWhichUserBelongsQueryHandler>
+        findChannelsToWhichUserBelongsQueryHandlerInit)
     : tokenService{std::move(tokenServiceInit)},
       registerUserCommandHandler{std::move(registerUserCommandHandlerInit)},
       loginUserCommandHandler{std::move(loginUserCommandHandlerInit)},
       createChannelCommandHandler{std::move(createChannelCommandHandlerInit)},
-      findUsersChannelsByUserIdQueryHandler{std::move(findUsersChannelsByUserIdQueryHandlerInit)}
+      findChannelsToWhichUserBelongsQueryHandler{std::move(findChannelsToWhichUserBelongsQueryHandlerInit)}
 {
 }
 
@@ -152,13 +151,13 @@ common::messages::Message MessageHandlerImpl::handleGetUserChannelsRequest(const
 
         auto userId = tokenService->getUserIdFromToken(token);
 
-        const auto& [userChannels] = findUsersChannelsByUserIdQueryHandler->execute({userId});
+        const auto& [channels] = findChannelsToWhichUserBelongsQueryHandler->execute({userId});
 
         nlohmann::json responsePayload = nlohmann::json::array();
 
-        for (const auto& userChannel : userChannels)
+        for (const auto& channel : channels)
         {
-            responsePayload.push_back(userChannel.getChannelId());
+            responsePayload.push_back(channel.getId());
         }
 
         auto message = common::messages::Message{common::messages::MessageId::GetUserChannelsResponse,

@@ -4,7 +4,7 @@
 
 #include "Channel.h"
 #include "Channel.odb.h"
-#include "FindUsersChannelsByUserIdQueryHandlerImpl.h"
+#include "FindChannelsToWhichUserBelongsQueryHandlerImpl.h"
 #include "server/application/services/hashService/HashServiceImpl.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
 #include "server/infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapperImpl.h"
@@ -20,7 +20,7 @@ using namespace server;
 using namespace server::infrastructure;
 using namespace server::application;
 
-class FindUsersChannelsByUserIdQueryImplIntegrationTest : public Test
+class FindChannelsToWhichUserBelongsQueryHandlerImplIntegrationTest : public Test
 {
 public:
     void SetUp() override
@@ -105,10 +105,10 @@ public:
 
     std::shared_ptr<HashService> hashService = std::make_shared<HashServiceImpl>();
 
-    FindUsersChannelsByUserIdQueryHandlerImpl findUsersChannelsByIdQueryHandler{channelRepository};
+    FindChannelsToWhichUserBelongsQueryHandlerImpl findChannelsToWhichUserBelongsQueryHandler{channelRepository};
 };
 
-TEST_F(FindUsersChannelsByUserIdQueryImplIntegrationTest, findUsersChannelsByUserId)
+TEST_F(FindChannelsToWhichUserBelongsQueryHandlerImplIntegrationTest, findUsersChannelsByUserId)
 {
     const auto userId1 = "userId1";
     const auto userEmail1 = "email1@gmail.com";
@@ -140,8 +140,8 @@ TEST_F(FindUsersChannelsByUserIdQueryImplIntegrationTest, findUsersChannelsByUse
     const auto userChannel1 = createUserChannel(userUserId1, user1, channel1);
     const auto userChannel2 = createUserChannel(userUserId2, user2, channel2);
 
-    const auto [usersChannels] = findUsersChannelsByIdQueryHandler.execute({userId1});
+    const auto [channels] = findChannelsToWhichUserBelongsQueryHandler.execute({userId1});
 
-    ASSERT_EQ(usersChannels.size(), 1);
-    ASSERT_EQ(usersChannels[0].getId(), userUserId1);
+    ASSERT_EQ(channels.size(), 1);
+    ASSERT_EQ(channels[0].getId(), channelId1);
 }

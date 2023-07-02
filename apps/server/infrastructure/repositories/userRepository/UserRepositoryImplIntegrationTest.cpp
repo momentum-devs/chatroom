@@ -56,29 +56,6 @@ TEST_F(UserRepositoryIntegrationTest, shouldCreateUser)
     ASSERT_EQ(user->getNickname(), nickname);
 }
 
-TEST_F(UserRepositoryIntegrationTest, givenUserWithExistingEmail_shouldThrowError)
-{
-    const auto id1 = "id1";
-    const auto id2 = "id2";
-    const auto email = "email@example.com";
-    const auto password = "password";
-    const auto nickname = "nickname";
-    const auto createdAt = "2023-06-16";
-    const auto updatedAt = "2023-06-16";
-
-    User user{id1, email, password, nickname, createdAt, updatedAt};
-
-    {
-        odb::transaction transaction(db->begin());
-
-        db->persist(user);
-
-        transaction.commit();
-    }
-
-    ASSERT_THROW(userRepository->createUser({id2, email, password, nickname}), errors::UserRepositoryError);
-}
-
 TEST_F(UserRepositoryIntegrationTest, shouldDeleteExistingUser)
 {
     const auto id = "id";
