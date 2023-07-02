@@ -2,21 +2,21 @@
 
 #include <memory>
 
-#include "CreateUserChannelCommandHandler.h"
+#include "AddUserToChannelCommandHandler.h"
 #include "server/domain/repositories/channelRepository/ChannelRepository.h"
 #include "server/domain/repositories/userChannelRepository/UserChannelRepository.h"
 #include "server/domain/repositories/userRepository/UserRepository.h"
 
 namespace server::application
 {
-class CreateUserChannelCommandHandlerImpl : public CreateUserChannelCommandHandler
+class AddUserToChannelCommandHandlerImpl : public AddUserToChannelCommandHandler
 {
 public:
-    CreateUserChannelCommandHandlerImpl(std::shared_ptr<domain::UserChannelRepository>,
-                                        std::shared_ptr<domain::UserRepository>,
-                                        std::shared_ptr<domain::ChannelRepository>);
+    AddUserToChannelCommandHandlerImpl(std::shared_ptr<domain::UserChannelRepository>,
+                                       std::shared_ptr<domain::UserRepository>,
+                                       std::shared_ptr<domain::ChannelRepository>);
 
-    CreateUserChannelCommandHandlerResult execute(const CreateUserChannelCommandHandlerPayload&) const override;
+    void execute(const AddUserToChannelCommandHandlerPayload&) const override;
 
 private:
     std::shared_ptr<domain::UserChannelRepository> userChannelRepository;

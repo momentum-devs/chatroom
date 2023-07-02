@@ -3,9 +3,9 @@
 
 #include "gtest/gtest.h"
 
+#include "AddUserToChannelCommandHandlerImpl.h"
 #include "Channel.h"
 #include "Channel.odb.h"
-#include "CreateUserChannelCommandHandlerImpl.h"
 #include "server/application/services/hashService/HashServiceImpl.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
 #include "server/infrastructure/repositories/channelRepository/ChannelRepositoryImpl.h"
@@ -23,7 +23,7 @@ using namespace server;
 using namespace server::infrastructure;
 using namespace server::application;
 
-class CreateUserChannelCommandImplIntegrationTest : public Test
+class AddUserToChannelCommandImplIntegrationTest : public Test
 {
 public:
     void SetUp() override
@@ -113,11 +113,11 @@ public:
 
     std::shared_ptr<HashService> hashService = std::make_shared<HashServiceImpl>();
 
-    CreateUserChannelCommandHandlerImpl createUserChannelCommandHandler{userChannelRepository, userRepository,
-                                                                        channelRepository};
+    AddUserToChannelCommandHandlerImpl addUserToChannelCommandHandler{userChannelRepository, userRepository,
+                                                                      channelRepository};
 };
 
-TEST_F(CreateUserChannelCommandImplIntegrationTest, createUserChannel)
+TEST_F(AddUserToChannelCommandImplIntegrationTest, addUserToChannel)
 {
     const auto userId = "userId";
     const auto userEmail = "email@gmail.com";
@@ -131,8 +131,18 @@ TEST_F(CreateUserChannelCommandImplIntegrationTest, createUserChannel)
 
     const auto channel = createChannel(channelId, name, creatorId);
 
-    const auto [userChannel] = createUserChannelCommandHandler.execute({userId, channelId});
+    addUserToChannelCommandHandler.execute({userId, channelId});
 
-    ASSERT_EQ(userChannel.getUser()->getId(), userId);
-    ASSERT_EQ(userChannel.getChannel()->getId(), channelId);
+    typedef odb::query<UserChannel> Query;
+
+    {
+        odb::transaction transaction(db->begin());
+
+        std::shared_ptr<UserChannel> foundUserChannel(
+            db->query_one<UserChannel>(Query::user->id == userId && Query::channel->id == channelId));
+
+        ASSERT_TRUE(foundUserChannel);
+
+        transaction.commit();
+    }
 }

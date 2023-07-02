@@ -32,7 +32,7 @@ set(SOURCES
         domain/entities/userChannel/UserChannel.cpp
         infrastructure/repositories/userChannelRepository/UserChannelRepositoryImpl.cpp
         infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapperImpl.cpp
-        application/commandHandlers/createUserChannelCommandHandler/CreateUserChannelCommandHandlerImpl.cpp
+        application/commandHandlers/addUserToChannelCommandHandler/AddUserToChannelCommandHandlerImpl.cpp
         application/commandHandlers/deleteUserChannelCommandHandler/DeleteUserChannelCommandHandlerImpl.cpp
         application/queryHandlers/findUsersBelongingToChannelQueryHandler/FindUsersBelongingToChannelQueryHandlerImpl.cpp
         application/queryHandlers/findChannelsToWhichUserBelongsQueryHandler/FindChannelsToWhichUserBelongsQueryHandlerImpl.cpp
@@ -58,7 +58,7 @@ set(IT_SOURCES
         application/commandHandlers/createChannelCommandHandler/CreateChannelCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/deleteChannelCommandHandler/DeleteChannelCommandHandlerImplIntegrationTest.cpp
         infrastructure/repositories/userChannelRepository/UserChannelRepositoryImplIntegrationTest.cpp
-        application/commandHandlers/createUserChannelCommandHandler/CreateUserChannelCommandHandlerImplIntegrationTest.cpp
+        application/commandHandlers/addUserToChannelCommandHandler/AddUserToChannelCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/deleteUserChannelCommandHandler/DeleteUserChannelCommandHandlerImplIntegrationTest.cpp
         application/queryHandlers/findUsersBelongingToChannelQueryHandler/FindUsersBelongingToChannelQueryHandlerImplIntegrationTest.cpp
         application/queryHandlers/findChannelsToWhichUserBelongsQueryHandler/FindChannelsToWhichUserBelongsQueryHandlerImplIntegrationTest.cpp

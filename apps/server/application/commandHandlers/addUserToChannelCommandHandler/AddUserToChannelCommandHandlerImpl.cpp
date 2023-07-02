@@ -1,4 +1,4 @@
-#include "CreateUserChannelCommandHandlerImpl.h"
+#include "AddUserToChannelCommandHandlerImpl.h"
 
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
@@ -9,7 +9,7 @@
 
 namespace server::application
 {
-CreateUserChannelCommandHandlerImpl::CreateUserChannelCommandHandlerImpl(
+AddUserToChannelCommandHandlerImpl::AddUserToChannelCommandHandlerImpl(
     std::shared_ptr<domain::UserChannelRepository> userChannelRepositoryInit,
     std::shared_ptr<domain::UserRepository> userRepositoryInit,
     std::shared_ptr<domain::ChannelRepository> channelRepositoryInit)
@@ -19,8 +19,7 @@ CreateUserChannelCommandHandlerImpl::CreateUserChannelCommandHandlerImpl(
 {
 }
 
-CreateUserChannelCommandHandlerResult
-CreateUserChannelCommandHandlerImpl::execute(const CreateUserChannelCommandHandlerPayload& payload) const
+void AddUserToChannelCommandHandlerImpl::execute(const AddUserToChannelCommandHandlerPayload& payload) const
 {
     LOG_S(INFO) << std::format("Creating user channel... {{userId: {}, channelId: {}}}", payload.userId,
                                payload.channelId);
@@ -48,7 +47,5 @@ CreateUserChannelCommandHandlerImpl::execute(const CreateUserChannelCommandHandl
 
     LOG_S(INFO) << std::format("User channel created. {{userId: {}, channelId: {}}}", userChannel.getUser()->getId(),
                                userChannel.getChannel()->getId());
-
-    return {userChannel};
 }
 }
