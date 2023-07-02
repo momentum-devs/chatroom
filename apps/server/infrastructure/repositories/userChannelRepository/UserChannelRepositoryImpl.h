@@ -18,6 +18,7 @@ public:
                               std::shared_ptr<UserMapper>, std::shared_ptr<ChannelMapper>);
 
     domain::UserChannel createUserChannel(const domain::CreateUserChannelPayload&) const;
+    std::optional<domain::UserChannel> findUserChannel(const domain::FindUserChannelPayload&) const;
     std::optional<domain::UserChannel> findUserChannelById(const domain::FindUserChannelByIdPayload&) const;
     std::vector<domain::UserChannel> findUsersChannelsByUserId(const domain::FindUsersChannelsByUserIdPayload&) const;
     std::vector<domain::UserChannel>

@@ -5,14 +5,13 @@
 #include "../../errors/ResourceNotFoundError.h"
 #include "Channel.h"
 #include "Channel.odb.h"
-#include "DeleteUserChannelCommandHandlerImpl.h"
+#include "RemoveUserFromChannelCommandHandlerImpl.h"
 #include "server/application/services/hashService/HashServiceImpl.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
 #include "server/infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapperImpl.h"
 #include "server/infrastructure/repositories/userChannelRepository/UserChannelRepositoryImpl.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "User.h"
-#include "User.odb.h"
 #include "UserChannel.h"
 #include "UserChannel.odb.h"
 
@@ -21,7 +20,7 @@ using namespace server;
 using namespace server::infrastructure;
 using namespace server::application;
 
-class DeleteUserChannelCommandImplIntegrationTest : public Test
+class RemoveUserFromChannelCommandImplIntegrationTest : public Test
 {
 public:
     void SetUp() override
@@ -104,10 +103,10 @@ public:
     std::shared_ptr<domain::UserChannelRepository> channelRepository =
         std::make_shared<UserChannelRepositoryImpl>(db, std::move(channelMapperInit), userMapper, channelMapper);
 
-    DeleteUserChannelCommandHandlerImpl deleteUserChannelCommandHandler{channelRepository};
+    RemoveUserFromChannelCommandHandlerImpl removeUserFromChannelCommandHandler{channelRepository};
 };
 
-TEST_F(DeleteUserChannelCommandImplIntegrationTest, givenExistingUserChannel_shouldDeleteUserChannel)
+TEST_F(RemoveUserFromChannelCommandImplIntegrationTest, givenExistingUserChannel_shouldDeleteUserChannel)
 {
     const auto id = "id1";
 
@@ -125,7 +124,7 @@ TEST_F(DeleteUserChannelCommandImplIntegrationTest, givenExistingUserChannel_sho
 
     const auto userChannel = createUserChannel(id, user, channel);
 
-    deleteUserChannelCommandHandler.execute({userChannel.getId()});
+    removeUserFromChannelCommandHandler.execute({userId, channelId});
 
     typedef odb::query<UserChannel> query;
 
@@ -140,9 +139,9 @@ TEST_F(DeleteUserChannelCommandImplIntegrationTest, givenExistingUserChannel_sho
     }
 }
 
-TEST_F(DeleteUserChannelCommandImplIntegrationTest, givenNonExistingUserChannel_shouldThrow)
+TEST_F(RemoveUserFromChannelCommandImplIntegrationTest, givenNonExistingUserChannel_shouldThrow)
 {
     const auto userChannelId = "userChannelId";
 
-    ASSERT_THROW(deleteUserChannelCommandHandler.execute({userChannelId}), errors::ResourceNotFoundError);
+    ASSERT_THROW(removeUserFromChannelCommandHandler.execute({userChannelId}), errors::ResourceNotFoundError);
 }

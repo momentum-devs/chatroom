@@ -48,6 +48,33 @@ domain::UserChannel UserChannelRepositoryImpl::createUserChannel(const domain::C
 }
 
 std::optional<domain::UserChannel>
+UserChannelRepositoryImpl::findUserChannel(const domain::FindUserChannelPayload& payload) const
+{
+    try
+    {
+        odb::transaction transaction(db->begin());
+
+        typedef odb::query<UserChannel> Query;
+
+        std::shared_ptr<UserChannel> userChannel(
+            db->query_one<UserChannel>(Query::user->id == payload.userId && Query::channel->id == payload.channelId));
+
+        transaction.commit();
+
+        if (!userChannel)
+        {
+            return std::nullopt;
+        }
+
+        return userChannelMapper->mapToDomainUserChannel(*userChannel);
+    }
+    catch (const std::exception& error)
+    {
+        throw errors::UserChannelRepositoryError{error.what()};
+    }
+}
+
+std::optional<domain::UserChannel>
 UserChannelRepositoryImpl::findUserChannelById(const domain::FindUserChannelByIdPayload& payload) const
 {
     try

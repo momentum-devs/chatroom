@@ -21,7 +21,7 @@ AddUserToChannelCommandHandlerImpl::AddUserToChannelCommandHandlerImpl(
 
 void AddUserToChannelCommandHandlerImpl::execute(const AddUserToChannelCommandHandlerPayload& payload) const
 {
-    LOG_S(INFO) << std::format("Creating user channel... {{userId: {}, channelId: {}}}", payload.userId,
+    LOG_S(INFO) << std::format("Adding user to channel... {{userId: {}, channelId: {}}}", payload.userId,
                                payload.channelId);
 
     const auto user = userRepository->findUserById({payload.userId});
@@ -45,7 +45,7 @@ void AddUserToChannelCommandHandlerImpl::execute(const AddUserToChannelCommandHa
 
     const auto userChannel = userChannelRepository->createUserChannel({userChannelId, *user, *channel});
 
-    LOG_S(INFO) << std::format("User channel created. {{userId: {}, channelId: {}}}", userChannel.getUser()->getId(),
+    LOG_S(INFO) << std::format("User added to channel. {{userId: {}, channelId: {}}}", userChannel.getUser()->getId(),
                                userChannel.getChannel()->getId());
 }
 }
