@@ -20,6 +20,9 @@ public:
 
     void activate();
     void deactivate();
+
+    Q_INVOKABLE void goBack();
+    Q_INVOKABLE void createChannel(const QString& channelName);
 signals:
 
 private:

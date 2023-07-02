@@ -51,6 +51,8 @@ void SessionImpl::handleMessage(const common::messages::Message& message)
             messageHandlers.erase(messageHandlerToDelete.messageId);
         }
     }
+
+    messageHandlersToDelete.clear();
 }
 
 void SessionImpl::addMessageHandler(const MessageHandlerPayload& messageHandlerPayload)

@@ -18,7 +18,7 @@ Rectangle {
                 text: qsTr('Create channel')
 
                 onClicked: {
-                    mainController.goToCreateChannelRequest();
+                    mainController.goToCreateChannel();
                     console.log("create channel from qml");
                 }
             }
@@ -27,7 +27,7 @@ Rectangle {
                 text: qsTr('Logout')
 
                 onClicked: {
-                    mainController.logoutRequest();
+                    mainController.logout();
                     console.log("logout from qml");
                 }
             }

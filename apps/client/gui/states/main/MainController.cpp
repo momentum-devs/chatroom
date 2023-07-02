@@ -22,14 +22,14 @@ void MainController::deactivate()
     // TODO: implement
 }
 
-void MainController::logoutRequest()
+void MainController::logout()
 {
     LOG_S(INFO) << "Handle logout";
 
-    // TODO: implement
+    stateMachine->returnToThePreviousState();
 }
 
-void MainController::goToCreateChannelRequest()
+void MainController::goToCreateChannel()
 {
     LOG_S(INFO) << "Handle go to create channel";
 

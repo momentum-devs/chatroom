@@ -16,4 +16,15 @@ CreateChannelController::CreateChannelController(std::shared_ptr<api::Session> s
 void CreateChannelController::activate() {}
 
 void CreateChannelController::deactivate() {}
+
+void CreateChannelController::goBack()
+{
+    LOG_S(INFO) << "Return to previous state";
+    stateMachine->returnToThePreviousState();
+}
+
+void CreateChannelController::createChannel(const QString& channelName)
+{
+    LOG_S(INFO) << "Create channel with name: " << channelName.toStdString();
+}
 }
