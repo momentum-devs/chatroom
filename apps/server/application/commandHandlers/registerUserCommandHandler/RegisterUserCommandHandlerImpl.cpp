@@ -5,6 +5,7 @@
 #include <format>
 
 #include "loguru.hpp"
+#include "server/application/errors/ResourceAlreadyExistsError.h"
 
 namespace server::application
 {
@@ -18,6 +19,13 @@ RegisterUserCommandHandlerResult
 RegisterUserCommandHandlerImpl::execute(const RegisterUserCommandHandlerPayload& payload) const
 {
     LOG_S(INFO) << std::format("Registering user with email \"{}\"...", payload.email);
+
+    const auto existingUser = userRepository->findUserByEmail({payload.email});
+
+    if (existingUser)
+    {
+        throw errors::ResourceAlreadyExistsError{std::format("User with email \"{}\" already exists.", payload.email)};
+    }
 
     const auto hashedPassword = hashService->hash(payload.password);
 
