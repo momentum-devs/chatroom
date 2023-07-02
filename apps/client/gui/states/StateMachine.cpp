@@ -30,19 +30,9 @@ void StateMachine::returnToThePreviousState()
     {
         states.top()->activate();
     }
-}
-
-void StateMachine::setNewRootState(std::shared_ptr<State> state)
-{
-    while (not states.empty())
+    else
     {
-        states.top()->deactivate();
-
-        states.pop();
+        throw;
     }
-
-    states.push(std::move(state));
-
-    states.top()->activate();
 }
 }

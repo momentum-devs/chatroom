@@ -20,12 +20,17 @@ public:
 
     void activate();
     void deactivate();
-
-signals:
+    Q_INVOKABLE void logout();
+    Q_INVOKABLE void goToCreateChannel();
+    Q_INVOKABLE void goToSendFriendRequest();
 
 private:
+    void handleGetUserChannelsResponse(const common::messages::Message& message);
+
     std::shared_ptr<api::Session> session;
     const StateFactory& stateFactory;
     std::shared_ptr<StateMachine> stateMachine;
+
+    inline static const std::string getUserChannelsResponseHandlerName{"getUserChannelsResponseHandlerName"};
 };
 }

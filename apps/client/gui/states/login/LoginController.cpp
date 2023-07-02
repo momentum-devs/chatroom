@@ -12,7 +12,7 @@ LoginController::LoginController(std::shared_ptr<api::Session> sessionInit, cons
 {
 }
 
-void LoginController::handleLoginRequest(const QString& email, const QString& password)
+void LoginController::loginRequest(const QString& email, const QString& password)
 {
     nlohmann::json payload{
         {"email", email.toStdString()},
@@ -26,7 +26,7 @@ void LoginController::handleLoginRequest(const QString& email, const QString& pa
     LOG_S(INFO) << std::format("Sent login request for user {}", static_cast<std::string>(message.payload));
 }
 
-void LoginController::handleGoToRegisterState()
+void LoginController::goToRegisterState()
 {
     stateMachine->addNextState(stateFactory.createRegisterState());
 }
@@ -62,10 +62,10 @@ void LoginController::handleLoginResponse(const common::messages::Message& messa
     if (responseJson.contains("token"))
     {
         LOG_S(INFO) << "Successfully logged";
-        
+
         session->storeToken(responseJson.at("token").get<std::string>());
 
-        stateMachine->setNewRootState(stateFactory.createMainState());
+        stateMachine->addNextState(stateFactory.createMainState());
     }
 }
 }

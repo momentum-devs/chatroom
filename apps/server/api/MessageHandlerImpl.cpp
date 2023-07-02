@@ -1,16 +1,25 @@
 #include "MessageHandlerImpl.h"
 
+#include <format>
 #include <limits>
+#include <loguru.hpp>
 #include <nlohmann/json.hpp>
 #include <regex>
 
 namespace server::api
 {
 MessageHandlerImpl::MessageHandlerImpl(
+    std::shared_ptr<server::application::TokenService> tokenServiceInit,
     std::unique_ptr<server::application::RegisterUserCommandHandler> registerUserCommandHandlerInit,
-    std::unique_ptr<server::application::LoginUserCommandHandler> loginUserCommandHandlerInit)
-    : registerUserCommandHandler{std::move(registerUserCommandHandlerInit)},
-      loginUserCommandHandler{std::move(loginUserCommandHandlerInit)}
+    std::unique_ptr<server::application::LoginUserCommandHandler> loginUserCommandHandlerInit,
+    std::unique_ptr<server::application::CreateChannelCommandHandler> createChannelCommandHandlerInit,
+    std::unique_ptr<server::application::FindUsersChannelsByUserIdQueryHandler>
+        findUsersChannelsByUserIdQueryHandlerInit)
+    : tokenService{std::move(tokenServiceInit)},
+      registerUserCommandHandler{std::move(registerUserCommandHandlerInit)},
+      loginUserCommandHandler{std::move(loginUserCommandHandlerInit)},
+      createChannelCommandHandler{std::move(createChannelCommandHandlerInit)},
+      findUsersChannelsByUserIdQueryHandler{std::move(findUsersChannelsByUserIdQueryHandlerInit)}
 {
 }
 
@@ -22,12 +31,16 @@ common::messages::Message MessageHandlerImpl::handleMessage(const common::messag
         return handleRegisterMessage(message.payload);
     case common::messages::MessageId::Login:
         return handleLoginMessage(message.payload);
+    case common::messages::MessageId::CreateChannel:
+        return handleCreateChannelRequest(message.payload);
+    case common::messages::MessageId::GetUserChannels:
+        return handleGetUserChannelsRequest(message.payload);
     default:
         return {common::messages::MessageId::Error, {}};
     }
 }
 
-common::messages::Message MessageHandlerImpl::handleRegisterMessage(const common::bytes::Bytes& payload)
+common::messages::Message MessageHandlerImpl::handleRegisterMessage(const common::bytes::Bytes& payload) const
 {
     auto payloadJson = nlohmann::json::parse(static_cast<std::string>(payload));
 
@@ -44,9 +57,11 @@ common::messages::Message MessageHandlerImpl::handleRegisterMessage(const common
 
     auto password = payloadJson["password"].get<std::string>();
 
+    std::optional<server::application::RegisterUserCommandHandlerResult> registerUserCommandHandlerResult;
+
     try
     {
-        registerUserCommandHandler->execute({email, password});
+        registerUserCommandHandlerResult = registerUserCommandHandler->execute({email, password});
     }
     catch (const std::exception& e)
     {
@@ -55,10 +70,12 @@ common::messages::Message MessageHandlerImpl::handleRegisterMessage(const common
         return {common::messages::MessageId::RegisterResponse, common::bytes::Bytes{responsePayload.dump()}};
     }
 
+    LOG_S(INFO) << std::format("Register user {} with id {}", email, registerUserCommandHandlerResult->user.getId());
+
     return {common::messages::MessageId::RegisterResponse, common::bytes::Bytes{R"(["ok"])"}};
 }
 
-common::messages::Message MessageHandlerImpl::handleLoginMessage(const common::bytes::Bytes& payload)
+common::messages::Message MessageHandlerImpl::handleLoginMessage(const common::bytes::Bytes& payload) const
 {
     auto payloadJson = nlohmann::json::parse(static_cast<std::string>(payload));
 
@@ -90,6 +107,70 @@ common::messages::Message MessageHandlerImpl::handleLoginMessage(const common::b
 
     nlohmann::json responsePayload{{"token", loginUserCommandHandlerResult.token}};
 
+    LOG_S(INFO) << std::format("Logged in user {} with id {}", email,
+                               tokenService->getUserIdFromToken(loginUserCommandHandlerResult.token));
+
     return {common::messages::MessageId::LoginResponse, common::bytes::Bytes{responsePayload.dump()}};
+}
+
+common::messages::Message MessageHandlerImpl::handleCreateChannelRequest(const common::bytes::Bytes& payload) const
+{
+    try
+    {
+        auto payloadJson = nlohmann::json::parse(static_cast<std::string>(payload));
+
+        auto channelName = payloadJson["data"]["channelName"].get<std::string>();
+
+        auto token = payloadJson["token"].get<std::string>();
+
+        auto creatorId = tokenService->getUserIdFromToken(token);
+
+        createChannelCommandHandler->execute({channelName, creatorId});
+
+        LOG_S(INFO) << std::format("Created channel {} by user with id {}", channelName, creatorId);
+
+        common::messages::Message message{common::messages::MessageId::CreateChannelResponse,
+                                          common::bytes::Bytes{R"(["ok"])"}};
+
+        return message;
+    }
+    catch (const std::exception& e)
+    {
+        nlohmann::json responsePayload{{"error", e.what()}};
+
+        return {common::messages::MessageId::CreateChannelResponse, common::bytes::Bytes{responsePayload.dump()}};
+    }
+}
+
+common::messages::Message MessageHandlerImpl::handleGetUserChannelsRequest(const common::bytes::Bytes& payload) const
+{
+    try
+    {
+        auto payloadJson = nlohmann::json::parse(static_cast<std::string>(payload));
+
+        auto token = payloadJson["token"].get<std::string>();
+
+        auto userId = tokenService->getUserIdFromToken(token);
+
+        const auto& [userChannels] = findUsersChannelsByUserIdQueryHandler->execute({userId});
+
+        nlohmann::json responsePayload = nlohmann::json::array();
+
+        for (const auto& userChannel : userChannels)
+        {
+            responsePayload.push_back(userChannel.getChannelId());
+        }
+
+        auto message = common::messages::Message{common::messages::MessageId::GetUserChannelsResponse,
+                                                 common::bytes::Bytes{responsePayload.dump()}};
+
+        return message;
+    }
+    catch (const std::exception& e)
+    {
+        nlohmann::json responsePayload{{"error", e.what()}};
+
+        return {common::messages::MessageId::GetUserChannelsResponse, common::bytes::Bytes{responsePayload.dump()}};
+    }
 }
 }

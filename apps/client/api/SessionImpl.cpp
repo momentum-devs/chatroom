@@ -7,10 +7,12 @@ namespace client::api
 {
 SessionImpl::SessionImpl(std::unique_ptr<common::messages::MessageReader> messageReaderInit,
                          std::unique_ptr<common::messages::MessageSender> messageSenderInit,
-                         std::unique_ptr<SocketConnector> socketConnectorInit)
+                         std::unique_ptr<SocketConnector> socketConnectorInit,
+                         std::unique_ptr<MessageFactory> messageFactoryInit)
     : messageReader{std::move(messageReaderInit)},
       messageSender{std::move(messageSenderInit)},
-      socketConnector{std::move(socketConnectorInit)}
+      socketConnector{std::move(socketConnectorInit)},
+      messageFactory{std::move(messageFactoryInit)}
 {
 }
 
@@ -24,6 +26,12 @@ void SessionImpl::connect(const ConnectorPayload& connectorPayload)
 void SessionImpl::sendMessage(const common::messages::Message& message)
 {
     messageSender->sendMessage(message);
+}
+
+void SessionImpl::sendMessage(common::messages::MessageId messageId, const nlohmann::json& data)
+{
+    auto message = messageFactory->createMessage(messageId, data, token);
+    sendMessage(message);
 }
 
 void SessionImpl::handleMessage(const common::messages::Message& message)
@@ -51,6 +59,8 @@ void SessionImpl::handleMessage(const common::messages::Message& message)
             messageHandlers.erase(messageHandlerToDelete.messageId);
         }
     }
+
+    messageHandlersToDelete.clear();
 }
 
 void SessionImpl::addMessageHandler(const MessageHandlerPayload& messageHandlerPayload)
@@ -90,6 +100,8 @@ void SessionImpl::removeMessageHandler(const MessageHandlerPayload& messageHandl
         {
             messageHandlers.erase(messageHandlerPayload.messageId);
         }
+
+        messageHandlersToDelete.clear();
     }
     else
     {
@@ -99,6 +111,6 @@ void SessionImpl::removeMessageHandler(const MessageHandlerPayload& messageHandl
 
 void SessionImpl::storeToken(const std::string& tokenInit)
 {
-    token = common::bytes::Bytes{tokenInit};
+    token = tokenInit;
 }
 }

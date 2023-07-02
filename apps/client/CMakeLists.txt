@@ -9,6 +9,7 @@ set(SOURCES
         config/ConfigProvider.cpp
         api/SessionImpl.cpp
         api/SocketConnectorImpl.cpp
+        api/MessageFactoryImpl.cpp
         gui/states/register/RegisterController.cpp
         gui/states/StateMachine.cpp
         gui/states/register/RegisterState.cpp
@@ -20,12 +21,14 @@ set(SOURCES
         gui/states/main/MainController.cpp
         gui/states/createChannel/CreateChannelState.cpp
         gui/states/createChannel/CreateChannelController.cpp
+        gui/states/sendFriendRequest/SendFriendRequestController.cpp
+        gui/states/sendFriendRequest/SendFriendRequestState.cpp
         )
 
 set(UT_SOURCES
         api/SessionImplTest.cpp
         gui/states/StateMachineTest.cpp
-        )
+        api/MessageFactoryImplTest.cpp)
 
 set(QML_SOURCES
         gui/qml/LoaderView.qml
@@ -33,6 +36,7 @@ set(QML_SOURCES
         gui/states/login/LoginView.qml
         gui/states/main/MainView.qml
         gui/states/createChannel/CreateChannelView.qml
+        gui/states/sendFriendRequest/SendFriendRequestView.qml
         )
 
 qt_add_executable(${EXECUTABLE_NAME} Main.cpp ${SOURCES})

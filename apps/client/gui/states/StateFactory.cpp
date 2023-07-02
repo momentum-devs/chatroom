@@ -1,11 +1,15 @@
 #include "StateFactory.h"
 
+#include "createChannel/CreateChannelController.h"
+#include "createChannel/CreateChannelState.h"
 #include "login/LoginController.h"
 #include "login/LoginState.h"
 #include "main/MainController.h"
 #include "main/MainState.h"
 #include "register/RegisterController.h"
 #include "register/RegisterState.h"
+#include "sendFriendRequest/SendFriendRequestController.h"
+#include "sendFriendRequest/SendFriendRequestState.h"
 
 namespace client::gui
 {
@@ -42,5 +46,19 @@ std::shared_ptr<State> StateFactory::createMainState() const
     auto controller = std::make_unique<MainController>(session, *this, stateMachine);
 
     return std::make_shared<MainState>(std::move(controller), loaderController);
+}
+
+std::shared_ptr<State> StateFactory::createCreateChannelState() const
+{
+    auto controller = std::make_unique<CreateChannelController>(session, *this, stateMachine);
+
+    return std::make_shared<CreateChannelState>(std::move(controller), loaderController);
+}
+
+std::shared_ptr<State> StateFactory::createSendFriendRequestState() const
+{
+    auto controller = std::make_unique<SendFriendRequestController>(session, *this, stateMachine);
+
+    return std::make_shared<SendFriendRequestState>(std::move(controller), loaderController);
 }
 }

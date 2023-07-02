@@ -21,33 +21,14 @@ public:
 TEST_F(UserChannelMapperTest, givenUserChannelModel_shouldMapToDomainUserChannel)
 {
     const auto userId = "userId";
-    const auto email = "email@example.com";
-    const auto password = "password";
+    const auto channelId = "channelId";
     const auto nickname = "nickname";
     const auto createdAt = "2023-06-16";
     const auto updatedAt = "2023-06-16";
 
-    auto user = std::make_shared<User>(userId, email, password, nickname, createdAt, updatedAt);
+    UserChannel userChannelModel{id, email, password, nickname, createdAt, updatedAt};
 
-    domain::User domainUser{userId, email, password, nickname, createdAt, updatedAt};
-
-    const auto id = "id";
-    const auto name = "name";
-    const auto creatorId = "creatorId";
-
-    auto channel = std::make_shared<Channel>(id, name, creatorId, createdAt, updatedAt);
-
-    domain::Channel domainChannel{id, name, creatorId, createdAt, updatedAt};
-
-    const auto userChannelId = "userChannelId";
-
-    UserChannel userChannel{userChannelId, user, channel, createdAt, updatedAt};
-
-    EXPECT_CALL(*userMapper, mapToDomainUser(*user)).WillOnce(Return(domainUser));
-
-    EXPECT_CALL(*channelMapper, mapToDomainChannel(*channel)).WillOnce(Return(domainChannel));
-
-    const auto domainUserChannel = userChannelMapper.mapToDomainUserChannel(userChannel);
+    const auto domainUserChannel = userMapper.mapToDomainUser(userModel);
 
     ASSERT_EQ(domainUserChannel.getId(), id);
     ASSERT_EQ(domainUserChannel.getUser(), domainUser);

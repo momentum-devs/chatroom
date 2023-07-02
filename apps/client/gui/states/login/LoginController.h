@@ -20,12 +20,10 @@ public:
 
     void activate();
     void deactivate();
-    Q_INVOKABLE void handleLoginRequest(const QString& email, const QString& password);
-    Q_INVOKABLE void handleGoToRegisterState();
+    Q_INVOKABLE void loginRequest(const QString& email, const QString& password);
+    Q_INVOKABLE void goToRegisterState();
 
 signals:
-    void loginRequest(const QString& email, const QString& password);
-    void goToRegisterState();
     void loginFailure(const QString& message);
 
 private:

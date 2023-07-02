@@ -3,6 +3,7 @@
 #include <boost/beast/_experimental/test/stream.hpp>
 #include <gtest/gtest.h>
 
+#include "MessageFactoryMock.h"
 #include "messages/MessageReaderMock.h"
 #include "messages/MessageSenderMock.h"
 #include "SocketConnectorMock.h"
@@ -22,6 +23,9 @@ struct DummyMock
 const ConnectorPayload connectorPayload{"host", 123};
 const common::messages::MessageId messageId{common::messages::MessageId::Register};
 const common::messages::Message message{messageId, {}};
+const nlohmann::json data{};
+const std::optional<std::string> token{"token"};
+const std::optional<std::string> emptyToken{std::nullopt};
 }
 
 class SessionImplTest : public Test
@@ -38,10 +42,11 @@ public:
     std::unique_ptr<SocketConnectorMock> socketConnectorMockInit = std::make_unique<StrictMock<SocketConnectorMock>>();
     SocketConnectorMock* socketConnectorMock = socketConnectorMockInit.get();
 
-    std::shared_ptr<DummyMock> dummyMock = std::make_shared<StrictMock<DummyMock>>();
+    std::unique_ptr<MessageFactoryMock> messageFactoryMockInit = std::make_unique<StrictMock<MessageFactoryMock>>();
+    MessageFactoryMock* messageFactoryMock = messageFactoryMockInit.get();
 
     SessionImpl session{std::move(messageReaderMockInit), std::move(messageSenderMockInit),
-                        std::move(socketConnectorMockInit)};
+                        std::move(socketConnectorMockInit), std::move(messageFactoryMockInit)};
 
     std::function<void(const common::messages::Message&)> messageHandler;
 
@@ -52,6 +57,8 @@ public:
 
         session.connect(connectorPayload);
     }
+
+    std::shared_ptr<DummyMock> dummyMock = std::make_shared<StrictMock<DummyMock>>();
 };
 
 TEST_F(SessionImplTest, connectSession)
@@ -96,4 +103,22 @@ TEST_F(SessionImplTest, removeNonExistingHandler_shouldThrow)
 TEST_F(SessionImplTest, removeNonExistingMessageIdHandler_shouldThrow)
 {
     EXPECT_THROW(session.removeMessageHandler({messageId, "notExisting", {}}), RemoveHandlerError);
+}
+
+TEST_F(SessionImplTest, sendMessageWithMessageIdAndDataWithoutToken)
+{
+    EXPECT_CALL(*messageFactoryMock, createMessage(messageId, data, emptyToken)).WillOnce(Return(message));
+    EXPECT_CALL(*messageSenderMock, sendMessage(message));
+
+    session.sendMessage(messageId, data);
+}
+
+TEST_F(SessionImplTest, sendMessageWithMessageIdAndDataWithToken)
+{
+    EXPECT_CALL(*messageFactoryMock, createMessage(messageId, data, token)).WillOnce(Return(message));
+    EXPECT_CALL(*messageSenderMock, sendMessage(message));
+
+    session.storeToken(token.value());
+
+    session.sendMessage(messageId, data);
 }

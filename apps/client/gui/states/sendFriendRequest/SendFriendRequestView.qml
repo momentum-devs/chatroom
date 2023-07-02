@@ -1,65 +1,57 @@
-import QtQuick 6.2
-import QtQuick.Controls 6.2
+import QtQuick 6.4
+import QtQuick.Controls 6.4
 
 Rectangle {
     color: "grey"
 
-    Keys.onEnterPressed: loginButton.activate()
-    Keys.onReturnPressed: loginButton.activate()
+    Keys.onEnterPressed: sendFriendRequestButton.activate()
+    Keys.onReturnPressed: sendFriendRequestButton.activate()
 
     Column {
-        id: column
         anchors.centerIn: parent
         spacing: 10
 
         TextField {
-            id: usernameField
-            placeholderText: qsTr('Email')
-        }
-        TextField {
-            id: passwordField
-            echoMode: TextInput.Password
-            placeholderText: qsTr('Password')
+            id: friendEmailField
+            placeholderText: qsTr('Friend email')
         }
         Row {
-            id: buttonRow
-            anchors.horizontalCenter: passwordField.horizontalCenter
+            anchors.horizontalCenter: friendEmailField.horizontalCenter
 
             Button {
-                id: loginButton
+                id: sendFriendRequestButton
                 function activate() {
-                    const email = usernameField.text;
-                    const password = passwordField.text;
-                    if (email.length !== 0 && password.length !== 0) {
-                        loginController.loginRequest(email, password);
+                    const friendEmail = friendEmailField.text;
+                    if (channelName.length !== 0) {
+                        sendFriendRequestController.sendFriendRequest(friendEmail);
                         successPopup.open();
                     } else {
-                        errorPopup.contentItem.text = "Email or password field is empty";
+                        errorPopup.contentItem.text = "Friend email field is empty";
                         errorPopup.open();
                     }
                 }
 
-                focus: true
-                text: qsTr('Login')
+                text: qsTr('Send friend request')
 
+                Keys.onEnterPressed: activate()
+                Keys.onReturnPressed: activate()
                 onClicked: activate()
             }
             Button {
-                text: qsTr('Go to register')
+                text: qsTr('Go back')
 
                 onClicked: {
-                    loginController.goToRegisterState();
+                    sendFriendRequestController.goBack();
                 }
             }
         }
     }
     Connections {
-        function onLoginFailure(message: string) {
-            errorPopup.contentItem.text = message;
-            errorPopup.open();
-        }
-
-        target: loginController
+        // function onCreateChannelFailure(message: string) {
+        //     errorPopup.contentItem.text = message;
+        //     errorPopup.open();
+        // }
+        target: sendFriendRequestController
     }
     Popup {
         id: successPopup
@@ -72,7 +64,7 @@ Rectangle {
             color: "green"
             font.pixelSize: 16
             horizontalAlignment: Text.AlignHCenter
-            text: qsTr('Send login request')
+            text: qsTr('Send friend request')
             verticalAlignment: Text.AlignVCenter
         }
     }

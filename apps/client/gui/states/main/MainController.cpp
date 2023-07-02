@@ -14,11 +14,39 @@ MainController::MainController(std::shared_ptr<api::Session> sessionInit, const 
 
 void MainController::activate()
 {
-    // TODO: implement
+    session->addMessageHandler({common::messages::MessageId::GetUserChannelsResponse,
+                                getUserChannelsResponseHandlerName,
+                                [this](const auto& msg) { handleGetUserChannelsResponse(msg); }});
+
+    session->sendMessage(common::messages::MessageId::GetUserChannels, {});
 }
 
 void MainController::deactivate()
 {
-    // TODO: implement
+    session->removeMessageHandler(
+        {common::messages::MessageId::GetUserChannelsResponse, getUserChannelsResponseHandlerName});
+}
+
+void MainController::logout()
+{
+    LOG_S(INFO) << "Handle logout";
+
+    stateMachine->returnToThePreviousState();
+}
+
+void MainController::goToCreateChannel()
+{
+    LOG_S(INFO) << "Handle go to create channel";
+
+    stateMachine->addNextState(stateFactory.createCreateChannelState());
+}
+
+void MainController::handleGetUserChannelsResponse(const common::messages::Message& message) {}
+
+void MainController::goToSendFriendRequest()
+{
+    LOG_S(INFO) << "Handle go to send friend request";
+
+    stateMachine->addNextState(stateFactory.createSendFriendRequestState());
 }
 }
