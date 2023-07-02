@@ -5,7 +5,7 @@ Rectangle {
     color: "grey"
 
     Keys.onEnterPressed: sendFriendRequestButton.activate()
-    Keys.onReturnPressed: sendFriendRequestButton.activate()
+    Keys.onEscapePressed: goBackButton.activate()
 
     Column {
         anchors.centerIn: parent
@@ -13,6 +13,7 @@ Rectangle {
 
         TextField {
             id: friendEmailField
+            focus: true
             placeholderText: qsTr('Friend email')
         }
         Row {
@@ -22,7 +23,7 @@ Rectangle {
                 id: sendFriendRequestButton
                 function activate() {
                     const friendEmail = friendEmailField.text;
-                    if (channelName.length !== 0) {
+                    if (friendEmail.length !== 0) {
                         sendFriendRequestController.sendFriendRequest(friendEmail);
                         successPopup.open();
                     } else {
@@ -38,19 +39,23 @@ Rectangle {
                 onClicked: activate()
             }
             Button {
-                text: qsTr('Go back')
-
-                onClicked: {
+                id: goBackButton
+                function activate() {
                     sendFriendRequestController.goBack();
                 }
+
+                text: qsTr('Go back')
+
+                onClicked: activate()
             }
         }
     }
     Connections {
-        // function onCreateChannelFailure(message: string) {
-        //     errorPopup.contentItem.text = message;
-        //     errorPopup.open();
-        // }
+        function onSendFriendRequestFailure(message: string) {
+            errorPopup.contentItem.text = message;
+            errorPopup.open();
+        }
+
         target: sendFriendRequestController
     }
     Popup {

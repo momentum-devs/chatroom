@@ -30,9 +30,5 @@ void StateMachine::returnToThePreviousState()
     {
         states.top()->activate();
     }
-    else
-    {
-        throw;
-    }
 }
 }

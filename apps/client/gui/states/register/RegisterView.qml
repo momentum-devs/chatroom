@@ -4,15 +4,16 @@ import QtQuick.Controls 6.2
 Rectangle {
     color: "grey"
 
-    Keys.onEnterPressed: registerButton.activate()
-    Keys.onReturnPressed: registerButton.activate()
+    Keys.onEnterPressed: registerUserButton.activate()
+    Keys.onEscapePressed: goBackButton.activate()
 
     Column {
         anchors.centerIn: parent
         spacing: 10
 
         TextField {
-            id: usernameField
+            id: emailField
+            focus: true
             placeholderText: qsTr('Email')
         }
         TextField {
@@ -29,9 +30,9 @@ Rectangle {
             anchors.horizontalCenter: passwordField.horizontalCenter
 
             Button {
-                id: registerButton
+                id: registerUserButton
                 function activate() {
-                    const email = usernameField.text;
+                    const email = emailField.text;
                     const password = passwordField.text;
                     const passwordRepeat = passwordRepeatField.text;
                     if (password === passwordRepeat && email.length !== 0 && password.length !== 0) {
@@ -48,11 +49,14 @@ Rectangle {
                 onClicked: activate()
             }
             Button {
-                text: qsTr('Go back')
-
-                onClicked: {
+                id: goBackButton
+                function activate() {
                     registerController.goBack();
                 }
+
+                text: qsTr('Go back')
+
+                onClicked: activate()
             }
         }
     }

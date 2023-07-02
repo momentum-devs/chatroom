@@ -5,7 +5,7 @@ Rectangle {
     color: "grey"
 
     Keys.onEnterPressed: createChannelButton.activate()
-    Keys.onReturnPressed: createChannelButton.activate()
+    Keys.onEscapePressed: goBackButton.activate()
 
     Column {
         anchors.centerIn: parent
@@ -13,6 +13,7 @@ Rectangle {
 
         TextField {
             id: channelNameField
+            focus: true
             placeholderText: qsTr('Channel name')
         }
         Row {
@@ -36,11 +37,14 @@ Rectangle {
                 onClicked: activate()
             }
             Button {
-                text: qsTr('Go back')
-
-                onClicked: {
+                id: goBackButton
+                function activate() {
                     createChannelController.goBack();
                 }
+
+                text: qsTr('Go back')
+
+                onClicked: activate()
             }
         }
     }
