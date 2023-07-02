@@ -4,6 +4,9 @@ import QtQuick.Controls 6.2
 Rectangle {
     color: "grey"
 
+    Keys.onEnterPressed: registerButton.activate()
+    Keys.onReturnPressed: registerButton.activate()
+
     Column {
         anchors.centerIn: parent
         spacing: 10
@@ -26,9 +29,8 @@ Rectangle {
             anchors.horizontalCenter: passwordField.horizontalCenter
 
             Button {
-                text: qsTr('Register')
-
-                onClicked: {
+                id: registerButton
+                function activate() {
                     const email = usernameField.text;
                     const password = passwordField.text;
                     const passwordRepeat = passwordRepeatField.text;
@@ -40,6 +42,10 @@ Rectangle {
                         errorPopup.open();
                     }
                 }
+
+                text: qsTr('Register')
+
+                onClicked: activate()
             }
             Button {
                 text: qsTr('Go back')

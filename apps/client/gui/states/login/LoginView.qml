@@ -4,7 +4,11 @@ import QtQuick.Controls 6.2
 Rectangle {
     color: "grey"
 
+    Keys.onEnterPressed: loginButton.activate()
+    Keys.onReturnPressed: loginButton.activate()
+
     Column {
+        id: column
         anchors.centerIn: parent
         spacing: 10
 
@@ -18,9 +22,11 @@ Rectangle {
             placeholderText: qsTr('Password')
         }
         Row {
+            id: buttonRow
             anchors.horizontalCenter: passwordField.horizontalCenter
 
             Button {
+                id: loginButton
                 function activate() {
                     const email = usernameField.text;
                     const password = passwordField.text;
@@ -33,10 +39,9 @@ Rectangle {
                     }
                 }
 
+                focus: true
                 text: qsTr('Login')
 
-                Keys.onEnterPressed: activate()
-                Keys.onReturnPressed: activate()
                 onClicked: activate()
             }
             Button {

@@ -20,12 +20,10 @@ public:
 
     void activate();
     void deactivate();
-    Q_INVOKABLE void handleRegisterRequest(const QString& email, const QString& password);
-    Q_INVOKABLE void handleGoBack();
+    Q_INVOKABLE void registerRequest(const QString& email, const QString& password);
+    Q_INVOKABLE void goBack();
 
 signals:
-    void registerRequest(const QString& email, const QString& password);
-    void goBack();
     void registerFailure(const QString& message);
 
 private:

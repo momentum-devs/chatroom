@@ -4,6 +4,9 @@ import QtQuick.Controls 6.4
 Rectangle {
     color: "grey"
 
+    Keys.onEnterPressed: sendFriendRequestButton.activate()
+    Keys.onReturnPressed: sendFriendRequestButton.activate()
+
     Column {
         anchors.centerIn: parent
         spacing: 10
@@ -16,6 +19,7 @@ Rectangle {
             anchors.horizontalCenter: friendEmailField.horizontalCenter
 
             Button {
+                id: sendFriendRequestButton
                 function activate() {
                     const friendEmail = friendEmailField.text;
                     if (channelName.length !== 0) {

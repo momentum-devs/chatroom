@@ -25,5 +25,12 @@ void CreateChannelState::activate()
     createChannelController->activate();
 }
 
-void CreateChannelState::deactivate() {}
+void CreateChannelState::deactivate()
+{
+    LOG_S(INFO) << "Deactivate CreateChannelState";
+
+    loaderController->getEngine()->rootContext()->setContextProperty(componentName, nullptr);
+
+    createChannelController->deactivate();
+}
 }

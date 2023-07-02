@@ -100,6 +100,8 @@ void SessionImpl::removeMessageHandler(const MessageHandlerPayload& messageHandl
         {
             messageHandlers.erase(messageHandlerPayload.messageId);
         }
+
+        messageHandlersToDelete.clear();
     }
     else
     {

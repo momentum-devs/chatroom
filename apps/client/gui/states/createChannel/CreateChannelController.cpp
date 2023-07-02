@@ -28,6 +28,7 @@ void CreateChannelController::deactivate()
 void CreateChannelController::goBack()
 {
     LOG_S(INFO) << "Return to previous state";
+    
     stateMachine->returnToThePreviousState();
 }
 
@@ -62,9 +63,9 @@ void CreateChannelController::handleCreateChannelResponse(const common::messages
 
     if (responseJson.is_array() and responseJson.at(0).get<std::string>() == "ok")
     {
-        stateMachine->returnToThePreviousState();
-
         LOG_S(INFO) << "Successfully created channel";
+
+        stateMachine->returnToThePreviousState();
     }
 }
 }

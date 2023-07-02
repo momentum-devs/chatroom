@@ -4,6 +4,9 @@ import QtQuick.Controls 6.4
 Rectangle {
     color: "grey"
 
+    Keys.onEnterPressed: createChannelButton.activate()
+    Keys.onReturnPressed: createChannelButton.activate()
+
     Column {
         anchors.centerIn: parent
         spacing: 10
@@ -16,6 +19,7 @@ Rectangle {
             anchors.horizontalCenter: channelNameField.horizontalCenter
 
             Button {
+                id: createChannelButton
                 function activate() {
                     const channelName = channelNameField.text;
                     if (channelName.length !== 0) {
@@ -29,8 +33,6 @@ Rectangle {
 
                 text: qsTr('Create channel')
 
-                Keys.onEnterPressed: activate()
-                Keys.onReturnPressed: activate()
                 onClicked: activate()
             }
             Button {
