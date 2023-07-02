@@ -14,6 +14,7 @@ public:
     std::string getCreatorId() const;
     std::string getCreatedAt() const;
     std::string getUpdatedAt() const;
+    bool operator==(const Channel&) const;
 
 private:
     std::string id;

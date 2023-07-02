@@ -26,8 +26,8 @@ CreateChannelCommandHandlerImpl::execute(const CreateChannelCommandHandlerPayloa
 
     const auto channel = channelRepository->createChannel({channelId, payload.name, payload.creatorId});
 
-    LOG_S(INFO) << std::format("Channel with name \"{}\" created.", channel.getName());
+    LOG_S(INFO) << std::format("Channel with name \"{}\" created.", channel->getName());
 
-    return {channel};
+    return {*channel};
 }
 }

@@ -9,8 +9,13 @@
 namespace server::infrastructure
 {
 UserChannelRepositoryImpl::UserChannelRepositoryImpl(std::shared_ptr<odb::pgsql::database> dbInit,
-                                                     std::unique_ptr<UserChannelMapper> userChannelMapperInit)
-    : db{std::move(dbInit)}, userChannelMapper{std::move(userChannelMapperInit)}
+                                                     std::shared_ptr<UserChannelMapper> userChannelMapperInit,
+                                                     std::shared_ptr<UserMapper> userMapperInit,
+                                                     std::shared_ptr<ChannelMapper> channelMapperInit)
+    : db{std::move(dbInit)},
+      userChannelMapper{std::move(userChannelMapperInit)},
+      userMapper{std::move(userMapperInit)},
+      channelMapper{std::move(channelMapperInit)}
 {
 }
 
@@ -21,7 +26,11 @@ domain::UserChannel UserChannelRepositoryImpl::createUserChannel(const domain::C
         {
             const auto currentDate = to_iso_string(boost::posix_time::second_clock::universal_time());
 
-            UserChannel userChannel{payload.id, payload.userId, payload.channelId, currentDate, currentDate};
+            const auto user = userMapper->mapToPersistenceUser(payload.user);
+
+            const auto channel = channelMapper->mapToPersistenceChannel(payload.channel);
+
+            UserChannel userChannel{payload.id, user, channel, currentDate, currentDate};
 
             odb::transaction transaction(db->begin());
 
@@ -73,7 +82,7 @@ UserChannelRepositoryImpl::findUsersChannelsByUserId(const domain::FindUsersChan
 
         typedef odb::query<UserChannel> Query;
 
-        auto result = db->query<UserChannel>(Query::user_id == payload.userId);
+        auto result = db->query<UserChannel>(Query::user->id == payload.userId);
 
         std::vector<domain::UserChannel> domainUserChannels;
 
@@ -103,7 +112,7 @@ std::vector<domain::UserChannel> UserChannelRepositoryImpl::findUsersChannelsByC
 
         typedef odb::result<UserChannel> Result;
 
-        Result result = db->query<UserChannel>(Query::channel_id == payload.channelId);
+        Result result = db->query<UserChannel>(Query::channel->id == payload.channelId);
 
         std::vector<domain::UserChannel> domainUserChannels;
 

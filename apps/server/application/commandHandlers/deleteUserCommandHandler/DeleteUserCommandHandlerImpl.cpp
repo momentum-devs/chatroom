@@ -20,6 +20,6 @@ void DeleteUserCommandHandlerImpl::execute(const DeleteUserCommandHandlerPayload
         throw errors::ResourceNotFoundError{std::format("User with email {} not found.", payload.email)};
     }
 
-    userRepository->deleteUser({*existingUser});
+    userRepository->deleteUser({**existingUser});
 }
 }

@@ -34,7 +34,7 @@ set(SOURCES
         infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapperImpl.cpp
         application/commandHandlers/createUserChannelCommandHandler/CreateUserChannelCommandHandlerImpl.cpp
         application/commandHandlers/deleteUserChannelCommandHandler/DeleteUserChannelCommandHandlerImpl.cpp
-        application/queryHandlers/findUsersChannelsByChannelIdQueryHandler/FindUsersChannelsByChannelIdQueryHandlerImpl.cpp
+        application/queryHandlers/findUsersBelongingToChannelQueryHandler/FindUsersBelongingToChannelQueryHandlerImpl.cpp
         application/queryHandlers/findUsersChannelsByUserIdQueryHandler/FindUsersChannelsByUserIdQueryHandlerImpl.cpp
         )
 
@@ -60,14 +60,14 @@ set(IT_SOURCES
         infrastructure/repositories/userChannelRepository/UserChannelRepositoryImplIntegrationTest.cpp
         application/commandHandlers/createUserChannelCommandHandler/CreateUserChannelCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/deleteUserChannelCommandHandler/DeleteUserChannelCommandHandlerImplIntegrationTest.cpp
-        application/queryHandlers/findUsersChannelsByChannelIdQueryHandler/FindUsersChannelsByChannelIdQueryHandlerImplIntegrationTest.cpp
+        application/queryHandlers/findUsersBelongingToChannelQueryHandler/FindUsersBelongingToChannelQueryHandlerImplIntegrationTest.cpp
         application/queryHandlers/findUsersChannelsByUserIdQueryHandler/FindUsersChannelsByUserIdQueryHandlerImplIntegrationTest.cpp
         )
 
 set(ODB_HEADERS
-        infrastructure/database/tables/userTable/User.h
-        infrastructure/database/tables/channelTable/Channel.h
-        infrastructure/database/tables/userChannelTable/UserChannel.h
+        infrastructure/database/entities/User.h
+        infrastructure/database/entities/Channel.h
+        infrastructure/database/entities/UserChannel.h
         )
 
 odb_compile(
@@ -83,9 +83,9 @@ odb_compile(
 )
 
 set(ODB_SOURCES
-        infrastructure/database/tables/userTable/User.cpp
-        infrastructure/database/tables/channelTable/Channel.cpp
-        infrastructure/database/tables/userChannelTable/UserChannel.cpp
+        infrastructure/database/entities/User.cpp
+        infrastructure/database/entities/Channel.cpp
+        infrastructure/database/entities/UserChannel.cpp
         ${ODB_GENERATED_SOURCES}
         )
 
@@ -94,9 +94,7 @@ set(ODB_LIBRARIES
         odb-pgsql
         )
 
-include_directories(infrastructure/database/tables/userTable)
-include_directories(infrastructure/database/tables/channelTable)
-include_directories(infrastructure/database/tables/userChannelTable)
+include_directories(infrastructure/database/entities)
 
 add_executable(${EXECUTABLE_NAME}
         Main.cpp

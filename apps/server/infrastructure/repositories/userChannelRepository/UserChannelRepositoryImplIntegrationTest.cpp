@@ -6,7 +6,9 @@
 #include "Channel.h"
 #include "Channel.odb.h"
 #include "server/infrastructure/errors/UserRepositoryError.h"
+#include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
 #include "server/infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapperImpl.h"
+#include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "User.h"
 #include "User.odb.h"
 #include "UserChannel.h"
@@ -46,11 +48,11 @@ public:
         transaction.commit();
     }
 
-    User createUser(const std::string& id, const std::string& email, const std::string& password)
+    std::shared_ptr<User> createUser(const std::string& id, const std::string& email, const std::string& password)
     {
         const auto currentDate = to_iso_string(boost::posix_time::second_clock::universal_time());
 
-        User user{id, email, password, email, currentDate, currentDate};
+        auto user = std::make_shared<User>(id, email, password, email, currentDate, currentDate);
 
         odb::transaction transaction(db->begin());
 
@@ -61,11 +63,11 @@ public:
         return user;
     }
 
-    Channel createChannel(const std::string& id, const std::string& name, const std::string& creatorId)
+    std::shared_ptr<Channel> createChannel(const std::string& id, const std::string& name, const std::string& creatorId)
     {
         const auto currentDate = to_iso_string(boost::posix_time::second_clock::universal_time());
 
-        Channel channel{id, name, creatorId, currentDate, currentDate};
+        auto channel = std::make_shared<Channel>(id, name, creatorId, currentDate, currentDate);
 
         odb::transaction transaction(db->begin());
 
@@ -76,11 +78,11 @@ public:
         return channel;
     }
 
-    UserChannel createUserChannel(const std::string& id, const std::string& userId, const std::string& channelId)
+    UserChannel createUserChannel(const std::string& id, std::shared_ptr<User> user, std::shared_ptr<Channel> channel)
     {
         const auto currentDate = to_iso_string(boost::posix_time::second_clock::universal_time());
 
-        UserChannel userChannel{id, userId, channelId, currentDate, currentDate};
+        UserChannel userChannel{id, std::move(user), std::move(channel), currentDate, currentDate};
 
         odb::transaction transaction(db->begin());
 
@@ -91,14 +93,19 @@ public:
         return userChannel;
     }
 
-    std::unique_ptr<server::infrastructure::UserChannelMapper> userChannelMapperInit =
-        std::make_unique<server::infrastructure::UserChannelMapperImpl>();
+    std::shared_ptr<UserMapper> userMapper = std::make_shared<UserMapperImpl>();
+
+    std::shared_ptr<ChannelMapper> channelMapper = std::make_shared<ChannelMapperImpl>();
+
+    std::shared_ptr<UserChannelMapper> userChannelMapper =
+        std::make_shared<UserChannelMapperImpl>(userMapper, channelMapper);
 
     std::shared_ptr<odb::pgsql::database> db =
         std::make_shared<odb::pgsql::database>("local", "local", "chatroom", "localhost", 5432);
 
     std::shared_ptr<server::domain::UserChannelRepository> userChannelRepository =
-        std::make_shared<server::infrastructure::UserChannelRepositoryImpl>(db, std::move(userChannelMapperInit));
+        std::make_shared<server::infrastructure::UserChannelRepositoryImpl>(db, userChannelMapper, userMapper,
+                                                                            channelMapper);
 };
 
 TEST_F(UserChannelRepositoryIntegrationTest, shouldCreateUserChannel)
@@ -113,14 +120,15 @@ TEST_F(UserChannelRepositoryIntegrationTest, shouldCreateUserChannel)
 
     const auto channelId = "channelId";
     const auto name = "name";
-    const auto creatorId = user.getId();
+    const auto creatorId = user->getId();
 
     const auto channel = createChannel(channelId, name, creatorId);
 
-    const auto userChannel = userChannelRepository->createUserChannel({id, userId, channelId});
+    const auto userChannel = userChannelRepository->createUserChannel(
+        {id, userMapper->mapToDomainUser(user), channelMapper->mapToDomainChannel(channel)});
 
-    ASSERT_EQ(userChannel.getUserId(), userId);
-    ASSERT_EQ(userChannel.getChannelId(), channelId);
+    ASSERT_EQ(userChannel.getUser()->getId(), userId);
+    ASSERT_EQ(userChannel.getChannel()->getId(), channelId);
 }
 
 TEST_F(UserChannelRepositoryIntegrationTest, shouldDeleteExistingUserChannel)
@@ -135,15 +143,15 @@ TEST_F(UserChannelRepositoryIntegrationTest, shouldDeleteExistingUserChannel)
 
     const auto channelId = "channelId";
     const auto name = "name";
-    const auto creatorId = user.getId();
+    const auto creatorId = user->getId();
 
     const auto channel = createChannel(channelId, name, creatorId);
 
-    const auto userChannel = createUserChannel(id, userId, channelId);
+    const auto userChannel = createUserChannel(id, user, channel);
 
-    const auto domainUserChannel =
-        domain::UserChannel{userChannel.getId(), userChannel.getUserId(), userChannel.getChannelId(),
-                            userChannel.getCreatedAt(), userChannel.getUpdatedAt()};
+    const auto domainUserChannel = domain::UserChannel{userChannel.getId(), userMapper->mapToDomainUser(user),
+                                                       channelMapper->mapToDomainChannel(channel),
+                                                       userChannel.getCreatedAt(), userChannel.getUpdatedAt()};
 
     userChannelRepository->deleteUserChannel({domainUserChannel});
 
@@ -160,7 +168,7 @@ TEST_F(UserChannelRepositoryIntegrationTest, shouldDeleteExistingUserChannel)
     }
 }
 
-TEST_F(UserChannelRepositoryIntegrationTest, delete_givenNonExistingUser_shouldThrowError)
+TEST_F(UserChannelRepositoryIntegrationTest, delete_givenNonExistingUserChannel_shouldThrowError)
 {
     const auto id = "id1";
     const auto userId = "userId";
@@ -168,7 +176,18 @@ TEST_F(UserChannelRepositoryIntegrationTest, delete_givenNonExistingUser_shouldT
     const auto createdAt = "2023-06-16";
     const auto updatedAt = "2023-06-16";
 
-    const auto domainUserChannel = domain::UserChannel{id, userId, channelId, createdAt, updatedAt};
+    const auto userEmail = "email@gmail.com";
+    const auto userPassword = "password";
+
+    const auto user = createUser(userId, userEmail, userPassword);
+
+    const auto name = "name";
+    const auto creatorId = user->getId();
+
+    const auto channel = createChannel(channelId, name, creatorId);
+
+    const auto domainUserChannel = domain::UserChannel{
+        id, userMapper->mapToDomainUser(user), channelMapper->mapToDomainChannel(channel), createdAt, updatedAt};
 
     ASSERT_ANY_THROW(userChannelRepository->deleteUserChannel({domainUserChannel}));
 }
@@ -185,11 +204,11 @@ TEST_F(UserChannelRepositoryIntegrationTest, shouldFindUsersChannelsByUserId)
 
     const auto channelId = "channelId";
     const auto name = "name";
-    const auto creatorId = user.getId();
+    const auto creatorId = user->getId();
 
     const auto channel = createChannel(channelId, name, creatorId);
 
-    const auto userChannel = createUserChannel(id, userId, channelId);
+    const auto userChannel = createUserChannel(id, user, channel);
 
     const auto foundUsersChannels = userChannelRepository->findUsersChannelsByUserId({userId});
 
@@ -209,11 +228,11 @@ TEST_F(UserChannelRepositoryIntegrationTest, shouldFindUsersChannelsByChannelId)
 
     const auto channelId = "channelId";
     const auto name = "name";
-    const auto creatorId = user.getId();
+    const auto creatorId = user->getId();
 
     const auto channel = createChannel(channelId, name, creatorId);
 
-    const auto userChannel = createUserChannel(id, userId, channelId);
+    const auto userChannel = createUserChannel(id, user, channel);
 
     const auto foundUsersChannels = userChannelRepository->findUsersChannelsByChannelId({channelId});
 

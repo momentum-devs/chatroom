@@ -2,15 +2,27 @@
 
 namespace server::infrastructure
 {
-domain::User UserMapperImpl::mapToDomainUser(const User& user) const
+std::shared_ptr<domain::User> UserMapperImpl::mapToDomainUser(std::shared_ptr<User> user) const
 {
-    const auto id = user.getId();
-    const auto email = user.getEmail();
-    const auto password = user.getPassword();
-    const auto nickname = user.getNickname();
-    const auto createdAt = user.getCreatedAt();
-    const auto updatedAt = user.getUpdatedAt();
+    const auto id = user->getId();
+    const auto email = user->getEmail();
+    const auto password = user->getPassword();
+    const auto nickname = user->getNickname();
+    const auto createdAt = user->getCreatedAt();
+    const auto updatedAt = user->getUpdatedAt();
 
-    return domain::User{id, email, password, nickname, createdAt, updatedAt};
+    return std::make_shared<domain::User>(id, email, password, nickname, createdAt, updatedAt);
+}
+
+std::shared_ptr<User> UserMapperImpl::mapToPersistenceUser(std::shared_ptr<domain::User> user) const
+{
+    const auto id = user->getId();
+    const auto email = user->getEmail();
+    const auto password = user->getPassword();
+    const auto nickname = user->getNickname();
+    const auto createdAt = user->getCreatedAt();
+    const auto updatedAt = user->getUpdatedAt();
+
+    return std::make_shared<User>(id, email, password, nickname, createdAt, updatedAt);
 }
 }

@@ -10,19 +10,20 @@
 namespace server::infrastructure
 {
 UserRepositoryImpl::UserRepositoryImpl(std::shared_ptr<odb::pgsql::database> dbInit,
-                                       std::unique_ptr<UserMapper> userMapperInit)
+                                       std::shared_ptr<UserMapper> userMapperInit)
     : db{std::move(dbInit)}, userMapper{std::move(userMapperInit)}
 {
 }
 
-domain::User UserRepositoryImpl::createUser(const domain::CreateUserPayload& payload) const
+std::shared_ptr<domain::User> UserRepositoryImpl::createUser(const domain::CreateUserPayload& payload) const
 {
     try
     {
         {
             const auto currentDate = to_iso_string(boost::posix_time::second_clock::universal_time());
 
-            User user{payload.id, payload.email, payload.password, payload.nickname, currentDate, currentDate};
+            const auto user = std::make_shared<User>(payload.id, payload.email, payload.password, payload.nickname,
+                                                     currentDate, currentDate);
 
             odb::transaction transaction(db->begin());
 
@@ -39,7 +40,8 @@ domain::User UserRepositoryImpl::createUser(const domain::CreateUserPayload& pay
     }
 }
 
-std::optional<domain::User> UserRepositoryImpl::findUserById(const domain::FindUserByIdPayload& payload) const
+std::optional<std::shared_ptr<domain::User>>
+UserRepositoryImpl::findUserById(const domain::FindUserByIdPayload& payload) const
 {
     try
     {
@@ -56,7 +58,7 @@ std::optional<domain::User> UserRepositoryImpl::findUserById(const domain::FindU
             return std::nullopt;
         }
 
-        return userMapper->mapToDomainUser(*user);
+        return userMapper->mapToDomainUser(user);
     }
     catch (const std::exception& error)
     {
@@ -64,7 +66,8 @@ std::optional<domain::User> UserRepositoryImpl::findUserById(const domain::FindU
     }
 }
 
-std::optional<domain::User> UserRepositoryImpl::findUserByEmail(const domain::FindUserByEmailPayload& payload) const
+std::optional<std::shared_ptr<domain::User>>
+UserRepositoryImpl::findUserByEmail(const domain::FindUserByEmailPayload& payload) const
 {
     try
     {
@@ -81,7 +84,7 @@ std::optional<domain::User> UserRepositoryImpl::findUserByEmail(const domain::Fi
             return std::nullopt;
         }
 
-        return userMapper->mapToDomainUser(*user);
+        return userMapper->mapToDomainUser(user);
     }
     catch (const std::exception& error)
     {

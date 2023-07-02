@@ -7,8 +7,6 @@
 
 namespace server::infrastructure
 {
-#pragma db value(std::string) type("TEXT") id_type("VARCHAR(32)")
-
 #pragma db object table("channels")
 class Channel
 {
@@ -18,8 +16,8 @@ public:
         : id{std::move(idInit)},
           name{std::move(nameInit)},
           creator_id{std::move(creatorIdInit)},
-          created_at{createdAtInit},
-          updated_at{updatedAtInit}
+          created_at{std::move(createdAtInit)},
+          updated_at{std::move(updatedAtInit)}
     {
     }
 
@@ -46,6 +44,14 @@ public:
     std::string getUpdatedAt() const
     {
         return updated_at;
+    }
+
+    bool operator==(const Channel& channel) const
+    {
+        auto tieStruct = [](const Channel& channel)
+        { return std::tie(channel.id, channel.creator_id, channel.name, channel.created_at, channel.updated_at); };
+
+        return tieStruct(*this) == tieStruct(channel);
     }
 
 private:

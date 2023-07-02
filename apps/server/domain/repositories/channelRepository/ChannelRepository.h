@@ -16,8 +16,8 @@ class ChannelRepository
 public:
     virtual ~ChannelRepository() = default;
 
-    virtual Channel createChannel(const CreateChannelPayload&) const = 0;
-    virtual std::optional<Channel> findChannelById(const FindChannelByIdPayload&) const = 0;
+    virtual std::shared_ptr<Channel> createChannel(const CreateChannelPayload&) const = 0;
+    virtual std::optional<std::shared_ptr<Channel>> findChannelById(const FindChannelByIdPayload&) const = 0;
     virtual void deleteChannel(const DeleteChannelPayload&) const = 0;
 };
 }

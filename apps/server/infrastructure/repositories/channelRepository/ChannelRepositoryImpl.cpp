@@ -9,19 +9,20 @@
 namespace server::infrastructure
 {
 ChannelRepositoryImpl::ChannelRepositoryImpl(std::shared_ptr<odb::pgsql::database> dbInit,
-                                             std::unique_ptr<ChannelMapper> channelMapperInit)
+                                             std::shared_ptr<ChannelMapper> channelMapperInit)
     : db{std::move(dbInit)}, channelMapper{std::move(channelMapperInit)}
 {
 }
 
-domain::Channel ChannelRepositoryImpl::createChannel(const domain::CreateChannelPayload& payload) const
+std::shared_ptr<domain::Channel> ChannelRepositoryImpl::createChannel(const domain::CreateChannelPayload& payload) const
 {
     try
     {
         {
             const auto currentDate = to_iso_string(boost::posix_time::second_clock::universal_time());
 
-            Channel channel{payload.id, payload.name, payload.creatorId, currentDate, currentDate};
+            const auto channel =
+                std::make_shared<Channel>(payload.id, payload.name, payload.creatorId, currentDate, currentDate);
 
             odb::transaction transaction(db->begin());
 
@@ -38,7 +39,7 @@ domain::Channel ChannelRepositoryImpl::createChannel(const domain::CreateChannel
     }
 }
 
-std::optional<domain::Channel>
+std::optional<std::shared_ptr<domain::Channel>>
 ChannelRepositoryImpl::findChannelById(const domain::FindChannelByIdPayload& payload) const
 {
     try
@@ -56,7 +57,7 @@ ChannelRepositoryImpl::findChannelById(const domain::FindChannelByIdPayload& pay
             return std::nullopt;
         }
 
-        return channelMapper->mapToDomainChannel(*channel);
+        return channelMapper->mapToDomainChannel(channel);
     }
     catch (const std::exception& error)
     {

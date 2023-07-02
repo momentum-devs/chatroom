@@ -2,7 +2,7 @@
 
 #include <gmock/gmock.h>
 
-#include "FindUsersChannelsByChannelIdQueryHandler.h"
+#include "FindUsersBelongingToChannelQueryHandler.h"
 
 namespace server::application
 {

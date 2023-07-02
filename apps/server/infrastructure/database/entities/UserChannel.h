@@ -5,21 +5,22 @@
 #include <string>
 #include <utility>
 
+#include "Channel.h"
+#include "User.h"
+
 namespace server::infrastructure
 {
-#pragma db value(std::string) type("TEXT") id_type("VARCHAR(32)")
-
 #pragma db object table("users_channels")
 class UserChannel
 {
 public:
-    UserChannel(std::string idInit, std::string userIdInit, std::string channelIdInit, std::string createdAtInit,
-                std::string updatedAtInit)
+    UserChannel(std::string idInit, std::shared_ptr<User> userInit, std::shared_ptr<Channel> channelInit,
+                std::string createdAtInit, std::string updatedAtInit)
         : id{std::move(idInit)},
-          user_id{std::move(userIdInit)},
-          channel_id{std::move(channelIdInit)},
-          created_at{createdAtInit},
-          updated_at{updatedAtInit}
+          user{std::move(userInit)},
+          channel{std::move(channelInit)},
+          created_at{std::move(createdAtInit)},
+          updated_at{std::move(updatedAtInit)}
     {
     }
 
@@ -28,14 +29,14 @@ public:
         return id;
     }
 
-    std::string getUserId() const
+    std::shared_ptr<User> getUser() const
     {
-        return user_id;
+        return user;
     }
 
-    std::string getChannelId() const
+    std::shared_ptr<Channel> getChannel() const
     {
-        return channel_id;
+        return channel;
     }
 
     std::string getCreatedAt() const
@@ -55,9 +56,13 @@ private:
 
 #pragma db id
     std::string id;
-    std::string user_id;
-    std::string channel_id;
     std::string created_at;
     std::string updated_at;
+
+#pragma db not_null
+    std::shared_ptr<User> user;
+
+#pragma db not_null
+    std::shared_ptr<Channel> channel;
 };
 }

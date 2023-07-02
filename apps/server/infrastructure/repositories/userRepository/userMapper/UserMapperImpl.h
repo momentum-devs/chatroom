@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../../../../domain/entities/user/User.h"
-#include "../../../database/tables/userTable/User.h"
 #include "UserMapper.h"
 
 namespace server::infrastructure
@@ -9,6 +7,7 @@ namespace server::infrastructure
 class UserMapperImpl : public UserMapper
 {
 public:
-    domain::User mapToDomainUser(const User&) const override;
+    std::shared_ptr<domain::User> mapToDomainUser(std::shared_ptr<User>) const override;
+    std::shared_ptr<User> mapToPersistenceUser(std::shared_ptr<domain::User>) const override;
 };
 }

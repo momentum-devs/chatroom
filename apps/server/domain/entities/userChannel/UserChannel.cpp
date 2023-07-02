@@ -4,11 +4,11 @@
 
 namespace server::domain
 {
-UserChannel::UserChannel(std::string idInit, std::string userIdInit, std::string channelIdInit,
+UserChannel::UserChannel(std::string idInit, std::shared_ptr<User> userInit, std::shared_ptr<Channel> channelInit,
                          std::string createdAtInit, std::string updatedAtInit)
     : id{std::move(idInit)},
-      userId{std::move(userIdInit)},
-      channelId{std::move(channelIdInit)},
+      user{std::move(userInit)},
+      channel{std::move(channelInit)},
       createdAt{std::move(createdAtInit)},
       updatedAt{std::move(updatedAtInit)}
 {
@@ -19,14 +19,14 @@ std::string UserChannel::getId() const
     return id;
 }
 
-std::string UserChannel::getUserId() const
+std::shared_ptr<User> UserChannel::getUser() const
 {
-    return userId;
+    return user;
 }
 
-std::string UserChannel::getChannelId() const
+std::shared_ptr<Channel> UserChannel::getChannel() const
 {
-    return channelId;
+    return channel;
 }
 
 std::string UserChannel::getCreatedAt() const

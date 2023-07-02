@@ -38,4 +38,12 @@ std::string Channel::getUpdatedAt() const
 {
     return updatedAt;
 }
+
+bool Channel::operator==(const Channel& channel) const
+{
+    auto tieStruct = [](const Channel& channel)
+    { return std::tie(channel.id, channel.creatorId, channel.name, channel.createdAt, channel.updatedAt); };
+
+    return tieStruct(*this) == tieStruct(channel);
+}
 }

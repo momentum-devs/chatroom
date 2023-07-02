@@ -4,10 +4,12 @@
 
 #include "Channel.h"
 #include "Channel.odb.h"
-#include "FindUsersChannelsByChannelIdQueryHandlerImpl.h"
+#include "FindUsersBelongingToChannelQueryHandlerImpl.h"
 #include "server/application/services/hashService/HashServiceImpl.h"
+#include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
 #include "server/infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapperImpl.h"
 #include "server/infrastructure/repositories/userChannelRepository/UserChannelRepositoryImpl.h"
+#include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "User.h"
 #include "User.odb.h"
 #include "UserChannel.h"
@@ -43,11 +45,11 @@ public:
         transaction.commit();
     }
 
-    User createUser(const std::string& id, const std::string& email, const std::string& password)
+    std::shared_ptr<User> createUser(const std::string& id, const std::string& email, const std::string& password)
     {
         const auto currentDate = to_iso_string(boost::posix_time::second_clock::universal_time());
 
-        User user{id, email, password, email, currentDate, currentDate};
+        auto user = std::make_shared<User>(id, email, password, email, currentDate, currentDate);
 
         odb::transaction transaction(db->begin());
 
@@ -58,11 +60,11 @@ public:
         return user;
     }
 
-    Channel createChannel(const std::string& id, const std::string& name, const std::string& creatorId)
+    std::shared_ptr<Channel> createChannel(const std::string& id, const std::string& name, const std::string& creatorId)
     {
         const auto currentDate = to_iso_string(boost::posix_time::second_clock::universal_time());
 
-        Channel channel{id, name, creatorId, currentDate, currentDate};
+        auto channel = std::make_shared<Channel>(id, name, creatorId, currentDate, currentDate);
 
         odb::transaction transaction(db->begin());
 
@@ -73,11 +75,11 @@ public:
         return channel;
     }
 
-    UserChannel createUserChannel(const std::string& id, const std::string& userId, const std::string& channelId)
+    UserChannel createUserChannel(const std::string& id, std::shared_ptr<User> user, std::shared_ptr<Channel> channel)
     {
         const auto currentDate = to_iso_string(boost::posix_time::second_clock::universal_time());
 
-        UserChannel userChannel{id, userId, channelId, currentDate, currentDate};
+        UserChannel userChannel{id, std::move(user), std::move(channel), currentDate, currentDate};
 
         odb::transaction transaction(db->begin());
 
@@ -88,17 +90,22 @@ public:
         return userChannel;
     }
 
-    std::unique_ptr<UserChannelMapper> channelMapperInit = std::make_unique<UserChannelMapperImpl>();
+    std::shared_ptr<UserMapper> userMapper = std::make_shared<UserMapperImpl>();
+
+    std::shared_ptr<ChannelMapper> channelMapper = std::make_shared<ChannelMapperImpl>();
+
+    std::shared_ptr<UserChannelMapper> userChannelMapper =
+        std::make_shared<UserChannelMapperImpl>(userMapper, channelMapper);
 
     std::shared_ptr<odb::pgsql::database> db =
         std::make_shared<odb::pgsql::database>("local", "local", "chatroom", "localhost", 5432);
 
     std::shared_ptr<domain::UserChannelRepository> channelRepository =
-        std::make_shared<UserChannelRepositoryImpl>(db, std::move(channelMapperInit));
+        std::make_shared<UserChannelRepositoryImpl>(db, userChannelMapper, userMapper, channelMapper);
 
     std::shared_ptr<HashService> hashService = std::make_shared<HashServiceImpl>();
 
-    FindUsersChannelsByChannelIdQueryHandlerImpl findUsersChannelsByChannelIdQueryHandler{channelRepository};
+    FindUsersBelongingToChannelQueryHandlerImpl findUsersChannelsByChannelIdQueryHandler{channelRepository};
 };
 
 TEST_F(FindUsersChannelsByChannelIdQueryImplIntegrationTest, findUsersChannelsByChannelId)
@@ -111,7 +118,7 @@ TEST_F(FindUsersChannelsByChannelIdQueryImplIntegrationTest, findUsersChannelsBy
 
     const auto channelId1 = "channelId1";
     const auto name1 = "name";
-    const auto creatorId1 = user1.getId();
+    const auto creatorId1 = user1->getId();
 
     const auto channel1 = createChannel(channelId1, name1, creatorId1);
 
@@ -123,15 +130,15 @@ TEST_F(FindUsersChannelsByChannelIdQueryImplIntegrationTest, findUsersChannelsBy
 
     const auto channelId2 = "channelId2";
     const auto name2 = "name2";
-    const auto creatorId2 = user2.getId();
+    const auto creatorId2 = user2->getId();
 
     const auto channel2 = createChannel(channelId2, name2, creatorId2);
 
     const auto userChannelId1 = "userChannelId1";
     const auto userChannelId2 = "userChannelId2";
 
-    const auto userChannel1 = createUserChannel(userChannelId1, userId1, channelId1);
-    const auto userChannel2 = createUserChannel(userChannelId2, userId2, channelId2);
+    const auto userChannel1 = createUserChannel(userChannelId1, user1, channel1);
+    const auto userChannel2 = createUserChannel(userChannelId2, user2, channel2);
 
     const auto [usersChannels] = findUsersChannelsByChannelIdQueryHandler.execute({channelId2});
 

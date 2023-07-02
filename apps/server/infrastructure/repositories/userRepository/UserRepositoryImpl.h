@@ -12,16 +12,16 @@ namespace server::infrastructure
 class UserRepositoryImpl : public domain::UserRepository
 {
 public:
-    UserRepositoryImpl(std::shared_ptr<odb::pgsql::database>, std::unique_ptr<UserMapper>);
+    UserRepositoryImpl(std::shared_ptr<odb::pgsql::database>, std::shared_ptr<UserMapper>);
 
-    domain::User createUser(const domain::CreateUserPayload&) const override;
-    std::optional<domain::User> findUserById(const domain::FindUserByIdPayload&) const override;
-    std::optional<domain::User> findUserByEmail(const domain::FindUserByEmailPayload&) const override;
+    std::shared_ptr<domain::User> createUser(const domain::CreateUserPayload&) const override;
+    std::optional<std::shared_ptr<domain::User>> findUserById(const domain::FindUserByIdPayload&) const override;
+    std::optional<std::shared_ptr<domain::User>> findUserByEmail(const domain::FindUserByEmailPayload&) const override;
     void updateUser(const domain::UpdateUserPayload&) const override;
     void deleteUser(const domain::DeleteUserPayload&) const override;
 
 private:
     std::shared_ptr<odb::pgsql::database> db;
-    std::unique_ptr<UserMapper> userMapper;
+    std::shared_ptr<UserMapper> userMapper;
 };
 }

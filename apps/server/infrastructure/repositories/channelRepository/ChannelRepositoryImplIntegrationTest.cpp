@@ -76,9 +76,9 @@ TEST_F(ChannelRepositoryIntegrationTest, shouldCreateChannel)
 
     const auto channel = channelRepository->createChannel({id, name, creatorId});
 
-    ASSERT_EQ(channel.getId(), id);
-    ASSERT_EQ(channel.getName(), name);
-    ASSERT_EQ(channel.getCreatorId(), creatorId);
+    ASSERT_EQ(channel->getId(), id);
+    ASSERT_EQ(channel->getName(), name);
+    ASSERT_EQ(channel->getCreatorId(), creatorId);
 }
 
 TEST_F(ChannelRepositoryIntegrationTest, shouldDeleteExistingChannel)
@@ -162,7 +162,7 @@ TEST_F(ChannelRepositoryIntegrationTest, shouldFindExistingChannelById)
     const auto foundChannel = channelRepository->findChannelById({id});
 
     ASSERT_TRUE(foundChannel);
-    ASSERT_EQ(foundChannel->getId(), id);
+    ASSERT_EQ(foundChannel->get()->getId(), id);
 }
 
 TEST_F(ChannelRepositoryIntegrationTest, givenNonExistingChannel_shouldNotFindAnyChannelById)

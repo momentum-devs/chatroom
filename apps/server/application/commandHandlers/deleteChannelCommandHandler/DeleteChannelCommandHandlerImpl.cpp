@@ -21,6 +21,6 @@ void DeleteChannelCommandHandlerImpl::execute(const DeleteChannelCommandHandlerP
         throw errors::ResourceNotFoundError{std::format("Channel with id {} not found.", payload.channelId)};
     }
 
-    channelRepository->deleteChannel({*existingChannel});
+    channelRepository->deleteChannel({**existingChannel});
 }
 }

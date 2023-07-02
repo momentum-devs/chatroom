@@ -18,6 +18,7 @@ public:
     std::string getUpdatedAt() const;
     void setPassword(const std::string& newPassword);
     void setNickname(const std::string& newNickname);
+    bool operator==(const User&) const;
 
 private:
     std::string id;

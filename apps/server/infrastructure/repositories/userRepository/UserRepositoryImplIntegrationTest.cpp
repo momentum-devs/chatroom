@@ -51,9 +51,9 @@ TEST_F(UserRepositoryIntegrationTest, shouldCreateUser)
 
     const auto user = userRepository->createUser({id, email, password, nickname});
 
-    ASSERT_EQ(user.getEmail(), email);
-    ASSERT_EQ(user.getPassword(), password);
-    ASSERT_EQ(user.getNickname(), nickname);
+    ASSERT_EQ(user->getEmail(), email);
+    ASSERT_EQ(user->getPassword(), password);
+    ASSERT_EQ(user->getNickname(), nickname);
 }
 
 TEST_F(UserRepositoryIntegrationTest, givenUserWithExistingEmail_shouldThrowError)
@@ -151,7 +151,7 @@ TEST_F(UserRepositoryIntegrationTest, shouldFindExistingUserByEmail)
     const auto foundUser = userRepository->findUserByEmail({email});
 
     ASSERT_TRUE(foundUser);
-    ASSERT_EQ(foundUser->getEmail(), email);
+    ASSERT_EQ(foundUser->get()->getEmail(), email);
 }
 
 TEST_F(UserRepositoryIntegrationTest, givenNonExistingUser_shouldNotFindAnyUserByEmail)
@@ -185,7 +185,7 @@ TEST_F(UserRepositoryIntegrationTest, shouldFindExistingUserById)
     const auto foundUser = userRepository->findUserById({id});
 
     ASSERT_TRUE(foundUser);
-    ASSERT_EQ(foundUser->getId(), id);
+    ASSERT_EQ(foundUser->get()->getId(), id);
 }
 
 TEST_F(UserRepositoryIntegrationTest, givenNonExistingUser_shouldNotFindAnyUserById)

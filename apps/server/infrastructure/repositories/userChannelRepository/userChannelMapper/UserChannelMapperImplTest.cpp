@@ -2,6 +2,9 @@
 
 #include "gtest/gtest.h"
 
+#include "../../userRepository/userMapper/UserMapperMock.h"
+#include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperMock.h"
+
 using namespace ::testing;
 using namespace server;
 using namespace server::infrastructure;
@@ -9,25 +12,46 @@ using namespace server::infrastructure;
 class UserChannelMapperTest : public Test
 {
 public:
-    UserChannelMapperImpl userChannelMapper;
+    std::shared_ptr<UserMapperMock> userMapper = std::make_shared<StrictMock<UserMapperMock>>();
+    std::shared_ptr<ChannelMapperMock> channelMapper = std::make_shared<StrictMock<ChannelMapperMock>>();
+
+    UserChannelMapperImpl userChannelMapper{userMapper, channelMapper};
 };
 
 TEST_F(UserChannelMapperTest, givenUserChannelModel_shouldMapToDomainUserChannel)
 {
-    const auto id = "id";
     const auto userId = "userId";
-    const auto channelId = "channelId";
+    const auto email = "email@example.com";
+    const auto password = "password";
     const auto nickname = "nickname";
     const auto createdAt = "2023-06-16";
     const auto updatedAt = "2023-06-16";
 
-    UserChannel userChannelModel{id, email, password, nickname, createdAt, updatedAt};
+    auto user = std::make_shared<User>(userId, email, password, nickname, createdAt, updatedAt);
 
-    const auto domainUserChannel = userMapper.mapToDomainUser(userModel);
+    domain::User domainUser{userId, email, password, nickname, createdAt, updatedAt};
+
+    const auto id = "id";
+    const auto name = "name";
+    const auto creatorId = "creatorId";
+
+    auto channel = std::make_shared<Channel>(id, name, creatorId, createdAt, updatedAt);
+
+    domain::Channel domainChannel{id, name, creatorId, createdAt, updatedAt};
+
+    const auto userChannelId = "userChannelId";
+
+    UserChannel userChannel{userChannelId, user, channel, createdAt, updatedAt};
+
+    EXPECT_CALL(*userMapper, mapToDomainUser(*user)).WillOnce(Return(domainUser));
+
+    EXPECT_CALL(*channelMapper, mapToDomainChannel(*channel)).WillOnce(Return(domainChannel));
+
+    const auto domainUserChannel = userChannelMapper.mapToDomainUserChannel(userChannel);
 
     ASSERT_EQ(domainUserChannel.getId(), id);
-    ASSERT_EQ(domainUserChannel.getUserId(), userId);
-    ASSERT_EQ(domainUserChannel.getChannelId(), channelId);
+    ASSERT_EQ(domainUserChannel.getUser(), domainUser);
+    ASSERT_EQ(domainUserChannel.getChannel(), domainChannel);
     ASSERT_EQ(domainUserChannel.getCreatedAt(), createdAt);
     ASSERT_EQ(domainUserChannel.getUpdatedAt(), updatedAt);
 }

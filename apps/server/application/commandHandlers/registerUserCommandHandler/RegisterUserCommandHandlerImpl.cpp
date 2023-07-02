@@ -1,10 +1,10 @@
 #include "RegisterUserCommandHandlerImpl.h"
 
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
 #include <format>
 
 #include "loguru.hpp"
-#include <boost/uuid/uuid_generators.hpp>
-#include <boost/uuid/uuid_io.hpp>
 
 namespace server::application
 {
@@ -30,6 +30,6 @@ RegisterUserCommandHandlerImpl::execute(const RegisterUserCommandHandlerPayload&
 
     LOG_S(INFO) << std::format("User with email \"{}\" registered.", payload.email);
 
-    return {user};
+    return {*user};
 }
 }

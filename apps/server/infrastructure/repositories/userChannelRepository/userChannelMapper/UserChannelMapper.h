@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../../../domain/entities/userChannel/UserChannel.h"
-#include "../../../database/tables/userChannelTable/UserChannel.h"
+#include "../../../database/entities/UserChannel.h"
 
 namespace server::infrastructure
 {

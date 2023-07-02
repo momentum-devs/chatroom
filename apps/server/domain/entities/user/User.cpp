@@ -55,4 +55,12 @@ std::string User::getUpdatedAt() const
     return updatedAt;
 }
 
+bool User::operator==(const User& user) const
+{
+    auto tieStruct = [](const User& user)
+    { return std::tie(user.id, user.email, user.password, user.nickname, user.createdAt, user.updatedAt); };
+
+    return tieStruct(*this) == tieStruct(user);
+}
+
 }

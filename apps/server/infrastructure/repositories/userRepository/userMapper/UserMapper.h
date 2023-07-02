@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../../../domain/entities/user/User.h"
-#include "../../../database/tables/userTable/User.h"
+#include "../../../database/entities/User.h"
 
 namespace server::infrastructure
 {
@@ -10,6 +10,7 @@ class UserMapper
 public:
     virtual ~UserMapper() = default;
 
-    virtual domain::User mapToDomainUser(const User&) const = 0;
+    virtual std::shared_ptr<domain::User> mapToDomainUser(const std::shared_ptr<User>) const = 0;
+    virtual std::shared_ptr<User> mapToPersistenceUser(const std::shared_ptr<domain::User>) const = 0;
 };
 }

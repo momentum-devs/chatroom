@@ -7,8 +7,6 @@
 
 namespace server::infrastructure
 {
-#pragma db value(std::string) type("TEXT") id_type("VARCHAR(32)")
-
 #pragma db object table("users")
 class User
 {
@@ -19,8 +17,8 @@ public:
           email{std::move(emailInit)},
           password{std::move(passwordInit)},
           nickname{std::move(nicknameInit)},
-          created_at{createdAtInit},
-          updated_at{updatedAtInit}
+          created_at{std::move(createdAtInit)},
+          updated_at{std::move(updatedAtInit)}
     {
     }
 
@@ -62,6 +60,14 @@ public:
     void setPassword(const std::string& passwordInit)
     {
         password = passwordInit;
+    }
+
+    bool operator==(const User& user) const
+    {
+        auto tieStruct = [](const User& user)
+        { return std::tie(user.id, user.email, user.password, user.nickname, user.created_at, user.updated_at); };
+
+        return tieStruct(*this) == tieStruct(user);
     }
 
 private:
