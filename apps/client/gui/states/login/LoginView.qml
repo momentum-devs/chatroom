@@ -14,6 +14,7 @@ Rectangle {
 
         TextField {
             id: usernameField
+            focus: true
             placeholderText: qsTr('Email')
         }
         TextField {
@@ -39,7 +40,6 @@ Rectangle {
                     }
                 }
 
-                focus: true
                 text: qsTr('Login')
 
                 onClicked: activate()

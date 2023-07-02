@@ -3,6 +3,7 @@ import QtQuick.Controls 6.4
 
 Rectangle {
     color: "grey"
+    focus: true
 
     Row {
         anchors.fill: parent
@@ -35,7 +36,6 @@ Rectangle {
 
                 onClicked: {
                     mainController.logout();
-                    console.log("logout from qml");
                 }
             }
             ListView {
