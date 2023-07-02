@@ -24,7 +24,7 @@ public:
     Q_INVOKABLE void goToRegisterState();
 
 signals:
-    void loginFailure(const QString& message);
+    void loginFailure(const QString& error);
 
 private:
     void handleLoginResponse(const common::messages::Message& message);

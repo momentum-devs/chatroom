@@ -44,6 +44,7 @@ TEST_F(StateMachineTest, returnToPreviousStateWithOneState)
     EXPECT_CALL(*state1, deactivate());
 
     stateMachine.addNextState(state1);
+
     stateMachine.returnToThePreviousState();
 }
 

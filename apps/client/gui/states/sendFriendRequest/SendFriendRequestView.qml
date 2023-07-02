@@ -22,7 +22,7 @@ Rectangle {
                 id: sendFriendRequestButton
                 function activate() {
                     const friendEmail = friendEmailField.text;
-                    if (channelName.length !== 0) {
+                    if (friendEmail.length !== 0) {
                         sendFriendRequestController.sendFriendRequest(friendEmail);
                         successPopup.open();
                     } else {
@@ -47,10 +47,11 @@ Rectangle {
         }
     }
     Connections {
-        // function onCreateChannelFailure(message: string) {
-        //     errorPopup.contentItem.text = message;
-        //     errorPopup.open();
-        // }
+        function onSendFriendRequestFailure(message: string) {
+            errorPopup.contentItem.text = message;
+            errorPopup.open();
+        }
+
         target: sendFriendRequestController
     }
     Popup {
