@@ -18,17 +18,36 @@ public:
     UserChannelMapperImpl userChannelMapper{userMapper, channelMapper};
 };
 
-TEST_F(UserChannelMapperTest, givenUserChannelModel_shouldMapToDomainUserChannel)
+TEST_F(UserChannelMapperTest, givenPersistenceUserChannel_shouldMapToDomainUserChannel)
 {
     const auto userId = "userId";
-    const auto channelId = "channelId";
+    const auto email = "email@example.com";
+    const auto password = "password";
     const auto nickname = "nickname";
     const auto createdAt = "2023-06-16";
     const auto updatedAt = "2023-06-16";
 
-    UserChannel userChannelModel{id, email, password, nickname, createdAt, updatedAt};
+    const auto user = std::make_shared<User>(userId, email, password, nickname, createdAt, updatedAt);
 
-    const auto domainUserChannel = userMapper.mapToDomainUser(userModel);
+    const auto domainUser = std::make_shared<domain::User>(userId, email, password, nickname, createdAt, updatedAt);
+
+    const auto channelId = "channelId";
+    const auto name = "name";
+    const auto creatorId = "creatorId";
+
+    const auto channel = std::make_shared<Channel>(channelId, name, creatorId, createdAt, updatedAt);
+
+    const auto domainChannel = std::make_shared<domain::Channel>(channelId, name, creatorId, createdAt, updatedAt);
+
+    const auto id = "id";
+
+    UserChannel persistenceUserChannel{id, user, channel, createdAt, updatedAt};
+
+    EXPECT_CALL(*userMapper, mapToDomainUser(user)).WillOnce(Return(domainUser));
+
+    EXPECT_CALL(*channelMapper, mapToDomainChannel(channel)).WillOnce(Return(domainChannel));
+
+    const auto domainUserChannel = userChannelMapper.mapToDomainUserChannel(persistenceUserChannel);
 
     ASSERT_EQ(domainUserChannel.getId(), id);
     ASSERT_EQ(domainUserChannel.getUser(), domainUser);
