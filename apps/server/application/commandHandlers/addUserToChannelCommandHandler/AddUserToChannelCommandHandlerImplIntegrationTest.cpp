@@ -78,21 +78,6 @@ public:
         return channel;
     }
 
-    UserChannel createUserChannel(const std::string& id, std::shared_ptr<User> user, std::shared_ptr<Channel> channel)
-    {
-        const auto currentDate = to_iso_string(boost::posix_time::second_clock::universal_time());
-
-        UserChannel userChannel{id, std::move(user), std::move(channel), currentDate, currentDate};
-
-        odb::transaction transaction(db->begin());
-
-        db->persist(userChannel);
-
-        transaction.commit();
-
-        return userChannel;
-    }
-
     std::shared_ptr<UserMapper> userMapper = std::make_shared<UserMapperImpl>();
 
     std::shared_ptr<ChannelMapper> channelMapper = std::make_shared<ChannelMapperImpl>();
@@ -110,8 +95,6 @@ public:
 
     std::shared_ptr<domain::ChannelRepository> channelRepository =
         std::make_shared<ChannelRepositoryImpl>(db, channelMapper);
-
-    std::shared_ptr<HashService> hashService = std::make_shared<HashServiceImpl>();
 
     AddUserToChannelCommandHandlerImpl addUserToChannelCommandHandler{userChannelRepository, userRepository,
                                                                       channelRepository};

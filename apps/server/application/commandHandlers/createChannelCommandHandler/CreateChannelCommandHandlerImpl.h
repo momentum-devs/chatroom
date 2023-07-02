@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "CreateChannelCommandHandler.h"
+#include "server/application/commandHandlers/addUserToChannelCommandHandler/AddUserToChannelCommandHandler.h"
 #include "server/domain/repositories/channelRepository/ChannelRepository.h"
 
 namespace server::application
@@ -10,11 +11,13 @@ namespace server::application
 class CreateChannelCommandHandlerImpl : public CreateChannelCommandHandler
 {
 public:
-    explicit CreateChannelCommandHandlerImpl(std::shared_ptr<domain::ChannelRepository>);
+    CreateChannelCommandHandlerImpl(std::shared_ptr<domain::ChannelRepository>,
+                                    std::shared_ptr<AddUserToChannelCommandHandler>);
 
     CreateChannelCommandHandlerResult execute(const CreateChannelCommandHandlerPayload&) const override;
 
 private:
     std::shared_ptr<domain::ChannelRepository> channelRepository;
+    std::shared_ptr<AddUserToChannelCommandHandler> addUserToChannelCommandHandler;
 };
 }

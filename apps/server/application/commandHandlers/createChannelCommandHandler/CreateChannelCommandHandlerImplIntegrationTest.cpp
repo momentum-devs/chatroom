@@ -3,17 +3,27 @@
 #include "gtest/gtest.h"
 
 #include "CreateChannelCommandHandlerImpl.h"
+#include "server/application/commandHandlers/addUserToChannelCommandHandler/AddUserToChannelCommandHandlerImpl.h"
 #include "server/application/services/hashService/HashServiceImpl.h"
+#include "server/domain/repositories/userChannelRepository/UserChannelRepository.h"
+#include "server/domain/repositories/userRepository/UserRepository.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
 #include "server/infrastructure/repositories/channelRepository/ChannelRepositoryImpl.h"
+#include "server/infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapper.h"
+#include "server/infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapperImpl.h"
+#include "server/infrastructure/repositories/userChannelRepository/UserChannelRepositoryImpl.h"
+#include "server/infrastructure/repositories/userRepository/userMapper/UserMapper.h"
+#include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
+#include "server/infrastructure/repositories/userRepository/UserRepositoryImpl.h"
 #include "User.h"
 #include "User.odb.h"
+#include "UserChannel.h"
+#include "UserChannel.odb.h"
 
 using namespace ::testing;
 using namespace server;
 using namespace server::infrastructure;
 using namespace server::application;
-using namespace server::domain;
 
 class CreateChannelCommandImplIntegrationTest : public Test
 {
@@ -22,6 +32,7 @@ public:
     {
         odb::transaction transaction(db->begin());
 
+        db->execute("DELETE FROM \"users_channels\";");
         db->execute("DELETE FROM \"channels\";");
         db->execute("DELETE FROM \"users\";");
 
@@ -32,6 +43,7 @@ public:
     {
         odb::transaction transaction(db->begin());
 
+        db->execute("DELETE FROM \"users_channels\";");
         db->execute("DELETE FROM \"channels\";");
         db->execute("DELETE FROM \"users\";");
 
@@ -53,20 +65,31 @@ public:
         return user;
     }
 
-    std::unique_ptr<ChannelMapper> channelMapperInit = std::make_unique<ChannelMapperImpl>();
+    std::shared_ptr<ChannelMapper> channelMapper = std::make_shared<ChannelMapperImpl>();
 
     std::shared_ptr<odb::pgsql::database> db =
         std::make_shared<odb::pgsql::database>("local", "local", "chatroom", "localhost", 5432);
 
-    std::shared_ptr<ChannelRepository> channelRepository =
-        std::make_shared<ChannelRepositoryImpl>(db, std::move(channelMapperInit));
+    std::shared_ptr<domain::ChannelRepository> channelRepository =
+        std::make_shared<ChannelRepositoryImpl>(db, channelMapper);
 
-    std::shared_ptr<HashService> hashService = std::make_shared<HashServiceImpl>();
+    std::shared_ptr<UserMapper> userMapper = std::make_shared<UserMapperImpl>();
 
-    CreateChannelCommandHandlerImpl createChannelCommandHandler{channelRepository};
+    std::shared_ptr<UserChannelMapper> channelMapperInit =
+        std::make_shared<UserChannelMapperImpl>(userMapper, channelMapper);
+
+    std::shared_ptr<domain::UserChannelRepository> userChannelRepository =
+        std::make_shared<UserChannelRepositoryImpl>(db, std::move(channelMapperInit), userMapper, channelMapper);
+
+    std::shared_ptr<domain::UserRepository> userRepository = std::make_shared<UserRepositoryImpl>(db, userMapper);
+
+    std::shared_ptr<AddUserToChannelCommandHandler> addUserToChannelCommandHandler =
+        std::make_shared<AddUserToChannelCommandHandlerImpl>(userChannelRepository, userRepository, channelRepository);
+
+    CreateChannelCommandHandlerImpl createChannelCommandHandler{channelRepository, addUserToChannelCommandHandler};
 };
 
-TEST_F(CreateChannelCommandImplIntegrationTest, registerChannel)
+TEST_F(CreateChannelCommandImplIntegrationTest, createChannel)
 {
     const auto userId = "userId";
     const auto userEmail = "email@gmail.com";
@@ -81,4 +104,17 @@ TEST_F(CreateChannelCommandImplIntegrationTest, registerChannel)
 
     ASSERT_EQ(channel.getName(), name);
     ASSERT_EQ(channel.getCreatorId(), creatorId);
+
+    typedef odb::query<UserChannel> Query;
+
+    {
+        odb::transaction transaction(db->begin());
+
+        std::shared_ptr<UserChannel> foundUserChannel(
+            db->query_one<UserChannel>(Query::user->id == userId && Query::channel->id == channel.getId()));
+
+        ASSERT_TRUE(foundUserChannel);
+
+        transaction.commit();
+    }
 }

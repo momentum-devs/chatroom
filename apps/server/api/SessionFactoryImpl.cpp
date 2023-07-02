@@ -7,6 +7,7 @@
 #include "common/messages/MessageSenderImpl.h"
 #include "common/messages/MessageSerializerImpl.h"
 #include "MessageHandlerImpl.h"
+#include "server/application/commandHandlers/addUserToChannelCommandHandler/AddUserToChannelCommandHandlerImpl.h"
 #include "server/application/commandHandlers/createChannelCommandHandler/CreateChannelCommandHandlerImpl.h"
 #include "server/application/commandHandlers/loginUserCommandHandler/LoginUserCommandHandlerImpl.h"
 #include "server/application/commandHandlers/registerUserCommandHandler/RegisterUserCommandHandlerImpl.h"
@@ -57,9 +58,6 @@ std::pair<std::shared_ptr<boost::asio::ip::tcp::socket>, std::shared_ptr<Session
 
     auto channelRepository = std::make_shared<server::infrastructure::ChannelRepositoryImpl>(db, channelMapper);
 
-    auto createChannelCommandHandler =
-        std::make_unique<server::application::CreateChannelCommandHandlerImpl>(channelRepository);
-
     auto userChannelMapper = std::make_shared<server::infrastructure::UserChannelMapperImpl>(userMapper, channelMapper);
 
     auto userChannelRepository = std::make_shared<server::infrastructure::UserChannelRepositoryImpl>(
@@ -67,6 +65,12 @@ std::pair<std::shared_ptr<boost::asio::ip::tcp::socket>, std::shared_ptr<Session
 
     auto findChannelsToWhichUserBelongsQueryHandler =
         std::make_unique<server::application::FindChannelsToWhichUserBelongsQueryHandlerImpl>(userChannelRepository);
+
+    auto addUserToChannelCommandHandler =
+        std::make_shared<server::application::AddUserToChannelCommandHandlerImpl>(userChannelRepository, userRepository,channelRepository);
+
+    auto createChannelCommandHandler =
+        std::make_unique<server::application::CreateChannelCommandHandlerImpl>(channelRepository, addUserToChannelCommandHandler);
 
     auto messageHandler = std::make_unique<MessageHandlerImpl>(
         tokenService, std::move(registerUserCommandHandler), std::move(loginUserCommandHandler),

@@ -9,8 +9,10 @@
 namespace server::application
 {
 CreateChannelCommandHandlerImpl::CreateChannelCommandHandlerImpl(
-    std::shared_ptr<domain::ChannelRepository> channelRepositoryInit)
-    : channelRepository{std::move(channelRepositoryInit)}
+    std::shared_ptr<domain::ChannelRepository> channelRepositoryInit,
+    std::shared_ptr<AddUserToChannelCommandHandler> addUserToChannelCommandHandlerInit)
+    : channelRepository{std::move(channelRepositoryInit)},
+      addUserToChannelCommandHandler{std::move(addUserToChannelCommandHandlerInit)}
 {
 }
 
@@ -27,6 +29,8 @@ CreateChannelCommandHandlerImpl::execute(const CreateChannelCommandHandlerPayloa
     const auto channel = channelRepository->createChannel({channelId, payload.name, payload.creatorId});
 
     LOG_S(INFO) << std::format("Channel with name \"{}\" created.", channel->getName());
+
+    addUserToChannelCommandHandler->execute({payload.creatorId, channelId});
 
     return {*channel};
 }
