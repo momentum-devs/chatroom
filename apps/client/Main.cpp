@@ -4,6 +4,7 @@
 #include <QQmlContext>
 #include <QTranslator>
 
+#include "api/MessageFactoryImpl.h"
 #include "api/SessionImpl.h"
 #include "api/SocketConnectorImpl.h"
 #include "common/filesystem/GetProjectPath.h"
@@ -45,8 +46,10 @@ int main(int argc, char* argv[])
 
     auto socketConnector = std::make_unique<client::api::SocketConnectorImpl>(socket);
 
+    auto messageFactory = std::make_unique<client::api::MessageFactoryImpl>();
+
     auto session = std::make_shared<client::api::SessionImpl>(std::move(messageReader), std::move(messageSender),
-                                                              std::move(socketConnector));
+                                                              std::move(socketConnector), std::move(messageFactory));
 
     session->connect({serverHost, static_cast<unsigned short>(serverPort)});
 

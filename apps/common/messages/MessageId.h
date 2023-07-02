@@ -12,17 +12,21 @@ enum class MessageId : unsigned char
     Register,
     RegisterResponse,
     Login,
-    LoginResponse
+    LoginResponse,
+    CreateChannel,
+    CreateChannelResponse,
 };
 
 inline std::string toString(MessageId messageId)
 {
-    const std::unordered_map<MessageId, std::string> messageIdsToStringMapping{
+    static const std::unordered_map<MessageId, std::string> messageIdsToStringMapping{
         {MessageId::Error, "Error"},
         {MessageId::Register, "Register"},
         {MessageId::RegisterResponse, "RegisterResponse"},
         {MessageId::Login, "Login"},
         {MessageId::LoginResponse, "LoginResponse"},
+        {MessageId::CreateChannel, "CreateChannel"},
+        {MessageId::CreateChannelResponse, "CreateChannelResponse"},
     };
 
     try

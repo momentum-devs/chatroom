@@ -7,10 +7,13 @@
 #include "common/messages/MessageSenderImpl.h"
 #include "common/messages/MessageSerializerImpl.h"
 #include "MessageHandlerImpl.h"
+#include "server/application/commandHandlers/createChannelCommandHandler/CreateChannelCommandHandlerImpl.h"
 #include "server/application/commandHandlers/loginUserCommandHandler/LoginUserCommandHandlerImpl.h"
 #include "server/application/commandHandlers/registerUserCommandHandler/RegisterUserCommandHandlerImpl.h"
 #include "server/application/services/hashService/HashServiceImpl.h"
 #include "server/application/services/tokenService/TokenServiceImpl.h"
+#include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
+#include "server/infrastructure/repositories/channelRepository/ChannelRepositoryImpl.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "server/infrastructure/repositories/userRepository/UserRepositoryImpl.h"
 #include "SessionImpl.h"
@@ -47,8 +50,17 @@ std::pair<std::shared_ptr<boost::asio::ip::tcp::socket>, std::shared_ptr<Session
     auto loginUserCommandHandler =
         std::make_unique<server::application::LoginUserCommandHandlerImpl>(userRepository, hashService, tokenService);
 
-    auto messageHandler =
-        std::make_unique<MessageHandlerImpl>(std::move(registerUserCommandHandler), std::move(loginUserCommandHandler));
+    auto channelMapper = std::make_unique<server::infrastructure::ChannelMapperImpl>();
+
+    auto channelRepository =
+        std::make_shared<server::infrastructure::ChannelRepositoryImpl>(db, std::move(channelMapper));
+
+    auto createChannelCommandHandler =
+        std::make_unique<server::application::CreateChannelCommandHandlerImpl>(channelRepository);
+
+    auto messageHandler = std::make_unique<MessageHandlerImpl>(tokenService, std::move(registerUserCommandHandler),
+                                                               std::move(loginUserCommandHandler),
+                                                               std::move(createChannelCommandHandler));
 
     auto session =
         std::make_shared<SessionImpl>(std::move(messageReader), std::move(messageSender), std::move(messageHandler));

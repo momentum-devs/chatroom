@@ -43,7 +43,7 @@ Rectangle {
         }
     }
     Connections {
-        function onLoginFailure(message: string) {
+        function onCreateChannelFailure(message: string) {
             errorPopup.contentItem.text = message;
             errorPopup.open();
         }
