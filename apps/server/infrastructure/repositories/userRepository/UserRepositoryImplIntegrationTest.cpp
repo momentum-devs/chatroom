@@ -2,7 +2,7 @@
 
 #include "gtest/gtest.h"
 
-#include "server/infrastructure/errors/UserRepositoryError.h"
+#include "faker-cxx/String.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "User.odb.h"
 #include "UserRepositoryImpl.h"
@@ -44,7 +44,7 @@ public:
 
 TEST_F(UserRepositoryIntegrationTest, shouldCreateUser)
 {
-    const auto id = "id1";
+    const auto id = faker::String::uuid();
     const auto email = "email@example.com";
     const auto password = "password";
     const auto nickname = "nickname";
