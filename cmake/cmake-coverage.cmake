@@ -135,14 +135,14 @@ if (CODE_COVERAGE AND NOT CODE_COVERAGE_ADDED)
         # Targets
         if (${CMAKE_VERSION} VERSION_LESS "3.17.0")
             add_custom_target(
-                    ccov-clean
+                    chatroom-ccov-clean
                     COMMAND ${CMAKE_COMMAND} -E remove -f
                     ${CMAKE_COVERAGE_OUTPUT_DIRECTORY}/binaries.list
                     COMMAND ${CMAKE_COMMAND} -E remove -f
                     ${CMAKE_COVERAGE_OUTPUT_DIRECTORY}/profraw.list)
         else ()
             add_custom_target(
-                    ccov-clean
+                    chatroom-ccov-clean
                     COMMAND ${CMAKE_COMMAND} -E rm -f
                     ${CMAKE_COVERAGE_OUTPUT_DIRECTORY}/binaries.list
                     COMMAND ${CMAKE_COMMAND} -E rm -f
@@ -152,7 +152,7 @@ if (CODE_COVERAGE AND NOT CODE_COVERAGE_ADDED)
         # Used to get the shared object file list before doing the main all-
         # processing
         add_custom_target(
-                ccov-libs
+                chatroom-ccov-libs
                 COMMAND ;
                 COMMENT "libs ready for coverage report.")
 
@@ -183,7 +183,7 @@ if (CODE_COVERAGE AND NOT CODE_COVERAGE_ADDED)
         endif ()
 
         # Targets
-        add_custom_target(ccov-clean COMMAND ${LCOV_PATH} --directory
+        add_custom_target(chatroom-ccov-clean COMMAND ${LCOV_PATH} --directory
                 ${CMAKE_BINARY_DIR} --zerocounters)
 
     else ()
@@ -287,14 +287,14 @@ function(target_code_coverage TARGET_NAME)
                         ${CMAKE_COVERAGE_OUTPUT_DIRECTORY}/binaries.list
                         DEPENDS ${TARGET_NAME})
 
-                if (NOT TARGET ccov-libs)
+                if (NOT TARGET chatroom-ccov-libs)
                     message(
                             FATAL_ERROR
                             "Calling target_code_coverage with 'ALL' must be after a call to 'add_code_coverage_all_targets'."
                     )
                 endif ()
 
-                add_dependencies(ccov-libs
+                add_dependencies(chatroom-ccov-libs
                         ccov-run-${target_code_coverage_COVERAGE_TARGET_NAME})
             endif ()
         endif ()
@@ -334,7 +334,7 @@ function(target_code_coverage TARGET_NAME)
                         "${CMAKE_CURRENT_BINARY_DIR}/${target_code_coverage_COVERAGE_TARGET_NAME}.profraw"
                         >> ${CMAKE_COVERAGE_OUTPUT_DIRECTORY}/profraw.list
                         JOB_POOL ccov_serial_pool
-                        DEPENDS ccov-libs ${TARGET_NAME})
+                        DEPENDS chatroom-ccov-libs ${TARGET_NAME})
 
                 # Merge the generated profile data so llvm-cov can process it
                 add_custom_target(
