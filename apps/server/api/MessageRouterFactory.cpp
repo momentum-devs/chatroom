@@ -1,12 +1,9 @@
-#include "SessionFactoryImpl.h"
+#include "MessageRouterFactory.h"
 
-#include <boost/asio.hpp>
-#include <utility>
-
-#include "common/messages/MessageReaderImpl.h"
-#include "common/messages/MessageSenderImpl.h"
-#include "common/messages/MessageSerializerImpl.h"
-#include "MessageHandlerImpl.h"
+#include "MessageHandlers/CreateChannelMessageHandler.h"
+#include "MessageHandlers/GetUserChannelsMessageHandler.h"
+#include "MessageHandlers/LoginMessageHandler.h"
+#include "MessageHandlers/RegisterMessageHandler.h"
 #include "MessageRouterImpl.h"
 #include "server/application/commandHandlers/addUserToChannelCommandHandler/AddUserToChannelCommandHandlerImpl.h"
 #include "server/application/commandHandlers/createChannelCommandHandler/CreateChannelCommandHandlerImpl.h"
@@ -21,30 +18,20 @@
 #include "server/infrastructure/repositories/userChannelRepository/UserChannelRepositoryImpl.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "server/infrastructure/repositories/userRepository/UserRepositoryImpl.h"
-#include "SessionImpl.h"
 
 namespace server::api
 {
-SessionFactoryImpl::SessionFactoryImpl(boost::asio::io_context& contextInit,
-                                       std::shared_ptr<odb::pgsql::database> dbInit, const std::string& jwtSecret,
-                                       const int jwtExpireIn)
-    : context{contextInit},
-      db{std::move(dbInit)},
+MessageRouterFactory::MessageRouterFactory(std::shared_ptr<odb::pgsql::database> dbInit, const std::string& jwtSecret,
+                                           const int jwtExpireIn)
+    : db{std::move(dbInit)},
       hashService{std::make_shared<server::application::HashServiceImpl>()},
       tokenService{std::make_shared<server::application::TokenServiceImpl>(jwtSecret, jwtExpireIn)}
+
 {
 }
 
-std::pair<std::shared_ptr<boost::asio::ip::tcp::socket>, std::shared_ptr<Session>> SessionFactoryImpl::create() const
+std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter()
 {
-    auto socket = std::make_shared<boost::asio::ip::tcp::socket>(context);
-
-    auto messageSerializer = std::make_shared<common::messages::MessageSerializerImpl>();
-
-    auto messageReader = std::make_unique<common::messages::MessageReaderImpl>(context, socket, messageSerializer);
-
-    auto messageSender = std::make_unique<common::messages::MessageSenderImpl>(socket, messageSerializer);
-
     auto userMapper = std::make_shared<server::infrastructure::UserMapperImpl>();
 
     auto userRepository = std::make_shared<server::infrastructure::UserRepositoryImpl>(db, userMapper);
@@ -73,15 +60,23 @@ std::pair<std::shared_ptr<boost::asio::ip::tcp::socket>, std::shared_ptr<Session
     auto createChannelCommandHandler = std::make_unique<server::application::CreateChannelCommandHandlerImpl>(
         channelRepository, addUserToChannelCommandHandler);
 
-    //    auto messageHandler = std::make_unique<MessageHandlerImpl>(
-    //        tokenService, std::move(registerUserCommandHandler), std::move(loginUserCommandHandler),
-    //        std::move(createChannelCommandHandler), std::move(findChannelsToWhichUserBelongsQueryHandler));
+    auto createChannelMessageHandler =
+        std::make_shared<CreateChannelMessageHandler>(tokenService, std::move(createChannelCommandHandler));
 
-    auto messageRouter = std::make_unique<MessageRouterImpl>();
+    auto getUserChannelsMessageHandler = std::make_shared<GetUserChannelsMessageHandler>(
+        tokenService, std::move(findChannelsToWhichUserBelongsQueryHandler));
 
-    auto session =
-        std::make_shared<SessionImpl>(std::move(messageReader), std::move(messageSender), std::move(messageRouter));
+    auto loginMessageHandler = std::make_shared<LoginMessageHandler>(tokenService, std::move(loginUserCommandHandler));
 
-    return std::make_pair(std::move(socket), std::move(session));
+    auto registerMessageHandler = std::make_shared<RegisterMessageHandler>(std::move(registerUserCommandHandler));
+
+    std::unordered_map<common::messages::MessageId, std::shared_ptr<MessageHandler>> messageHandlers{
+        {common::messages::MessageId::CreateChannel, createChannelMessageHandler},
+        {common::messages::MessageId::GetUserChannels, getUserChannelsMessageHandler},
+        {common::messages::MessageId::Login, loginMessageHandler},
+        {common::messages::MessageId::Register, registerMessageHandler},
+    };
+
+    return std::make_unique<MessageRouterImpl>(std::move(messageHandlers));
 }
 }

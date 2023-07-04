@@ -38,7 +38,7 @@ set(SOURCES
         application/commandHandlers/removeUserFromChannelCommandHandler/RemoveUserFromChannelCommandHandlerImpl.cpp
         application/queryHandlers/findUsersBelongingToChannelQueryHandler/FindUsersBelongingToChannelQueryHandlerImpl.cpp
         application/queryHandlers/findChannelsToWhichUserBelongsQueryHandler/FindChannelsToWhichUserBelongsQueryHandlerImpl.cpp
-        )
+        api/MessageRouterImpl.cpp api/MessageHandlers/RegisterMessageHandler.cpp api/MessageHandlers/LoginMessageHandler.cpp api/MessageHandlers/CreateChannelMessageHandler.cpp api/MessageHandlers/GetUserChannelsMessageHandler.cpp api/MessageRouterFactory.cpp)
 
 set(UT_SOURCES
         api/MessageHandlerImplTest.cpp
@@ -66,7 +66,7 @@ set(IT_SOURCES
         application/commandHandlers/removeUserFromChannelCommandHandler/RemoveUserFromChannelCommandHandlerImplIntegrationTest.cpp
         application/queryHandlers/findUsersBelongingToChannelQueryHandler/FindUsersBelongingToChannelQueryHandlerImplIntegrationTest.cpp
         application/queryHandlers/findChannelsToWhichUserBelongsQueryHandler/FindChannelsToWhichUserBelongsQueryHandlerImplIntegrationTest.cpp
-        )
+        api/MessageRouterImplTest.cpp)
 
 set(ODB_HEADERS
         infrastructure/database/entities/User.h
