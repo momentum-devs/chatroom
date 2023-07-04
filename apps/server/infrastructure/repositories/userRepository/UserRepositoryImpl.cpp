@@ -92,7 +92,7 @@ UserRepositoryImpl::findUserByEmail(const domain::FindUserByEmailPayload& payloa
     }
 }
 
-void UserRepositoryImpl::updateUser(const domain::UpdateUserPayload& payload) const
+std::shared_ptr<domain::User> UserRepositoryImpl::updateUser(const domain::UpdateUserPayload& payload) const
 {
     try
     {
@@ -116,6 +116,8 @@ void UserRepositoryImpl::updateUser(const domain::UpdateUserPayload& payload) co
 
             transaction.commit();
         }
+
+        return *findUserById({payload.user.getId()});
     }
     catch (const std::exception& error)
     {

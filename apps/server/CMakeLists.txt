@@ -22,6 +22,7 @@ set(SOURCES
         application/commandHandlers/registerUserCommandHandler/RegisterUserCommandHandlerImpl.cpp
         application/commandHandlers/deleteUserCommandHandler/DeleteUserCommandHandlerImpl.cpp
         application/commandHandlers/loginUserCommandHandler/LoginUserCommandHandlerImpl.cpp
+        application/commandHandlers/updateUserCommandHandler/UpdateUserCommandHandlerImpl.cpp
 
         domain/entities/channel/Channel.cpp
         infrastructure/repositories/channelRepository/ChannelRepositoryImpl.cpp
@@ -54,6 +55,7 @@ set(IT_SOURCES
         application/commandHandlers/registerUserCommandHandler/RegisterUserCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/loginUserCommandHandler/LoginUserCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/deleteUserCommandHandler/DeleteUserCommandHandlerImplIntegrationTest.cpp
+        application/commandHandlers/updateUserCommandHandler/UpdateUserCommandHandlerImplIntegrationTest.cpp
         infrastructure/repositories/channelRepository/ChannelRepositoryImplIntegrationTest.cpp
         application/commandHandlers/createChannelCommandHandler/CreateChannelCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/deleteChannelCommandHandler/DeleteChannelCommandHandlerImplIntegrationTest.cpp

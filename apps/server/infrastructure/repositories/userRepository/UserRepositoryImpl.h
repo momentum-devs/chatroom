@@ -17,7 +17,7 @@ public:
     std::shared_ptr<domain::User> createUser(const domain::CreateUserPayload&) const override;
     std::optional<std::shared_ptr<domain::User>> findUserById(const domain::FindUserByIdPayload&) const override;
     std::optional<std::shared_ptr<domain::User>> findUserByEmail(const domain::FindUserByEmailPayload&) const override;
-    void updateUser(const domain::UpdateUserPayload&) const override;
+    std::shared_ptr<domain::User> updateUser(const domain::UpdateUserPayload&) const override;
     void deleteUser(const domain::DeleteUserPayload&) const override;
 
 private:
