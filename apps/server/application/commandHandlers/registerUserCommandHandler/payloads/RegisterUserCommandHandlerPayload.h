@@ -6,8 +6,8 @@ namespace server::application
 {
 struct RegisterUserCommandHandlerPayload
 {
-    const std::string email;
-    const std::string password;
+    std::string email;
+    std::string password;
 };
 
 inline bool operator==(const RegisterUserCommandHandlerPayload& lhs, const RegisterUserCommandHandlerPayload& rhs)
