@@ -51,7 +51,7 @@ public:
     {
         const auto currentDate = to_iso_string(boost::posix_time::second_clock::universal_time());
 
-        User user{id, email, password, email, false, currentDate, currentDate};
+        User user{id, email, password, email, false, false, currentDate, currentDate};
 
         odb::transaction transaction(db->begin());
 

@@ -11,13 +11,14 @@ namespace server::infrastructure
 class User
 {
 public:
-    User(std::string idInit, std::string emailInit, std::string passwordInit, std::string nicknameInit, bool active,
-         std::string createdAtInit, std::string updatedAtInit)
+    User(std::string idInit, std::string emailInit, std::string passwordInit, std::string nicknameInit, bool activeInit,
+         bool emailVerifiedInit, std::string createdAtInit, std::string updatedAtInit)
         : id{std::move(idInit)},
           email{std::move(emailInit)},
           password{std::move(passwordInit)},
           nickname{std::move(nicknameInit)},
-          active{active},
+          active{activeInit},
+          email_verified{emailVerifiedInit},
           created_at{std::move(createdAtInit)},
           updated_at{std::move(updatedAtInit)}
     {
@@ -46,6 +47,11 @@ public:
     [[nodiscard]] bool isActive() const
     {
         return active;
+    }
+
+    [[nodiscard]] bool isEmailVerified() const
+    {
+        return email_verified;
     }
 
     [[nodiscard]] std::string getCreatedAt() const
@@ -87,6 +93,7 @@ private:
     std::string password;
     std::string nickname;
     bool active{false};
+    bool email_verified{false};
     std::string created_at;
     std::string updated_at;
 };

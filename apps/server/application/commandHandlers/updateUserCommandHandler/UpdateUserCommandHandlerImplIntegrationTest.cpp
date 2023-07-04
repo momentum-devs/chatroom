@@ -62,10 +62,11 @@ TEST_F(UpdateUserCommandImplIntegrationTest, updatePassword)
     const auto updatedPassword = faker::Internet::password();
     const auto nickname = faker::Internet::username();
     const auto active = true;
+    const auto emailVerified = false;
     const auto createdAt = "2023-06-16";
     const auto updatedAt = "2023-06-16";
 
-    infrastructure::User existingUser{id, email, password, nickname, active, createdAt, updatedAt};
+    infrastructure::User existingUser{id, email, password, nickname, active, emailVerified, createdAt, updatedAt};
 
     {
         odb::transaction transaction(db->begin());
@@ -89,10 +90,11 @@ TEST_F(UpdateUserCommandImplIntegrationTest, updateNickname)
     const auto nickname = faker::Internet::username();
     const auto updatedNickname = faker::Internet::username();
     const auto active = true;
+    const auto emailVerified = false;
     const auto createdAt = "2023-06-16";
     const auto updatedAt = "2023-06-16";
 
-    infrastructure::User existingUser{id, email, password, nickname, active, createdAt, updatedAt};
+    infrastructure::User existingUser{id, email, password, nickname, active, emailVerified, createdAt, updatedAt};
 
     {
         odb::transaction transaction(db->begin());

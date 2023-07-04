@@ -1,7 +1,5 @@
 #include "gtest/gtest.h"
 
-#include "Channel.h"
-#include "Channel.odb.h"
 #include "faker-cxx/Internet.h"
 #include "faker-cxx/String.h"
 #include "FindUserQueryHandlerImpl.h"
@@ -62,10 +60,11 @@ TEST_F(FindUserQueryHandlerImplIntegrationTest, findUserById)
     const auto updatedPassword = faker::Internet::password();
     const auto nickname = faker::Internet::username();
     const auto active = false;
+    const auto emailVerified = false;
     const auto createdAt = "2023-06-16";
     const auto updatedAt = "2023-06-16";
 
-    infrastructure::User existingUser{id, email, password, nickname, active, createdAt, updatedAt};
+    infrastructure::User existingUser{id, email, password, nickname, active, emailVerified, createdAt, updatedAt};
 
     {
         odb::transaction transaction(db->begin());
