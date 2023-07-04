@@ -5,7 +5,6 @@
 #include "Channel.h"
 #include "Channel.odb.h"
 #include "FindUsersBelongingToChannelQueryHandlerImpl.h"
-#include "server/application/services/hashService/HashServiceImpl.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
 #include "server/infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapperImpl.h"
 #include "server/infrastructure/repositories/userChannelRepository/UserChannelRepositoryImpl.h"
@@ -102,8 +101,6 @@ public:
 
     std::shared_ptr<domain::UserChannelRepository> channelRepository =
         std::make_shared<UserChannelRepositoryImpl>(db, userChannelMapper, userMapper, channelMapper);
-
-    std::shared_ptr<HashService> hashService = std::make_shared<HashServiceImpl>();
 
     FindUsersBelongingToChannelQueryHandlerImpl findUsersBelongingToChannelQueryHandler{channelRepository};
 };
