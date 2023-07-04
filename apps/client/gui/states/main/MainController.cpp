@@ -49,4 +49,11 @@ void MainController::goToSendFriendRequest()
 
     stateMachine->addNextState(stateFactory.createSendFriendRequestState());
 }
+
+void MainController::goToUserSettings()
+{
+    LOG_S(INFO) << "Handle go to user settings";
+
+    stateMachine->addNextState(stateFactory.createUserSettingsState());
+}
 }

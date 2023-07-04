@@ -11,20 +11,29 @@ Rectangle {
         id: column
         anchors.centerIn: parent
         spacing: 10
+        width: Math.round(parent.width / 3)
 
+        Text {
+            anchors.horizontalCenter: parent.horizontalCenter
+            text: "Login"
+        }
         TextField {
             id: usernameField
+            anchors.horizontalCenter: parent.horizontalCenter
             focus: true
             placeholderText: qsTr('Email')
+            width: parent.width
         }
         TextField {
             id: passwordField
+            anchors.horizontalCenter: parent.horizontalCenter
             echoMode: TextInput.Password
             placeholderText: qsTr('Password')
+            width: parent.width
         }
         Row {
             id: buttonRow
-            anchors.horizontalCenter: passwordField.horizontalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
 
             Button {
                 id: loginButton

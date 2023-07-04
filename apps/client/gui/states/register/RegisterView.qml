@@ -10,24 +10,35 @@ Rectangle {
     Column {
         anchors.centerIn: parent
         spacing: 10
+        width: Math.round(parent.width / 3)
 
+        Text {
+            anchors.horizontalCenter: parent.horizontalCenter
+            text: "Register"
+        }
         TextField {
             id: emailField
+            anchors.horizontalCenter: parent.horizontalCenter
             focus: true
             placeholderText: qsTr('Email')
+            width: parent.width
         }
         TextField {
             id: passwordField
+            anchors.horizontalCenter: parent.horizontalCenter
             echoMode: TextInput.Password
             placeholderText: qsTr('Password')
+            width: parent.width
         }
         TextField {
             id: passwordRepeatField
+            anchors.horizontalCenter: parent.horizontalCenter
             echoMode: TextInput.Password
             placeholderText: qsTr('Repeat password')
+            width: parent.width
         }
         Row {
-            anchors.horizontalCenter: passwordField.horizontalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
 
             Button {
                 id: registerUserButton

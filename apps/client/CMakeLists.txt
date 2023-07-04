@@ -23,12 +23,15 @@ set(SOURCES
         gui/states/createChannel/CreateChannelController.cpp
         gui/states/sendFriendRequest/SendFriendRequestController.cpp
         gui/states/sendFriendRequest/SendFriendRequestState.cpp
+        gui/states/userSettings/UserSettingsController.cpp
+        gui/states/userSettings/UserSettingsState.cpp
         )
 
 set(UT_SOURCES
         api/SessionImplTest.cpp
         gui/states/StateMachineTest.cpp
-        api/MessageFactoryImplTest.cpp)
+        api/MessageFactoryImplTest.cpp
+        )
 
 set(QML_SOURCES
         gui/qml/LoaderView.qml
@@ -37,6 +40,7 @@ set(QML_SOURCES
         gui/states/main/MainView.qml
         gui/states/createChannel/CreateChannelView.qml
         gui/states/sendFriendRequest/SendFriendRequestView.qml
+        gui/states/userSettings/UserSettingsView.qml
         )
 
 qt_add_executable(${EXECUTABLE_NAME} Main.cpp ${SOURCES})
