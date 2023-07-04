@@ -69,14 +69,14 @@ TEST_F(DeleteUserCommandImplIntegrationTest, givenExistingUser_shouldDeleteUser)
 
     const auto user = createUser(userId, userEmail, userPassword);
 
-    deleteUserCommandHandler.execute({user.getEmail()});
+    deleteUserCommandHandler.execute({user.getId()});
 
     typedef odb::query<User> query;
 
     {
         odb::transaction transaction(db->begin());
 
-        std::shared_ptr<User> foundUser(db->query_one<User>(query::email == userEmail));
+        std::shared_ptr<User> foundUser(db->query_one<User>(query::id == userId));
 
         ASSERT_FALSE(foundUser);
 
@@ -86,7 +86,7 @@ TEST_F(DeleteUserCommandImplIntegrationTest, givenExistingUser_shouldDeleteUser)
 
 TEST_F(DeleteUserCommandImplIntegrationTest, givenNonExistingChannel_shouldThrow)
 {
-    const auto email = "email@example.com";
+    const auto userId = "userId";
 
-    ASSERT_THROW(deleteUserCommandHandler.execute({email}), errors::ResourceNotFoundError);
+    ASSERT_THROW(deleteUserCommandHandler.execute({userId}), errors::ResourceNotFoundError);
 }

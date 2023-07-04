@@ -13,11 +13,11 @@ DeleteUserCommandHandlerImpl::DeleteUserCommandHandlerImpl(std::shared_ptr<domai
 
 void DeleteUserCommandHandlerImpl::execute(const DeleteUserCommandHandlerPayload& payload)
 {
-    const auto existingUser = userRepository->findUserByEmail({payload.email});
+    const auto existingUser = userRepository->findUserById({payload.id});
 
     if (!existingUser)
     {
-        throw errors::ResourceNotFoundError{std::format("User with email {} not found.", payload.email)};
+        throw errors::ResourceNotFoundError{std::format("User with id {} not found.", payload.id)};
     }
 
     userRepository->deleteUser({**existingUser});

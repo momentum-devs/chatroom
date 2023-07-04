@@ -6,6 +6,6 @@ namespace server::application
 {
 struct DeleteUserCommandHandlerPayload
 {
-    const std::string email;
+    const std::string id;
 };
 }
