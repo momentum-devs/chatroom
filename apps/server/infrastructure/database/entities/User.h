@@ -74,6 +74,16 @@ public:
         password = passwordInit;
     }
 
+    void setActive(bool activeInit)
+    {
+        active = activeInit;
+    }
+
+    void setEmailVerified(bool emailVerifiedInit)
+    {
+        email_verified = emailVerifiedInit;
+    }
+
     bool operator==(const User& user) const
     {
         auto tieStruct = [](const User& user)

@@ -20,6 +20,8 @@ public:
     [[nodiscard]] std::string getUpdatedAt() const;
     void setPassword(const std::string& newPassword);
     void setNickname(const std::string& newNickname);
+    void setActive(bool);
+    void setEmailVerified(bool);
     bool operator==(const User&) const;
 
 private:

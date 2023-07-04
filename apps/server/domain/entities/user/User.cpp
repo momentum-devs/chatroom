@@ -47,6 +47,16 @@ bool User::isEmailVerified() const
     return emailVerified;
 }
 
+std::string User::getCreatedAt() const
+{
+    return createdAt;
+}
+
+std::string User::getUpdatedAt() const
+{
+    return updatedAt;
+}
+
 void User::setPassword(const std::string& newPassword)
 {
     password = newPassword;
@@ -57,14 +67,14 @@ void User::setNickname(const std::string& newNickname)
     nickname = newNickname;
 }
 
-std::string User::getCreatedAt() const
+void User::setActive(bool activeInit)
 {
-    return createdAt;
+    active = activeInit;
 }
 
-std::string User::getUpdatedAt() const
+void User::setEmailVerified(bool emailVerifiedInit)
 {
-    return updatedAt;
+    emailVerified = emailVerifiedInit;
 }
 
 bool User::operator==(const User& user) const

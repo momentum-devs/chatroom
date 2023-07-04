@@ -190,8 +190,10 @@ TEST_F(UserRepositoryIntegrationTest, shouldUpdateExistingUser)
     const auto password = "password1";
     const auto updatedPassword = "password2";
     const auto nickname = "nickname1";
-    const auto active = true;
+    const auto active = false;
+    const auto updatedActive = true;
     const auto emailVerified = false;
+    const auto updatedEmailVerified = true;
     const auto updatedNickname = "nickname2";
     const auto createdAt = "2023-06-16";
     const auto updatedAt = "2023-06-16";
@@ -210,6 +212,8 @@ TEST_F(UserRepositoryIntegrationTest, shouldUpdateExistingUser)
 
     domainUser.setPassword(updatedPassword);
     domainUser.setNickname(updatedNickname);
+    domainUser.setActive(updatedActive);
+    domainUser.setEmailVerified(updatedEmailVerified);
 
     userRepository->updateUser({domainUser});
 
@@ -225,6 +229,8 @@ TEST_F(UserRepositoryIntegrationTest, shouldUpdateExistingUser)
         ASSERT_TRUE(updatedUser);
         ASSERT_EQ(updatedUser->getNickname(), updatedNickname);
         ASSERT_EQ(updatedUser->getPassword(), updatedPassword);
+        ASSERT_EQ(updatedUser->isActive(), updatedActive);
+        ASSERT_EQ(updatedUser->isEmailVerified(), updatedEmailVerified);
     }
 }
 

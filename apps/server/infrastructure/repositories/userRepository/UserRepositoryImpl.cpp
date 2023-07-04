@@ -111,6 +111,8 @@ std::shared_ptr<domain::User> UserRepositoryImpl::updateUser(const domain::Updat
 
             user->setNickname(payload.user.getNickname());
             user->setPassword(payload.user.getPassword());
+            user->setActive(payload.user.isActive());
+            user->setEmailVerified(payload.user.isEmailVerified());
 
             db->update(*user);
 
