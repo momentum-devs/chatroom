@@ -8,8 +8,14 @@ set(SOURCES
         api/SessionManager.cpp
         api/SessionImpl.cpp
         api/SessionFactoryImpl.cpp
-        api/MessageHandlerImpl.cpp
         api/ConnectionAcceptorImpl.cpp
+        api/MessageRouterImpl.cpp
+        api/MessageRouterFactory.cpp
+        api/MessageHandlers/RegisterMessageHandler.cpp
+        api/MessageHandlers/LoginMessageHandler.cpp
+        api/MessageHandlers/CreateChannelMessageHandler.cpp
+        api/MessageHandlers/GetUserChannelsMessageHandler.cpp
+        api/MessageHandlers/GetUserDataMessageHandler.cpp
         config/EnvironmentParser.cpp
         config/ConfigProvider.cpp
         core/database/DatabaseConnectionFactory.cpp
@@ -68,7 +74,7 @@ set(IT_SOURCES
         application/commandHandlers/removeUserFromChannelCommandHandler/RemoveUserFromChannelCommandHandlerImplIntegrationTest.cpp
         application/queryHandlers/findUsersBelongingToChannelQueryHandler/FindUsersBelongingToChannelQueryHandlerImplIntegrationTest.cpp
         application/queryHandlers/findChannelsToWhichUserBelongsQueryHandler/FindChannelsToWhichUserBelongsQueryHandlerImplIntegrationTest.cpp
-        )
+        api/MessageRouterImplTest.cpp)
 
 set(ODB_HEADERS
         infrastructure/database/entities/User.h

@@ -4,7 +4,7 @@
 #include <gtest/gtest.h>
 #include <regex>
 
-#include "MessageHandlerMock.h"
+#include "MessageRouterMock.h"
 #include "messages/MessageReaderMock.h"
 #include "messages/MessageSenderMock.h"
 
@@ -29,11 +29,11 @@ public:
         std::make_unique<StrictMock<common::messages::MessageSenderMock>>();
     common::messages::MessageSenderMock* messageSenderMock = messageSenderMockInit.get();
 
-    std::unique_ptr<MessageHandlerMock> messageHandlerMockInit = std::make_unique<StrictMock<MessageHandlerMock>>();
-    MessageHandlerMock* messageHandlerMock = messageHandlerMockInit.get();
+    std::unique_ptr<MessageRouterMock> messageRouterMockInit = std::make_unique<StrictMock<MessageRouterMock>>();
+    MessageRouterMock* messageHandlerMock = messageRouterMockInit.get();
 
     SessionImpl session{std::move(messageReaderMockInit), std::move(messageSenderMockInit),
-                        std::move(messageHandlerMockInit)};
+                        std::move(messageRouterMockInit)};
 
     std::function<void(const common::messages::Message&)> messageHandler;
 
@@ -63,7 +63,7 @@ TEST_F(SessionImplTest, handleReceivedMessage)
 {
     startSesion();
 
-    EXPECT_CALL(*messageHandlerMock, handleMessage(message)).WillOnce(Return(responseMessage));
+    EXPECT_CALL(*messageHandlerMock, route(message)).WillOnce(Return(responseMessage));
     EXPECT_CALL(*messageSenderMock, sendMessage(responseMessage));
 
     messageHandler(message);
