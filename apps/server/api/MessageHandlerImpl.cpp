@@ -153,12 +153,16 @@ common::messages::Message MessageHandlerImpl::handleGetUserChannelsRequest(const
 
         const auto& [channels] = findChannelsToWhichUserBelongsQueryHandler->execute({userId});
 
-        nlohmann::json responsePayload = nlohmann::json::array();
+        nlohmann::json channelsJsonArray = nlohmann::json::array();
 
         for (const auto& channel : channels)
         {
-            responsePayload.push_back(channel.getId());
+            nlohmann::json channelJson{{"id", channel.getId()}, {"name", channel.getName()}};
+
+            channelsJsonArray.push_back(channelJson);
         }
+
+        nlohmann::json responsePayload{{"data", channelsJsonArray}};
 
         auto message = common::messages::Message{common::messages::MessageId::GetUserChannelsResponse,
                                                  common::bytes::Bytes{responsePayload.dump()}};
