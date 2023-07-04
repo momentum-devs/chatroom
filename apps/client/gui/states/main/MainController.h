@@ -23,6 +23,7 @@ public:
     Q_INVOKABLE void logout();
     Q_INVOKABLE void goToCreateChannel();
     Q_INVOKABLE void goToSendFriendRequest();
+    Q_INVOKABLE void goToUserSettings();
 
 private:
     void handleGetUserChannelsResponse(const common::messages::Message& message);

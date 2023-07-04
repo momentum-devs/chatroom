@@ -10,11 +10,17 @@ Rectangle {
     Column {
         anchors.centerIn: parent
         spacing: 10
+        width: Math.round(parent.width / 3)
 
+        Text {
+            anchors.horizontalCenter: parent.horizontalCenter
+            text: "Create Channel"
+        }
         TextField {
             id: channelNameField
             focus: true
             placeholderText: qsTr('Channel name')
+            width: parent.width
         }
         Row {
             anchors.horizontalCenter: channelNameField.horizontalCenter

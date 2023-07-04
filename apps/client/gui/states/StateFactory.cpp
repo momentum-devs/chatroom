@@ -10,6 +10,8 @@
 #include "register/RegisterState.h"
 #include "sendFriendRequest/SendFriendRequestController.h"
 #include "sendFriendRequest/SendFriendRequestState.h"
+#include "userSettings/UserSettingsController.h"
+#include "userSettings/UserSettingsState.h"
 
 namespace client::gui
 {
@@ -60,5 +62,12 @@ std::shared_ptr<State> StateFactory::createSendFriendRequestState() const
     auto controller = std::make_unique<SendFriendRequestController>(session, *this, stateMachine);
 
     return std::make_shared<SendFriendRequestState>(std::move(controller), loaderController);
+}
+
+std::shared_ptr<State> StateFactory::createUserSettingsState() const
+{
+    auto controller = std::make_unique<UserSettingsController>(session, *this, stateMachine);
+
+    return std::make_shared<UserSettingsState>(std::move(controller), loaderController);
 }
 }

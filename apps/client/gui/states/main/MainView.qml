@@ -32,6 +32,14 @@ Rectangle {
             }
             Button {
                 anchors.horizontalCenter: parent.horizontalCenter
+                text: qsTr('User settings')
+
+                onClicked: {
+                    mainController.goToUserSettings();
+                }
+            }
+            Button {
+                anchors.horizontalCenter: parent.horizontalCenter
                 text: qsTr('Logout')
 
                 onClicked: {
