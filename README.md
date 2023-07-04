@@ -37,21 +37,29 @@
 
 ### TODO:
 
-* create user
 * delete user
-* update user
-* create chatroom
-* delete chatroom
-* update chatroom
-* join chatroom
-* leave chatroom
-* send message to chatroom
-* receive message in chatroom
+* update user (nickname & password)
+* user online/offline, logout user
+* *send registration verification email
+
+
+* show list of channels
+* delete channel (only creator)
+* send channel invitation (admin and creator)
+* accept channel invitation
+* reject channel invitation
+* leave channel
+* add admin user role in channels (only creator)
+
+
+* send friend invitation
+* show list of friends
+* accept friend invitation
+* reject friend invitation
+* remove from friends
+
+
 * direct messages between users
-* add user to friends
-* user has history of direct messages and messages in chatroom
-* active users info
-* message encryption
-* show list of friends and chatrooms
-* add admin user role in chatroom
-* add reaction to messages
+* messages in channel
+* user has history of direct messages and messages in channel
+* *message encryption
