@@ -8,8 +8,14 @@ set(SOURCES
         api/SessionManager.cpp
         api/SessionImpl.cpp
         api/SessionFactoryImpl.cpp
-        api/MessageHandlerImpl.cpp
         api/ConnectionAcceptorImpl.cpp
+        api/MessageRouterImpl.cpp
+        api/MessageRouterFactory.cpp
+        api/MessageHandlers/RegisterMessageHandler.cpp
+        api/MessageHandlers/LoginMessageHandler.cpp
+        api/MessageHandlers/CreateChannelMessageHandler.cpp
+        api/MessageHandlers/GetUserChannelsMessageHandler.cpp
+        api/MessageHandlers/GetUserDataMessageHandler.cpp
         config/EnvironmentParser.cpp
         config/ConfigProvider.cpp
         core/database/DatabaseConnectionFactory.cpp
@@ -38,7 +44,7 @@ set(SOURCES
         application/commandHandlers/removeUserFromChannelCommandHandler/RemoveUserFromChannelCommandHandlerImpl.cpp
         application/queryHandlers/findUsersBelongingToChannelQueryHandler/FindUsersBelongingToChannelQueryHandlerImpl.cpp
         application/queryHandlers/findChannelsToWhichUserBelongsQueryHandler/FindChannelsToWhichUserBelongsQueryHandlerImpl.cpp
-        api/MessageRouterImpl.cpp api/MessageHandlers/RegisterMessageHandler.cpp api/MessageHandlers/LoginMessageHandler.cpp api/MessageHandlers/CreateChannelMessageHandler.cpp api/MessageHandlers/GetUserChannelsMessageHandler.cpp api/MessageRouterFactory.cpp)
+        )
 
 set(UT_SOURCES
         api/MessageHandlerImplTest.cpp

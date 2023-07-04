@@ -3,6 +3,7 @@
 #include <odb/pgsql/database.hxx>
 
 #include "common/messages/MessageSerializer.h"
+#include "MessageRouterFactory.h"
 #include "server/application/services/hashService/HashService.h"
 #include "server/application/services/tokenService/TokenService.h"
 #include "server/domain/repositories/userRepository/UserRepository.h"
@@ -20,5 +21,6 @@ public:
 
 private:
     boost::asio::io_context& context;
+    MessageRouterFactory messageRouterFactory;
 };
 }

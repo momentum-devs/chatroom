@@ -5,11 +5,13 @@
 #include "MessageHandlers/LoginMessageHandler.h"
 #include "MessageHandlers/RegisterMessageHandler.h"
 #include "MessageRouterImpl.h"
+#include "server/api/MessageHandlers/GetUserDataMessageHandler.h"
 #include "server/application/commandHandlers/addUserToChannelCommandHandler/AddUserToChannelCommandHandlerImpl.h"
 #include "server/application/commandHandlers/createChannelCommandHandler/CreateChannelCommandHandlerImpl.h"
 #include "server/application/commandHandlers/loginUserCommandHandler/LoginUserCommandHandlerImpl.h"
 #include "server/application/commandHandlers/registerUserCommandHandler/RegisterUserCommandHandlerImpl.h"
 #include "server/application/queryHandlers/findChannelsToWhichUserBelongsQueryHandler/FindChannelsToWhichUserBelongsQueryHandlerImpl.h"
+#include "server/application/queryHandlers/findUserQueryHandler/FindUserQueryHandlerImpl.h"
 #include "server/application/services/hashService/HashServiceImpl.h"
 #include "server/application/services/tokenService/TokenServiceImpl.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
@@ -30,7 +32,7 @@ MessageRouterFactory::MessageRouterFactory(std::shared_ptr<odb::pgsql::database>
 {
 }
 
-std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter()
+std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
 {
     auto userMapper = std::make_shared<server::infrastructure::UserMapperImpl>();
 
@@ -70,11 +72,17 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter()
 
     auto registerMessageHandler = std::make_shared<RegisterMessageHandler>(std::move(registerUserCommandHandler));
 
+    auto findUserQueryHandler = std::make_unique<server::application::FindUserQueryHandlerImpl>(userRepository);
+
+    auto getUserDataMessageHandler =
+        std::make_shared<GetUserDataMessageHandler>(tokenService, std::move(findUserQueryHandler));
+
     std::unordered_map<common::messages::MessageId, std::shared_ptr<MessageHandler>> messageHandlers{
         {common::messages::MessageId::CreateChannel, createChannelMessageHandler},
         {common::messages::MessageId::GetUserChannels, getUserChannelsMessageHandler},
         {common::messages::MessageId::Login, loginMessageHandler},
         {common::messages::MessageId::Register, registerMessageHandler},
+        {common::messages::MessageId::GetUserData, getUserDataMessageHandler},
     };
 
     return std::make_unique<MessageRouterImpl>(std::move(messageHandlers));

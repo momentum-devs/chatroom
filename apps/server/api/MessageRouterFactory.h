@@ -13,7 +13,7 @@ class MessageRouterFactory
 {
 public:
     MessageRouterFactory(std::shared_ptr<odb::pgsql::database> db, const std::string& jwtSecret, const int jwtExpireIn);
-    std::unique_ptr<MessageRouter> createMessageRouter();
+    std::unique_ptr<MessageRouter> createMessageRouter() const;
 
 private:
     std::shared_ptr<odb::pgsql::database> db;
