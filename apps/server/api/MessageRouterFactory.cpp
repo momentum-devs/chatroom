@@ -1,15 +1,19 @@
 #include "MessageRouterFactory.h"
 
 #include "MessageHandlers/CreateChannelMessageHandler.h"
+#include "MessageHandlers/DeleteUserMessageHandler.h"
 #include "MessageHandlers/GetUserChannelsMessageHandler.h"
+#include "MessageHandlers/GetUserDataMessageHandler.h"
 #include "MessageHandlers/LoginMessageHandler.h"
 #include "MessageHandlers/RegisterMessageHandler.h"
+#include "MessageHandlers/UpdateUserMessageHandler.h"
 #include "MessageRouterImpl.h"
-#include "server/api/MessageHandlers/GetUserDataMessageHandler.h"
 #include "server/application/commandHandlers/addUserToChannelCommandHandler/AddUserToChannelCommandHandlerImpl.h"
 #include "server/application/commandHandlers/createChannelCommandHandler/CreateChannelCommandHandlerImpl.h"
+#include "server/application/commandHandlers/deleteUserCommandHandler/DeleteUserCommandHandlerImpl.h"
 #include "server/application/commandHandlers/loginUserCommandHandler/LoginUserCommandHandlerImpl.h"
 #include "server/application/commandHandlers/registerUserCommandHandler/RegisterUserCommandHandlerImpl.h"
+#include "server/application/commandHandlers/updateUserCommandHandler/UpdateUserCommandHandlerImpl.h"
 #include "server/application/queryHandlers/findChannelsToWhichUserBelongsQueryHandler/FindChannelsToWhichUserBelongsQueryHandlerImpl.h"
 #include "server/application/queryHandlers/findUserQueryHandler/FindUserQueryHandlerImpl.h"
 #include "server/application/services/hashService/HashServiceImpl.h"
@@ -77,13 +81,24 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
     auto getUserDataMessageHandler =
         std::make_shared<GetUserDataMessageHandler>(tokenService, std::move(findUserQueryHandler));
 
+    auto updateUserCommandHandler = std::make_unique<server::application::UpdateUserCommandHandlerImpl>(userRepository);
+
+    auto updateUserMessageHandler =
+        std::make_shared<UpdateUserMessageHandler>(tokenService, std::move(updateUserCommandHandler));
+
+    auto deleteUserCommandHandler = std::make_unique<server::application::DeleteUserCommandHandlerImpl>(userRepository);
+
+    auto deleteUserMessageHandler =
+        std::make_shared<DeleteUserMessageHandler>(tokenService, std::move(deleteUserCommandHandler));
+
     std::unordered_map<common::messages::MessageId, std::shared_ptr<MessageHandler>> messageHandlers{
         {common::messages::MessageId::CreateChannel, createChannelMessageHandler},
         {common::messages::MessageId::GetUserChannels, getUserChannelsMessageHandler},
         {common::messages::MessageId::Login, loginMessageHandler},
         {common::messages::MessageId::Register, registerMessageHandler},
         {common::messages::MessageId::GetUserData, getUserDataMessageHandler},
-    };
+        {common::messages::MessageId::UpdateUser, updateUserMessageHandler},
+        {common::messages::MessageId::DeleteUser, deleteUserMessageHandler}};
 
     return std::make_unique<MessageRouterImpl>(std::move(messageHandlers));
 }
