@@ -20,12 +20,13 @@ namespace
 const std::string id = "id";
 const std::string validEmail = "abc@abc.com";
 const std::string validPassword = "password";
+const bool active = true;
 const std::string createdAt = "2023-06-16";
 const std::string updatedAt = "2023-06-16";
 const server::application::RegisterUserCommandHandlerPayload validRegisterUserCommandHandlerPayload{validEmail,
                                                                                                     validPassword};
 const server::application::RegisterUserCommandHandlerResult validRegisterUserCommandHandlerResult{
-    {id, validEmail, validPassword, validPassword, createdAt, updatedAt}};
+    {id, validEmail, validPassword, validPassword, active, createdAt, updatedAt}};
 common::bytes::Bytes validRegisterPayload{
     std::format(R"({{"email":"{}","password":"{}"}})", validEmail, validPassword)};
 common::messages::Message validRegisterMessage{common::messages::MessageId::Register, validRegisterPayload};
@@ -72,14 +73,10 @@ public:
 
     std::unique_ptr<server::application::CreateChannelCommandHandlerMock> createChannelCommandHandlerMockInit =
         std::make_unique<StrictMock<server::application::CreateChannelCommandHandlerMock>>();
-    server::application::CreateChannelCommandHandlerMock* createChannelCommandHandlerMock =
-        createChannelCommandHandlerMockInit.get();
 
     std::unique_ptr<server::application::FindChannelsToWhichUserBelongsQueryHandlerMock>
         findChannelsToWhichUserBelongsQueryHandlerMockInit =
             std::make_unique<StrictMock<server::application::FindChannelsToWhichUserBelongsQueryHandlerMock>>();
-    server::application::FindChannelsToWhichUserBelongsQueryHandlerMock*
-        findChannelsToWhichUserBelongsQueryHandlerMock = findChannelsToWhichUserBelongsQueryHandlerMockInit.get();
 
     MessageHandlerImpl messageHandler{
         tokenServiceMock, std::move(registerUserCommandHandlerMockInit), std::move(loginUserCommandHandlerMockInit),

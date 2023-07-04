@@ -48,8 +48,9 @@ TEST_F(UserRepositoryIntegrationTest, shouldCreateUser)
     const auto email = "email@example.com";
     const auto password = "password";
     const auto nickname = "nickname";
+    const auto active = true;
 
-    const auto user = userRepository->createUser({id, email, password, nickname});
+    const auto user = userRepository->createUser({id, email, password, nickname, active});
 
     ASSERT_EQ(user->getEmail(), email);
     ASSERT_EQ(user->getPassword(), password);
@@ -62,10 +63,11 @@ TEST_F(UserRepositoryIntegrationTest, shouldDeleteExistingUser)
     const auto email = "email@example.com";
     const auto password = "password";
     const auto nickname = "nickname";
+    const auto active = true;
     const auto createdAt = "2023-06-16";
     const auto updatedAt = "2023-06-16";
 
-    User user{id, email, password, nickname, createdAt, updatedAt};
+    User user{id, email, password, nickname, active, createdAt, updatedAt};
 
     {
         odb::transaction transaction(db->begin());
@@ -75,7 +77,7 @@ TEST_F(UserRepositoryIntegrationTest, shouldDeleteExistingUser)
         transaction.commit();
     }
 
-    const auto domainUser = domain::User{id, email, password, nickname, createdAt, updatedAt};
+    const auto domainUser = domain::User{id, email, password, nickname, active, createdAt, updatedAt};
 
     userRepository->deleteUser({domainUser});
 
@@ -98,10 +100,11 @@ TEST_F(UserRepositoryIntegrationTest, delete_givenNonExistingUser_shouldThrowErr
     const auto email = "email@example.com";
     const auto password = "password";
     const auto nickname = "nickname";
+    const auto active = true;
     const auto createdAt = "2023-06-16";
     const auto updatedAt = "2023-06-16";
 
-    const auto domainUser = domain::User{id, email, password, nickname, createdAt, updatedAt};
+    const auto domainUser = domain::User{id, email, password, nickname, active, createdAt, updatedAt};
 
     ASSERT_ANY_THROW(userRepository->deleteUser({domainUser}));
 }
@@ -112,10 +115,11 @@ TEST_F(UserRepositoryIntegrationTest, shouldFindExistingUserByEmail)
     const auto email = "email@example.com";
     const auto password = "password";
     const auto nickname = "nickname";
+    const auto active = true;
     const auto createdAt = "2023-06-16";
     const auto updatedAt = "2023-06-16";
 
-    User user{id, email, password, nickname, createdAt, updatedAt};
+    User user{id, email, password, nickname, active, createdAt, updatedAt};
 
     {
         odb::transaction transaction(db->begin());
@@ -146,10 +150,11 @@ TEST_F(UserRepositoryIntegrationTest, shouldFindExistingUserById)
     const auto email = "email@example.com";
     const auto password = "password";
     const auto nickname = "nickname";
+    const auto active = true;
     const auto createdAt = "2023-06-16";
     const auto updatedAt = "2023-06-16";
 
-    User user{id, email, password, nickname, createdAt, updatedAt};
+    User user{id, email, password, nickname, active, createdAt, updatedAt};
 
     {
         odb::transaction transaction(db->begin());
@@ -181,11 +186,12 @@ TEST_F(UserRepositoryIntegrationTest, shouldUpdateExistingUser)
     const auto password = "password1";
     const auto updatedPassword = "password2";
     const auto nickname = "nickname1";
+    const auto active = true;
     const auto updatedNickname = "nickname2";
     const auto createdAt = "2023-06-16";
     const auto updatedAt = "2023-06-16";
 
-    User user{id, email, password, nickname, createdAt, updatedAt};
+    User user{id, email, password, nickname, active, createdAt, updatedAt};
 
     {
         odb::transaction transaction(db->begin());
@@ -195,7 +201,7 @@ TEST_F(UserRepositoryIntegrationTest, shouldUpdateExistingUser)
         transaction.commit();
     }
 
-    auto domainUser = domain::User{id, email, password, nickname, createdAt, updatedAt};
+    auto domainUser = domain::User{id, email, password, nickname, active, createdAt, updatedAt};
 
     domainUser.setPassword(updatedPassword);
     domainUser.setNickname(updatedNickname);
@@ -223,10 +229,11 @@ TEST_F(UserRepositoryIntegrationTest, update_givenNonExistingUser_shouldThrowErr
     const auto email = "email@example.com";
     const auto password = "password";
     const auto nickname = "nickname";
+    const auto active = true;
     const auto createdAt = "2023-06-16";
     const auto updatedAt = "2023-06-16";
 
-    const auto domainUser = domain::User{id, email, password, nickname, createdAt, updatedAt};
+    const auto domainUser = domain::User{id, email, password, nickname, active, createdAt, updatedAt};
 
     ASSERT_ANY_THROW(userRepository->updateUser({domainUser}));
 }

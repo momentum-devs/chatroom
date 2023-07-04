@@ -61,10 +61,11 @@ TEST_F(FindUserQueryHandlerImplIntegrationTest, findUserById)
     const auto password = faker::Internet::password();
     const auto updatedPassword = faker::Internet::password();
     const auto nickname = faker::Internet::username();
+    const auto active = false;
     const auto createdAt = "2023-06-16";
     const auto updatedAt = "2023-06-16";
 
-    infrastructure::User existingUser{id, email, password, nickname, createdAt, updatedAt};
+    infrastructure::User existingUser{id, email, password, nickname, active, createdAt, updatedAt};
 
     {
         odb::transaction transaction(db->begin());

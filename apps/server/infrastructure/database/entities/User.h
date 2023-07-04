@@ -11,43 +11,49 @@ namespace server::infrastructure
 class User
 {
 public:
-    User(std::string idInit, std::string emailInit, std::string passwordInit, std::string nicknameInit,
+    User(std::string idInit, std::string emailInit, std::string passwordInit, std::string nicknameInit, bool active,
          std::string createdAtInit, std::string updatedAtInit)
         : id{std::move(idInit)},
           email{std::move(emailInit)},
           password{std::move(passwordInit)},
           nickname{std::move(nicknameInit)},
+          active{active},
           created_at{std::move(createdAtInit)},
           updated_at{std::move(updatedAtInit)}
     {
     }
 
-    std::string getId() const
+    [[nodiscard]] std::string getId() const
     {
         return id;
     }
 
-    std::string getEmail() const
+    [[nodiscard]] std::string getEmail() const
     {
         return email;
     }
 
-    std::string getPassword() const
+    [[nodiscard]] std::string getPassword() const
     {
         return password;
     }
 
-    std::string getNickname() const
+    [[nodiscard]] std::string getNickname() const
     {
         return nickname;
     }
 
-    std::string getCreatedAt() const
+    [[nodiscard]] bool isActive() const
+    {
+        return active;
+    }
+
+    [[nodiscard]] std::string getCreatedAt() const
     {
         return created_at;
     }
 
-    std::string getUpdatedAt() const
+    [[nodiscard]] std::string getUpdatedAt() const
     {
         return updated_at;
     }
@@ -80,6 +86,7 @@ private:
     std::string email;
     std::string password;
     std::string nickname;
+    bool active{false};
     std::string created_at;
     std::string updated_at;
 };

@@ -59,10 +59,11 @@ TEST_F(LoginUserCommandImplIntegrationTest, loginExistingUserWithValidPassword)
     const auto email = "email@example.com";
     const auto password = "password";
     const auto hashedPassword = "5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8";
+    const auto active = false;
     const auto createdAt = "2023-06-16";
     const auto updatedAt = "2023-06-16";
 
-    server::infrastructure::User user{id, email, hashedPassword, email, createdAt, updatedAt};
+    server::infrastructure::User user{id, email, hashedPassword, email, active, createdAt, updatedAt};
 
     {
         odb::transaction transaction(db->begin());
@@ -85,10 +86,11 @@ TEST_F(LoginUserCommandImplIntegrationTest, loginExistingUserWithInvalidPassword
     const auto email = "email@example.com";
     const auto password = "invalidPassword";
     const auto hashedPassword = "5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8";
+    const auto active = false;
     const auto createdAt = "2023-06-16";
     const auto updatedAt = "2023-06-16";
 
-    server::infrastructure::User user{id, email, hashedPassword, email, createdAt, updatedAt};
+    server::infrastructure::User user{id, email, hashedPassword, email, active, createdAt, updatedAt};
 
     {
         odb::transaction transaction(db->begin());

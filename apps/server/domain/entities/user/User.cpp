@@ -5,11 +5,12 @@
 namespace server::domain
 {
 User::User(std::string idInit, std::string emailInit, std::string passwordInit, std::string nicknameInit,
-           std::string createdAtInit, std::string updatedAtInit)
+           bool activeInit, std::string createdAtInit, std::string updatedAtInit)
     : id{std::move(idInit)},
       email{std::move(emailInit)},
       password{std::move(passwordInit)},
       nickname{std::move(nicknameInit)},
+      active{activeInit},
       createdAt{std::move(createdAtInit)},
       updatedAt{std::move(updatedAtInit)}
 {
@@ -33,6 +34,11 @@ std::string User::getPassword() const
 std::string User::getNickname() const
 {
     return nickname;
+}
+
+bool User::isActive() const
+{
+    return active;
 }
 
 void User::setPassword(const std::string& newPassword)

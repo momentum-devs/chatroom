@@ -2,12 +2,13 @@ DROP TABLE IF EXISTS "users" CASCADE;
 
 CREATE TABLE "users"
 (
-    "id"         TEXT NOT NULL PRIMARY KEY,
-    "email"      TEXT NOT NULL,
-    "password"   TEXT NOT NULL,
-    "nickname"   TEXT NOT NULL,
-    "created_at" TEXT NOT NULL,
-    "updated_at" TEXT NOT NULL
+    "id"         TEXT    NOT NULL PRIMARY KEY,
+    "email"      TEXT    NOT NULL,
+    "password"   TEXT    NOT NULL,
+    "nickname"   TEXT    NOT NULL,
+    "active"     BOOLEAN NOT NULL,
+    "created_at" TEXT    NOT NULL,
+    "updated_at" TEXT    NOT NULL
 );
 
 DROP TABLE IF EXISTS "channels" CASCADE;

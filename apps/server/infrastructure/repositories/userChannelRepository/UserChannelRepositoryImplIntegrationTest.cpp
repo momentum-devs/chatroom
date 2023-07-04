@@ -4,8 +4,6 @@
 #include "gtest/gtest.h"
 
 #include "Channel.h"
-#include "Channel.odb.h"
-#include "server/infrastructure/errors/UserRepositoryError.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
 #include "server/infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapperImpl.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
@@ -52,7 +50,7 @@ public:
     {
         const auto currentDate = to_iso_string(boost::posix_time::second_clock::universal_time());
 
-        auto user = std::make_shared<User>(id, email, password, email, currentDate, currentDate);
+        auto user = std::make_shared<User>(id, email, password, email, false, currentDate, currentDate);
 
         odb::transaction transaction(db->begin());
 

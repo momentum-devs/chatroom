@@ -65,10 +65,11 @@ TEST_F(RegisterUserCommandImplIntegrationTest, givenUserWithSameEmail_shouldThro
     const auto email = "email@example.com";
     const auto password = "password";
     const auto nickname = "nickname";
+    const auto active = true;
     const auto createdAt = "2023-06-16";
     const auto updatedAt = "2023-06-16";
 
-    infrastructure::User existingUser{id, email, password, nickname, createdAt, updatedAt};
+    infrastructure::User existingUser{id, email, password, nickname, active, createdAt, updatedAt};
 
     {
         odb::transaction transaction(db->begin());

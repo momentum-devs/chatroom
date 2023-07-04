@@ -5,14 +5,11 @@
 #include "CreateChannelCommandHandlerImpl.h"
 #include "server/application/commandHandlers/addUserToChannelCommandHandler/AddUserToChannelCommandHandlerImpl.h"
 #include "server/application/services/hashService/HashServiceImpl.h"
-#include "server/domain/repositories/userChannelRepository/UserChannelRepository.h"
-#include "server/domain/repositories/userRepository/UserRepository.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
 #include "server/infrastructure/repositories/channelRepository/ChannelRepositoryImpl.h"
 #include "server/infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapper.h"
 #include "server/infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapperImpl.h"
 #include "server/infrastructure/repositories/userChannelRepository/UserChannelRepositoryImpl.h"
-#include "server/infrastructure/repositories/userRepository/userMapper/UserMapper.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "server/infrastructure/repositories/userRepository/UserRepositoryImpl.h"
 #include "User.h"
@@ -54,7 +51,7 @@ public:
     {
         const auto currentDate = to_iso_string(boost::posix_time::second_clock::universal_time());
 
-        User user{id, email, password, email, currentDate, currentDate};
+        User user{id, email, password, email, false, currentDate, currentDate};
 
         odb::transaction transaction(db->begin());
 
