@@ -34,6 +34,10 @@ LoginUserCommandHandlerResult LoginUserCommandHandlerImpl::execute(const LoginUs
         throw errors::ResourceNotFoundError{std::format("User with email \"{}\" not found.", payload.email)};
     }
 
+    existingUser->get()->setActive(true);
+
+    userRepository->updateUser({**existingUser});
+
     const auto token = tokenService->createToken(existingUser->get()->getId());
 
     LOG_S(INFO) << std::format("User with email \"{}\" logged in.", payload.email);

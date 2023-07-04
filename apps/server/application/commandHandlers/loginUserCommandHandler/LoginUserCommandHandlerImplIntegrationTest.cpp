@@ -12,7 +12,6 @@ using namespace ::testing;
 using namespace server;
 using namespace server::infrastructure;
 using namespace server::application;
-using namespace server::domain;
 
 const auto jwtSecret = "12321313423565365654546654121890008";
 const auto jwtExpiresIn = 86400;
@@ -43,7 +42,7 @@ public:
     std::shared_ptr<odb::pgsql::database> db =
         std::make_shared<odb::pgsql::database>("local", "local", "chatroom", "localhost", 5432);
 
-    std::shared_ptr<UserRepository> userRepository =
+    std::shared_ptr<domain::UserRepository> userRepository =
         std::make_shared<UserRepositoryImpl>(db, std::move(userMapperInit));
 
     std::shared_ptr<HashService> hashService = std::make_shared<HashServiceImpl>();
@@ -77,6 +76,19 @@ TEST_F(LoginUserCommandImplIntegrationTest, loginExistingUserWithValidPassword)
     const auto userId = user.getId();
 
     const auto [token] = loginUserCommandHandler.execute({email, password});
+
+    {
+        typedef odb::query<User> Query;
+
+        odb::transaction transaction(db->begin());
+
+        std::shared_ptr<User> loggedInUser(db->query_one<User>(Query::id == id));
+
+        transaction.commit();
+
+        ASSERT_TRUE(loggedInUser);
+        ASSERT_EQ(loggedInUser->isActive(), true);
+    }
 
     ASSERT_EQ(tokenService->getUserIdFromToken(token), userId);
 }
