@@ -30,6 +30,7 @@ set(SOURCES
         application/commandHandlers/loginUserCommandHandler/LoginUserCommandHandlerImpl.cpp
         application/commandHandlers/updateUserCommandHandler/UpdateUserCommandHandlerImpl.cpp
         application/commandHandlers/logoutUserCommandHandler/LogoutUserCommandHandlerImpl.cpp
+        application/commandHandlers/verifyUserEmailCommandHandler/VerifyUserEmailCommandHandlerImpl.cpp
         application/queryHandlers/findUserQueryHandler/FindUserQueryHandlerImpl.cpp
 
         domain/entities/channel/Channel.cpp
@@ -65,6 +66,7 @@ set(IT_SOURCES
         application/commandHandlers/deleteUserCommandHandler/DeleteUserCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/updateUserCommandHandler/UpdateUserCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/logoutUserCommandHandler/LogoutUserCommandHandlerImplIntegrationTest.cpp
+        application/commandHandlers/verifyUserEmailCommandHandler/VerifyUserEmailCommandHandlerImplIntegrationTest.cpp
         application/queryHandlers/findUserQueryHandler/FindUserQueryHandlerImplIntegrationTest.cpp
         infrastructure/repositories/channelRepository/ChannelRepositoryImplIntegrationTest.cpp
         application/commandHandlers/createChannelCommandHandler/CreateChannelCommandHandlerImplIntegrationTest.cpp
