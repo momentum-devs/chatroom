@@ -16,3 +16,6 @@
 [submodule "externals/faker-cxx"]
 	path = externals/faker-cxx
 	url = https://github.com/cieslarmichal/faker-cxx.git
+[submodule "externals/cpr"]
+	path = externals/cpr
+	url = https://github.com/libcpr/cpr.git
