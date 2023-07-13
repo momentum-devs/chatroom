@@ -33,6 +33,7 @@ set(SOURCES
         application/commandHandlers/verifyUserEmailCommandHandler/VerifyUserEmailCommandHandlerImpl.cpp
         application/commandHandlers/sendRegistrationVerificationEmailCommandHandler/SendRegistrationVerificationEmailCommandHandlerImpl.cpp
         application/queryHandlers/findUserQueryHandler/FindUserQueryHandlerImpl.cpp
+        infrastructure/services/emailService/EmailServiceImpl.cpp
 
         domain/entities/channel/Channel.cpp
         infrastructure/repositories/channelRepository/ChannelRepositoryImpl.cpp
@@ -53,6 +54,7 @@ set(UT_SOURCES
         api/MessageHandlerImplTest.cpp
         api/SessionImplTest.cpp
         api/SessionManagerTest.cpp
+        infrastructure/services/emailService/EmailServiceImplTest.cpp
         infrastructure/repositories/userRepository/userMapper/UserMapperImplTest.cpp
         infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImplTest.cpp
         infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapperImplTest.cpp
