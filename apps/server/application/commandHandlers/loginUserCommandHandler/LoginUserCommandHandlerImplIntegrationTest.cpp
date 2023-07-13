@@ -63,7 +63,8 @@ TEST_F(LoginUserCommandImplIntegrationTest, loginExistingUserWithValidPassword)
     const auto createdAt = "2023-06-16";
     const auto updatedAt = "2023-06-16";
 
-    server::infrastructure::User user{id, email, hashedPassword, email, active, emailVerified, createdAt, updatedAt};
+    server::infrastructure::User user{id,    email,     hashedPassword, email, active, emailVerified,
+                                      "123", createdAt, updatedAt};
 
     {
         odb::transaction transaction(db->begin());
@@ -104,7 +105,8 @@ TEST_F(LoginUserCommandImplIntegrationTest, loginExistingUserWithInvalidPassword
     const auto createdAt = "2023-06-16";
     const auto updatedAt = "2023-06-16";
 
-    server::infrastructure::User user{id, email, hashedPassword, email, active, emailVerified, createdAt, updatedAt};
+    server::infrastructure::User user{id,    email,     hashedPassword, email, active, emailVerified,
+                                      "123", createdAt, updatedAt};
 
     {
         odb::transaction transaction(db->begin());

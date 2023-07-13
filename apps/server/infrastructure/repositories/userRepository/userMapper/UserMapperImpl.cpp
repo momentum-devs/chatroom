@@ -10,10 +10,12 @@ std::shared_ptr<domain::User> UserMapperImpl::mapToDomainUser(std::shared_ptr<Us
     const auto nickname = user->getNickname();
     const auto active = user->isActive();
     const auto emailVerified = user->isEmailVerified();
+    const auto verificationCode = user->getVerificationCode();
     const auto createdAt = user->getCreatedAt();
     const auto updatedAt = user->getUpdatedAt();
 
-    return std::make_shared<domain::User>(id, email, password, nickname, active, emailVerified, createdAt, updatedAt);
+    return std::make_shared<domain::User>(id, email, password, nickname, active, emailVerified, verificationCode,
+                                          createdAt, updatedAt);
 }
 
 std::shared_ptr<User> UserMapperImpl::mapToPersistenceUser(std::shared_ptr<domain::User> user) const
@@ -24,9 +26,11 @@ std::shared_ptr<User> UserMapperImpl::mapToPersistenceUser(std::shared_ptr<domai
     const auto nickname = user->getNickname();
     const auto active = user->isActive();
     const auto emailVerified = user->isEmailVerified();
+    const auto verificationCode = user->getVerificationCode();
     const auto createdAt = user->getCreatedAt();
     const auto updatedAt = user->getUpdatedAt();
 
-    return std::make_shared<User>(id, email, password, nickname, active, emailVerified, createdAt, updatedAt);
+    return std::make_shared<User>(id, email, password, nickname, active, emailVerified, verificationCode, createdAt,
+                                  updatedAt);
 }
 }

@@ -12,13 +12,14 @@ class User
 {
 public:
     User(std::string idInit, std::string emailInit, std::string passwordInit, std::string nicknameInit, bool activeInit,
-         bool emailVerifiedInit, std::string createdAtInit, std::string updatedAtInit)
+         bool emailVerifiedInit, std::string verificationCodeInit, std::string createdAtInit, std::string updatedAtInit)
         : id{std::move(idInit)},
           email{std::move(emailInit)},
           password{std::move(passwordInit)},
           nickname{std::move(nicknameInit)},
           active{activeInit},
           email_verified{emailVerifiedInit},
+          verification_code(std::move(verificationCodeInit)),
           created_at{std::move(createdAtInit)},
           updated_at{std::move(updatedAtInit)}
     {
@@ -54,6 +55,11 @@ public:
         return email_verified;
     }
 
+    [[nodiscard]] std::string getVerificationCode() const
+    {
+        return verification_code;
+    }
+
     [[nodiscard]] std::string getCreatedAt() const
     {
         return created_at;
@@ -84,6 +90,11 @@ public:
         email_verified = emailVerifiedInit;
     }
 
+    void setVerificationCode(const std::string& verificationCodeInit)
+    {
+        verification_code = verificationCodeInit;
+    }
+
     bool operator==(const User& user) const
     {
         auto tieStruct = [](const User& user)
@@ -104,6 +115,7 @@ private:
     std::string nickname;
     bool active{false};
     bool email_verified{false};
+    std::string verification_code;
     std::string created_at;
     std::string updated_at;
 };

@@ -52,7 +52,7 @@ public:
     {
         const auto currentDate = to_iso_string(boost::posix_time::second_clock::universal_time());
 
-        auto user = std::make_shared<User>(id, email, password, email, false, false, currentDate, currentDate);
+        auto user = std::make_shared<User>(id, email, password, email, false, false, "123", currentDate, currentDate);
 
         odb::transaction transaction(db->begin());
 

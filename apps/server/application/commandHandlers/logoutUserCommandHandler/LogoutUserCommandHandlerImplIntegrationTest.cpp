@@ -56,7 +56,7 @@ TEST_F(LogoutUserCommandImplIntegrationTest, logoutExistingUser)
     const auto createdAt = "2023-06-16";
     const auto updatedAt = "2023-06-16";
 
-    server::infrastructure::User user{id, email, password, email, active, emailVerified, createdAt, updatedAt};
+    server::infrastructure::User user{id, email, password, email, active, emailVerified, "123", createdAt, updatedAt};
 
     {
         odb::transaction transaction(db->begin());

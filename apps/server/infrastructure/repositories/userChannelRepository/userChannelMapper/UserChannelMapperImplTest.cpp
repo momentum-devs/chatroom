@@ -26,14 +26,15 @@ TEST_F(UserChannelMapperTest, givenPersistenceUserChannel_shouldMapToDomainUserC
     const auto nickname = "nickname";
     const auto active = true;
     const auto emailVerified = false;
+    const auto verificationCode = "verificationCode";
     const auto createdAt = "2023-06-16";
     const auto updatedAt = "2023-06-16";
 
-    const auto user =
-        std::make_shared<User>(userId, email, password, nickname, active, emailVerified, createdAt, updatedAt);
+    const auto user = std::make_shared<User>(userId, email, password, nickname, active, emailVerified, verificationCode,
+                                             createdAt, updatedAt);
 
-    const auto domainUser =
-        std::make_shared<domain::User>(userId, email, password, nickname, active, emailVerified, createdAt, updatedAt);
+    const auto domainUser = std::make_shared<domain::User>(userId, email, password, nickname, active, emailVerified,
+                                                           verificationCode, createdAt, updatedAt);
 
     const auto channelId = "channelId";
     const auto name = "name";

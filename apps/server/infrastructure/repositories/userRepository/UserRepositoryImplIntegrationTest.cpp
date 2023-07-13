@@ -65,10 +65,11 @@ TEST_F(UserRepositoryIntegrationTest, shouldDeleteExistingUser)
     const auto nickname = "nickname";
     const auto active = true;
     const auto emailVerified = false;
+    const auto verificationCode = "verificationCode";
     const auto createdAt = "2023-06-16";
     const auto updatedAt = "2023-06-16";
 
-    User user{id, email, password, nickname, active, emailVerified, createdAt, updatedAt};
+    User user{id, email, password, nickname, active, emailVerified, verificationCode, createdAt, updatedAt};
 
     {
         odb::transaction transaction(db->begin());
@@ -78,7 +79,8 @@ TEST_F(UserRepositoryIntegrationTest, shouldDeleteExistingUser)
         transaction.commit();
     }
 
-    const auto domainUser = domain::User{id, email, password, nickname, active, emailVerified, createdAt, updatedAt};
+    const auto domainUser =
+        domain::User{id, email, password, nickname, active, emailVerified, verificationCode, createdAt, updatedAt};
 
     userRepository->deleteUser({domainUser});
 
@@ -103,10 +105,12 @@ TEST_F(UserRepositoryIntegrationTest, delete_givenNonExistingUser_shouldThrowErr
     const auto nickname = "nickname";
     const auto active = true;
     const auto emailVerified = false;
+    const auto verificationCode = "verificationCode";
     const auto createdAt = "2023-06-16";
     const auto updatedAt = "2023-06-16";
 
-    const auto domainUser = domain::User{id, email, password, nickname, active, emailVerified, createdAt, updatedAt};
+    const auto domainUser =
+        domain::User{id, email, password, nickname, active, emailVerified, verificationCode, createdAt, updatedAt};
 
     ASSERT_ANY_THROW(userRepository->deleteUser({domainUser}));
 }
@@ -119,10 +123,11 @@ TEST_F(UserRepositoryIntegrationTest, shouldFindExistingUserByEmail)
     const auto nickname = "nickname";
     const auto active = true;
     const auto emailVerified = false;
+    const auto verificationCode = "verificationCode";
     const auto createdAt = "2023-06-16";
     const auto updatedAt = "2023-06-16";
 
-    User user{id, email, password, nickname, active, emailVerified, createdAt, updatedAt};
+    User user{id, email, password, nickname, active, emailVerified, verificationCode, createdAt, updatedAt};
 
     {
         odb::transaction transaction(db->begin());
@@ -155,10 +160,11 @@ TEST_F(UserRepositoryIntegrationTest, shouldFindExistingUserById)
     const auto nickname = "nickname";
     const auto active = true;
     const auto emailVerified = false;
+    const auto verificationCode = "verificationCode";
     const auto createdAt = "2023-06-16";
     const auto updatedAt = "2023-06-16";
 
-    User user{id, email, password, nickname, active, emailVerified, createdAt, updatedAt};
+    User user{id, email, password, nickname, active, emailVerified, verificationCode, createdAt, updatedAt};
 
     {
         odb::transaction transaction(db->begin());
@@ -194,11 +200,13 @@ TEST_F(UserRepositoryIntegrationTest, shouldUpdateExistingUser)
     const auto updatedActive = true;
     const auto emailVerified = false;
     const auto updatedEmailVerified = true;
+    const auto verificationCode = "verificationCode1";
+    const auto updatedVerificationCode = "verificationCode2";
     const auto updatedNickname = "nickname2";
     const auto createdAt = "2023-06-16";
     const auto updatedAt = "2023-06-16";
 
-    User user{id, email, password, nickname, active, emailVerified, createdAt, updatedAt};
+    User user{id, email, password, nickname, active, emailVerified, verificationCode, createdAt, updatedAt};
 
     {
         odb::transaction transaction(db->begin());
@@ -208,12 +216,14 @@ TEST_F(UserRepositoryIntegrationTest, shouldUpdateExistingUser)
         transaction.commit();
     }
 
-    auto domainUser = domain::User{id, email, password, nickname, active, emailVerified, createdAt, updatedAt};
+    auto domainUser =
+        domain::User{id, email, password, nickname, active, emailVerified, verificationCode, createdAt, updatedAt};
 
     domainUser.setPassword(updatedPassword);
     domainUser.setNickname(updatedNickname);
     domainUser.setActive(updatedActive);
     domainUser.setEmailVerified(updatedEmailVerified);
+    domainUser.setVerificationCode(updatedVerificationCode);
 
     userRepository->updateUser({domainUser});
 
@@ -231,6 +241,7 @@ TEST_F(UserRepositoryIntegrationTest, shouldUpdateExistingUser)
         ASSERT_EQ(updatedUser->getPassword(), updatedPassword);
         ASSERT_EQ(updatedUser->isActive(), updatedActive);
         ASSERT_EQ(updatedUser->isEmailVerified(), updatedEmailVerified);
+        ASSERT_EQ(updatedUser->getVerificationCode(), updatedVerificationCode);
     }
 }
 
@@ -242,10 +253,12 @@ TEST_F(UserRepositoryIntegrationTest, update_givenNonExistingUser_shouldThrowErr
     const auto nickname = "nickname";
     const auto active = true;
     const auto emailVerified = false;
+    const auto verificationCode = "verificationCode";
     const auto createdAt = "2023-06-16";
     const auto updatedAt = "2023-06-16";
 
-    const auto domainUser = domain::User{id, email, password, nickname, active, emailVerified, createdAt, updatedAt};
+    const auto domainUser =
+        domain::User{id, email, password, nickname, active, emailVerified, verificationCode, createdAt, updatedAt};
 
     ASSERT_ANY_THROW(userRepository->updateUser({domainUser}));
 }

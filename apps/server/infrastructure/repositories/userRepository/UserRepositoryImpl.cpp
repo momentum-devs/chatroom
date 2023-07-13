@@ -22,8 +22,9 @@ std::shared_ptr<domain::User> UserRepositoryImpl::createUser(const domain::Creat
         {
             const auto currentDate = to_iso_string(boost::posix_time::second_clock::universal_time());
 
-            const auto user = std::make_shared<User>(payload.id, payload.email, payload.password, payload.nickname,
-                                                     payload.active, payload.emailVerified, currentDate, currentDate);
+            const auto user =
+                std::make_shared<User>(payload.id, payload.email, payload.password, payload.nickname, payload.active,
+                                       payload.emailVerified, payload.verificationCode, currentDate, currentDate);
 
             odb::transaction transaction(db->begin());
 
@@ -113,6 +114,7 @@ std::shared_ptr<domain::User> UserRepositoryImpl::updateUser(const domain::Updat
             user->setPassword(payload.user.getPassword());
             user->setActive(payload.user.isActive());
             user->setEmailVerified(payload.user.isEmailVerified());
+            user->setVerificationCode(payload.user.getVerificationCode());
 
             db->update(*user);
 

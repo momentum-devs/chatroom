@@ -66,7 +66,8 @@ TEST_F(UpdateUserCommandImplIntegrationTest, updatePassword)
     const auto createdAt = "2023-06-16";
     const auto updatedAt = "2023-06-16";
 
-    infrastructure::User existingUser{id, email, password, nickname, active, emailVerified, createdAt, updatedAt};
+    infrastructure::User existingUser{id,    email,     password, nickname, active, emailVerified,
+                                      "123", createdAt, updatedAt};
 
     {
         odb::transaction transaction(db->begin());
@@ -94,7 +95,8 @@ TEST_F(UpdateUserCommandImplIntegrationTest, updateNickname)
     const auto createdAt = "2023-06-16";
     const auto updatedAt = "2023-06-16";
 
-    infrastructure::User existingUser{id, email, password, nickname, active, emailVerified, createdAt, updatedAt};
+    infrastructure::User existingUser{id,    email,     password, nickname, active, emailVerified,
+                                      "123", createdAt, updatedAt};
 
     {
         odb::transaction transaction(db->begin());

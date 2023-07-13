@@ -12,6 +12,7 @@ struct CreateUserPayload
     std::string nickname;
     bool active;
     bool emailVerified;
+    std::string verificationCode;
 };
 
 inline bool operator==(const CreateUserPayload& lhs, const CreateUserPayload& rhs)
@@ -19,7 +20,7 @@ inline bool operator==(const CreateUserPayload& lhs, const CreateUserPayload& rh
     auto tieStruct = [](const CreateUserPayload& payload)
     {
         return std::tie(payload.id, payload.email, payload.password, payload.nickname, payload.active,
-                        payload.emailVerified);
+                        payload.emailVerified, payload.verificationCode);
     };
 
     return tieStruct(lhs) == tieStruct(rhs);

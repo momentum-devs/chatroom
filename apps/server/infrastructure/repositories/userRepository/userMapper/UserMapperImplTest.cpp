@@ -20,11 +20,12 @@ TEST_F(UserMapperTest, givenPersistenceUser_shouldMapToDomainUser)
     const auto nickname = "nickname";
     const auto active = true;
     const auto emailVerified = false;
+    const auto verificationCode = "verificationCode";
     const auto createdAt = "2023-06-16";
     const auto updatedAt = "2023-06-16";
 
-    const auto persistenceUser =
-        std::make_shared<User>(id, email, password, nickname, active, emailVerified, createdAt, updatedAt);
+    const auto persistenceUser = std::make_shared<User>(id, email, password, nickname, active, emailVerified,
+                                                        verificationCode, createdAt, updatedAt);
 
     const auto domainUser = userMapper.mapToDomainUser(persistenceUser);
 
@@ -34,6 +35,7 @@ TEST_F(UserMapperTest, givenPersistenceUser_shouldMapToDomainUser)
     ASSERT_EQ(domainUser->getNickname(), nickname);
     ASSERT_EQ(domainUser->isActive(), active);
     ASSERT_EQ(domainUser->isEmailVerified(), emailVerified);
+    ASSERT_EQ(domainUser->getVerificationCode(), verificationCode);
     ASSERT_EQ(domainUser->getCreatedAt(), createdAt);
     ASSERT_EQ(domainUser->getUpdatedAt(), updatedAt);
 }
@@ -46,11 +48,12 @@ TEST_F(UserMapperTest, givenDomainUser_shouldMapToPersistenceUser)
     const auto nickname = "nickname";
     const auto active = true;
     const auto emailVerified = false;
+    const auto verificationCode = "verificationCode";
     const auto createdAt = "2023-06-16";
     const auto updatedAt = "2023-06-16";
 
-    const auto domainUser =
-        std::make_shared<domain::User>(id, email, password, nickname, active, emailVerified, createdAt, updatedAt);
+    const auto domainUser = std::make_shared<domain::User>(id, email, password, nickname, active, emailVerified,
+                                                           verificationCode, createdAt, updatedAt);
 
     const auto persistenceUser = userMapper.mapToPersistenceUser(domainUser);
 
@@ -60,6 +63,7 @@ TEST_F(UserMapperTest, givenDomainUser_shouldMapToPersistenceUser)
     ASSERT_EQ(persistenceUser->getNickname(), nickname);
     ASSERT_EQ(persistenceUser->isActive(), active);
     ASSERT_EQ(persistenceUser->isEmailVerified(), emailVerified);
+    ASSERT_EQ(persistenceUser->getVerificationCode(), verificationCode);
     ASSERT_EQ(persistenceUser->getCreatedAt(), createdAt);
     ASSERT_EQ(persistenceUser->getUpdatedAt(), updatedAt);
 }
