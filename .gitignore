@@ -42,3 +42,4 @@ cmake-build-*
 **.zip
 .env
 vcpkg_installed
+*.profraw

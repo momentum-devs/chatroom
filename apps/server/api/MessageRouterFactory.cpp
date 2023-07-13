@@ -72,7 +72,7 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
     auto getUserChannelsMessageHandler = std::make_shared<GetUserChannelsMessageHandler>(
         tokenService, std::move(findChannelsToWhichUserBelongsQueryHandler));
 
-    auto loginMessageHandler = std::make_shared<LoginMessageHandler>(tokenService, std::move(loginUserCommandHandler));
+    auto loginMessageHandler = std::make_shared<LoginMessageHandler>(std::move(loginUserCommandHandler));
 
     auto registerMessageHandler = std::make_shared<RegisterMessageHandler>(std::move(registerUserCommandHandler));
 

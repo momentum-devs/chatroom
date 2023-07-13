@@ -8,9 +8,8 @@
 namespace server::api
 {
 LoginMessageHandler::LoginMessageHandler(
-    std::shared_ptr<server::application::TokenService> tokenServiceInit,
     std::unique_ptr<server::application::LoginUserCommandHandler> loginUserCommandHandlerInit)
-    : tokenService{std::move(tokenServiceInit)}, loginUserCommandHandler{std::move(loginUserCommandHandlerInit)}
+    : loginUserCommandHandler{std::move(loginUserCommandHandlerInit)}
 {
 }
 
@@ -46,8 +45,7 @@ common::messages::Message LoginMessageHandler::handleMessage(const common::messa
 
     nlohmann::json responsePayload{{"token", loginUserCommandHandlerResult.token}};
 
-    LOG_S(INFO) << std::format("Logged in user {} with id {}", email,
-                               tokenService->getUserIdFromToken(loginUserCommandHandlerResult.token));
+    LOG_S(INFO) << std::format("Logged in user {}", email);
 
     return {common::messages::MessageId::LoginResponse, common::bytes::Bytes{responsePayload.dump()}};
 }

@@ -82,7 +82,7 @@ Rectangle {
 
             anchors.horizontalCenter: passwordRepeatField.horizontalCenter
 
-            text: Text {
+            contentItem: Text {
                 color: "#FF0000"
                 text: qsTr('Delete user')
             }

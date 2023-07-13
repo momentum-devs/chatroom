@@ -26,9 +26,9 @@ common::messages::Message DeleteUserMessageHandler::handleMessage(const common::
 
         deleteUserCommandHandler->execute({userId});
 
-        nlohmann::json responsePayload{{
+        nlohmann::json responsePayload{
             "ok",
-        }};
+        };
 
         auto message = common::messages::Message{common::messages::MessageId::DeleteUserResponse,
                                                  common::bytes::Bytes{responsePayload.dump()}};
