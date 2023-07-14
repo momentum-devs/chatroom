@@ -33,14 +33,14 @@ common::messages::Message UpdateUserMessageHandler::handleMessage(const common::
 
         if (payloadJson["data"].contains("password"))
         {
-            payload.nickname = payloadJson["data"]["password"].get<std::string>();
+            payload.password = payloadJson["data"]["password"].get<std::string>();
         }
 
         updateUserCommandHandler->execute(payload);
 
-        nlohmann::json responsePayload{{
+        nlohmann::json responsePayload{
             "ok",
-        }};
+        };
 
         auto message = common::messages::Message{common::messages::MessageId::UpdateUserResponse,
                                                  common::bytes::Bytes{responsePayload.dump()}};

@@ -51,7 +51,7 @@ public:
     GetUserDataMessageHandler getUserDataMessageHandler{tokenServiceMock, std::move(findUserQueryHandlerMockInit)};
 };
 
-TEST_F(GetUserDataMessageHandlerTest, handleValidDeleteUserMessage)
+TEST_F(GetUserDataMessageHandlerTest, handleValidGetUserDataMessage)
 {
     EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(userId));
     EXPECT_CALL(*findUserQueryHandlerMock, execute(server::application::FindUserQueryHandlerPayload{userId}))
@@ -63,7 +63,7 @@ TEST_F(GetUserDataMessageHandlerTest, handleValidDeleteUserMessage)
     EXPECT_EQ(responseMessage, validMessageResponse);
 }
 
-TEST_F(GetUserDataMessageHandlerTest, handleDeleteUserMessageWithInvalidToken)
+TEST_F(GetUserDataMessageHandlerTest, handleGetUserDataMessageWithInvalidToken)
 {
     EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Throw(invalidToken));
 
@@ -72,7 +72,7 @@ TEST_F(GetUserDataMessageHandlerTest, handleDeleteUserMessageWithInvalidToken)
     EXPECT_EQ(responseMessage, invalidTokenMessageResponse);
 }
 
-TEST_F(GetUserDataMessageHandlerTest, handleDeleteUserMessageWithErrorWhileHandling)
+TEST_F(GetUserDataMessageHandlerTest, handleGetUserDataMessageWithErrorWhileHandling)
 {
     EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(userId));
     EXPECT_CALL(*findUserQueryHandlerMock, execute(server::application::FindUserQueryHandlerPayload{userId}))
