@@ -4,7 +4,6 @@
 #include <gtest/gtest.h>
 #include <regex>
 
-#include "server/application/commandHandlers/deleteUserCommandHandler/DeleteUserCommandHandlerMock.h"
 #include "server/application/commandHandlers/loginUserCommandHandler/LoginUserCommandHandlerMock.h"
 #include "server/application/services/tokenService/TokenServiceMock.h"
 

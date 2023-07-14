@@ -54,7 +54,13 @@ set(UT_SOURCES
         infrastructure/repositories/userRepository/userMapper/UserMapperImplTest.cpp
         infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImplTest.cpp
         infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapperImplTest.cpp
-        api/MessageHandlers/CreateChannelMessageHandlerTest.cpp api/MessageHandlers/DeleteUserMessageHandlerTest.cpp api/MessageHandlers/GetUserChannelsMessageHandlerTest.cpp api/MessageHandlers/GetUserDataMessageHandlerTest.cpp api/MessageHandlers/LoginMessageHandlerTest.cpp)
+        api/MessageHandlers/CreateChannelMessageHandlerTest.cpp 
+        api/MessageHandlers/DeleteUserMessageHandlerTest.cpp 
+        api/MessageHandlers/GetUserChannelsMessageHandlerTest.cpp 
+        api/MessageHandlers/GetUserDataMessageHandlerTest.cpp 
+        api/MessageHandlers/LoginMessageHandlerTest.cpp
+        api/MessageHandlers/RegisterMessageHandlerTest.cpp
+        )
 
 set(IT_SOURCES
         infrastructure/repositories/userRepository/UserRepositoryImplIntegrationTest.cpp
