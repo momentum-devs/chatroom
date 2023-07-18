@@ -32,6 +32,7 @@ private:
     std::shared_ptr<api::Session> session;
     const StateFactory& stateFactory;
     std::shared_ptr<StateMachine> stateMachine;
+    std::optional<std::shared_ptr<State>> nextState = std::nullopt;
     inline const static std::string loginResponseHandlerName{"loginResponseHandlerName"};
 };
 }

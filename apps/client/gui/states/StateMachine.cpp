@@ -34,10 +34,13 @@ void StateMachine::returnToThePreviousState()
 
 void StateMachine::clear(std::optional<std::shared_ptr<State>> state)
 {
-    while (not states.empty())
+    if (not states.empty())
     {
         states.top()->deactivate();
+    }
 
+    while (not states.empty())
+    {
         states.pop();
     }
 

@@ -107,8 +107,8 @@ Rectangle {
             errorPopup.open();
         }
         function onSetUserData(email: string, nickname: string) {
-            nicknameField.contentItem.text = nickname;
-            emailField.contentItem.text = email;
+            nicknameField.text = nickname;
+            emailField.text = email;
         }
         function onUpdateUserFailure(message: string) {
             errorPopup.contentItem.text = message;
