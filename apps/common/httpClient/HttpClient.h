@@ -1,7 +1,8 @@
 #pragma once
 
-#include "HttpGetRequestPayload.h"
 #include "HttpResponse.h"
+#include "payloads/HttpGetRequestPayload.h"
+#include "payloads/HttpPostRequestPayload.h"
 
 namespace common::httpClient
 {
@@ -11,5 +12,6 @@ public:
     virtual ~HttpClient() = default;
 
     virtual HttpResponse get(const HttpGetRequestPayload&) const = 0;
+    virtual HttpResponse post(const HttpPostRequestPayload&) const = 0;
 };
 }

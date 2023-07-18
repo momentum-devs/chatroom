@@ -2,6 +2,7 @@ set(LIBRARY_NAME collection)
 
 set(SOURCES
         StringHelper.cpp
+        StlOperators.h
         )
 
 set(UT_SOURCES
@@ -22,7 +23,6 @@ target_link_libraries(${LIBRARY_NAME}UT PRIVATE
 
 target_include_directories(${LIBRARY_NAME}UT
         PRIVATE
-        ${Boost_INCLUDE_DIR}
         ${GTEST_INCLUDE_DIR}
         )
 

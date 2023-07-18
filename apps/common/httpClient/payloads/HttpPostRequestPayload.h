@@ -4,25 +4,18 @@
 #include <optional>
 #include <string>
 
-#include "collection/StlOperators.h"
-
 namespace common::httpClient
 {
-struct HttpGetRequestPayload
+struct HttpPostRequestPayload
 {
     std::string url;
     std::optional<std::map<std::string, std::string>> headers = std::nullopt;
-    std::optional<std::map<std::string, std::string>> queries = std::nullopt;
+    std::string body;
 };
 
-inline bool operator==(const HttpGetRequestPayload& lhs, const HttpGetRequestPayload& rhs)
+inline bool operator==(const HttpPostRequestPayload& lhs, const HttpPostRequestPayload& rhs)
 {
-    return (lhs.url == rhs.url && lhs.headers == rhs.headers && lhs.queries == rhs.queries);
+    return (lhs.url == rhs.url && lhs.headers == rhs.headers && lhs.body == rhs.body);
 }
 
-inline std::ostream& operator<<(std::ostream& os, const HttpGetRequestPayload& getPayload)
-{
-    return os << "{url: " << getPayload.url << ", headers: " << getPayload.headers
-              << ", queries: " << getPayload.queries << "}";
-}
 }
