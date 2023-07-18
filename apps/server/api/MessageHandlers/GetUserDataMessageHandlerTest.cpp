@@ -56,7 +56,7 @@ TEST_F(GetUserDataMessageHandlerTest, handleValidGetUserDataMessage)
     EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(userId));
     EXPECT_CALL(*findUserQueryHandlerMock, execute(server::application::FindUserQueryHandlerPayload{userId}))
         .WillOnce(Return(server::application::FindUserQueryHandlerResult{
-            {userId, userEmail, userPassword, userNickname, userIsActive, userEmailVerified, "", ""}}));
+            {userId, userEmail, userPassword, userNickname, userIsActive, userEmailVerified, "123", "", ""}}));
 
     auto responseMessage = getUserDataMessageHandler.handleMessage(message);
 

@@ -31,14 +31,15 @@ auto validMessageResponse = common::messages::Message{common::messages::MessageI
 auto invalidUserEmail = "invalidUserEmail";
 auto payloadJsonWithInvalidEmail = nlohmann::json{{"email", invalidUserEmail}, {"password", userPassword}};
 auto payloadWithInvalidEmail = common::bytes::Bytes{payloadJsonWithInvalidEmail.dump()};
-auto messageWithInvalidEmail = common::messages::Message{common::messages::MessageId::Register, payloadWithInvalidEmail};
+auto messageWithInvalidEmail =
+    common::messages::Message{common::messages::MessageId::Register, payloadWithInvalidEmail};
 auto invalidEmailMessageResponsePayloadJson = nlohmann::json{{"error", "wrong email address"}};
 auto invalidEmailMessageResponse = common::messages::Message{
     common::messages::MessageId::RegisterResponse, common::bytes::Bytes{invalidEmailMessageResponsePayloadJson.dump()}};
 
 std::runtime_error registerUserError("registerUserError");
-auto registerUserErrorMessageResponse = common::messages::Message{common::messages::MessageId::RegisterResponse,
-                                                               common::bytes::Bytes{R"({"error":"registerUserError"})"}};
+auto registerUserErrorMessageResponse = common::messages::Message{
+    common::messages::MessageId::RegisterResponse, common::bytes::Bytes{R"({"error":"registerUserError"})"}};
 }
 
 class RegisterMessageHandlerTest : public Test
@@ -56,13 +57,13 @@ TEST_F(RegisterMessageHandlerTest, handleValidRegisterUserMessage)
 {
     EXPECT_CALL(*registerUserCommandHandlerMock,
                 execute(server::application::RegisterUserCommandHandlerPayload{userEmail, userPassword}))
-        .WillOnce(Return(server::application::RegisterUserCommandHandlerResult{{userId, userEmail, userPassword, userNickname, userIsActive, userEmailVerified, "", ""}}));
+        .WillOnce(Return(server::application::RegisterUserCommandHandlerResult{
+            {userId, userEmail, userPassword, userNickname, userIsActive, userEmailVerified, "123", "", ""}}));
 
     auto responseMessage = registerMessageHandler.handleMessage(message);
 
     EXPECT_EQ(responseMessage, validMessageResponse);
 }
-
 
 TEST_F(RegisterMessageHandlerTest, handleRegisterUserMessageWithInvalidEmail)
 {
