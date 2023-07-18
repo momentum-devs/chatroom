@@ -9,6 +9,6 @@ namespace common::httpClient
 class HttpClientFactory
 {
 public:
-    std::unique_ptr<HttpClient> createHttpClient() const;
+    static std::unique_ptr<HttpClient> createHttpClient();
 };
 }

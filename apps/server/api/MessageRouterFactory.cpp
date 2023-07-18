@@ -1,5 +1,6 @@
 #include "MessageRouterFactory.h"
 
+#include "httpClient/HttpClientFactory.h"
 #include "MessageHandlers/CreateChannelMessageHandler.h"
 #include "MessageHandlers/GetUserChannelsMessageHandler.h"
 #include "MessageHandlers/LoginMessageHandler.h"
@@ -10,6 +11,7 @@
 #include "server/application/commandHandlers/createChannelCommandHandler/CreateChannelCommandHandlerImpl.h"
 #include "server/application/commandHandlers/loginUserCommandHandler/LoginUserCommandHandlerImpl.h"
 #include "server/application/commandHandlers/registerUserCommandHandler/RegisterUserCommandHandlerImpl.h"
+#include "server/application/commandHandlers/sendRegistrationVerificationEmailCommandHandler/SendRegistrationVerificationEmailCommandHandlerImpl.h"
 #include "server/application/queryHandlers/findChannelsToWhichUserBelongsQueryHandler/FindChannelsToWhichUserBelongsQueryHandlerImpl.h"
 #include "server/application/queryHandlers/findUserQueryHandler/FindUserQueryHandlerImpl.h"
 #include "server/application/services/hashService/HashServiceImpl.h"
@@ -20,15 +22,16 @@
 #include "server/infrastructure/repositories/userChannelRepository/UserChannelRepositoryImpl.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "server/infrastructure/repositories/userRepository/UserRepositoryImpl.h"
+#include "server/infrastructure/services/emailService/EmailServiceImpl.h"
 
 namespace server::api
 {
 MessageRouterFactory::MessageRouterFactory(std::shared_ptr<odb::pgsql::database> dbInit, const std::string& jwtSecret,
-                                           const int jwtExpireIn)
+                                           const int jwtExpireIn, std::string sendGridApiKeyInit)
     : db{std::move(dbInit)},
       hashService{std::make_shared<server::application::HashServiceImpl>()},
-      tokenService{std::make_shared<server::application::TokenServiceImpl>(jwtSecret, jwtExpireIn)}
-
+      tokenService{std::make_shared<server::application::TokenServiceImpl>(jwtSecret, jwtExpireIn)},
+      sendGridApiKey{std::move(sendGridApiKeyInit)}
 {
 }
 
@@ -61,6 +64,15 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
 
     auto createChannelCommandHandler = std::make_unique<server::application::CreateChannelCommandHandlerImpl>(
         channelRepository, addUserToChannelCommandHandler);
+
+    const std::shared_ptr<common::httpClient::HttpClient> httpClient =
+        common::httpClient::HttpClientFactory::createHttpClient();
+
+    const auto emailService = std::make_shared<application::EmailServiceImpl>(httpClient, sendGridApiKey);
+
+    auto sendRegistrationVerificationEmailCommandHandler =
+        std::make_shared<server::application::SendRegistrationVerificationEmailCommandHandlerImpl>(userRepository,
+                                                                                                   emailService);
 
     auto createChannelMessageHandler =
         std::make_shared<CreateChannelMessageHandler>(tokenService, std::move(createChannelCommandHandler));

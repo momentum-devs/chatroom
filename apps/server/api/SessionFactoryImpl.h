@@ -15,7 +15,7 @@ class SessionFactoryImpl : public SessionFactory
 {
 public:
     SessionFactoryImpl(boost::asio::io_context& context, std::shared_ptr<odb::pgsql::database> db,
-                       const std::string& jwtSecret, const int jwtExpireIn);
+                       const std::string& jwtSecret, int jwtExpireIn, std::string sendGridApiKey);
 
     std::pair<std::shared_ptr<boost::asio::ip::tcp::socket>, std::shared_ptr<Session>> create() const override;
 

@@ -4,7 +4,7 @@
 
 namespace common::httpClient
 {
-std::unique_ptr<HttpClient> HttpClientFactory::createHttpClient() const
+std::unique_ptr<HttpClient> HttpClientFactory::createHttpClient()
 {
     return std::make_unique<HttpClientImpl>();
 }
