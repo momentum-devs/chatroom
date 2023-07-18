@@ -1,50 +1,70 @@
+#include "SendRegistrationVerificationEmailCommandHandlerImpl.h"
+
 #include <format>
 
 #include "gtest/gtest.h"
 
 #include "server/application/services/emailService/EmailServiceMock.h"
+#include "server/domain/repositories/userRepository/UserRepositoryMock.h"
 
+#include "../../errors/ResourceNotFoundError.h"
+#include "faker-cxx/Datatype.h"
+#include "faker-cxx/Date.h"
 #include "faker-cxx/Internet.h"
-#include "faker-cxx/Lorem.h"
-#include "faker-cxx/Word.h"
-#include "SendRegistrationVerificationEmailCommandHandler.h"
+#include "faker-cxx/String.h"
+#include "User.h"
 
 using namespace ::testing;
 using namespace server;
 using namespace server::application;
 
-class EmailServiceImplTest : public Test
+class SendRegistrationVerificationEmailCommandHandlerImplTest : public Test
 {
 public:
-    std::shared_ptr<EmailServiceMock> httpClient = std::make_shared<StrictMock<EmailServiceMock>>();
+    std::shared_ptr<domain::UserRepositoryMock> userRepository =
+        std::make_shared<StrictMock<domain::UserRepositoryMock>>();
+    std::shared_ptr<EmailServiceMock> emailService = std::make_shared<StrictMock<EmailServiceMock>>();
 
-    const std::string sendGridSecret = faker::Internet::password();
-
-    EmailServiceImpl emailService{httpClient, sendGridSecret};
+    SendRegistrationVerificationEmailCommandHandlerImpl handler{userRepository, emailService};
 };
 
-TEST_F(EmailServiceImplTest, shouldSendEmail)
+TEST_F(SendRegistrationVerificationEmailCommandHandlerImplTest, givenNotExistingUser_shouldThrow)
 {
-    const auto to = faker::Internet::email();
-    const auto from = faker::Internet::email();
-    const auto subject = faker::Word::noun();
-    const auto emailData = faker::Lorem::paragraph();
+    const auto email = faker::Internet::email();
 
-    const std::map<std::string, std::string> headers{{"Authorization", std::format("Bearer {}", sendGridSecret)},
-                                                     {"Content-Type", "application/json"}};
+    const auto expectedFindUserByEmailPayload = domain::FindUserByEmailPayload{email};
 
-    const auto sendGridApiUrl = "https://api.sendgrid.com/v3/mail/send";
+    EXPECT_CALL(*userRepository, findUserByEmail(expectedFindUserByEmailPayload)).WillOnce(Return(std::nullopt));
 
-    const auto body =
-        std::format("{{\"personalizations\": [{{\"to\": [{{\"email\": \"{}\"}}]}}],\"from\": {{\"email\": "
-                    "\"{}\"}},\"subject\": \"{}\",\"content\": [{{\"type\": \"text/plain\", \"value\": \"{}\"}}]}}",
-                    to, from, subject, emailData);
+    ASSERT_THROW(handler.execute({email}), errors::ResourceNotFoundError);
+}
 
-    const common::httpClient::HttpPostRequestPayload postRequestPayload{sendGridApiUrl, headers, body};
+TEST_F(SendRegistrationVerificationEmailCommandHandlerImplTest, givenExistingUser_shouldSendEmail)
+{
+    const auto id = faker::String::uuid();
+    const auto email = faker::Internet::email();
+    const auto password = faker::Internet::password();
+    const auto nickname = faker::Internet::username();
+    const auto active = faker::Datatype::boolean();
+    const auto emailVerified = faker::Datatype::boolean();
+    const auto verificationCode = faker::String::numeric(8);
+    const auto createdAt = faker::Date::pastDate();
+    const auto updatedAt = faker::Date::recentDate();
 
-    const common::httpClient::HttpResponse response{200, ""};
+    const auto user = std::make_shared<server::domain::User>(id, email, password, email, active, emailVerified,
+                                                             verificationCode, createdAt, updatedAt);
 
-    EXPECT_CALL(*httpClient, post(postRequestPayload)).WillOnce(Return(response));
+    const auto expectedFindUserByEmailPayload = domain::FindUserByEmailPayload{email};
 
-    emailService.sendEmail({to, from, subject, emailData});
+    const auto expectedFromAddress = "michal.andrzej.cieslar@gmail.com";
+
+    const auto expectedEmailSubject = "Chatroom Registration Verification";
+
+    const auto expectedSendEmailPayload =
+        application::SendEmailPayload{email, expectedFromAddress, expectedEmailSubject, verificationCode};
+
+    EXPECT_CALL(*userRepository, findUserByEmail(expectedFindUserByEmailPayload)).WillOnce(Return(user));
+    EXPECT_CALL(*emailService, sendEmail(expectedSendEmailPayload));
+
+    handler.execute({email});
 }
