@@ -14,5 +14,6 @@ public:
     int getServerPort() const;
     std::string getJwtSecret() const;
     int getJwtExpireIn() const;
+    std::string getSendGridApiKey() const;
 };
 }

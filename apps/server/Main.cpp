@@ -31,6 +31,9 @@ int main(int argc, char* argv[])
     const auto serverPort = configProvider.getServerPort();
     const auto jwtSecret = configProvider.getJwtSecret();
     const auto jwtExpireIn = configProvider.getJwtExpireIn();
+    const auto sendGridApiKey = configProvider.getSendGridApiKey();
+
+    std::cout << "SENDGRID_API_KEY: " << sendGridApiKey << std::endl;
 
     const auto numberOfSupportedThreads = std::thread::hardware_concurrency();
 

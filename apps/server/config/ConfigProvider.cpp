@@ -38,4 +38,9 @@ int ConfigProvider::getJwtExpireIn() const
 {
     return EnvironmentParser::parseInt("JWT_EXPIRES_IN");
 }
+
+std::string ConfigProvider::getSendGridApiKey() const
+{
+    return EnvironmentParser::parseString("SENDGRID_API_KEY");
+}
 }
