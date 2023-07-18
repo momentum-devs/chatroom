@@ -7,16 +7,17 @@
 
 namespace server::application
 {
-VerifyUserEmailCommandHandlerImpl::VerifyUserEmailCommandHandlerImpl(
-    std::shared_ptr<domain::UserRepository> userRepositoryInit)
-    : userRepository{std::move(userRepositoryInit)}
+SendRegistrationVerificationEmailCommandHandlerImpl::SendRegistrationVerificationEmailCommandHandlerImpl(
+    std::shared_ptr<domain::UserRepository> userRepositoryInit,
+    std::shared_ptr<application::EmailService> emailServiceInit)
+    : userRepository{std::move(userRepositoryInit)}, emailService{std::move(emailServiceInit)}
 {
 }
 
-VerifyUserEmailCommandHandlerResult
-VerifyUserEmailCommandHandlerImpl::execute(const VerifyUserEmailCommandHandlerPayload& payload) const
+void SendRegistrationVerificationEmailCommandHandlerImpl::execute(
+    const SendRegistrationVerificationEmailCommandHandlerPayload& payload) const
 {
-    LOG_S(INFO) << std::format("Verifying user email \"{}\"...", payload.email);
+    LOG_S(INFO) << std::format("Sending registration verification email to \"{}\"...", payload.email);
 
     const auto existingUser = userRepository->findUserByEmail({payload.email});
 
@@ -25,25 +26,7 @@ VerifyUserEmailCommandHandlerImpl::execute(const VerifyUserEmailCommandHandlerPa
         throw errors::ResourceNotFoundError{std::format("User with email \"{}\" not found.", payload.email)};
     }
 
-    if (existingUser->get()->isEmailVerified())
-    {
-        return {true};
-    }
-
-    if (existingUser->get()->getVerificationCode() != payload.verificationCode)
-    {
-        LOG_S(INFO) << std::format("User with email \"{}\" not verified.", payload.email);
-
-        return {false};
-    }
-
-    existingUser->get()->setEmailVerified(true);
-
-    userRepository->updateUser({**existingUser});
-
-    LOG_S(INFO) << std::format("User with email \"{}\" verified.", payload.email);
-
-    return {true};
+    LOG_S(INFO) << std::format("Registration verification email sent to \"{}\".", payload.email);
 }
 
 }
