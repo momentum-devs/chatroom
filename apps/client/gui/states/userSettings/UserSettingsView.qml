@@ -102,6 +102,19 @@ Rectangle {
         }
     }
     Connections {
+        function onDeleteUserFailure(message: string) {
+            errorPopup.contentItem.text = message;
+            errorPopup.open();
+        }
+        function onSetUserData(email: string, nickname: string) {
+            nicknameField.contentItem.text = nickname;
+            emailField.contentItem.text = email;
+        }
+        function onUpdateUserFailure(message: string) {
+            errorPopup.contentItem.text = message;
+            errorPopup.open();
+        }
+
         target: userSettingsController
     }
     Popup {

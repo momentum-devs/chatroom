@@ -31,6 +31,7 @@ void SessionImpl::sendMessage(const common::messages::Message& message)
 void SessionImpl::sendMessage(common::messages::MessageId messageId, const nlohmann::json& data)
 {
     auto message = messageFactory->createMessage(messageId, data, token);
+    
     sendMessage(message);
 }
 

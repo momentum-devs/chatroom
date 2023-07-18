@@ -31,4 +31,19 @@ void StateMachine::returnToThePreviousState()
         states.top()->activate();
     }
 }
+
+void StateMachine::clear(std::optional<std::shared_ptr<State>> state)
+{
+    while (not states.empty())
+    {
+        states.top()->deactivate();
+
+        states.pop();
+    }
+
+    if (state.has_value())
+    {
+        addNextState(state.value());
+    }
+}
 }
