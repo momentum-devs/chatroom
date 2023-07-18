@@ -24,6 +24,8 @@ void LoginController::loginRequest(const QString& email, const QString& password
     session->sendMessage(message);
 
     LOG_S(INFO) << std::format("Sent login request for user {}", static_cast<std::string>(message.payload));
+
+    nextState = stateFactory.createMainState();
 }
 
 void LoginController::goToRegisterState()
@@ -40,6 +42,8 @@ void LoginController::activate()
 void LoginController::deactivate()
 {
     session->removeMessageHandler({common::messages::MessageId::LoginResponse, loginResponseHandlerName});
+
+    nextState = std::nullopt;
 }
 
 void LoginController::handleLoginResponse(const common::messages::Message& message)
@@ -65,7 +69,7 @@ void LoginController::handleLoginResponse(const common::messages::Message& messa
 
         session->storeToken(responseJson.at("token").get<std::string>());
 
-        stateMachine->addNextState(stateFactory.createMainState());
+        stateMachine->addNextState(nextState.value());
     }
 }
 }

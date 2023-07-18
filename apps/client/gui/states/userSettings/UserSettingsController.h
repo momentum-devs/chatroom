@@ -38,6 +38,7 @@ private:
     std::shared_ptr<api::Session> session;
     const StateFactory& stateFactory;
     std::shared_ptr<StateMachine> stateMachine;
+    std::optional<std::shared_ptr<State>> nextState = std::nullopt;
     inline static const std::string updateUserResponseHandlerName{"updateUserResponseHandlerName"};
     inline static const std::string deleteUserResponseHandlerName{"deleteUserResponseHandlerName"};
     inline static const std::string getUserDataResponseHandlerName{"getUserDataResponseHandlerName"};

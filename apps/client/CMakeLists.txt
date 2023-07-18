@@ -25,6 +25,8 @@ set(SOURCES
         gui/states/sendFriendRequest/SendFriendRequestState.cpp
         gui/states/userSettings/UserSettingsController.cpp
         gui/states/userSettings/UserSettingsState.cpp
+        gui/states/verifyUser/VerifyUserState.cpp
+        gui/states/verifyUser/VerifyUserController.cpp
         )
 
 set(UT_SOURCES
@@ -41,6 +43,7 @@ set(QML_SOURCES
         gui/states/createChannel/CreateChannelView.qml
         gui/states/sendFriendRequest/SendFriendRequestView.qml
         gui/states/userSettings/UserSettingsView.qml
+        gui/states/verifyUser/VerifyUserView.qml
         )
 
 qt_add_executable(${EXECUTABLE_NAME} Main.cpp ${SOURCES})

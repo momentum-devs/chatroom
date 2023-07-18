@@ -34,6 +34,8 @@ void UserSettingsController::deactivate()
     session->removeMessageHandler({common::messages::MessageId::DeleteUserResponse, deleteUserResponseHandlerName});
 
     session->removeMessageHandler({common::messages::MessageId::GetUserDataResponse, getUserDataResponseHandlerName});
+
+    nextState = std::nullopt;
 }
 
 void UserSettingsController::changeNickname(const QString& nickname)
@@ -63,6 +65,8 @@ void UserSettingsController::deleteUser()
     LOG_S(INFO) << "Delete user";
 
     session->sendMessage(common::messages::MessageId::DeleteUser, {});
+
+    nextState = stateFactory.createDefaultState();
 }
 
 void UserSettingsController::goBack()
@@ -118,7 +122,7 @@ void UserSettingsController::handleDeleteUserResponse(const common::messages::Me
 
         session->storeToken("");
 
-        stateMachine->clear(stateFactory.createDefaultState());
+        stateMachine->clear(nextState.value());
     }
 }
 
