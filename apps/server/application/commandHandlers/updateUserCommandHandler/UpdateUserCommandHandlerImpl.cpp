@@ -1,6 +1,5 @@
 #include "UpdateUserCommandHandlerImpl.h"
 
-#include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
 #include <format>
 
@@ -10,8 +9,9 @@
 
 namespace server::application
 {
-UpdateUserCommandHandlerImpl::UpdateUserCommandHandlerImpl(std::shared_ptr<domain::UserRepository> userRepositoryInit)
-    : userRepository{std::move(userRepositoryInit)}
+UpdateUserCommandHandlerImpl::UpdateUserCommandHandlerImpl(std::shared_ptr<domain::UserRepository> userRepositoryInit,
+                                                           std::shared_ptr<HashService> hashServiceInit)
+    : userRepository{std::move(userRepositoryInit)}, hashService{std::move(hashServiceInit)}
 {
 }
 
@@ -34,7 +34,9 @@ UpdateUserCommandHandlerImpl::execute(const UpdateUserCommandHandlerPayload& pay
 
     if (payload.password)
     {
-        existingUser->get()->setPassword(*payload.password);
+        const auto hashedPassword = hashService->hash(*payload.password);
+
+        existingUser->get()->setPassword(hashedPassword);
     }
 
     const auto user = userRepository->updateUser({**existingUser});

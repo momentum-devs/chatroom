@@ -3,6 +3,7 @@
 #include "faker-cxx/Internet.h"
 #include "faker-cxx/String.h"
 #include "server/application/errors/ResourceNotFoundError.h"
+#include "server/application/services/hashService/HashServiceImpl.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "server/infrastructure/repositories/userRepository/UserRepositoryImpl.h"
 #include "UpdateUserCommandHandlerImpl.h"
@@ -43,7 +44,9 @@ public:
     std::shared_ptr<UserRepository> userRepository =
         std::make_shared<UserRepositoryImpl>(db, std::move(userMapperInit));
 
-    UpdateUserCommandHandlerImpl updateUserCommandHandler{userRepository};
+    std::shared_ptr<HashServiceImpl> hashService = std::make_shared<HashServiceImpl>();
+
+    UpdateUserCommandHandlerImpl updateUserCommandHandler{userRepository, hashService};
 };
 
 TEST_F(UpdateUserCommandImplIntegrationTest, updateNotExistingUser_shouldThrow)
@@ -80,7 +83,7 @@ TEST_F(UpdateUserCommandImplIntegrationTest, updatePassword)
     const auto [user] = updateUserCommandHandler.execute({id, std::nullopt, updatedPassword});
 
     ASSERT_EQ(user.getId(), id);
-    ASSERT_EQ(user.getPassword(), updatedPassword);
+    ASSERT_EQ(user.getPassword(), hashService->hash(updatedPassword));
 }
 
 TEST_F(UpdateUserCommandImplIntegrationTest, updateNickname)
