@@ -21,8 +21,8 @@ enum class MessageId : unsigned char
     SendFriendRequestResponse,
     GetUserData,
     GetUserDataResponse,
-    ChangeUserData,
-    ChangUserDataResponse,
+    UpdateUser,
+    UpdateUserResponse,
     DeleteUser,
     DeleteUserResponse,
 };
@@ -43,8 +43,8 @@ inline std::string toString(MessageId messageId)
         {MessageId::SendFriendRequestResponse, "SendFriendRequestResponse"},
         {MessageId::GetUserData, "GetUserData"},
         {MessageId::GetUserDataResponse, "GetUserDataResponse"},
-        {MessageId::ChangeUserData, "ChangeUserData"},
-        {MessageId::ChangUserDataResponse, "ChangUserDataResponse"},
+        {MessageId::UpdateUser, "UpdateUser"},
+        {MessageId::UpdateUserResponse, "UpdateUserResponse"},
         {MessageId::DeleteUser, "DeleteUser"},
         {MessageId::DeleteUserResponse, "DeleteUserResponse"},
     };

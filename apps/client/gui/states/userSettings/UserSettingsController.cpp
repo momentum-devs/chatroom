@@ -13,18 +13,139 @@ UserSettingsController::UserSettingsController(std::shared_ptr<api::Session> ses
 {
 }
 
-void UserSettingsController::activate() {}
+void UserSettingsController::activate()
+{
+    session->addMessageHandler({common::messages::MessageId::UpdateUserResponse, updateUserResponseHandlerName,
+                                [this](const auto& msg) { handleUpdateUserResponse(msg); }});
 
-void UserSettingsController::deactivate() {}
+    session->addMessageHandler({common::messages::MessageId::DeleteUserResponse, deleteUserResponseHandlerName,
+                                [this](const auto& msg) { handleDeleteUserResponse(msg); }});
 
-void UserSettingsController::changeNickname(const QString& nickname) {}
+    session->addMessageHandler({common::messages::MessageId::GetUserDataResponse, getUserDataResponseHandlerName,
+                                [this](const auto& msg) { handleGetUserDataResponse(msg); }});
 
-void UserSettingsController::changePassword(const QString& password) {}
+    session->sendMessage(common::messages::MessageId::GetUserData, {});
+}
 
-void UserSettingsController::deleteUser() {}
+void UserSettingsController::deactivate()
+{
+    session->removeMessageHandler({common::messages::MessageId::UpdateUserResponse, updateUserResponseHandlerName});
+
+    session->removeMessageHandler({common::messages::MessageId::DeleteUserResponse, deleteUserResponseHandlerName});
+
+    session->removeMessageHandler({common::messages::MessageId::GetUserDataResponse, getUserDataResponseHandlerName});
+}
+
+void UserSettingsController::changeNickname(const QString& nickname)
+{
+    LOG_S(INFO) << "Change user nickname to " << nickname.toStdString();
+
+    nlohmann::json data{
+        {"nickname", nickname.toStdString()},
+    };
+
+    session->sendMessage(common::messages::MessageId::UpdateUser, data);
+}
+
+void UserSettingsController::changePassword(const QString& password)
+{
+    LOG_S(INFO) << "Change user password";
+
+    nlohmann::json data{
+        {"password", password.toStdString()},
+    };
+
+    session->sendMessage(common::messages::MessageId::UpdateUser, data);
+}
+
+void UserSettingsController::deleteUser()
+{
+    LOG_S(INFO) << "Delete user";
+
+    session->sendMessage(common::messages::MessageId::DeleteUser, {});
+}
 
 void UserSettingsController::goBack()
 {
     stateMachine->returnToThePreviousState();
+}
+
+void UserSettingsController::handleUpdateUserResponse(const common::messages::Message& message)
+{
+    LOG_S(INFO) << "Handle update user response";
+
+    auto responsePayload = static_cast<std::string>(message.payload);
+
+    auto responseJson = nlohmann::json::parse(responsePayload);
+
+    if (responseJson.contains("error"))
+    {
+        auto errorMessage = std::format("Error while updating user: {}", responseJson.at("error").get<std::string>());
+
+        emit updateUserFailure(QString::fromStdString(errorMessage));
+
+        LOG_S(ERROR) << errorMessage;
+    }
+
+    if (responseJson.is_array() and responseJson.at(0).get<std::string>() == "ok")
+    {
+        LOG_S(INFO) << "Successfully updated user";
+
+        stateMachine->returnToThePreviousState();
+    }
+}
+
+void UserSettingsController::handleDeleteUserResponse(const common::messages::Message& message)
+{
+    LOG_S(INFO) << "Handle delete user response";
+
+    auto responsePayload = static_cast<std::string>(message.payload);
+
+    auto responseJson = nlohmann::json::parse(responsePayload);
+
+    if (responseJson.contains("error"))
+    {
+        auto errorMessage = std::format("Error while updating user: {}", responseJson.at("error").get<std::string>());
+
+        emit deleteUserFailure(QString::fromStdString(errorMessage));
+
+        LOG_S(ERROR) << errorMessage;
+    }
+
+    if (responseJson.is_array() and responseJson.at(0).get<std::string>() == "ok")
+    {
+        LOG_S(INFO) << "Successfully deleted user";
+
+        session->storeToken("");
+
+        stateMachine->clear(stateFactory.createDefaultState());
+    }
+}
+
+void UserSettingsController::handleGetUserDataResponse(const common::messages::Message& message)
+{
+    LOG_S(INFO) << "Handle get user data response";
+
+    auto responsePayload = static_cast<std::string>(message.payload);
+
+    auto responseJson = nlohmann::json::parse(responsePayload);
+
+    if (responseJson.contains("error"))
+    {
+        LOG_S(ERROR) << std::format("Error while getting user data: {}", responseJson.at("error").get<std::string>());
+    }
+
+    if (responseJson.contains("data") and responseJson.at("data").contains("email") and
+        responseJson.at("data").contains("nickname"))
+    {
+        LOG_S(INFO) << "Successfully obtain user data";
+
+        emit setUserData(QString::fromStdString(responseJson.at("data").at("email").get<std::string>()),
+                         QString::fromStdString(responseJson.at("data").at("nickname").get<std::string>()));
+    }
+    else
+    {
+        LOG_S(ERROR) << "Unknown error while getting user data";
+    }
 }
 }

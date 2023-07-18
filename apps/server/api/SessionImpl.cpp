@@ -32,7 +32,8 @@ void SessionImpl::startReceivingMessage()
 
 void SessionImpl::handleMessage(const common::messages::Message& message)
 {
-    LOG_S(INFO) << "Read message with payload: " << static_cast<std::string>(message.payload);
+    LOG_S(INFO) << std::format("Received message: (id: {0:}, payload: {1:}), id {0:}", toString(message.id),
+                               static_cast<std::string>(message.payload));
 
     auto response = messageRouter->route(message);
 

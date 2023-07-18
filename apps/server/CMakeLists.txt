@@ -48,13 +48,20 @@ set(SOURCES
         application/commandHandlers/removeUserFromChannelCommandHandler/RemoveUserFromChannelCommandHandlerImpl.cpp
         application/queryHandlers/findUsersBelongingToChannelQueryHandler/FindUsersBelongingToChannelQueryHandlerImpl.cpp
         application/queryHandlers/findChannelsToWhichUserBelongsQueryHandler/FindChannelsToWhichUserBelongsQueryHandlerImpl.cpp
-        )
+        api/MessageHandlers/UpdateUserMessageHandler.cpp api/MessageHandlers/DeleteUserMessageHandler.cpp)
 
 set(UT_SOURCES
-        api/MessageHandlerImplTest.cpp
         api/SessionImplTest.cpp
         api/SessionManagerTest.cpp
         infrastructure/services/emailService/EmailServiceImplTest.cpp
+        api/MessageRouterImplTest.cpp
+        api/MessageHandlers/CreateChannelMessageHandlerTest.cpp
+        api/MessageHandlers/DeleteUserMessageHandlerTest.cpp
+        api/MessageHandlers/GetUserChannelsMessageHandlerTest.cpp
+        api/MessageHandlers/GetUserDataMessageHandlerTest.cpp
+        api/MessageHandlers/LoginMessageHandlerTest.cpp
+        api/MessageHandlers/RegisterMessageHandlerTest.cpp
+        api/MessageHandlers/UpdateUserMessageHandlerTest.cpp
         infrastructure/repositories/userRepository/userMapper/UserMapperImplTest.cpp
         infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImplTest.cpp
         infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapperImplTest.cpp
@@ -80,7 +87,7 @@ set(IT_SOURCES
         application/commandHandlers/removeUserFromChannelCommandHandler/RemoveUserFromChannelCommandHandlerImplIntegrationTest.cpp
         application/queryHandlers/findUsersBelongingToChannelQueryHandler/FindUsersBelongingToChannelQueryHandlerImplIntegrationTest.cpp
         application/queryHandlers/findChannelsToWhichUserBelongsQueryHandler/FindChannelsToWhichUserBelongsQueryHandlerImplIntegrationTest.cpp
-        api/MessageRouterImplTest.cpp)
+        )
 
 set(ODB_HEADERS
         infrastructure/database/entities/User.h

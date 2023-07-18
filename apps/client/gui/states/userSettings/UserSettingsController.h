@@ -26,12 +26,20 @@ public:
     Q_INVOKABLE void deleteUser();
     Q_INVOKABLE void goBack();
 signals:
-    void changeNicknameFailure(const QString& error);
-    void changePasswordFailure(const QString& error);
+    void updateUserFailure(const QString& error);
+    void deleteUserFailure(const QString& error);
+    void setUserData(const QString& email, const QString& nick);
 
 private:
+    void handleUpdateUserResponse(const common::messages::Message& message);
+    void handleDeleteUserResponse(const common::messages::Message& message);
+    void handleGetUserDataResponse(const common::messages::Message& message);
+
     std::shared_ptr<api::Session> session;
     const StateFactory& stateFactory;
     std::shared_ptr<StateMachine> stateMachine;
+    inline static const std::string updateUserResponseHandlerName{"updateUserResponseHandlerName"};
+    inline static const std::string deleteUserResponseHandlerName{"deleteUserResponseHandlerName"};
+    inline static const std::string getUserDataResponseHandlerName{"getUserDataResponseHandlerName"};
 };
 }
