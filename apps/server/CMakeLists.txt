@@ -48,7 +48,10 @@ set(SOURCES
         application/commandHandlers/removeUserFromChannelCommandHandler/RemoveUserFromChannelCommandHandlerImpl.cpp
         application/queryHandlers/findUsersBelongingToChannelQueryHandler/FindUsersBelongingToChannelQueryHandlerImpl.cpp
         application/queryHandlers/findChannelsToWhichUserBelongsQueryHandler/FindChannelsToWhichUserBelongsQueryHandlerImpl.cpp
-        api/MessageHandlers/UpdateUserMessageHandler.cpp api/MessageHandlers/DeleteUserMessageHandler.cpp)
+        api/MessageHandlers/UpdateUserMessageHandler.cpp
+        api/MessageHandlers/DeleteUserMessageHandler.cpp
+        api/MessageHandlers/VerifyUserMessageHandle.cpp
+        )
 
 set(UT_SOURCES
         api/SessionImplTest.cpp

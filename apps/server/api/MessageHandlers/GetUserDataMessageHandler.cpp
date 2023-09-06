@@ -8,9 +8,9 @@
 namespace server::api
 {
 GetUserDataMessageHandler::GetUserDataMessageHandler(
-    std::shared_ptr<server::application::TokenService> tokenServiceInit,
-    std::unique_ptr<server::application::FindUserQueryHandler> findUserQueryHandlerInit)
-    : tokenService{std::move(tokenServiceInit)}, findUserQueryHandler{std::move(findUserQueryHandlerInit)}
+    std::shared_ptr<server::application::TokenService> tokenService,
+    std::shared_ptr<server::application::FindUserQueryHandler> findUserQueryHandler)
+    : tokenService{std::move(tokenService)}, findUserQueryHandler{std::move(findUserQueryHandler)}
 {
 }
 common::messages::Message GetUserDataMessageHandler::handleMessage(const common::messages::Message& message) const

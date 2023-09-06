@@ -26,13 +26,11 @@ void VerifyUserController::deactivate()
 
 void VerifyUserController::verificationRequest(const QString& verificationCode)
 {
-    nlohmann::json payload{
+    nlohmann::json data{
         {"verificationCode", verificationCode.toStdString()},
     };
 
-    common::messages::Message message{common::messages::MessageId::VerifyUser, common::bytes::Bytes{payload.dump()}};
-
-    session->sendMessage(message);
+    session->sendMessage(common::messages::MessageId::VerifyUser, data);
 
     LOG_S(INFO) << std::format("Sent verification request with code {}", verificationCode.toStdString());
 }

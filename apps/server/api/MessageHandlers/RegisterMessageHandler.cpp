@@ -8,8 +8,11 @@
 namespace server::api
 {
 RegisterMessageHandler::RegisterMessageHandler(
-    std::unique_ptr<server::application::RegisterUserCommandHandler> registerUserCommandHandlerInit)
-    : registerUserCommandHandler{std::move(registerUserCommandHandlerInit)}
+    std::unique_ptr<server::application::RegisterUserCommandHandler> registerUserCommandHandlerInit,
+    std::shared_ptr<server::application::SendRegistrationVerificationEmailCommandHandler>
+        sendRegistrationVerificationEmailCommandHandlerInit)
+    : registerUserCommandHandler{std::move(registerUserCommandHandlerInit)},
+      sendRegistrationVerificationEmailCommandHandler{std::move(sendRegistrationVerificationEmailCommandHandlerInit)}
 {
 }
 
@@ -42,6 +45,8 @@ common::messages::Message RegisterMessageHandler::handleMessage(const common::me
 
         return {common::messages::MessageId::RegisterResponse, common::bytes::Bytes{responsePayload.dump()}};
     }
+
+    sendRegistrationVerificationEmailCommandHandler->execute({email});
 
     LOG_S(INFO) << std::format("Register user {} with id {}", email, registerUserCommandHandlerResult->user.getId());
 
