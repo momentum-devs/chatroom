@@ -37,19 +37,16 @@
 
 ### TODO:
 
-* delete user
-* update user (nickname & password)
 * user online/offline, logout user
 * *send registration verification email
 
 
 * show list of channels
 * delete channel (only creator)
-* send channel invitation (admin and creator)
+* send channel invitation (only creator)
 * accept channel invitation
 * reject channel invitation
 * leave channel
-* add admin user role in channels (only creator)
 
 
 * send friend invitation

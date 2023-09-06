@@ -48,7 +48,14 @@ set(SOURCES
         application/commandHandlers/removeUserFromChannelCommandHandler/RemoveUserFromChannelCommandHandlerImpl.cpp
         application/queryHandlers/findUsersBelongingToChannelQueryHandler/FindUsersBelongingToChannelQueryHandlerImpl.cpp
         application/queryHandlers/findChannelsToWhichUserBelongsQueryHandler/FindChannelsToWhichUserBelongsQueryHandlerImpl.cpp
-        api/MessageHandlers/UpdateUserMessageHandler.cpp api/MessageHandlers/DeleteUserMessageHandler.cpp)
+
+        domain/entities/channelInvitation/ChannelInvitation.cpp
+        infrastructure/repositories/channelInvitationRepository/ChannelInvitationRepositoryImpl.cpp
+        infrastructure/repositories/channelInvitationRepository/channelInvitationMapper/ChannelInvitationMapperImpl.cpp
+
+        api/MessageHandlers/UpdateUserMessageHandler.cpp
+        api/MessageHandlers/DeleteUserMessageHandler.cpp
+        )
 
 set(UT_SOURCES
         api/SessionImplTest.cpp
@@ -66,6 +73,7 @@ set(UT_SOURCES
         infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImplTest.cpp
         infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapperImplTest.cpp
         application/commandHandlers/sendRegistrationVerificationEmailCommandHandler/SendRegistrationVerificationEmailCommandHandlerImplTest.cpp
+        infrastructure/repositories/channelInvitationRepository/channelInvitationMapper/ChannelInvitationMapperImplTest.cpp
         )
 
 set(IT_SOURCES
@@ -87,12 +95,14 @@ set(IT_SOURCES
         application/commandHandlers/removeUserFromChannelCommandHandler/RemoveUserFromChannelCommandHandlerImplIntegrationTest.cpp
         application/queryHandlers/findUsersBelongingToChannelQueryHandler/FindUsersBelongingToChannelQueryHandlerImplIntegrationTest.cpp
         application/queryHandlers/findChannelsToWhichUserBelongsQueryHandler/FindChannelsToWhichUserBelongsQueryHandlerImplIntegrationTest.cpp
+        infrastructure/repositories/channelInvitationRepository/ChannelInvitationRepositoryImplIntegrationTest.cpp
         )
 
 set(ODB_HEADERS
         infrastructure/database/entities/User.h
         infrastructure/database/entities/Channel.h
         infrastructure/database/entities/UserChannel.h
+        infrastructure/database/entities/ChannelInvitation.h
         )
 
 odb_compile(
@@ -111,6 +121,7 @@ set(ODB_SOURCES
         infrastructure/database/entities/User.cpp
         infrastructure/database/entities/Channel.cpp
         infrastructure/database/entities/UserChannel.cpp
+        infrastructure/database/entities/ChannelInvitation.cpp
         ${ODB_GENERATED_SOURCES}
         )
 
