@@ -52,6 +52,7 @@ set(SOURCES
         domain/entities/channelInvitation/ChannelInvitation.cpp
         infrastructure/repositories/channelInvitationRepository/ChannelInvitationRepositoryImpl.cpp
         infrastructure/repositories/channelInvitationRepository/channelInvitationMapper/ChannelInvitationMapperImpl.cpp
+        application/commandHandlers/createChannelInvitationCommandHandler/CreateChannelInvitationCommandHandlerImpl.cpp
 
         api/MessageHandlers/UpdateUserMessageHandler.cpp
         api/MessageHandlers/DeleteUserMessageHandler.cpp
@@ -96,6 +97,7 @@ set(IT_SOURCES
         application/queryHandlers/findUsersBelongingToChannelQueryHandler/FindUsersBelongingToChannelQueryHandlerImplIntegrationTest.cpp
         application/queryHandlers/findChannelsToWhichUserBelongsQueryHandler/FindChannelsToWhichUserBelongsQueryHandlerImplIntegrationTest.cpp
         infrastructure/repositories/channelInvitationRepository/ChannelInvitationRepositoryImplIntegrationTest.cpp
+        application/commandHandlers/createChannelInvitationCommandHandler/CreateChannelInvitationCommandHandlerImplIntegrationTest.cpp
         )
 
 set(ODB_HEADERS
