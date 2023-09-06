@@ -22,7 +22,7 @@ CreateChannelInvitationCommandHandlerImpl::CreateChannelInvitationCommandHandler
 void CreateChannelInvitationCommandHandlerImpl::execute(
     const CreateChannelInvitationCommandHandlerPayload& payload) const
 {
-    LOG_S(INFO) << std::format("Creating channel invitation... {{senderId: {}, recipient: {},channelId: {}}}",
+    LOG_S(INFO) << std::format("Creating channel invitation... {{senderId: {}, recipientId: {},channelId: {}}}",
                                payload.senderId, payload.recipientId, payload.channelId);
 
     const auto sender = userRepository->findUserById({payload.senderId});
