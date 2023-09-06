@@ -26,9 +26,7 @@ common::messages::Message GetUserDataMessageHandler::handleMessage(const common:
         const auto& [user] = findUserQueryHandler->execute({userId});
 
         nlohmann::json userData{
-            {"email", user.getEmail()},
-            {"nickname", user.getNickname()},
-        };
+            {"email", user.getEmail()}, {"nickname", user.getNickname()}, {"verified", user.isEmailVerified()}};
 
         nlohmann::json responsePayload{{"data", userData}};
 

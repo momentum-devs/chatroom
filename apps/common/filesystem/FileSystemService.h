@@ -20,4 +20,5 @@ public:
     virtual void remove(const std::string& absolutePath) const = 0;
     virtual void createDirectory(const std::string& absolutePath) const = 0;
 };
+-
 }
