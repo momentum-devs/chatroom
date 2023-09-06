@@ -50,7 +50,7 @@ void VerifyUserController::handleVerificationResponse(const common::messages::Me
 
     if (responseJson.contains("error"))
     {
-        auto errorMessage = std::format("Error while logging: {}", responseJson.at("error").get<std::string>());
+        auto errorMessage = std::format("Error while verifying user: {}", responseJson.at("error").get<std::string>());
 
         emit verificationFailure(QString::fromStdString(errorMessage));
 

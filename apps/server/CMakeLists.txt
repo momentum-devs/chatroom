@@ -78,7 +78,7 @@ set(UT_SOURCES
         infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImplTest.cpp
         infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapperImplTest.cpp
         application/commandHandlers/sendRegistrationVerificationEmailCommandHandler/SendRegistrationVerificationEmailCommandHandlerImplTest.cpp
-        )
+        api/MessageHandlers/VerifyUserMessageHandleTest.cpp)
 
 set(IT_SOURCES
         infrastructure/repositories/userRepository/UserRepositoryImplIntegrationTest.cpp
