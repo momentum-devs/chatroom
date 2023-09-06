@@ -25,7 +25,8 @@ auto userNickname = "userNickname";
 auto userIsActive = true;
 auto userEmailVerified = true;
 
-auto validMessageResponsePayloadJson = nlohmann::json{{"data", {{"email", userEmail}, {"nickname", userNickname}}}};
+auto validMessageResponsePayloadJson =
+    nlohmann::json{{"data", {{"email", userEmail}, {"nickname", userNickname}, {"verified", true}}}};
 auto validMessageResponse = common::messages::Message{common::messages::MessageId::GetUserDataResponse,
                                                       common::bytes::Bytes{validMessageResponsePayloadJson.dump()}};
 
