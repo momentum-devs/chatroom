@@ -1,6 +1,6 @@
-
 #include "VerifyUserState.h"
 
+#include <loguru.hpp>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 
@@ -12,7 +12,19 @@ VerifyUserState::VerifyUserState(std::unique_ptr<VerifyUserController> verifyUse
 {
 }
 
-void VerifyUserState::activate() {}
+void VerifyUserState::activate()
+{
+    LOG_S(INFO) << "Activate VerifyUserState";
 
-void VerifyUserState::deactivate() {}
+    loaderController->getEngine()->rootContext()->setContextProperty(componentName, verifyUserController.get());
+
+    loaderController->callLoadView(qUrl);
+
+    verifyUserController->activate();
+}
+
+void VerifyUserState::deactivate()
+{
+    verifyUserController->deactivate();
+}
 }

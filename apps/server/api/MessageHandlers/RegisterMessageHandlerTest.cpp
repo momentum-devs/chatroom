@@ -4,6 +4,7 @@
 #include <gtest/gtest.h>
 #include <regex>
 
+#include "server/application//commandHandlers/sendRegistrationVerificationEmailCommandHandler/SendRegistrationVerificationEmailCommandHandlerMock.h"
 #include "server/application/commandHandlers/registerUserCommandHandler/RegisterUserCommandHandlerMock.h"
 #include "server/application/services/tokenService/TokenServiceMock.h"
 
@@ -50,7 +51,12 @@ public:
     server::application::RegisterUserCommandHandlerMock* registerUserCommandHandlerMock =
         registerUserCommandHandlerMockInit.get();
 
-    RegisterMessageHandler registerMessageHandler{std::move(registerUserCommandHandlerMockInit)};
+    std::shared_ptr<server::application::SendRegistrationVerificationEmailCommandHandlerMock>
+        sendRegistrationVerificationEmailCommandHandlerMock =
+            std::make_shared<StrictMock<server::application::SendRegistrationVerificationEmailCommandHandlerMock>>();
+
+    RegisterMessageHandler registerMessageHandler{std::move(registerUserCommandHandlerMockInit),
+                                                  sendRegistrationVerificationEmailCommandHandlerMock};
 };
 
 TEST_F(RegisterMessageHandlerTest, handleValidRegisterUserMessage)
@@ -59,6 +65,9 @@ TEST_F(RegisterMessageHandlerTest, handleValidRegisterUserMessage)
                 execute(server::application::RegisterUserCommandHandlerPayload{userEmail, userPassword}))
         .WillOnce(Return(server::application::RegisterUserCommandHandlerResult{
             {userId, userEmail, userPassword, userNickname, userIsActive, userEmailVerified, "123", "", ""}}));
+
+    EXPECT_CALL(*sendRegistrationVerificationEmailCommandHandlerMock,
+                execute(server::application::SendRegistrationVerificationEmailCommandHandlerPayload{userEmail}));
 
     auto responseMessage = registerMessageHandler.handleMessage(message);
 

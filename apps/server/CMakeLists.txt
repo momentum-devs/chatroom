@@ -48,6 +48,9 @@ set(SOURCES
         application/commandHandlers/removeUserFromChannelCommandHandler/RemoveUserFromChannelCommandHandlerImpl.cpp
         application/queryHandlers/findUsersBelongingToChannelQueryHandler/FindUsersBelongingToChannelQueryHandlerImpl.cpp
         application/queryHandlers/findChannelsToWhichUserBelongsQueryHandler/FindChannelsToWhichUserBelongsQueryHandlerImpl.cpp
+        api/MessageHandlers/UpdateUserMessageHandler.cpp
+        api/MessageHandlers/DeleteUserMessageHandler.cpp
+        api/MessageHandlers/VerifyUserMessageHandle.cpp
 
         domain/entities/channelInvitation/ChannelInvitation.cpp
         infrastructure/repositories/channelInvitationRepository/ChannelInvitationRepositoryImpl.cpp
@@ -74,7 +77,6 @@ set(UT_SOURCES
         infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImplTest.cpp
         infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapperImplTest.cpp
         application/commandHandlers/sendRegistrationVerificationEmailCommandHandler/SendRegistrationVerificationEmailCommandHandlerImplTest.cpp
-        infrastructure/repositories/channelInvitationRepository/channelInvitationMapper/ChannelInvitationMapperImplTest.cpp
         )
 
 set(IT_SOURCES

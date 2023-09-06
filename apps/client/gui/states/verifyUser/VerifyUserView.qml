@@ -6,7 +6,8 @@ Rectangle {
     color: "grey"
     width: Math.round(parent.width / 3)
 
-    Keys.onEnterPressed: sendFriendRequestButton.activate()
+    Keys.onEnterPressed: verifyButton.activate()
+    Keys.onReturnPressed: verifyButton.activate()
 
     Column {
         anchors.centerIn: parent
@@ -24,13 +25,13 @@ Rectangle {
             width: parent.width
         }
         Row {
-            anchors.horizontalCenter: friendEmailField.horizontalCenter
+            anchors.horizontalCenter: verificationCodeField.horizontalCenter
 
             Button {
-                id: sendFriendRequestButton
+                id: verifyButton
                 function activate() {
                     const verificationCode = verificationCodeField.text;
-                //TODO
+                    verifyUserController.verificationRequest(verificationCode);
                 }
 
                 text: qsTr('Verify')
@@ -42,7 +43,7 @@ Rectangle {
             Button {
                 id: goToLoginButton
                 function activate() {
-                //TODO
+                    verifyUserController.goToLoginState();
                 }
 
                 text: qsTr('Go to login')
@@ -52,6 +53,12 @@ Rectangle {
         }
     }
     Connections {
+        function onVerificationFailure(message: string) {
+            errorPopup.contentItem.text = message;
+            errorPopup.open();
+        }
+
+        target: verifyUserController
     }
     Popup {
         id: successPopup

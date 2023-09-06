@@ -20,11 +20,19 @@ public:
 
     void activate();
     void deactivate();
+
+    Q_INVOKABLE void verificationRequest(const QString& verificationCode);
+    Q_INVOKABLE void goToLoginState();
+
 signals:
+    void verificationFailure(const QString& error);
 
 private:
+    void handleVerificationResponse(const common::messages::Message& message);
+
     std::shared_ptr<api::Session> session;
     const StateFactory& stateFactory;
     std::shared_ptr<StateMachine> stateMachine;
+    inline const static std::string verificationResponseHandlerName{"verificationResponseHandlerName"};
 };
 }

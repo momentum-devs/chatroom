@@ -25,6 +25,8 @@ enum class MessageId : unsigned char
     UpdateUserResponse,
     DeleteUser,
     DeleteUserResponse,
+    VerifyUser,
+    VerifyUserResponse,
 };
 
 inline std::string toString(MessageId messageId)
@@ -47,6 +49,8 @@ inline std::string toString(MessageId messageId)
         {MessageId::UpdateUserResponse, "UpdateUserResponse"},
         {MessageId::DeleteUser, "DeleteUser"},
         {MessageId::DeleteUserResponse, "DeleteUserResponse"},
+        {MessageId::VerifyUser, "VerifyUser"},
+        {MessageId::VerifyUserResponse, "VerifyUserResponse"},
     };
 
     try

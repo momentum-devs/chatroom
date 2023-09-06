@@ -22,7 +22,7 @@ signals:
 
 private:
     inline static const QString componentName{"loaderController"};
-    inline static const QUrl qUrl{QUrl::fromLocalFile("chatroom/gui/qml/MainView.qml")};
+    inline static const QUrl qUrl{QUrl::fromLocalFile("chatroom/gui/qml/LoaderView.qml")};
     QQuickView view;
 };
 }

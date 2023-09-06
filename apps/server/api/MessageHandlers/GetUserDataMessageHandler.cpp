@@ -8,9 +8,9 @@
 namespace server::api
 {
 GetUserDataMessageHandler::GetUserDataMessageHandler(
-    std::shared_ptr<server::application::TokenService> tokenServiceInit,
-    std::unique_ptr<server::application::FindUserQueryHandler> findUserQueryHandlerInit)
-    : tokenService{std::move(tokenServiceInit)}, findUserQueryHandler{std::move(findUserQueryHandlerInit)}
+    std::shared_ptr<server::application::TokenService> tokenService,
+    std::shared_ptr<server::application::FindUserQueryHandler> findUserQueryHandler)
+    : tokenService{std::move(tokenService)}, findUserQueryHandler{std::move(findUserQueryHandler)}
 {
 }
 common::messages::Message GetUserDataMessageHandler::handleMessage(const common::messages::Message& message) const
@@ -26,9 +26,7 @@ common::messages::Message GetUserDataMessageHandler::handleMessage(const common:
         const auto& [user] = findUserQueryHandler->execute({userId});
 
         nlohmann::json userData{
-            {"email", user.getEmail()},
-            {"nickname", user.getNickname()},
-        };
+            {"email", user.getEmail()}, {"nickname", user.getNickname()}, {"verified", user.isEmailVerified()}};
 
         nlohmann::json responsePayload{{"data", userData}};
 

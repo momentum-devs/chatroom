@@ -25,4 +25,7 @@ set(target_code_coverage_ALL 1)
 include("cmake/cmake-coverage.cmake")
 add_code_coverage_all_targets()
 
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fpic")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpic")
+
 add_subdirectory(apps)

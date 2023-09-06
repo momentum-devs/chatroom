@@ -8,6 +8,7 @@
 #include "MessageHandlers/LoginMessageHandler.h"
 #include "MessageHandlers/RegisterMessageHandler.h"
 #include "MessageHandlers/UpdateUserMessageHandler.h"
+#include "MessageHandlers/VerifyUserMessageHandle.h"
 #include "MessageRouterImpl.h"
 #include "server/application/commandHandlers/addUserToChannelCommandHandler/AddUserToChannelCommandHandlerImpl.h"
 #include "server/application/commandHandlers/createChannelCommandHandler/CreateChannelCommandHandlerImpl.h"
@@ -16,6 +17,7 @@
 #include "server/application/commandHandlers/registerUserCommandHandler/RegisterUserCommandHandlerImpl.h"
 #include "server/application/commandHandlers/sendRegistrationVerificationEmailCommandHandler/SendRegistrationVerificationEmailCommandHandlerImpl.h"
 #include "server/application/commandHandlers/updateUserCommandHandler/UpdateUserCommandHandlerImpl.h"
+#include "server/application/commandHandlers/verifyUserEmailCommandHandler/VerifyUserEmailCommandHandlerImpl.h"
 #include "server/application/queryHandlers/findChannelsToWhichUserBelongsQueryHandler/FindChannelsToWhichUserBelongsQueryHandlerImpl.h"
 #include "server/application/queryHandlers/findUserQueryHandler/FindUserQueryHandlerImpl.h"
 #include "server/application/services/hashService/HashServiceImpl.h"
@@ -86,12 +88,12 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
 
     auto loginMessageHandler = std::make_shared<LoginMessageHandler>(std::move(loginUserCommandHandler));
 
-    auto registerMessageHandler = std::make_shared<RegisterMessageHandler>(std::move(registerUserCommandHandler));
+    auto registerMessageHandler = std::make_shared<RegisterMessageHandler>(
+        std::move(registerUserCommandHandler), sendRegistrationVerificationEmailCommandHandler);
 
-    auto findUserQueryHandler = std::make_unique<server::application::FindUserQueryHandlerImpl>(userRepository);
+    auto findUserQueryHandler = std::make_shared<server::application::FindUserQueryHandlerImpl>(userRepository);
 
-    auto getUserDataMessageHandler =
-        std::make_shared<GetUserDataMessageHandler>(tokenService, std::move(findUserQueryHandler));
+    auto getUserDataMessageHandler = std::make_shared<GetUserDataMessageHandler>(tokenService, findUserQueryHandler);
 
     auto updateUserCommandHandler =
         std::make_unique<server::application::UpdateUserCommandHandlerImpl>(userRepository, hashService);
@@ -104,6 +106,12 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
     auto deleteUserMessageHandler =
         std::make_shared<DeleteUserMessageHandler>(tokenService, std::move(deleteUserCommandHandler));
 
+    auto verifyUserEmailCommandHandler =
+        std::make_unique<server::application::VerifyUserEmailCommandHandlerImpl>(userRepository);
+
+    auto verifyUserMessageHandler = std::make_shared<VerifyUserMessageHandle>(
+        tokenService, std::move(verifyUserEmailCommandHandler), findUserQueryHandler);
+
     std::unordered_map<common::messages::MessageId, std::shared_ptr<MessageHandler>> messageHandlers{
         {common::messages::MessageId::CreateChannel, createChannelMessageHandler},
         {common::messages::MessageId::GetUserChannels, getUserChannelsMessageHandler},
@@ -111,7 +119,9 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
         {common::messages::MessageId::Register, registerMessageHandler},
         {common::messages::MessageId::GetUserData, getUserDataMessageHandler},
         {common::messages::MessageId::UpdateUser, updateUserMessageHandler},
-        {common::messages::MessageId::DeleteUser, deleteUserMessageHandler}};
+        {common::messages::MessageId::DeleteUser, deleteUserMessageHandler},
+        {common::messages::MessageId::VerifyUser, verifyUserMessageHandler},
+    };
 
     return std::make_unique<MessageRouterImpl>(std::move(messageHandlers));
 }

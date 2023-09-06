@@ -27,11 +27,14 @@ public:
 
 private:
     void handleGetUserChannelsResponse(const common::messages::Message& message);
+    void handleGetUserDataResponse(const common::messages::Message& message);
 
     std::shared_ptr<api::Session> session;
     const StateFactory& stateFactory;
     std::shared_ptr<StateMachine> stateMachine;
+    std::optional<std::shared_ptr<State>> nextState = std::nullopt;
 
     inline static const std::string getUserChannelsResponseHandlerName{"getUserChannelsResponseHandlerName"};
+    inline static const std::string getUserDataResponseHandlerName{"getUserChannelsResponseHandlerName"};
 };
 }
