@@ -6,7 +6,10 @@
 #include "Channel.h"
 #include "Channel.odb.h"
 #include "DeleteChannelCommandHandlerImpl.h"
-#include "server/application/services/hashService/HashServiceImpl.h"
+#include "faker-cxx/Internet.h"
+#include "faker-cxx/String.h"
+#include "faker-cxx/Word.h"
+#include "server/application/errors/OperationNotValid.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
 #include "server/infrastructure/repositories/channelRepository/ChannelRepositoryImpl.h"
 #include "User.h"
@@ -81,21 +84,21 @@ public:
     DeleteChannelCommandHandlerImpl deleteChannelCommandHandler{channelRepository};
 };
 
-TEST_F(DeleteChannelCommandImplIntegrationTest, givenExistingChannel_shouldDeleteChannel)
+TEST_F(DeleteChannelCommandImplIntegrationTest, givenExistingChannelAndRequesterIsChannelCreator_shouldDeleteChannel)
 {
-    const auto userId = "userId";
-    const auto userEmail = "email@gmail.com";
-    const auto userPassword = "password";
+    const auto userId = faker::String::uuid();
+    const auto userEmail = faker::Internet::email();
+    const auto userPassword = faker::Internet::password();
 
     const auto user = createUser(userId, userEmail, userPassword);
 
-    const auto channelId = "channelId";
-    const auto name = "name";
+    const auto channelId = faker::String::uuid();
+    const auto name = faker::Word::noun();
     const auto creatorId = user.getId();
 
     const auto channel = createChannel(channelId, name, creatorId);
 
-    deleteChannelCommandHandler.execute({channel.getId()});
+    deleteChannelCommandHandler.execute({channel.getId(), creatorId});
 
     typedef odb::query<Channel> query;
 
@@ -110,9 +113,28 @@ TEST_F(DeleteChannelCommandImplIntegrationTest, givenExistingChannel_shouldDelet
     }
 }
 
+TEST_F(DeleteChannelCommandImplIntegrationTest, givenExistingChannelAndRequesterIsNotChannelCreator_shouldThrow)
+{
+    const auto userId = faker::String::uuid();
+    const auto userEmail = faker::Internet::email();
+    const auto userPassword = faker::Internet::password();
+
+    const auto user = createUser(userId, userEmail, userPassword);
+
+    const auto channelId = faker::String::uuid();
+    const auto name = faker::Word::noun();
+    const auto creatorId = user.getId();
+
+    const auto channel = createChannel(channelId, name, creatorId);
+
+    const auto requesterId = faker::String::uuid();
+
+    ASSERT_THROW(deleteChannelCommandHandler.execute({channel.getId(), requesterId}), errors::OperationNotValid);
+}
+
 TEST_F(DeleteChannelCommandImplIntegrationTest, givenNonExistingChannel_shouldThrow)
 {
-    const auto channelId = "channelId";
+    const auto channelId = faker::String::uuid();
 
     ASSERT_THROW(deleteChannelCommandHandler.execute({channelId}), errors::ResourceNotFoundError);
 }

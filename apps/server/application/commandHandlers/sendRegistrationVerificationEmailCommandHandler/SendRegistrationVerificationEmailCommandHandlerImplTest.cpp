@@ -1,7 +1,5 @@
 #include "SendRegistrationVerificationEmailCommandHandlerImpl.h"
 
-#include <format>
-
 #include "gtest/gtest.h"
 
 #include "server/application/services/emailService/EmailServiceMock.h"
