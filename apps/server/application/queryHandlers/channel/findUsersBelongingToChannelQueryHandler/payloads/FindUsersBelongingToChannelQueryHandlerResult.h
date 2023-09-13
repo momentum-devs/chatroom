@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "../../../../domain/entities/user/User.h"
+#include "../../../../../domain/entities/user/User.h"
 
 namespace server::application
 {

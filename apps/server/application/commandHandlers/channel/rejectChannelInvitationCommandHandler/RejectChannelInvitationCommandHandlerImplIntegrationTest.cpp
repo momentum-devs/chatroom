@@ -18,7 +18,6 @@
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "server/infrastructure/repositories/userRepository/UserRepositoryImpl.h"
 #include "User.h"
-#include "User.odb.h"
 #include "UserChannel.h"
 #include "UserChannel.odb.h"
 

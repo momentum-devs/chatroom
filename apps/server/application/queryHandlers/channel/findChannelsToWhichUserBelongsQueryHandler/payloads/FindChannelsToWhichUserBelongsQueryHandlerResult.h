@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "../../../../domain/entities/channel/Channel.h"
+#include "../../../../../domain/entities/channel/Channel.h"
 
 namespace server::application
 {

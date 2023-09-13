@@ -3,30 +3,36 @@
 
 #include "gtest/gtest.h"
 
+#include "AcceptChannelInvitationCommandHandlerImpl.h"
 #include "Channel.h"
 #include "Channel.odb.h"
 #include "ChannelInvitation.h"
 #include "ChannelInvitation.odb.h"
-#include "CreateChannelInvitationCommandHandlerImpl.h"
 #include "faker-cxx/Date.h"
 #include "faker-cxx/Internet.h"
 #include "faker-cxx/String.h"
 #include "faker-cxx/Word.h"
+#include "server/application/commandHandlers/channel/addUserToChannelCommandHandler/AddUserToChannelCommandHandlerImpl.h"
 #include "server/infrastructure/repositories/channelInvitationRepository/channelInvitationMapper/ChannelInvitationMapperImpl.h"
 #include "server/infrastructure/repositories/channelInvitationRepository/ChannelInvitationRepositoryImpl.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
 #include "server/infrastructure/repositories/channelRepository/ChannelRepositoryImpl.h"
+#include "server/infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapper.h"
+#include "server/infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapperImpl.h"
+#include "server/infrastructure/repositories/userChannelRepository/UserChannelRepositoryImpl.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "server/infrastructure/repositories/userRepository/UserRepositoryImpl.h"
 #include "User.h"
 #include "User.odb.h"
+#include "UserChannel.h"
+#include "UserChannel.odb.h"
 
 using namespace ::testing;
 using namespace server;
 using namespace server::infrastructure;
 using namespace server::application;
 
-class CreateChannelInvitationCommandImplIntegrationTest : public Test
+class AcceptChannelInvitationCommandImplIntegrationTest : public Test
 {
 public:
     void SetUp() override
@@ -34,6 +40,7 @@ public:
         odb::transaction transaction(db->begin());
 
         db->execute("DELETE FROM \"channels_invitations\";");
+        db->execute("DELETE FROM \"users_channels\";");
         db->execute("DELETE FROM \"channels\";");
         db->execute("DELETE FROM \"users\";");
 
@@ -45,6 +52,7 @@ public:
         odb::transaction transaction(db->begin());
 
         db->execute("DELETE FROM \"channels_invitations\";");
+        db->execute("DELETE FROM \"users_channels\";");
         db->execute("DELETE FROM \"channels\";");
         db->execute("DELETE FROM \"users\";");
 
@@ -81,6 +89,23 @@ public:
         return channel;
     }
 
+    ChannelInvitation createChannelInvitation(const std::string& id, std::shared_ptr<User> sender,
+                                              std::shared_ptr<User> recipient, std::shared_ptr<Channel> channel)
+    {
+        const auto currentDate = to_iso_string(boost::posix_time::second_clock::universal_time());
+
+        ChannelInvitation channelInvitation{id,          std::move(sender), std::move(recipient), std::move(channel),
+                                            currentDate, currentDate};
+
+        odb::transaction transaction(db->begin());
+
+        db->persist(channelInvitation);
+
+        transaction.commit();
+
+        return channelInvitation;
+    }
+
     std::shared_ptr<UserMapper> userMapper = std::make_shared<UserMapperImpl>();
 
     std::shared_ptr<ChannelMapper> channelMapper = std::make_shared<ChannelMapperImpl>();
@@ -99,11 +124,20 @@ public:
     std::shared_ptr<domain::ChannelRepository> channelRepository =
         std::make_shared<ChannelRepositoryImpl>(db, channelMapper);
 
-    CreateChannelInvitationCommandHandlerImpl createChannelInvitationCommandHandler{channelInvitationRepository,
-                                                                                    userRepository, channelRepository};
+    std::shared_ptr<UserChannelMapper> channelMapperInit =
+        std::make_shared<UserChannelMapperImpl>(userMapper, channelMapper);
+
+    std::shared_ptr<domain::UserChannelRepository> userChannelRepository =
+        std::make_shared<UserChannelRepositoryImpl>(db, std::move(channelMapperInit), userMapper, channelMapper);
+
+    std::shared_ptr<application::AddUserToChannelCommandHandler> addUserToChannelCommandHandler =
+        std::make_shared<AddUserToChannelCommandHandlerImpl>(userChannelRepository, userRepository, channelRepository);
+
+    AcceptChannelInvitationCommandHandlerImpl acceptChannelInvitationCommandHandler{
+        channelInvitationRepository, userRepository, addUserToChannelCommandHandler};
 };
 
-TEST_F(CreateChannelInvitationCommandImplIntegrationTest, createChannelInvitation)
+TEST_F(AcceptChannelInvitationCommandImplIntegrationTest, acceptChannelInvitation)
 {
     const auto channelInvitationId = faker::String::uuid();
     const auto createdAt = faker::Date::pastDate();
@@ -124,17 +158,25 @@ TEST_F(CreateChannelInvitationCommandImplIntegrationTest, createChannelInvitatio
 
     const auto channel = createChannel(channelId, name, senderId);
 
-    createChannelInvitationCommandHandler.execute({sender->getId(), recipient->getId(), channel->getId()});
+    const auto channelInvitation = createChannelInvitation(channelInvitationId, sender, recipient, channel);
 
-    typedef odb::query<ChannelInvitation> Query;
+    acceptChannelInvitationCommandHandler.execute({recipient->getId(), channelInvitation.getId()});
+
+    typedef odb::query<ChannelInvitation> ChannelInvitationQuery;
+    typedef odb::query<UserChannel> UserChannelQuery;
 
     {
         odb::transaction transaction(db->begin());
 
-        std::shared_ptr<ChannelInvitation> foundChannelInvitation(db->query_one<ChannelInvitation>(
-            Query::sender->id == senderId && Query::recipient->id == recipientId && Query::channel->id == channelId));
+        std::shared_ptr<ChannelInvitation> foundChannelInvitation(
+            db->query_one<ChannelInvitation>(ChannelInvitationQuery::id == channelInvitationId));
 
-        ASSERT_TRUE(foundChannelInvitation);
+        ASSERT_FALSE(foundChannelInvitation);
+
+        std::shared_ptr<UserChannel> foundUserChannel(db->query_one<UserChannel>(
+            UserChannelQuery::user->id == recipientId && UserChannelQuery::channel->id == channelId));
+
+        ASSERT_TRUE(foundUserChannel);
 
         transaction.commit();
     }

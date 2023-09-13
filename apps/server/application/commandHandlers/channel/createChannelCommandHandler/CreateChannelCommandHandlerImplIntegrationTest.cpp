@@ -3,7 +3,7 @@
 #include "gtest/gtest.h"
 
 #include "CreateChannelCommandHandlerImpl.h"
-#include "server/application/commandHandlers/addUserToChannelCommandHandler/AddUserToChannelCommandHandlerImpl.h"
+#include "server/application/commandHandlers/channel/addUserToChannelCommandHandler/AddUserToChannelCommandHandlerImpl.h"
 #include "server/application/services/hashService/HashServiceImpl.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
 #include "server/infrastructure/repositories/channelRepository/ChannelRepositoryImpl.h"

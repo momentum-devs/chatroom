@@ -2,7 +2,6 @@
 
 #include "gtest/gtest.h"
 
-#include "../../errors/ResourceNotFoundError.h"
 #include "Channel.h"
 #include "Channel.odb.h"
 #include "DeleteChannelCommandHandlerImpl.h"
@@ -10,6 +9,7 @@
 #include "faker-cxx/String.h"
 #include "faker-cxx/Word.h"
 #include "server/application/errors/OperationNotValid.h"
+#include "server/application/errors/ResourceNotFoundError.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
 #include "server/infrastructure/repositories/channelRepository/ChannelRepositoryImpl.h"
 #include "User.h"

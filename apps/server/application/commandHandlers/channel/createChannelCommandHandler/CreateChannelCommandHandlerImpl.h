@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "CreateChannelCommandHandler.h"
-#include "server/application/commandHandlers/addUserToChannelCommandHandler/AddUserToChannelCommandHandler.h"
+#include "server/application/commandHandlers/channel/addUserToChannelCommandHandler/AddUserToChannelCommandHandler.h"
 #include "server/domain/repositories/channelRepository/ChannelRepository.h"
 
 namespace server::application

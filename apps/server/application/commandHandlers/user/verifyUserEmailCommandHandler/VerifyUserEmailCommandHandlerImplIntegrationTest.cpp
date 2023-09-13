@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "../../errors/ResourceNotFoundError.h"
+#include "server/application/errors/ResourceNotFoundError.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "server/infrastructure/repositories/userRepository/UserRepositoryImpl.h"
 #include "User.odb.h"

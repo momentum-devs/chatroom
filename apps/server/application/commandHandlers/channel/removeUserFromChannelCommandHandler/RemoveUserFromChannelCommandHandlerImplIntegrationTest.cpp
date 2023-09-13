@@ -2,10 +2,10 @@
 
 #include "gtest/gtest.h"
 
-#include "../../errors/ResourceNotFoundError.h"
 #include "Channel.h"
 #include "Channel.odb.h"
 #include "RemoveUserFromChannelCommandHandlerImpl.h"
+#include "server/application/errors/ResourceNotFoundError.h"
 #include "server/application/services/hashService/HashServiceImpl.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
 #include "server/infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapperImpl.h"

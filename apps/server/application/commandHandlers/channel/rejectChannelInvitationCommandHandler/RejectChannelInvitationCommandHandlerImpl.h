@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "RejectChannelInvitationCommandHandler.h"
-#include "server/application/commandHandlers/addUserToChannelCommandHandler/AddUserToChannelCommandHandler.h"
+#include "server/application/commandHandlers/channel/addUserToChannelCommandHandler/AddUserToChannelCommandHandler.h"
 #include "server/domain/repositories/channelInvitationRepository/ChannelInvitationRepository.h"
 #include "server/domain/repositories/channelRepository/ChannelRepository.h"
 #include "server/domain/repositories/userRepository/UserRepository.h"
