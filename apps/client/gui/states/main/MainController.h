@@ -24,6 +24,9 @@ public:
     Q_INVOKABLE void goToCreateChannel();
     Q_INVOKABLE void goToSendFriendRequest();
     Q_INVOKABLE void goToUserSettings();
+    Q_INVOKABLE void setCurrentChat(const QString& channelId);
+    Q_INVOKABLE void addToChat();
+    Q_INVOKABLE void leftTheChat();
 
 signals:
     void addChannel(const QString& channelName, const QString& channelId);

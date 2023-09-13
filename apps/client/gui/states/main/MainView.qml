@@ -64,13 +64,16 @@ Rectangle {
                 ListView {
                     id: channelsView
                     contentWidth: parent.width
+                    spacing: 5
 
                     delegate: Button {
                         anchors.horizontalCenter: parent.horizontalCenter
                         text: modelData[0]
 
                         onClicked: {
-                            console.log('clicked channel ' + modelData[0] + ' with id ' + modelData[1]);
+                            chatView.visible = true;
+                            chatView.setChat(modelData);
+                            mainController.setCurrentChat(modelData[1]);
                         }
                     }
                 }
@@ -89,6 +92,12 @@ Rectangle {
             color: 'black'
             height: parent.height
             width: 2
+        }
+        ChatView {
+            id: chatView
+            height: parent.height
+            visible: false
+            width: parent.width - menuColumn.width
         }
     }
     Connections {
