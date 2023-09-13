@@ -6,7 +6,7 @@
 #include "common/messages/MessageReaderImpl.h"
 #include "common/messages/MessageSenderImpl.h"
 #include "common/messages/MessageSerializerImpl.h"
-#include "server/application/commandHandlers/loginUserCommandHandler/LoginUserCommandHandlerImpl.h"
+#include "server/application/commandHandlers/user/loginUserCommandHandler/LoginUserCommandHandlerImpl.h"
 #include "server/infrastructure/repositories/userRepository/UserRepositoryImpl.h"
 #include "SessionImpl.h"
 

@@ -2,7 +2,7 @@
 
 #include <format>
 
-#include "../../errors/ResourceNotFoundError.h"
+#include "server/application/errors/ResourceNotFoundError.h"
 
 namespace server::application
 {

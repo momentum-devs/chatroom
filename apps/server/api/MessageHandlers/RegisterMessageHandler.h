@@ -3,8 +3,8 @@
 #include <memory>
 
 #include "server/api/MessageHandler.h"
-#include "server/application/commandHandlers/registerUserCommandHandler/RegisterUserCommandHandler.h"
-#include "server/application/commandHandlers/sendRegistrationVerificationEmailCommandHandler/SendRegistrationVerificationEmailCommandHandler.h"
+#include "server/application/commandHandlers/user/registerUserCommandHandler/RegisterUserCommandHandler.h"
+#include "server/application/commandHandlers/user/sendRegistrationVerificationEmailCommandHandler/SendRegistrationVerificationEmailCommandHandler.h"
 
 namespace server::api
 {

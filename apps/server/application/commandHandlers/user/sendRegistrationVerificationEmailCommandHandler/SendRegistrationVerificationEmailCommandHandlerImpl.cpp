@@ -2,8 +2,8 @@
 
 #include <format>
 
-#include "../../errors/ResourceNotFoundError.h"
 #include "loguru.hpp"
+#include "server/application/errors/ResourceNotFoundError.h"
 
 namespace server::application
 {
@@ -26,9 +26,11 @@ void SendRegistrationVerificationEmailCommandHandlerImpl::execute(
         throw errors::ResourceNotFoundError{std::format("User with email \"{}\" not found.", payload.email)};
     }
 
+    // TODO: add to env
     const auto fromAddress = "michal.andrzej.cieslar@gmail.com";
 
-    emailService->sendEmail({payload.email, fromAddress, "Chatroom Registration Verification", existingUser->get()->getVerificationCode()});
+    emailService->sendEmail(
+        {payload.email, fromAddress, "Chatroom Registration Verification", existingUser->get()->getVerificationCode()});
 
     LOG_S(INFO) << std::format("Registration verification email sent to \"{}\".", payload.email);
 }

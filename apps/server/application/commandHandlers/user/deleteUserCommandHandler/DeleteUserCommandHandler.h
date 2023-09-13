@@ -1,6 +1,6 @@
 #pragma once
 
-#include "server/application/commandHandlers/deleteUserCommandHandler/payloads/DeleteUserCommandHandlerPayload.h"
+#include "server/application/commandHandlers/user/deleteUserCommandHandler/payloads/DeleteUserCommandHandlerPayload.h"
 
 namespace server::application
 {

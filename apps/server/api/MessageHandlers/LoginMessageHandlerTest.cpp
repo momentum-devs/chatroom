@@ -4,7 +4,7 @@
 #include <gtest/gtest.h>
 #include <regex>
 
-#include "server/application/commandHandlers/loginUserCommandHandler/LoginUserCommandHandlerMock.h"
+#include "server/application/commandHandlers/user/loginUserCommandHandler/LoginUserCommandHandlerMock.h"
 #include "server/application/services/tokenService/TokenServiceMock.h"
 
 #include "nlohmann/json.hpp"

@@ -5,11 +5,11 @@
 #include "server/application/services/emailService/EmailServiceMock.h"
 #include "server/domain/repositories/userRepository/UserRepositoryMock.h"
 
-#include "../../errors/ResourceNotFoundError.h"
 #include "faker-cxx/Datatype.h"
 #include "faker-cxx/Date.h"
 #include "faker-cxx/Internet.h"
 #include "faker-cxx/String.h"
+#include "server/application/errors/ResourceNotFoundError.h"
 #include "User.h"
 
 using namespace ::testing;

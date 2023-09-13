@@ -25,14 +25,14 @@ set(SOURCES
         infrastructure/repositories/userRepository/userMapper/UserMapperImpl.cpp
         application/services/hashService/HashServiceImpl.cpp
         application/services/tokenService/TokenServiceImpl.cpp
-        application/commandHandlers/registerUserCommandHandler/RegisterUserCommandHandlerImpl.cpp
-        application/commandHandlers/deleteUserCommandHandler/DeleteUserCommandHandlerImpl.cpp
-        application/commandHandlers/loginUserCommandHandler/LoginUserCommandHandlerImpl.cpp
-        application/commandHandlers/updateUserCommandHandler/UpdateUserCommandHandlerImpl.cpp
-        application/commandHandlers/logoutUserCommandHandler/LogoutUserCommandHandlerImpl.cpp
-        application/commandHandlers/verifyUserEmailCommandHandler/VerifyUserEmailCommandHandlerImpl.cpp
-        application/commandHandlers/sendRegistrationVerificationEmailCommandHandler/SendRegistrationVerificationEmailCommandHandlerImpl.cpp
-        application/queryHandlers/findUserQueryHandler/FindUserQueryHandlerImpl.cpp
+        application/commandHandlers/user/registerUserCommandHandler/RegisterUserCommandHandlerImpl.cpp
+        application/commandHandlers/user/deleteUserCommandHandler/DeleteUserCommandHandlerImpl.cpp
+        application/commandHandlers/user/loginUserCommandHandler/LoginUserCommandHandlerImpl.cpp
+        application/commandHandlers/user/updateUserCommandHandler/UpdateUserCommandHandlerImpl.cpp
+        application/commandHandlers/user/logoutUserCommandHandler/LogoutUserCommandHandlerImpl.cpp
+        application/commandHandlers/user/verifyUserEmailCommandHandler/VerifyUserEmailCommandHandlerImpl.cpp
+        application/commandHandlers/user/sendRegistrationVerificationEmailCommandHandler/SendRegistrationVerificationEmailCommandHandlerImpl.cpp
+        application/queryHandlers/user/findUserQueryHandler/FindUserQueryHandlerImpl.cpp
         infrastructure/services/emailService/EmailServiceImpl.cpp
 
         domain/entities/channel/Channel.cpp
@@ -85,7 +85,7 @@ set(UT_SOURCES
         infrastructure/repositories/userRepository/userMapper/UserMapperImplTest.cpp
         infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImplTest.cpp
         infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapperImplTest.cpp
-        application/commandHandlers/sendRegistrationVerificationEmailCommandHandler/SendRegistrationVerificationEmailCommandHandlerImplTest.cpp
+        application/commandHandlers/user/sendRegistrationVerificationEmailCommandHandler/SendRegistrationVerificationEmailCommandHandlerImplTest.cpp
         infrastructure/repositories/channelInvitationRepository/channelInvitationMapper/ChannelInvitationMapperImplTest.cpp
         infrastructure/repositories/friendInvitationRepository/friendInvitationMapper/FriendInvitationMapperImplTest.cpp
         )
@@ -94,13 +94,13 @@ set(IT_SOURCES
         infrastructure/repositories/userRepository/UserRepositoryImplIntegrationTest.cpp
         application/services/tokenService/TokenServiceImplIntegrationTest.cpp
         application/services/hashService/HashServiceImplIntegrationTest.cpp
-        application/commandHandlers/registerUserCommandHandler/RegisterUserCommandHandlerImplIntegrationTest.cpp
-        application/commandHandlers/loginUserCommandHandler/LoginUserCommandHandlerImplIntegrationTest.cpp
-        application/commandHandlers/deleteUserCommandHandler/DeleteUserCommandHandlerImplIntegrationTest.cpp
-        application/commandHandlers/updateUserCommandHandler/UpdateUserCommandHandlerImplIntegrationTest.cpp
-        application/commandHandlers/logoutUserCommandHandler/LogoutUserCommandHandlerImplIntegrationTest.cpp
-        application/commandHandlers/verifyUserEmailCommandHandler/VerifyUserEmailCommandHandlerImplIntegrationTest.cpp
-        application/queryHandlers/findUserQueryHandler/FindUserQueryHandlerImplIntegrationTest.cpp
+        application/commandHandlers/user/registerUserCommandHandler/RegisterUserCommandHandlerImplIntegrationTest.cpp
+        application/commandHandlers/user/loginUserCommandHandler/LoginUserCommandHandlerImplIntegrationTest.cpp
+        application/commandHandlers/user/deleteUserCommandHandler/DeleteUserCommandHandlerImplIntegrationTest.cpp
+        application/commandHandlers/user/updateUserCommandHandler/UpdateUserCommandHandlerImplIntegrationTest.cpp
+        application/commandHandlers/user/logoutUserCommandHandler/LogoutUserCommandHandlerImplIntegrationTest.cpp
+        application/commandHandlers/user/verifyUserEmailCommandHandler/VerifyUserEmailCommandHandlerImplIntegrationTest.cpp
+        application/queryHandlers/user/findUserQueryHandler/FindUserQueryHandlerImplIntegrationTest.cpp
         infrastructure/repositories/channelRepository/ChannelRepositoryImplIntegrationTest.cpp
         application/commandHandlers/createChannelCommandHandler/CreateChannelCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/deleteChannelCommandHandler/DeleteChannelCommandHandlerImplIntegrationTest.cpp

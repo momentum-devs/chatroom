@@ -2,8 +2,8 @@
 
 #include <format>
 
-#include "../../errors/ResourceNotFoundError.h"
 #include "loguru.hpp"
+#include "server/application/errors/ResourceNotFoundError.h"
 
 namespace server::application
 {

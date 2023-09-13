@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "server/api/MessageHandler.h"
-#include "server/application/commandHandlers/updateUserCommandHandler/UpdateUserCommandHandler.h"
+#include "server/application/commandHandlers/user/updateUserCommandHandler/UpdateUserCommandHandler.h"
 #include "server/application/services/tokenService/TokenService.h"
 
 namespace server::api

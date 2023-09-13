@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 
-#include "../../errors/ResourceNotFoundError.h"
 #include "LoginUserCommandHandlerImpl.h"
+#include "server/application/errors/ResourceNotFoundError.h"
 #include "server/application/services/hashService/HashServiceImpl.h"
 #include "server/application/services/tokenService/TokenServiceImpl.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
