@@ -64,6 +64,7 @@ set(SOURCES
         infrastructure/repositories/friendInvitationRepository/friendInvitationMapper/FriendInvitationMapperImpl.cpp
         application/commandHandlers/createFriendInvitationCommandHandler/CreateFriendInvitationCommandHandlerImpl.cpp
         application/commandHandlers/acceptFriendInvitationCommandHandler/AcceptFriendInvitationCommandHandlerImpl.cpp
+        application/commandHandlers/rejectFriendInvitationCommandHandler/RejectFriendInvitationCommandHandlerImpl.cpp
 
         api/MessageHandlers/UpdateUserMessageHandler.cpp
         api/MessageHandlers/DeleteUserMessageHandler.cpp
@@ -115,6 +116,7 @@ set(IT_SOURCES
         infrastructure/repositories/friendInvitationRepository/FriendInvitationRepositoryImplIntegrationTest.cpp
         application/commandHandlers/createFriendInvitationCommandHandler/CreateFriendInvitationCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/acceptFriendInvitationCommandHandler/AcceptFriendInvitationCommandHandlerImplIntegrationTest.cpp
+        application/commandHandlers/rejectFriendInvitationCommandHandler/RejectFriendInvitationCommandHandlerImplIntegrationTest.cpp
         )
 
 set(ODB_HEADERS
