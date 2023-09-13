@@ -48,9 +48,6 @@ TEST_F(FriendInvitationMapperTest, givenPersistenceFriendInvitation_shouldMapToD
     const auto domainRecipient = std::make_shared<domain::User>(userId2, email2, password, nickname, active,
                                                                 emailVerified, verificationCode, createdAt, updatedAt);
 
-    const auto name = faker::Word::noun();
-    const auto creatorId = sender->getId();
-
     const auto id = faker::String::uuid();
 
     FriendInvitation persistenceFriendInvitation{id, sender, recipient, createdAt, updatedAt};

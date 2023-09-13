@@ -6,13 +6,10 @@
 #include "faker-cxx/Date.h"
 #include "faker-cxx/Internet.h"
 #include "faker-cxx/String.h"
-#include "faker-cxx/Word.h"
 #include "FriendInvitation.h"
 #include "FriendInvitation.odb.h"
 #include "FriendInvitationRepositoryImpl.h"
-#include "server/domain/repositories/friendInvitationRepository/FriendInvitationRepository.h"
 #include "server/infrastructure/repositories/friendInvitationRepository/friendInvitationMapper/FriendInvitationMapperImpl.h"
-#include "server/infrastructure/repositories/friendRepository/friendMapper/FriendMapperImpl.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "User.h"
 #include "User.odb.h"
@@ -79,12 +76,15 @@ public:
 
     std::shared_ptr<UserMapper> userMapper = std::make_shared<UserMapperImpl>();
 
+    std::shared_ptr<FriendInvitationMapper> friendInvitationMapper =
+        std::make_shared<FriendInvitationMapperImpl>(userMapper);
+
     std::shared_ptr<odb::pgsql::database> db =
         std::make_shared<odb::pgsql::database>("local", "local", "chatroom", "localhost", 5432);
 
     std::shared_ptr<server::domain::FriendInvitationRepository> friendInvitationRepository =
         std::make_shared<server::infrastructure::FriendInvitationRepositoryImpl>(db, friendInvitationMapper,
-                                                                                 userMapper, friendMapper);
+                                                                                 userMapper);
 };
 
 TEST_F(FriendInvitationRepositoryIntegrationTest, shouldCreateFriendInvitation)
@@ -101,18 +101,11 @@ TEST_F(FriendInvitationRepositoryIntegrationTest, shouldCreateFriendInvitation)
 
     const auto recipient = createUser(recipientId, recipientEmail, password);
 
-    const auto friendId = faker::String::uuid();
-    const auto name = faker::Word::noun();
-
-    const auto friend = createFriend(friendId, name, senderId);
-
     const auto friendInvitation = friendInvitationRepository->createFriendInvitation(
-        {friendInvitationId, userMapper->mapToDomainUser(sender), userMapper->mapToDomainUser(recipient),
-         friendMapper->mapToDomainFriend(friend)});
+        {friendInvitationId, userMapper->mapToDomainUser(sender), userMapper->mapToDomainUser(recipient)});
 
     ASSERT_EQ(friendInvitation.getSender()->getId(), senderId);
     ASSERT_EQ(friendInvitation.getRecipient()->getId(), recipientId);
-    ASSERT_EQ(friendInvitation.getFriend()->getId(), friendId);
 
     typedef odb::query<FriendInvitation> query;
 
@@ -142,19 +135,11 @@ TEST_F(FriendInvitationRepositoryIntegrationTest, shouldDeleteExistingFriendInvi
 
     const auto recipient = createUser(recipientId, recipientEmail, password);
 
-    const auto friendId = faker::String::uuid();
-    const auto name = faker::Word::noun();
+    const auto friendInvitation = createFriendInvitation(friendInvitationId, sender, recipient);
 
-    const auto friend = createFriend(friendId, name, senderId);
-
-    const auto friendInvitation = createFriendInvitation(friendInvitationId, sender, recipient, friend);
-
-    const auto domainFriendInvitation = domain::FriendInvitation{friendInvitation.getId(),
-                                                                 userMapper->mapToDomainUser(sender),
-                                                                 userMapper->mapToDomainUser(recipient),
-                                                                 friendMapper->mapToDomainFriend(friend),
-                                                                 friendInvitation.getCreatedAt(),
-                                                                 friendInvitation.getUpdatedAt()};
+    const auto domainFriendInvitation = domain::FriendInvitation{
+        friendInvitation.getId(), userMapper->mapToDomainUser(sender), userMapper->mapToDomainUser(recipient),
+        friendInvitation.getCreatedAt(), friendInvitation.getUpdatedAt()};
 
     friendInvitationRepository->deleteFriendInvitation({domainFriendInvitation});
 
@@ -188,17 +173,9 @@ TEST_F(FriendInvitationRepositoryIntegrationTest, delete_givenNonExistingFriendI
 
     const auto recipient = createUser(recipientId, recipientEmail, password);
 
-    const auto friendId = faker::String::uuid();
-    const auto name = faker::Word::noun();
-
-    const auto friend = createFriend(friendId, name, senderId);
-
-    const auto domainFriendInvitation = domain::FriendInvitation{friendInvitationId,
-                                                                 userMapper->mapToDomainUser(sender),
-                                                                 userMapper->mapToDomainUser(recipient),
-                                                                 friendMapper->mapToDomainFriend(friend),
-                                                                 createdAt,
-                                                                 updatedAt};
+    const auto domainFriendInvitation =
+        domain::FriendInvitation{friendInvitationId, userMapper->mapToDomainUser(sender),
+                                 userMapper->mapToDomainUser(recipient), createdAt, updatedAt};
 
     ASSERT_ANY_THROW(friendInvitationRepository->deleteFriendInvitation({domainFriendInvitation}));
 }
@@ -217,12 +194,7 @@ TEST_F(FriendInvitationRepositoryIntegrationTest, shouldFindFriendInvitationById
 
     const auto recipient = createUser(recipientId, recipientEmail, password);
 
-    const auto friendId = faker::String::uuid();
-    const auto name = faker::Word::noun();
-
-    const auto friend = createFriend(friendId, name, senderId);
-
-    const auto friendInvitation = createFriendInvitation(friendInvitationId, sender, recipient, friend);
+    const auto friendInvitation = createFriendInvitation(friendInvitationId, sender, recipient);
 
     const auto foundFriendInvitation = friendInvitationRepository->findFriendInvitationById({friendInvitationId});
 
@@ -244,12 +216,7 @@ TEST_F(FriendInvitationRepositoryIntegrationTest, shouldFindFriendInvitationsByR
 
     const auto recipient = createUser(recipientId, recipientEmail, password);
 
-    const auto friendId = faker::String::uuid();
-    const auto name = faker::Word::noun();
-
-    const auto friend = createFriend(friendId, name, senderId);
-
-    const auto friendInvitation = createFriendInvitation(friendInvitationId, sender, recipient, friend);
+    const auto friendInvitation = createFriendInvitation(friendInvitationId, sender, recipient);
 
     const auto foundFriendInvitations = friendInvitationRepository->findFriendInvitationsByRecipientId({recipientId});
 

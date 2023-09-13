@@ -92,7 +92,6 @@ TEST_F(CreateFriendInvitationCommandImplIntegrationTest, createFriendInvitation)
 
     const auto recipient = createUser(recipientId, recipientEmail, password);
 
-    const auto friendId = faker::String::uuid();
     const auto name = faker::Word::noun();
 
     createFriendInvitationCommandHandler.execute({sender->getId(), recipient->getId()});
