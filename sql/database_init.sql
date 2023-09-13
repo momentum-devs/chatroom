@@ -71,3 +71,24 @@ ALTER TABLE "channels_invitations"
         FOREIGN KEY ("channel")
             REFERENCES "channels" ("id")
             INITIALLY DEFERRED;
+
+DROP TABLE IF EXISTS "friends_invitations" CASCADE;
+
+CREATE TABLE "friends_invitations"
+(
+    "id"         TEXT NOT NULL PRIMARY KEY,
+    "created_at" TEXT NOT NULL,
+    "updated_at" TEXT NOT NULL,
+    "sender"     TEXT NOT NULL,
+    "recipient"  TEXT NOT NULL
+);
+
+ALTER TABLE "friends_invitations"
+    ADD CONSTRAINT "sender_fk"
+        FOREIGN KEY ("sender")
+            REFERENCES "users" ("id")
+            INITIALLY DEFERRED,
+    ADD CONSTRAINT "recipient_fk"
+        FOREIGN KEY ("recipient")
+            REFERENCES "users" ("id")
+            INITIALLY DEFERRED;

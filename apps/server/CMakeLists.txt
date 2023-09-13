@@ -59,6 +59,10 @@ set(SOURCES
         application/commandHandlers/acceptChannelInvitationCommandHandler/AcceptChannelInvitationCommandHandlerImpl.cpp
         application/commandHandlers/rejectChannelInvitationCommandHandler/RejectChannelInvitationCommandHandlerImpl.cpp
 
+        domain/entities/friendInvitation/FriendInvitation.cpp
+        infrastructure/repositories/friendInvitationRepository/FriendInvitationRepositoryImpl.cpp
+        infrastructure/repositories/friendInvitationRepository/friendInvitationMapper/FriendInvitationMapperImpl.cpp
+
         api/MessageHandlers/UpdateUserMessageHandler.cpp
         api/MessageHandlers/DeleteUserMessageHandler.cpp
         )
@@ -79,6 +83,8 @@ set(UT_SOURCES
         infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImplTest.cpp
         infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapperImplTest.cpp
         application/commandHandlers/sendRegistrationVerificationEmailCommandHandler/SendRegistrationVerificationEmailCommandHandlerImplTest.cpp
+        infrastructure/repositories/channelInvitationRepository/channelInvitationMapper/ChannelInvitationMapperImplTest.cpp
+        infrastructure/repositories/friendInvitationRepository/friendInvitationMapper/FriendInvitationMapperImplTest.cpp
         )
 
 set(IT_SOURCES
@@ -104,6 +110,7 @@ set(IT_SOURCES
         application/commandHandlers/createChannelInvitationCommandHandler/CreateChannelInvitationCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/acceptChannelInvitationCommandHandler/AcceptChannelInvitationCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/rejectChannelInvitationCommandHandler/RejectChannelInvitationCommandHandlerImplIntegrationTest.cpp
+        infrastructure/repositories/friendInvitationRepository/FriendInvitationRepositoryImplIntegrationTest.cpp
         )
 
 set(ODB_HEADERS
@@ -111,6 +118,7 @@ set(ODB_HEADERS
         infrastructure/database/entities/Channel.h
         infrastructure/database/entities/UserChannel.h
         infrastructure/database/entities/ChannelInvitation.h
+        infrastructure/database/entities/FriendInvitation.h
         )
 
 odb_compile(
@@ -130,6 +138,7 @@ set(ODB_SOURCES
         infrastructure/database/entities/Channel.cpp
         infrastructure/database/entities/UserChannel.cpp
         infrastructure/database/entities/ChannelInvitation.cpp
+        infrastructure/database/entities/FriendInvitation.cpp
         ${ODB_GENERATED_SOURCES}
         )
 
