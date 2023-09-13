@@ -92,3 +92,24 @@ ALTER TABLE "friends_invitations"
         FOREIGN KEY ("recipient")
             REFERENCES "users" ("id")
             INITIALLY DEFERRED;
+
+DROP TABLE IF EXISTS "friendships" CASCADE;
+
+CREATE TABLE "friendships"
+(
+    "id"          TEXT NOT NULL PRIMARY KEY,
+    "created_at"  TEXT NOT NULL,
+    "updated_at"  TEXT NOT NULL,
+    "user"        TEXT NOT NULL,
+    "user_friend" TEXT NOT NULL
+);
+
+ALTER TABLE "friendships"
+    ADD CONSTRAINT "user_fk"
+        FOREIGN KEY ("user")
+            REFERENCES "users" ("id")
+            INITIALLY DEFERRED,
+    ADD CONSTRAINT "user_friend_fk"
+        FOREIGN KEY ("user_friend")
+            REFERENCES "users" ("id")
+            INITIALLY DEFERRED;
