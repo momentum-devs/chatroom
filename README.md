@@ -37,8 +37,9 @@
 
 ### TODO:
 
-* user online/offline, logout user
-* *send registration verification email
+* user online/offline
+* logout user
+* logout not active user (closed connection, do not send request for long time period, etc.)
 
 
 * show list of channels

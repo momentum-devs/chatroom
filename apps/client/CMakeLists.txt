@@ -40,6 +40,7 @@ set(QML_SOURCES
         gui/states/register/RegisterView.qml
         gui/states/login/LoginView.qml
         gui/states/main/MainView.qml
+        gui/states/main/ChatView.qml
         gui/states/createChannel/CreateChannelView.qml
         gui/states/sendFriendRequest/SendFriendRequestView.qml
         gui/states/userSettings/UserSettingsView.qml

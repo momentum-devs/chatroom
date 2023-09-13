@@ -35,7 +35,12 @@ common::messages::Message VerifyUserMessageHandle::handleMessage(const common::m
             payload.verificationCode = payloadJson["data"]["verificationCode"].get<std::string>();
         }
 
-        verifyUserEmailCommandHandler->execute(payload);
+        auto [verified] = verifyUserEmailCommandHandler->execute(payload);
+
+        if (not verified)
+        {
+            throw std::runtime_error("invalid verification code");
+        }
 
         nlohmann::json responsePayload{
             "ok",
