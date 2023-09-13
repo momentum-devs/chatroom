@@ -49,7 +49,42 @@ void MainController::goToCreateChannel()
     stateMachine->addNextState(stateFactory.createCreateChannelState());
 }
 
-void MainController::handleGetUserChannelsResponse(const common::messages::Message& message) {}
+void MainController::handleGetUserChannelsResponse(const common::messages::Message& message)
+{
+    LOG_S(INFO) << "Handle get user's channel data response";
+
+    auto responsePayload = static_cast<std::string>(message.payload);
+
+    auto responseJson = nlohmann::json::parse(responsePayload);
+
+    if (responseJson.contains("error"))
+    {
+        LOG_S(ERROR) << std::format("Error while getting user data: {}", responseJson.at("error").get<std::string>());
+    }
+
+    if (responseJson.contains("data"))
+    {
+        for (const auto& channel : responseJson.at("data"))
+        {
+            if (channel.contains("id") and channel.contains("name"))
+            {
+                LOG_S(INFO) << std::format("Adding channel {} with id {} to list",
+                                           channel.at("name").get<std::string>(), channel.at("id").get<std::string>());
+                
+                emit addChannel(QString::fromStdString(channel.at("name").get<std::string>()),
+                                QString::fromStdString(channel.at("id").get<std::string>()));
+            }
+            else
+            {
+                LOG_S(ERROR) << "Wrong channel format";
+            }
+        }
+    }
+    else
+    {
+        LOG_S(ERROR) << "Response without data";
+    }
+}
 
 void MainController::handleGetUserDataResponse(const common::messages::Message& message)
 {

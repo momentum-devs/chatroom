@@ -2,6 +2,8 @@ import QtQuick 6.4
 import QtQuick.Controls 6.4
 
 Rectangle {
+    property var channels: []
+
     color: "grey"
     focus: true
 
@@ -46,20 +48,41 @@ Rectangle {
                     mainController.logout();
                 }
             }
-            ListView {
-                contentWidth: 320
-                height: 200
-                width: 180
+            Rectangle {
+                color: 'black'
+                height: 2
+                width: parent.width
+            }
+            Text {
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: '<b>Channels:</b> '
+            }
+            ScrollView {
+                height: parent.height / 3
+                width: parent.width
 
-                delegate: Text {
-                    text: '<b>Channel:</b> ' + name
+                ListView {
+                    id: channelsView
+                    contentWidth: parent.width
+
+                    delegate: Button {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: modelData[0]
+
+                        onClicked: {
+                            console.log('clicked channel ' + modelData[0] + ' with id ' + modelData[1]);
+                        }
+                    }
                 }
-                highlight: Rectangle {
-                    color: "lightsteelblue"
-                    radius: 5
-                }
-                model: ListModel {
-                }
+            }
+            Rectangle {
+                color: 'black'
+                height: 2
+                width: parent.width
+            }
+            Text {
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: '<b>Friends:</b> '
             }
         }
         Rectangle {
@@ -67,5 +90,13 @@ Rectangle {
             height: parent.height
             width: 2
         }
+    }
+    Connections {
+        function onAddChannel(channelName: string, channelId: string) {
+            channels.push([channelName, channelId]);
+            channelsView.model = channels;
+        }
+
+        target: mainController
     }
 }
