@@ -57,9 +57,9 @@ set(SOURCES
         domain/entities/friendInvitation/FriendInvitation.cpp
         infrastructure/repositories/friendInvitationRepository/FriendInvitationRepositoryImpl.cpp
         infrastructure/repositories/friendInvitationRepository/friendInvitationMapper/FriendInvitationMapperImpl.cpp
-        application/commandHandlers/createFriendInvitationCommandHandler/CreateFriendInvitationCommandHandlerImpl.cpp
-        application/commandHandlers/acceptFriendInvitationCommandHandler/AcceptFriendInvitationCommandHandlerImpl.cpp
-        application/commandHandlers/rejectFriendInvitationCommandHandler/RejectFriendInvitationCommandHandlerImpl.cpp
+        application/commandHandlers/friend/createFriendInvitationCommandHandler/CreateFriendInvitationCommandHandlerImpl.cpp
+        application/commandHandlers/friend/acceptFriendInvitationCommandHandler/AcceptFriendInvitationCommandHandlerImpl.cpp
+        application/commandHandlers/friend/rejectFriendInvitationCommandHandler/RejectFriendInvitationCommandHandlerImpl.cpp
 
         api/MessageHandlers/UpdateUserMessageHandler.cpp
         api/MessageHandlers/DeleteUserMessageHandler.cpp
@@ -112,9 +112,9 @@ set(IT_SOURCES
         application/commandHandlers/channel/rejectChannelInvitationCommandHandler/RejectChannelInvitationCommandHandlerImplIntegrationTest.cpp
 
         infrastructure/repositories/friendInvitationRepository/FriendInvitationRepositoryImplIntegrationTest.cpp
-        application/commandHandlers/createFriendInvitationCommandHandler/CreateFriendInvitationCommandHandlerImplIntegrationTest.cpp
-        application/commandHandlers/acceptFriendInvitationCommandHandler/AcceptFriendInvitationCommandHandlerImplIntegrationTest.cpp
-        application/commandHandlers/rejectFriendInvitationCommandHandler/RejectFriendInvitationCommandHandlerImplIntegrationTest.cpp
+        application/commandHandlers/friend/createFriendInvitationCommandHandler/CreateFriendInvitationCommandHandlerImplIntegrationTest.cpp
+        application/commandHandlers/friend/acceptFriendInvitationCommandHandler/AcceptFriendInvitationCommandHandlerImplIntegrationTest.cpp
+        application/commandHandlers/friend/rejectFriendInvitationCommandHandler/RejectFriendInvitationCommandHandlerImplIntegrationTest.cpp
         )
 
 set(ODB_HEADERS
