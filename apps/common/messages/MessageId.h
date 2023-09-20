@@ -27,6 +27,7 @@ enum class MessageId : unsigned char
     DeleteUserResponse,
     VerifyUser,
     VerifyUserResponse,
+    Logout
 };
 
 inline std::string toString(MessageId messageId)
@@ -51,7 +52,7 @@ inline std::string toString(MessageId messageId)
         {MessageId::DeleteUserResponse, "DeleteUserResponse"},
         {MessageId::VerifyUser, "VerifyUser"},
         {MessageId::VerifyUserResponse, "VerifyUserResponse"},
-    };
+        {MessageId::Logout, "Logout"}};
 
     try
     {

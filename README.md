@@ -37,7 +37,6 @@
 
 ### TODO:
 
-* logout user
 * logout not active user (closed connection, do not send request for long time period, etc.)
 
 * show list of channels
@@ -49,7 +48,8 @@
 
 * send friend invitation
 * show list of friends
-* create friend invitation
+* friend online/offline
+* accept friend invitation
 * reject friend invitation
 * remove from friends
 * user online/offline

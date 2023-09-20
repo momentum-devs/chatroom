@@ -13,5 +13,7 @@ public:
 
     virtual void startSession() = 0;
     virtual void sendMessage(const common::messages::Message& message) = 0;
+    virtual bool isActive() = 0;
+    virtual void close() = 0;
 };
 }

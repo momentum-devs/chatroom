@@ -16,6 +16,7 @@ public:
     SessionManager(std::unique_ptr<ConnectionAcceptor> connectionAcceptor);
 
     void startAcceptingConnections();
+    void removeInactiveSessions();
 
 private:
     void handleConnection(const std::shared_ptr<Session>& newSession);

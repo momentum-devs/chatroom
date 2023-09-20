@@ -53,7 +53,7 @@ void SendFriendRequestController::handleSendFriendRequestResponse(const common::
 
     if (responseJson.is_array() and responseJson.at(0).get<std::string>() == "ok")
     {
-        LOG_S(INFO) << "Successfully sended friend request";
+        LOG_S(INFO) << "Successfully sent friend request";
 
         stateMachine->returnToThePreviousState();
     }

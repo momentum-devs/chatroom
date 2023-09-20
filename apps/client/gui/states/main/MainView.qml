@@ -71,9 +71,9 @@ Rectangle {
                         text: modelData[0]
 
                         onClicked: {
-                            chatView.visible = true;
-                            chatView.setChat(modelData);
-                            mainController.setCurrentChat(modelData[1]);
+                            channelView.visible = true;
+                            channelView.setChannel(modelData);
+                            mainController.setCurrentChannel(modelData[1]);
                         }
                     }
                 }
@@ -93,8 +93,8 @@ Rectangle {
             height: parent.height
             width: 2
         }
-        ChatView {
-            id: chatView
+        ChannelView {
+            id: channelView
             height: parent.height
             visible: false
             width: parent.width - menuColumn.width

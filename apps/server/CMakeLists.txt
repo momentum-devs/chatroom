@@ -71,6 +71,7 @@ set(SOURCES
         api/MessageHandlers/UpdateUserMessageHandler.cpp
         api/MessageHandlers/DeleteUserMessageHandler.cpp
         api/MessageHandlers/VerifyUserMessageHandle.cpp
+        api/MessageHandlers/LogoutMessageHandler.cpp
         )
 
 set(UT_SOURCES
@@ -92,8 +93,7 @@ set(UT_SOURCES
         application/commandHandlers/user/sendRegistrationVerificationEmailCommandHandler/SendRegistrationVerificationEmailCommandHandlerImplTest.cpp
         infrastructure/repositories/channelInvitationRepository/channelInvitationMapper/ChannelInvitationMapperImplTest.cpp
         infrastructure/repositories/friendInvitationRepository/friendInvitationMapper/FriendInvitationMapperImplTest.cpp
-        infrastructure/repositories/friendshipRepository/friendshipMapper/FriendshipMapperImplTest.cpp
-        )
+        infrastructure/repositories/friendshipRepository/friendshipMapper/FriendshipMapperImplTest.cpp api/MessageHandlers/LogoutMessageHandlerTest.cpp)
 
 set(IT_SOURCES
         infrastructure/repositories/userRepository/UserRepositoryImplIntegrationTest.cpp

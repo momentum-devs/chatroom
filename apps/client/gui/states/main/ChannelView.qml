@@ -2,21 +2,21 @@ import QtQuick 6.4
 import QtQuick.Controls 6.4
 
 Item {
-    property var chatId: ""
+    property var channelId: ""
 
-    function setChat(chat) {
-        chatName.text = '<b>' + chat[0] + '</b>';
-        chatId = chat[1];
+    function setChannel(channel) {
+        channelName.text = '<b>' + channel[0] + '</b>';
+        channelId = channel[1];
     }
 
     Column {
-        id: chat
+        id: channel
         height: parent.height
         spacing: 5
         width: parent.width
 
         Text {
-            id: chatName
+            id: channelName
             anchors.horizontalCenter: parent.horizontalCenter
         }
         Row {
@@ -24,10 +24,10 @@ Item {
 
             Button {
                 anchors.horizontalCenter: parent.horizontalRight
-                text: qsTr('Add to chat')
+                text: qsTr('Add to channel')
 
                 onClicked: {
-                    mainController.addToChat();
+                    mainController.addToChannel();
                 }
             }
             Button {
@@ -35,11 +35,11 @@ Item {
 
                 contentItem: Text {
                     color: "#FF0000"
-                    text: qsTr('Left the chat')
+                    text: qsTr('Left the channel')
                 }
 
                 onClicked: {
-                    mainController.leftTheChat();
+                    mainController.leftTheChannel();
                 }
             }
         }

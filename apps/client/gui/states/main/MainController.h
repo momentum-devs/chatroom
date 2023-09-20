@@ -24,9 +24,9 @@ public:
     Q_INVOKABLE void goToCreateChannel();
     Q_INVOKABLE void goToSendFriendRequest();
     Q_INVOKABLE void goToUserSettings();
-    Q_INVOKABLE void setCurrentChat(const QString& channelId);
-    Q_INVOKABLE void addToChat();
-    Q_INVOKABLE void leftTheChat();
+    Q_INVOKABLE void setCurrentChannel(const QString& channelId);
+    Q_INVOKABLE void addToChannel();
+    Q_INVOKABLE void leftTheChannel();
 
 signals:
     void addChannel(const QString& channelName, const QString& channelId);
@@ -39,6 +39,7 @@ private:
     const StateFactory& stateFactory;
     std::shared_ptr<StateMachine> stateMachine;
     std::optional<std::shared_ptr<State>> nextState = std::nullopt;
+    std::string currentChannelId;
 
     inline static const std::string getUserChannelsResponseHandlerName{"getUserChannelsResponseHandlerName"};
     inline static const std::string getUserDataResponseHandlerName{"getUserChannelsResponseHandlerName"};

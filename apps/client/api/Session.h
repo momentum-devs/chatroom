@@ -21,5 +21,6 @@ public:
     virtual void addMessageHandler(const MessageHandlerPayload& messageHandlerPayload) = 0;
     virtual void removeMessageHandler(const MessageHandlerPayload& messageHandlerPayload) = 0;
     virtual void storeToken(const std::string& token) = 0;
+    virtual void logout() = 0;
 };
 }

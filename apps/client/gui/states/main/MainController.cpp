@@ -41,6 +41,8 @@ void MainController::logout()
 {
     LOG_S(INFO) << "Handle logout";
 
+    session->logout();
+
     stateMachine->returnToThePreviousState();
 }
 
@@ -132,18 +134,20 @@ void MainController::goToUserSettings()
     stateMachine->addNextState(stateFactory.createUserSettingsState());
 }
 
-void MainController::setCurrentChat(const QString& channelId)
+void MainController::setCurrentChannel(const QString& channelId)
 {
     LOG_S(INFO) << std::format("Set current chat to id {}", channelId.toStdString());
+
+    currentChannelId = channelId.toStdString();
 }
 
-void MainController::addToChat()
+void MainController::addToChannel()
 {
     LOG_S(INFO) << "Add to chat";
 
-    // TODO: implement go to add user to chat state
+    stateMachine->addNextState(stateFactory.createInviteToChannelState(currentChannelId));
 }
-void MainController::leftTheChat()
+void MainController::leftTheChannel()
 {
     LOG_S(INFO) << "Left the chat";
 

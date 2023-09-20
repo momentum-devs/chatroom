@@ -32,6 +32,7 @@ int main(int argc, char* argv[])
     const auto jwtSecret = configProvider.getJwtSecret();
     const auto jwtExpireIn = configProvider.getJwtExpireIn();
     const auto sendGridApiKey = configProvider.getSendGridApiKey();
+    const auto refreshSessionsInterval = boost::posix_time::seconds{configProvider.getRefreshSessionsInterval()};
 
     const auto numberOfSupportedThreads = std::thread::hardware_concurrency();
 
@@ -50,6 +51,17 @@ int main(int argc, char* argv[])
         std::make_unique<server::api::SessionManager>(std::move(connectionAcceptor));
 
     sessionManager->startAcceptingConnections();
+
+    boost::asio::deadline_timer timer(context, refreshSessionsInterval);
+
+    std::function<void(const boost::system::error_code&)> refreshSessions = [&](const boost::system::error_code& /*e*/)
+    {
+        sessionManager->removeInactiveSessions();
+        timer.expires_at(timer.expires_at() + refreshSessionsInterval);
+        timer.async_wait(refreshSessions);
+    };
+    
+    timer.async_wait(refreshSessions);
 
     std::vector<std::thread> threads;
 
