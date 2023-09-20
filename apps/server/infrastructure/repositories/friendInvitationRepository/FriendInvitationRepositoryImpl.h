@@ -19,6 +19,7 @@ public:
     domain::FriendInvitation createFriendInvitation(const domain::CreateFriendInvitationPayload&) const;
     std::optional<domain::FriendInvitation>
     findFriendInvitationById(const domain::FindFriendInvitationByIdPayload&) const;
+    std::optional<domain::FriendInvitation> findFriendInvitation(const domain::FindFriendInvitationPayload&) const;
     std::vector<domain::FriendInvitation>
     findFriendInvitationsByRecipientId(const domain::FindFriendInvitationsByRecipientIdPayload&) const;
     void deleteFriendInvitation(const domain::DeleteFriendInvitationPayload&) const;

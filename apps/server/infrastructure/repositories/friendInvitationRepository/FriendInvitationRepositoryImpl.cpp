@@ -71,6 +71,33 @@ FriendInvitationRepositoryImpl::findFriendInvitationById(const domain::FindFrien
     }
 }
 
+std::optional<domain::FriendInvitation>
+FriendInvitationRepositoryImpl::findFriendInvitation(const domain::FindFriendInvitationPayload& payload) const
+{
+    try
+    {
+        odb::transaction transaction(db->begin());
+
+        typedef odb::query<FriendInvitation> Query;
+
+        std::shared_ptr<FriendInvitation> friendInvitation(db->query_one<FriendInvitation>(
+            Query::recipient->id == payload.recipientId && Query::sender->id == payload.senderId));
+
+        transaction.commit();
+
+        if (!friendInvitation)
+        {
+            return std::nullopt;
+        }
+
+        return friendInvitationMapper->mapToDomainFriendInvitation(*friendInvitation);
+    }
+    catch (const std::exception& error)
+    {
+        throw errors::FriendInvitationRepositoryError{error.what()};
+    }
+}
+
 std::vector<domain::FriendInvitation> FriendInvitationRepositoryImpl::findFriendInvitationsByRecipientId(
     const domain::FindFriendInvitationsByRecipientIdPayload& payload) const
 {

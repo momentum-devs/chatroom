@@ -202,6 +202,28 @@ TEST_F(FriendInvitationRepositoryIntegrationTest, shouldFindFriendInvitationById
     ASSERT_EQ(foundFriendInvitation->getId(), friendInvitationId);
 }
 
+TEST_F(FriendInvitationRepositoryIntegrationTest, shouldFindFriendInvitationBySenderAndRecipientIds)
+{
+    const auto friendInvitationId = faker::String::uuid();
+
+    const auto senderId = faker::String::uuid();
+    const auto recipientId = faker::String::uuid();
+    const auto senderEmail = faker::Internet::email();
+    const auto recipientEmail = faker::Internet::email();
+    const auto password = faker::Internet::password();
+
+    const auto sender = createUser(senderId, senderEmail, password);
+
+    const auto recipient = createUser(recipientId, recipientEmail, password);
+
+    const auto friendInvitation = createFriendInvitation(friendInvitationId, sender, recipient);
+
+    const auto foundFriendInvitation = friendInvitationRepository->findFriendInvitation({senderId, recipientId});
+
+    ASSERT_TRUE(foundFriendInvitation);
+    ASSERT_EQ(foundFriendInvitation->getId(), friendInvitationId);
+}
+
 TEST_F(FriendInvitationRepositoryIntegrationTest, shouldFindFriendInvitationsByRecipientId)
 {
     const auto friendInvitationId = faker::String::uuid();
