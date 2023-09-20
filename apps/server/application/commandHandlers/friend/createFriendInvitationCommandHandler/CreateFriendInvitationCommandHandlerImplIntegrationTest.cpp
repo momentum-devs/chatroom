@@ -116,8 +116,7 @@ public:
         std::make_shared<FriendshipRepositoryImpl>(db, friendshipMapperInit, userMapper);
 
     CreateFriendInvitationCommandHandlerImpl createFriendInvitationCommandHandler{friendInvitationRepository,
-                                                                                  userRepository,
-                                                                                  friendshipRepository};
+                                                                                  userRepository, friendshipRepository};
 };
 
 TEST_F(CreateFriendInvitationCommandImplIntegrationTest, createFriendInvitation)
@@ -171,7 +170,8 @@ TEST_F(CreateFriendInvitationCommandImplIntegrationTest, throwsAnError_whenFrien
 
     createFriendInvitation(friendInvitationId, sender, recipient);
 
-    ASSERT_THROW(createFriendInvitationCommandHandler.execute({sender->getId(), recipient->getId()}),errors::OperationNotValidError);
+    ASSERT_THROW(createFriendInvitationCommandHandler.execute({sender->getId(), recipient->getId()}),
+                 errors::OperationNotValidError);
 }
 
 TEST_F(CreateFriendInvitationCommandImplIntegrationTest, throwsAnError_whenFriendshipAlreadyExists)
@@ -190,5 +190,6 @@ TEST_F(CreateFriendInvitationCommandImplIntegrationTest, throwsAnError_whenFrien
 
     createFriendship(friendshipId, sender, recipient);
 
-    ASSERT_THROW(createFriendInvitationCommandHandler.execute({sender->getId(), recipient->getId()}),errors::OperationNotValidError);
+    ASSERT_THROW(createFriendInvitationCommandHandler.execute({sender->getId(), recipient->getId()}),
+                 errors::OperationNotValidError);
 }

@@ -46,8 +46,7 @@ void MessageReaderImpl::onReadMessageLength(boost::system::error_code, std::size
               { onReadMessage(error, bytes, bytesToRead); });
 }
 
-void MessageReaderImpl::onReadMessage(boost::system::error_code, std::size_t,
-                                      std::size_t)
+void MessageReaderImpl::onReadMessage(boost::system::error_code, std::size_t, std::size_t)
 {
     const common::bytes::Bytes bytes{std::istreambuf_iterator<char>(&response), std::istreambuf_iterator<char>()};
 

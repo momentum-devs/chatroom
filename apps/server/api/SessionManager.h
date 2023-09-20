@@ -14,7 +14,7 @@ class SessionManager
 {
 public:
     SessionManager(std::unique_ptr<ConnectionAcceptor> connectionAcceptor);
-    
+
     void startAcceptingConnections();
 
 private:

@@ -28,7 +28,7 @@ void CreateChannelController::deactivate()
 void CreateChannelController::goBack()
 {
     LOG_S(INFO) << "Return to previous state";
-    
+
     stateMachine->returnToThePreviousState();
 }
 

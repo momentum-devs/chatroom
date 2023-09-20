@@ -9,6 +9,7 @@ namespace server::application
 class RegisterUserCommandHandlerMock : public RegisterUserCommandHandler
 {
 public:
-    MOCK_METHOD(RegisterUserCommandHandlerResult, execute, (const RegisterUserCommandHandlerPayload&), (const override));
+    MOCK_METHOD(RegisterUserCommandHandlerResult, execute, (const RegisterUserCommandHandlerPayload&),
+                (const override));
 };
 }

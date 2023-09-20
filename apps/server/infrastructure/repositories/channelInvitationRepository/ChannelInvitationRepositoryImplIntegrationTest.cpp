@@ -188,7 +188,8 @@ TEST_F(ChannelInvitationRepositoryIntegrationTest, shouldDeleteExistingChannelIn
     {
         odb::transaction transaction(db->begin());
 
-        std::shared_ptr<ChannelInvitation> foundChannelInvitation(db->query_one<ChannelInvitation>(query::id == channelInvitationId));
+        std::shared_ptr<ChannelInvitation> foundChannelInvitation(
+            db->query_one<ChannelInvitation>(query::id == channelInvitationId));
 
         ASSERT_FALSE(foundChannelInvitation);
 
@@ -275,7 +276,8 @@ TEST_F(ChannelInvitationRepositoryIntegrationTest, shouldFindChannelInvitationsB
 
     const auto channelInvitation = createChannelInvitation(channelInvitationId, sender, recipient, channel);
 
-    const auto foundChannelInvitations = channelInvitationRepository->findChannelInvitationsByRecipientId({recipientId});
+    const auto foundChannelInvitations =
+        channelInvitationRepository->findChannelInvitationsByRecipientId({recipientId});
 
     ASSERT_EQ(foundChannelInvitations.size(), 1);
     ASSERT_EQ(foundChannelInvitations[0].getId(), channelInvitation.getId());

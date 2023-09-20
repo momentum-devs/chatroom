@@ -12,7 +12,7 @@ LoaderController::LoaderController()
     view.setSource(qUrl);
 
     view.setResizeMode(QQuickView::SizeRootObjectToView);
-    
+
     view.show();
 }
 

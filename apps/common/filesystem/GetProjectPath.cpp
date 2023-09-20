@@ -17,12 +17,9 @@ std::string getProjectPath(const std::string& projectName)
 {
     std::filesystem::path executablePath{getExecutablePath()};
 
-    for(auto path = executablePath.parent_path(); 
-        path != path.root_directory(); 
-        path = path.parent_path()
-    )
+    for (auto path = executablePath.parent_path(); path != path.root_directory(); path = path.parent_path())
     {
-        if(path.filename() == projectName)
+        if (path.filename() == projectName)
         {
             return path.generic_string();
         }
