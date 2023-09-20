@@ -2,6 +2,8 @@
 
 #include "createChannel/CreateChannelController.h"
 #include "createChannel/CreateChannelState.h"
+#include "inviteToChannel/InviteToChannelController.h"
+#include "inviteToChannel/InviteToChannelState.h"
 #include "login/LoginController.h"
 #include "login/LoginState.h"
 #include "main/MainController.h"
@@ -78,5 +80,12 @@ std::shared_ptr<State> StateFactory::createVerifyUserState() const
     auto controller = std::make_unique<VerifyUserController>(session, *this, stateMachine);
 
     return std::make_shared<VerifyUserState>(std::move(controller), loaderController);
+}
+
+std::shared_ptr<State> StateFactory::createInviteToChannelState(const std::string& channelId) const
+{
+    auto controller = std::make_unique<InviteToChannelController>(session, *this, stateMachine, channelId);
+
+    return std::make_shared<InviteToChannelState>(std::move(controller), loaderController);
 }
 }

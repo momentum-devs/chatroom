@@ -27,6 +27,8 @@ void SendFriendRequestState::activate()
 
 void SendFriendRequestState::deactivate()
 {
+    LOG_S(INFO) << "Deactivate SendFriendRequestState";
+
     loaderController->getEngine()->rootContext()->setContextProperty(componentName, nullptr);
 
     sendFriendRequestController->deactivate();
