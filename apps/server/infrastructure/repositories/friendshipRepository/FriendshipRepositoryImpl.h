@@ -19,6 +19,7 @@ public:
     domain::Friendship createFriendship(const domain::CreateFriendshipPayload&) const;
     std::optional<domain::Friendship> findFriendshipById(const domain::FindFriendshipByIdPayload&) const;
     std::vector<domain::Friendship> findFriendshipsByUserId(const domain::FindFriendshipsByUserIdPayload&) const;
+    std::optional<domain::Friendship> findFriendshipByUserIds(const domain::FindFriendshipByUserIdsPayload&) const;
     void deleteFriendship(const domain::DeleteFriendshipPayload&) const;
 
 private:

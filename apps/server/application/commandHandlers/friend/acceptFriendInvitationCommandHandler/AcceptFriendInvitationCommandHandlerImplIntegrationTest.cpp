@@ -9,8 +9,14 @@
 #include "faker-cxx/String.h"
 #include "FriendInvitation.h"
 #include "FriendInvitation.odb.h"
+#include "Friendship.h"
+#include "Friendship.odb.h"
+#include "server/application/commandHandlers/friend/createFriendshipCommandHandler/CreateFriendshipCommandHandlerImpl.h"
 #include "server/infrastructure/repositories/friendInvitationRepository/friendInvitationMapper/FriendInvitationMapperImpl.h"
 #include "server/infrastructure/repositories/friendInvitationRepository/FriendInvitationRepositoryImpl.h"
+#include "server/infrastructure/repositories/friendshipRepository/friendshipMapper/FriendshipMapper.h"
+#include "server/infrastructure/repositories/friendshipRepository/friendshipMapper/FriendshipMapperImpl.h"
+#include "server/infrastructure/repositories/friendshipRepository/FriendshipRepositoryImpl.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "server/infrastructure/repositories/userRepository/UserRepositoryImpl.h"
 #include "User.h"
@@ -29,6 +35,7 @@ public:
         odb::transaction transaction(db->begin());
 
         db->execute("DELETE FROM \"friends_invitations\";");
+        db->execute("DELETE FROM \"friendships\";");
         db->execute("DELETE FROM \"users\";");
 
         transaction.commit();
@@ -39,6 +46,7 @@ public:
         odb::transaction transaction(db->begin());
 
         db->execute("DELETE FROM \"friends_invitations\";");
+        db->execute("DELETE FROM \"friendships\";");
         db->execute("DELETE FROM \"users\";");
 
         transaction.commit();
@@ -88,8 +96,16 @@ public:
 
     std::shared_ptr<domain::UserRepository> userRepository = std::make_shared<UserRepositoryImpl>(db, userMapper);
 
-    AcceptFriendInvitationCommandHandlerImpl acceptFriendInvitationCommandHandler{friendInvitationRepository,
-                                                                                  userRepository};
+    std::shared_ptr<FriendshipMapper> friendshipMapperInit = std::make_shared<FriendshipMapperImpl>(userMapper);
+
+    std::shared_ptr<domain::FriendshipRepository> friendshipRepository =
+        std::make_shared<FriendshipRepositoryImpl>(db, friendshipMapperInit, userMapper);
+
+    std::shared_ptr<application::CreateFriendshipCommandHandler> createFriendshipCommandHandler =
+        std::make_shared<CreateFriendshipCommandHandlerImpl>(friendshipRepository, userRepository);
+
+    AcceptFriendInvitationCommandHandlerImpl acceptFriendInvitationCommandHandler{
+        friendInvitationRepository, userRepository, createFriendshipCommandHandler};
 };
 
 TEST_F(AcceptFriendInvitationCommandImplIntegrationTest, acceptFriendInvitation)
@@ -113,7 +129,7 @@ TEST_F(AcceptFriendInvitationCommandImplIntegrationTest, acceptFriendInvitation)
     acceptFriendInvitationCommandHandler.execute({recipient->getId(), friendInvitation.getId()});
 
     typedef odb::query<FriendInvitation> FriendInvitationQuery;
-    //    typedef odb::query<UserFriend> UserFriendQuery;
+    typedef odb::query<Friendship> FriendshipQuery;
 
     {
         odb::transaction transaction(db->begin());
@@ -123,10 +139,10 @@ TEST_F(AcceptFriendInvitationCommandImplIntegrationTest, acceptFriendInvitation)
 
         ASSERT_FALSE(foundFriendInvitation);
 
-        //        std::shared_ptr<UserFriend> foundUserFriend(db->query_one<UserFriend>(
-        //            UserFriendQuery::user->id == recipientId && UserFriendQuery::friend->id == friendId));
+        std::shared_ptr<Friendship> foundFriendship(db->query_one<Friendship>(
+            FriendshipQuery::user->id == senderId && FriendshipQuery::user_friend->id == recipientId));
 
-        //        ASSERT_TRUE(foundUserFriend);
+        ASSERT_TRUE(foundFriendship);
 
         transaction.commit();
     }

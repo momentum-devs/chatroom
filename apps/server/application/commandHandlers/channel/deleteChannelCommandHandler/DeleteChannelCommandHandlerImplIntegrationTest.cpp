@@ -8,7 +8,7 @@
 #include "faker-cxx/Internet.h"
 #include "faker-cxx/String.h"
 #include "faker-cxx/Word.h"
-#include "server/application/errors/OperationNotValid.h"
+#include "server/application/errors/OperationNotValidError.h"
 #include "server/application/errors/ResourceNotFoundError.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
 #include "server/infrastructure/repositories/channelRepository/ChannelRepositoryImpl.h"
@@ -129,7 +129,7 @@ TEST_F(DeleteChannelCommandImplIntegrationTest, givenExistingChannelAndRequester
 
     const auto requesterId = faker::String::uuid();
 
-    ASSERT_THROW(deleteChannelCommandHandler.execute({channel.getId(), requesterId}), errors::OperationNotValid);
+    ASSERT_THROW(deleteChannelCommandHandler.execute({channel.getId(), requesterId}), errors::OperationNotValidError);
 }
 
 TEST_F(DeleteChannelCommandImplIntegrationTest, givenNonExistingChannel_shouldThrow)

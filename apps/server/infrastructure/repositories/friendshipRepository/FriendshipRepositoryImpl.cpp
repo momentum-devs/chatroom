@@ -97,6 +97,39 @@ FriendshipRepositoryImpl::findFriendshipsByUserId(const domain::FindFriendshipsB
     }
 }
 
+std::optional<domain::Friendship>
+FriendshipRepositoryImpl::findFriendshipByUserIds(const domain::FindFriendshipByUserIdsPayload& payload) const
+{
+    try
+    {
+        odb::transaction transaction(db->begin());
+
+        typedef odb::query<Friendship> Query;
+
+        std::shared_ptr<Friendship> friendship(db->query_one<Friendship>(
+            Query::user->id == payload.userId && Query::user_friend->id == payload.userFriendId));
+
+        if (!friendship)
+        {
+            friendship = db->query_one<Friendship>(Query::user->id == payload.userFriendId &&
+                                                   Query::user_friend->id == payload.userId);
+        }
+
+        transaction.commit();
+
+        if (!friendship)
+        {
+            return std::nullopt;
+        }
+
+        return friendshipMapper->mapToDomainFriendship(*friendship);
+    }
+    catch (const std::exception& error)
+    {
+        throw errors::FriendshipRepositoryError{error.what()};
+    }
+}
+
 void FriendshipRepositoryImpl::deleteFriendship(const domain::DeleteFriendshipPayload& payload) const
 {
     try

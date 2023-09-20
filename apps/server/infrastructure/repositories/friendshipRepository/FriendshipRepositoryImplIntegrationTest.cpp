@@ -196,6 +196,32 @@ TEST_F(FriendshipRepositoryIntegrationTest, shouldFindFriendshipById)
     ASSERT_EQ(foundFriendship->getId(), friendshipId);
 }
 
+TEST_F(FriendshipRepositoryIntegrationTest, shouldFindFriendshipByUserIds)
+{
+    const auto friendshipId = faker::String::uuid();
+
+    const auto userId = faker::String::uuid();
+    const auto userFriendId = faker::String::uuid();
+    const auto userEmail = faker::Internet::email();
+    const auto userFriendEmail = faker::Internet::email();
+    const auto password = faker::Internet::password();
+
+    const auto user = createUser(userId, userEmail, password);
+
+    const auto userFriend = createUser(userFriendId, userFriendEmail, password);
+
+    const auto friendship = createFriendship(friendshipId, user, userFriend);
+
+    const auto foundFriendship1 = friendshipRepository->findFriendshipByUserIds({userId, userFriendId});
+
+    const auto foundFriendship2 = friendshipRepository->findFriendshipByUserIds({userFriendId, userId});
+
+    ASSERT_TRUE(foundFriendship1);
+    ASSERT_TRUE(foundFriendship2);
+    ASSERT_EQ(foundFriendship1->getId(), friendshipId);
+    ASSERT_EQ(foundFriendship2->getId(), friendshipId);
+}
+
 TEST_F(FriendshipRepositoryIntegrationTest, shouldFindFriendshipsByUserId)
 {
     const auto friendshipId = faker::String::uuid();

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -7,6 +8,7 @@
 #include "payloads/CreateFriendshipPayload.h"
 #include "payloads/DeleteFriendshipPayload.h"
 #include "payloads/FindFriendshipByIdPayload.h"
+#include "payloads/FindFriendshipByUserIdsPayload.h"
 #include "payloads/FindFriendshipsByUserIdPayload.h"
 
 namespace server::domain
@@ -19,6 +21,7 @@ public:
     virtual Friendship createFriendship(const CreateFriendshipPayload&) const = 0;
     virtual std::optional<Friendship> findFriendshipById(const FindFriendshipByIdPayload&) const = 0;
     virtual std::vector<Friendship> findFriendshipsByUserId(const FindFriendshipsByUserIdPayload&) const = 0;
+    virtual std::optional<Friendship> findFriendshipByUserIds(const FindFriendshipByUserIdsPayload&) const = 0;
     virtual void deleteFriendship(const DeleteFriendshipPayload&) const = 0;
 };
 }

@@ -2,7 +2,7 @@
 
 #include <format>
 
-#include "server/application/errors/OperationNotValid.h"
+#include "server/application/errors/OperationNotValidError.h"
 #include "server/application/errors/ResourceNotFoundError.h"
 
 namespace server::application
@@ -26,8 +26,8 @@ void DeleteChannelCommandHandlerImpl::execute(const DeleteChannelCommandHandlerP
 
     if (payload.requesterUserId != creatorId)
     {
-        throw errors::OperationNotValid{std::format("User with id {} is not creator of the channel with id {}.",
-                                                    payload.requesterUserId, payload.channelId)};
+        throw errors::OperationNotValidError{std::format("User with id {} is not creator of the channel with id {}.",
+                                                         payload.requesterUserId, payload.channelId)};
     }
 
     channelRepository->deleteChannel({**existingChannel});

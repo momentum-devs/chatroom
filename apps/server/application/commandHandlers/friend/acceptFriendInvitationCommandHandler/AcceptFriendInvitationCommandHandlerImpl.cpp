@@ -4,16 +4,18 @@
 #include <format>
 
 #include "loguru.hpp"
-#include "server/application/errors/OperationNotValid.h"
+#include "server/application/errors/OperationNotValidError.h"
 #include "server/application/errors/ResourceNotFoundError.h"
 
 namespace server::application
 {
 AcceptFriendInvitationCommandHandlerImpl::AcceptFriendInvitationCommandHandlerImpl(
     std::shared_ptr<domain::FriendInvitationRepository> friendInvitationRepositoryInit,
-    std::shared_ptr<domain::UserRepository> userRepositoryInit)
+    std::shared_ptr<domain::UserRepository> userRepositoryInit,
+    std::shared_ptr<application::CreateFriendshipCommandHandler> createFriendshipCommandHandlerInit)
     : friendInvitationRepository{std::move(friendInvitationRepositoryInit)},
-      userRepository{std::move(userRepositoryInit)}
+      userRepository{std::move(userRepositoryInit)},
+      createFriendshipCommandHandler{std::move(createFriendshipCommandHandlerInit)}
 {
 }
 
@@ -32,7 +34,7 @@ void AcceptFriendInvitationCommandHandlerImpl::execute(const AcceptFriendInvitat
 
     if (payload.recipientId != friendInvitation->getRecipient()->getId())
     {
-        throw errors::OperationNotValid{
+        throw errors::OperationNotValidError{
             std::format("User with id {} is not recipient of the friend invitation with id {}.", payload.recipientId,
                         payload.friendInvitationId)};
     }
@@ -40,8 +42,7 @@ void AcceptFriendInvitationCommandHandlerImpl::execute(const AcceptFriendInvitat
     const auto recipientId = friendInvitation->getRecipient()->getId();
     const auto senderId = friendInvitation->getSender()->getId();
 
-    // TODO: uncomment
-    //    addUserToFriendCommandHandler->execute({recipientId, friendId});
+    createFriendshipCommandHandler->execute({senderId, recipientId});
 
     // TODO: consider adding transactions
     friendInvitationRepository->deleteFriendInvitation({*friendInvitation});

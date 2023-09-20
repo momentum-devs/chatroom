@@ -4,7 +4,7 @@
 #include <format>
 
 #include "loguru.hpp"
-#include "server/application/errors/OperationNotValid.h"
+#include "server/application/errors/OperationNotValidError.h"
 #include "server/application/errors/ResourceNotFoundError.h"
 
 namespace server::application
@@ -32,7 +32,7 @@ void RejectFriendInvitationCommandHandlerImpl::execute(const RejectFriendInvitat
 
     if (payload.recipientId != friendInvitation->getRecipient()->getId())
     {
-        throw errors::OperationNotValid{
+        throw errors::OperationNotValidError{
             std::format("User with id {} is not recipient of the friend invitation with id {}.", payload.recipientId,
                         payload.friendInvitationId)};
     }

@@ -5,7 +5,7 @@
 #include <format>
 
 #include "loguru.hpp"
-#include "server/application/errors/OperationNotValid.h"
+#include "server/application/errors/OperationNotValidError.h"
 #include "server/application/errors/ResourceNotFoundError.h"
 
 namespace server::application
@@ -35,7 +35,7 @@ void RejectChannelInvitationCommandHandlerImpl::execute(
 
     if (payload.recipientId != channelInvitation->getRecipient()->getId())
     {
-        throw errors::OperationNotValid{
+        throw errors::OperationNotValidError{
             std::format("User with id {} is not recipient of the channel invitation with id {}.", payload.recipientId,
                         payload.channelInvitationId)};
     }
