@@ -56,8 +56,10 @@ set(SOURCES
 
         domain/entities/friendInvitation/FriendInvitation.cpp
         domain/entities/friendship/Friendship.cpp
-        infrastructure/repositories/friendInvitationRepository/FriendInvitationRepositoryImpl.cpp
         infrastructure/repositories/friendInvitationRepository/friendInvitationMapper/FriendInvitationMapperImpl.cpp
+        infrastructure/repositories/friendshipRepository/friendshipMapper/FriendshipMapperImpl.cpp
+        infrastructure/repositories/friendInvitationRepository/FriendInvitationRepositoryImpl.cpp
+        infrastructure/repositories/friendshipRepository/FriendshipRepositoryImpl.cpp
         application/commandHandlers/friend/createFriendInvitationCommandHandler/CreateFriendInvitationCommandHandlerImpl.cpp
         application/commandHandlers/friend/acceptFriendInvitationCommandHandler/AcceptFriendInvitationCommandHandlerImpl.cpp
         application/commandHandlers/friend/rejectFriendInvitationCommandHandler/RejectFriendInvitationCommandHandlerImpl.cpp
@@ -86,6 +88,7 @@ set(UT_SOURCES
         application/commandHandlers/user/sendRegistrationVerificationEmailCommandHandler/SendRegistrationVerificationEmailCommandHandlerImplTest.cpp
         infrastructure/repositories/channelInvitationRepository/channelInvitationMapper/ChannelInvitationMapperImplTest.cpp
         infrastructure/repositories/friendInvitationRepository/friendInvitationMapper/FriendInvitationMapperImplTest.cpp
+        infrastructure/repositories/friendshipRepository/friendshipMapper/FriendshipMapperImplTest.cpp
         )
 
 set(IT_SOURCES
@@ -114,6 +117,7 @@ set(IT_SOURCES
         application/commandHandlers/channel/rejectChannelInvitationCommandHandler/RejectChannelInvitationCommandHandlerImplIntegrationTest.cpp
 
         infrastructure/repositories/friendInvitationRepository/FriendInvitationRepositoryImplIntegrationTest.cpp
+        infrastructure/repositories/friendshipRepository/FriendshipRepositoryImplIntegrationTest.cpp
         application/commandHandlers/friend/createFriendInvitationCommandHandler/CreateFriendInvitationCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/friend/acceptFriendInvitationCommandHandler/AcceptFriendInvitationCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/friend/rejectFriendInvitationCommandHandler/RejectFriendInvitationCommandHandlerImplIntegrationTest.cpp

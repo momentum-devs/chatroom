@@ -4,7 +4,7 @@
 #include <gtest/gtest.h>
 #include <regex>
 
-#include "server/application/queryHandlers/findUserQueryHandler/FindUserQueryHandlerMock.h"
+#include "server/application/queryHandlers/user/findUserQueryHandler/FindUserQueryHandlerMock.h"
 #include "server/application/services/tokenService/TokenServiceMock.h"
 
 #include "nlohmann/json.hpp"
