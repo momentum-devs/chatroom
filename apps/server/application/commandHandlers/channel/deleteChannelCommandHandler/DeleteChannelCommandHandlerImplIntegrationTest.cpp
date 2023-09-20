@@ -134,7 +134,9 @@ TEST_F(DeleteChannelCommandImplIntegrationTest, givenExistingChannelAndRequester
 
 TEST_F(DeleteChannelCommandImplIntegrationTest, givenNonExistingChannel_shouldThrow)
 {
+    const auto requesterUserId = faker::String::uuid();
+
     const auto channelId = faker::String::uuid();
 
-    ASSERT_THROW(deleteChannelCommandHandler.execute({channelId}), errors::ResourceNotFoundError);
+    ASSERT_THROW(deleteChannelCommandHandler.execute({channelId, requesterUserId}), errors::ResourceNotFoundError);
 }

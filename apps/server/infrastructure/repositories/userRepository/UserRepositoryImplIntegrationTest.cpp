@@ -49,8 +49,11 @@ TEST_F(UserRepositoryIntegrationTest, shouldCreateUser)
     const auto password = "password";
     const auto nickname = "nickname";
     const auto active = true;
+    const auto emailVerified = true;
+    const auto verificationCode = "verificationCode";
 
-    const auto user = userRepository->createUser({id, email, password, nickname, active});
+    const auto user =
+        userRepository->createUser({id, email, password, nickname, active, emailVerified, verificationCode});
 
     ASSERT_EQ(user->getEmail(), email);
     ASSERT_EQ(user->getPassword(), password);

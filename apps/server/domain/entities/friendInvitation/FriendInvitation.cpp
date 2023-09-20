@@ -8,10 +8,10 @@ FriendInvitation::FriendInvitation(std::string idInit, std::shared_ptr<User> sen
                                    std::shared_ptr<User> recipientInit, std::string createdAtInit,
                                    std::string updatedAtInit)
     : id{std::move(idInit)},
-      sender{std::move(senderInit)},
-      recipient{std::move(recipientInit)},
       createdAt{std::move(createdAtInit)},
-      updatedAt{std::move(updatedAtInit)}
+      updatedAt{std::move(updatedAtInit)},
+      sender{std::move(senderInit)},
+      recipient{std::move(recipientInit)}
 {
 }
 

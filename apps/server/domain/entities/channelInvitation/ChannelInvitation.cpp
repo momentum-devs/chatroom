@@ -8,11 +8,11 @@ ChannelInvitation::ChannelInvitation(std::string idInit, std::shared_ptr<User> s
                                      std::shared_ptr<User> recipientInit, std::shared_ptr<Channel> channelInit,
                                      std::string createdAtInit, std::string updatedAtInit)
     : id{std::move(idInit)},
+      createdAt{std::move(createdAtInit)},
+      updatedAt{std::move(updatedAtInit)},
       sender{std::move(senderInit)},
       recipient{std::move(recipientInit)},
-      channel{std::move(channelInit)},
-      createdAt{std::move(createdAtInit)},
-      updatedAt{std::move(updatedAtInit)}
+      channel{std::move(channelInit)}
 {
 }
 

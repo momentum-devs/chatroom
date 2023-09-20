@@ -141,7 +141,9 @@ TEST_F(RemoveUserFromChannelCommandImplIntegrationTest, givenExistingUserChannel
 
 TEST_F(RemoveUserFromChannelCommandImplIntegrationTest, givenNonExistingUserChannel_shouldThrow)
 {
+    const auto userId = "userId";
+
     const auto userChannelId = "userChannelId";
 
-    ASSERT_THROW(removeUserFromChannelCommandHandler.execute({userChannelId}), errors::ResourceNotFoundError);
+    ASSERT_THROW(removeUserFromChannelCommandHandler.execute({userId, userChannelId}), errors::ResourceNotFoundError);
 }

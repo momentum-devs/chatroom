@@ -16,10 +16,10 @@ public:
     Friendship(std::string idInit, std::shared_ptr<User> userInit, std::shared_ptr<User> userFriendInit,
                std::string createdAtInit, std::string updatedAtInit)
         : id{std::move(idInit)},
-          user{std::move(userInit)},
-          user_friend{std::move(userFriendInit)},
           created_at{std::move(createdAtInit)},
-          updated_at{std::move(updatedAtInit)}
+          updated_at{std::move(updatedAtInit)},
+          user{std::move(userInit)},
+          user_friend{std::move(userFriendInit)}
     {
     }
 

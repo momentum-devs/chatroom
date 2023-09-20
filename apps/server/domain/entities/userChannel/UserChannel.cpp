@@ -7,10 +7,10 @@ namespace server::domain
 UserChannel::UserChannel(std::string idInit, std::shared_ptr<User> userInit, std::shared_ptr<Channel> channelInit,
                          std::string createdAtInit, std::string updatedAtInit)
     : id{std::move(idInit)},
-      user{std::move(userInit)},
-      channel{std::move(channelInit)},
       createdAt{std::move(createdAtInit)},
-      updatedAt{std::move(updatedAtInit)}
+      updatedAt{std::move(updatedAtInit)},
+      user{std::move(userInit)},
+      channel{std::move(channelInit)}
 {
 }
 

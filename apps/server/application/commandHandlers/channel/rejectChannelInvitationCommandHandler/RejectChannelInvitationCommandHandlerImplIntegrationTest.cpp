@@ -145,7 +145,6 @@ TEST_F(RejectChannelInvitationCommandImplIntegrationTest, rejectChannelInvitatio
     rejectChannelInvitationCommandHandler.execute({recipient->getId(), channelInvitation.getId()});
 
     typedef odb::query<ChannelInvitation> ChannelInvitationQuery;
-    typedef odb::query<UserChannel> UserChannelQuery;
 
     {
         odb::transaction transaction(db->begin());

@@ -16,10 +16,11 @@ public:
     FriendInvitation(std::string idInit, std::shared_ptr<User> senderInit, std::shared_ptr<User> recipientInit,
                      std::string createdAtInit, std::string updatedAtInit)
         : id{std::move(idInit)},
-          sender{std::move(senderInit)},
-          recipient{std::move(recipientInit)},
           created_at{std::move(createdAtInit)},
-          updated_at{std::move(updatedAtInit)}
+          updated_at{std::move(updatedAtInit)},
+          sender{std::move(senderInit)},
+          recipient{std::move(recipientInit)}
+
     {
     }
 
