@@ -37,8 +37,6 @@
 
 ### TODO:
 
-* user online/offline
-* logout user
 * logout not active user (closed connection, do not send request for long time period, etc.)
 
 
@@ -52,6 +50,7 @@
 
 * send friend invitation
 * show list of friends
+* friend online/offline
 * accept friend invitation
 * reject friend invitation
 * remove from friends

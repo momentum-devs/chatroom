@@ -7,14 +7,20 @@
 #include "common/messages/MessageSenderImpl.h"
 #include "common/messages/MessageSerializerImpl.h"
 #include "server/application/commandHandlers/loginUserCommandHandler/LoginUserCommandHandlerImpl.h"
+#include "server/application/commandHandlers/logoutUserCommandHandler/LogoutUserCommandHandlerImpl.h"
+#include "server/application/services/tokenService/TokenServiceImpl.h"
+#include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "server/infrastructure/repositories/userRepository/UserRepositoryImpl.h"
 #include "SessionImpl.h"
 
 namespace server::api
 {
-SessionFactoryImpl::SessionFactoryImpl(boost::asio::io_context& context, std::shared_ptr<odb::pgsql::database> db,
+SessionFactoryImpl::SessionFactoryImpl(boost::asio::io_context& context, std::shared_ptr<odb::pgsql::database> dbInit,
                                        const std::string& jwtSecret, int jwtExpireIn, const std::string& sendGridApiKey)
-    : context{context}, messageRouterFactory{std::move(db), jwtSecret, jwtExpireIn, std::move(sendGridApiKey)}
+    : context{context},
+      db{dbInit},
+      messageRouterFactory{dbInit, jwtSecret, jwtExpireIn, std::move(sendGridApiKey)},
+      tokenService{std::make_shared<server::application::TokenServiceImpl>(jwtSecret, jwtExpireIn)}
 {
 }
 
@@ -30,8 +36,15 @@ std::pair<std::shared_ptr<boost::asio::ip::tcp::socket>, std::shared_ptr<Session
 
     auto messageRouter = messageRouterFactory.createMessageRouter();
 
+    auto userMapper = std::make_shared<server::infrastructure::UserMapperImpl>();
+
+    auto userRepository = std::make_shared<server::infrastructure::UserRepositoryImpl>(db, userMapper);
+
+    auto logoutCommandHandler = std::make_unique<server::application::LogoutUserCommandHandlerImpl>(userRepository);
+
     auto session =
-        std::make_shared<SessionImpl>(std::move(messageReader), std::move(messageSender), std::move(messageRouter));
+        std::make_shared<SessionImpl>(std::move(messageReader), std::move(messageSender), std::move(messageRouter),
+                                      tokenService, std::move(logoutCommandHandler));
 
     return std::make_pair(std::move(socket), std::move(session));
 }

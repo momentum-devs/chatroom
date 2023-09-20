@@ -15,5 +15,6 @@ public:
     std::string getJwtSecret() const;
     int getJwtExpireIn() const;
     std::string getSendGridApiKey() const;
+    int getRefreshSessionsInterval() const;
 };
 }

@@ -43,4 +43,9 @@ std::string ConfigProvider::getSendGridApiKey() const
 {
     return EnvironmentParser::parseString("SENDGRID_API_KEY");
 }
+
+int ConfigProvider::getRefreshSessionsInterval() const
+{
+    return EnvironmentParser::parseInt("REFRESH_SESSION_INTERVAL");
+}
 }

@@ -22,5 +22,7 @@ public:
 private:
     boost::asio::io_context& context;
     MessageRouterFactory messageRouterFactory;
+    std::shared_ptr<odb::pgsql::database> db;
+    std::shared_ptr<server::application::TokenService> tokenService;
 };
 }

@@ -7,6 +7,8 @@
 #include "MessageRouterMock.h"
 #include "messages/MessageReaderMock.h"
 #include "messages/MessageSenderMock.h"
+#include "server/application/commandHandlers/logoutUserCommandHandler/LogoutUserCommandHandlerMock.h"
+#include "server/application/services/tokenService/TokenServiceMock.h"
 
 using namespace ::testing;
 using namespace server::api;
@@ -32,12 +34,21 @@ public:
     std::unique_ptr<MessageRouterMock> messageRouterMockInit = std::make_unique<StrictMock<MessageRouterMock>>();
     MessageRouterMock* messageHandlerMock = messageRouterMockInit.get();
 
+    std::shared_ptr<server::application::TokenServiceMock> tokenServiceMock =
+        std::make_shared<StrictMock<server::application::TokenServiceMock>>();
+
+    std::unique_ptr<server::application::LogoutUserCommandHandlerMock> logoutUserCommandHandlerMockInit =
+        std::make_unique<StrictMock<server::application::LogoutUserCommandHandlerMock>>();
+    server::application::LogoutUserCommandHandlerMock* logoutUserCommandHandlerMock =
+        logoutUserCommandHandlerMockInit.get();
+
     SessionImpl session{std::move(messageReaderMockInit), std::move(messageSenderMockInit),
-                        std::move(messageRouterMockInit)};
+                        std::move(messageRouterMockInit), tokenServiceMock,
+                        std::move(logoutUserCommandHandlerMockInit)};
 
     std::function<void(const common::messages::Message&)> messageHandler;
 
-    void startSesion()
+    void startSession()
     {
         EXPECT_CALL(*messageReaderMock, startReadingMessages(_)).WillOnce(SaveArg<0>(&messageHandler));
 
@@ -61,7 +72,7 @@ TEST_F(SessionImplTest, sendMessage)
 
 TEST_F(SessionImplTest, handleReceivedMessage)
 {
-    startSesion();
+    startSession();
 
     EXPECT_CALL(*messageHandlerMock, route(message)).WillOnce(Return(responseMessage));
     EXPECT_CALL(*messageSenderMock, sendMessage(responseMessage));
