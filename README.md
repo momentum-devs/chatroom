@@ -39,14 +39,12 @@
 
 * logout not active user (closed connection, do not send request for long time period, etc.)
 
-
 * show list of channels
 * delete channel (only creator)
 * send channel invitation (only creator)
-* accept channel invitation
+* create channel invitation
 * reject channel invitation
 * leave channel
-
 
 * send friend invitation
 * show list of friends
@@ -54,9 +52,8 @@
 * accept friend invitation
 * reject friend invitation
 * remove from friends
-
+* user online/offline
 
 * direct messages between users
 * messages in channel
 * user has history of direct messages and messages in channel
-* *message encryption

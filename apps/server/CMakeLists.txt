@@ -23,44 +23,53 @@ set(SOURCES
         domain/entities/user/User.cpp
         infrastructure/repositories/userRepository/UserRepositoryImpl.cpp
         infrastructure/repositories/userRepository/userMapper/UserMapperImpl.cpp
+        infrastructure/services/emailService/EmailServiceImpl.cpp
         application/services/hashService/HashServiceImpl.cpp
         application/services/tokenService/TokenServiceImpl.cpp
-        application/commandHandlers/registerUserCommandHandler/RegisterUserCommandHandlerImpl.cpp
-        application/commandHandlers/deleteUserCommandHandler/DeleteUserCommandHandlerImpl.cpp
-        application/commandHandlers/loginUserCommandHandler/LoginUserCommandHandlerImpl.cpp
-        application/commandHandlers/updateUserCommandHandler/UpdateUserCommandHandlerImpl.cpp
-        application/commandHandlers/logoutUserCommandHandler/LogoutUserCommandHandlerImpl.cpp
-        application/commandHandlers/verifyUserEmailCommandHandler/VerifyUserEmailCommandHandlerImpl.cpp
-        application/commandHandlers/sendRegistrationVerificationEmailCommandHandler/SendRegistrationVerificationEmailCommandHandlerImpl.cpp
-        application/queryHandlers/findUserQueryHandler/FindUserQueryHandlerImpl.cpp
-        infrastructure/services/emailService/EmailServiceImpl.cpp
+        application/commandHandlers/user/registerUserCommandHandler/RegisterUserCommandHandlerImpl.cpp
+        application/commandHandlers/user/deleteUserCommandHandler/DeleteUserCommandHandlerImpl.cpp
+        application/commandHandlers/user/loginUserCommandHandler/LoginUserCommandHandlerImpl.cpp
+        application/commandHandlers/user/updateUserCommandHandler/UpdateUserCommandHandlerImpl.cpp
+        application/commandHandlers/user/logoutUserCommandHandler/LogoutUserCommandHandlerImpl.cpp
+        application/commandHandlers/user/verifyUserEmailCommandHandler/VerifyUserEmailCommandHandlerImpl.cpp
+        application/commandHandlers/user/sendRegistrationVerificationEmailCommandHandler/SendRegistrationVerificationEmailCommandHandlerImpl.cpp
+        application/queryHandlers/user/findUserQueryHandler/FindUserQueryHandlerImpl.cpp
 
         domain/entities/channel/Channel.cpp
-        infrastructure/repositories/channelRepository/ChannelRepositoryImpl.cpp
-        infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.cpp
-        application/commandHandlers/createChannelCommandHandler/CreateChannelCommandHandlerImpl.cpp
-        application/commandHandlers/deleteChannelCommandHandler/DeleteChannelCommandHandlerImpl.cpp
-
         domain/entities/userChannel/UserChannel.cpp
+        domain/entities/channelInvitation/ChannelInvitation.cpp
+        infrastructure/repositories/channelRepository/ChannelRepositoryImpl.cpp
         infrastructure/repositories/userChannelRepository/UserChannelRepositoryImpl.cpp
+        infrastructure/repositories/channelInvitationRepository/ChannelInvitationRepositoryImpl.cpp
+        infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.cpp
         infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapperImpl.cpp
-        application/commandHandlers/addUserToChannelCommandHandler/AddUserToChannelCommandHandlerImpl.cpp
-        application/commandHandlers/removeUserFromChannelCommandHandler/RemoveUserFromChannelCommandHandlerImpl.cpp
-        application/queryHandlers/findUsersBelongingToChannelQueryHandler/FindUsersBelongingToChannelQueryHandlerImpl.cpp
-        application/queryHandlers/findChannelsToWhichUserBelongsQueryHandler/FindChannelsToWhichUserBelongsQueryHandlerImpl.cpp
+        infrastructure/repositories/channelInvitationRepository/channelInvitationMapper/ChannelInvitationMapperImpl.cpp
+        application/commandHandlers/channel/createChannelCommandHandler/CreateChannelCommandHandlerImpl.cpp
+        application/commandHandlers/channel/deleteChannelCommandHandler/DeleteChannelCommandHandlerImpl.cpp
+        application/commandHandlers/channel/addUserToChannelCommandHandler/AddUserToChannelCommandHandlerImpl.cpp
+        application/commandHandlers/channel/removeUserFromChannelCommandHandler/RemoveUserFromChannelCommandHandlerImpl.cpp
+        application/queryHandlers/channel/findUsersBelongingToChannelQueryHandler/FindUsersBelongingToChannelQueryHandlerImpl.cpp
+        application/queryHandlers/channel/findChannelsToWhichUserBelongsQueryHandler/FindChannelsToWhichUserBelongsQueryHandlerImpl.cpp
+        application/commandHandlers/channel/createChannelInvitationCommandHandler/CreateChannelInvitationCommandHandlerImpl.cpp
+        application/commandHandlers/channel/acceptChannelInvitationCommandHandler/AcceptChannelInvitationCommandHandlerImpl.cpp
+        application/commandHandlers/channel/rejectChannelInvitationCommandHandler/RejectChannelInvitationCommandHandlerImpl.cpp
+
+        domain/entities/friendInvitation/FriendInvitation.cpp
+        domain/entities/friendship/Friendship.cpp
+        infrastructure/repositories/friendInvitationRepository/friendInvitationMapper/FriendInvitationMapperImpl.cpp
+        infrastructure/repositories/friendshipRepository/friendshipMapper/FriendshipMapperImpl.cpp
+        infrastructure/repositories/friendInvitationRepository/FriendInvitationRepositoryImpl.cpp
+        infrastructure/repositories/friendshipRepository/FriendshipRepositoryImpl.cpp
+        application/commandHandlers/friend/createFriendInvitationCommandHandler/CreateFriendInvitationCommandHandlerImpl.cpp
+        application/commandHandlers/friend/acceptFriendInvitationCommandHandler/AcceptFriendInvitationCommandHandlerImpl.cpp
+        application/commandHandlers/friend/rejectFriendInvitationCommandHandler/RejectFriendInvitationCommandHandlerImpl.cpp
+        application/commandHandlers/friend/createFriendshipCommandHandler/CreateFriendshipCommandHandlerImpl.cpp
+
         api/MessageHandlers/UpdateUserMessageHandler.cpp
         api/MessageHandlers/DeleteUserMessageHandler.cpp
         api/MessageHandlers/VerifyUserMessageHandle.cpp
-
-        domain/entities/channelInvitation/ChannelInvitation.cpp
-        infrastructure/repositories/channelInvitationRepository/ChannelInvitationRepositoryImpl.cpp
-        infrastructure/repositories/channelInvitationRepository/channelInvitationMapper/ChannelInvitationMapperImpl.cpp
-        application/commandHandlers/createChannelInvitationCommandHandler/CreateChannelInvitationCommandHandlerImpl.cpp
-        application/commandHandlers/acceptChannelInvitationCommandHandler/AcceptChannelInvitationCommandHandlerImpl.cpp
-
-        api/MessageHandlers/UpdateUserMessageHandler.cpp
-        api/MessageHandlers/DeleteUserMessageHandler.cpp
-        api/MessageHandlers/LogoutMessageHandler.cpp)
+        api/MessageHandlers/LogoutMessageHandler.cpp
+        )
 
 set(UT_SOURCES
         api/SessionImplTest.cpp
@@ -77,31 +86,43 @@ set(UT_SOURCES
         infrastructure/repositories/userRepository/userMapper/UserMapperImplTest.cpp
         infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImplTest.cpp
         infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapperImplTest.cpp
-        application/commandHandlers/sendRegistrationVerificationEmailCommandHandler/SendRegistrationVerificationEmailCommandHandlerImplTest.cpp
-        api/MessageHandlers/VerifyUserMessageHandleTest.cpp api/MessageHandlers/LogoutMessageHandlerTest.cpp)
+        api/MessageHandlers/VerifyUserMessageHandleTest.cpp
+        application/commandHandlers/user/sendRegistrationVerificationEmailCommandHandler/SendRegistrationVerificationEmailCommandHandlerImplTest.cpp
+        infrastructure/repositories/channelInvitationRepository/channelInvitationMapper/ChannelInvitationMapperImplTest.cpp
+        infrastructure/repositories/friendInvitationRepository/friendInvitationMapper/FriendInvitationMapperImplTest.cpp
+        infrastructure/repositories/friendshipRepository/friendshipMapper/FriendshipMapperImplTest.cpp api/MessageHandlers/LogoutMessageHandlerTest.cpp)
 
 set(IT_SOURCES
         infrastructure/repositories/userRepository/UserRepositoryImplIntegrationTest.cpp
         application/services/tokenService/TokenServiceImplIntegrationTest.cpp
         application/services/hashService/HashServiceImplIntegrationTest.cpp
-        application/commandHandlers/registerUserCommandHandler/RegisterUserCommandHandlerImplIntegrationTest.cpp
-        application/commandHandlers/loginUserCommandHandler/LoginUserCommandHandlerImplIntegrationTest.cpp
-        application/commandHandlers/deleteUserCommandHandler/DeleteUserCommandHandlerImplIntegrationTest.cpp
-        application/commandHandlers/updateUserCommandHandler/UpdateUserCommandHandlerImplIntegrationTest.cpp
-        application/commandHandlers/logoutUserCommandHandler/LogoutUserCommandHandlerImplIntegrationTest.cpp
-        application/commandHandlers/verifyUserEmailCommandHandler/VerifyUserEmailCommandHandlerImplIntegrationTest.cpp
-        application/queryHandlers/findUserQueryHandler/FindUserQueryHandlerImplIntegrationTest.cpp
+        application/commandHandlers/user/registerUserCommandHandler/RegisterUserCommandHandlerImplIntegrationTest.cpp
+        application/commandHandlers/user/loginUserCommandHandler/LoginUserCommandHandlerImplIntegrationTest.cpp
+        application/commandHandlers/user/deleteUserCommandHandler/DeleteUserCommandHandlerImplIntegrationTest.cpp
+        application/commandHandlers/user/updateUserCommandHandler/UpdateUserCommandHandlerImplIntegrationTest.cpp
+        application/commandHandlers/user/logoutUserCommandHandler/LogoutUserCommandHandlerImplIntegrationTest.cpp
+        application/commandHandlers/user/verifyUserEmailCommandHandler/VerifyUserEmailCommandHandlerImplIntegrationTest.cpp
+        application/queryHandlers/user/findUserQueryHandler/FindUserQueryHandlerImplIntegrationTest.cpp
+
         infrastructure/repositories/channelRepository/ChannelRepositoryImplIntegrationTest.cpp
-        application/commandHandlers/createChannelCommandHandler/CreateChannelCommandHandlerImplIntegrationTest.cpp
-        application/commandHandlers/deleteChannelCommandHandler/DeleteChannelCommandHandlerImplIntegrationTest.cpp
         infrastructure/repositories/userChannelRepository/UserChannelRepositoryImplIntegrationTest.cpp
-        application/commandHandlers/addUserToChannelCommandHandler/AddUserToChannelCommandHandlerImplIntegrationTest.cpp
-        application/commandHandlers/removeUserFromChannelCommandHandler/RemoveUserFromChannelCommandHandlerImplIntegrationTest.cpp
-        application/queryHandlers/findUsersBelongingToChannelQueryHandler/FindUsersBelongingToChannelQueryHandlerImplIntegrationTest.cpp
-        application/queryHandlers/findChannelsToWhichUserBelongsQueryHandler/FindChannelsToWhichUserBelongsQueryHandlerImplIntegrationTest.cpp
         infrastructure/repositories/channelInvitationRepository/ChannelInvitationRepositoryImplIntegrationTest.cpp
-        application/commandHandlers/createChannelInvitationCommandHandler/CreateChannelInvitationCommandHandlerImplIntegrationTest.cpp
-        application/commandHandlers/acceptChannelInvitationCommandHandler/AcceptChannelInvitationCommandHandlerImplIntegrationTest.cpp
+        application/commandHandlers/channel/createChannelCommandHandler/CreateChannelCommandHandlerImplIntegrationTest.cpp
+        application/commandHandlers/channel/deleteChannelCommandHandler/DeleteChannelCommandHandlerImplIntegrationTest.cpp
+        application/commandHandlers/channel/addUserToChannelCommandHandler/AddUserToChannelCommandHandlerImplIntegrationTest.cpp
+        application/commandHandlers/channel/removeUserFromChannelCommandHandler/RemoveUserFromChannelCommandHandlerImplIntegrationTest.cpp
+        application/commandHandlers/channel/createChannelInvitationCommandHandler/CreateChannelInvitationCommandHandlerImplIntegrationTest.cpp
+        application/queryHandlers/channel/findUsersBelongingToChannelQueryHandler/FindUsersBelongingToChannelQueryHandlerImplIntegrationTest.cpp
+        application/queryHandlers/channel/findChannelsToWhichUserBelongsQueryHandler/FindChannelsToWhichUserBelongsQueryHandlerImplIntegrationTest.cpp
+        application/commandHandlers/channel/acceptChannelInvitationCommandHandler/AcceptChannelInvitationCommandHandlerImplIntegrationTest.cpp
+        application/commandHandlers/channel/rejectChannelInvitationCommandHandler/RejectChannelInvitationCommandHandlerImplIntegrationTest.cpp
+
+        infrastructure/repositories/friendInvitationRepository/FriendInvitationRepositoryImplIntegrationTest.cpp
+        infrastructure/repositories/friendshipRepository/FriendshipRepositoryImplIntegrationTest.cpp
+        application/commandHandlers/friend/createFriendInvitationCommandHandler/CreateFriendInvitationCommandHandlerImplIntegrationTest.cpp
+        application/commandHandlers/friend/acceptFriendInvitationCommandHandler/AcceptFriendInvitationCommandHandlerImplIntegrationTest.cpp
+        application/commandHandlers/friend/rejectFriendInvitationCommandHandler/RejectFriendInvitationCommandHandlerImplIntegrationTest.cpp
+        application/commandHandlers/friend/createFriendshipCommandHandler/CreateFriendshipCommandHandlerImplIntegrationTest.cpp
         )
 
 set(ODB_HEADERS
@@ -109,6 +130,8 @@ set(ODB_HEADERS
         infrastructure/database/entities/Channel.h
         infrastructure/database/entities/UserChannel.h
         infrastructure/database/entities/ChannelInvitation.h
+        infrastructure/database/entities/FriendInvitation.h
+        infrastructure/database/entities/Friendship.h
         )
 
 odb_compile(
@@ -128,6 +151,8 @@ set(ODB_SOURCES
         infrastructure/database/entities/Channel.cpp
         infrastructure/database/entities/UserChannel.cpp
         infrastructure/database/entities/ChannelInvitation.cpp
+        infrastructure/database/entities/FriendInvitation.cpp
+        infrastructure/database/entities/Friendship.cpp
         ${ODB_GENERATED_SOURCES}
         )
 

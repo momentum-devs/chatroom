@@ -26,6 +26,7 @@ const common::messages::Message message{messageId, {}};
 const nlohmann::json data{};
 const std::optional<std::string> token{"token"};
 const std::optional<std::string> emptyToken{std::nullopt};
+const common::messages::Message logoutMessage{common::messages::MessageId::Logout, {}};
 }
 
 class SessionImplTest : public Test
@@ -117,6 +118,9 @@ TEST_F(SessionImplTest, sendMessageWithMessageIdAndDataWithToken)
 {
     EXPECT_CALL(*messageFactoryMock, createMessage(messageId, data, token)).WillOnce(Return(message));
     EXPECT_CALL(*messageSenderMock, sendMessage(message));
+    EXPECT_CALL(*messageFactoryMock, createMessage(common::messages::MessageId::Logout, nlohmann::json{}, token))
+        .WillOnce(Return(logoutMessage));
+    EXPECT_CALL(*messageSenderMock, sendMessage(logoutMessage));
 
     session.storeToken(token.value());
 

@@ -4,8 +4,8 @@
 #include <gtest/gtest.h>
 #include <regex>
 
-#include "server/application/commandHandlers/verifyUserEmailCommandHandler/VerifyUserEmailCommandHandlerMock.h"
-#include "server/application/queryHandlers/findUserQueryHandler/FindUserQueryHandlerMock.h"
+#include "server/application/commandHandlers/user/verifyUserEmailCommandHandler/VerifyUserEmailCommandHandlerMock.h"
+#include "server/application/queryHandlers/user/findUserQueryHandler/FindUserQueryHandlerMock.h"
 #include "server/application/services/tokenService/TokenServiceMock.h"
 
 #include "nlohmann/json.hpp"

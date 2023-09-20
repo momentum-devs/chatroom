@@ -17,11 +17,11 @@ public:
     ChannelInvitation(std::string idInit, std::shared_ptr<User> senderInit, std::shared_ptr<User> recipientInit,
                       std::shared_ptr<Channel> channelInit, std::string createdAtInit, std::string updatedAtInit)
         : id{std::move(idInit)},
+          created_at{std::move(createdAtInit)},
+          updated_at{std::move(updatedAtInit)},
           sender{std::move(senderInit)},
           recipient{std::move(recipientInit)},
-          channel{std::move(channelInit)},
-          created_at{std::move(createdAtInit)},
-          updated_at{std::move(updatedAtInit)}
+          channel{std::move(channelInit)}
     {
     }
 

@@ -7,7 +7,7 @@
 #include "MessageRouterMock.h"
 #include "messages/MessageReaderMock.h"
 #include "messages/MessageSenderMock.h"
-#include "server/application/commandHandlers/logoutUserCommandHandler/LogoutUserCommandHandlerMock.h"
+#include "server/application/commandHandlers/user/logoutUserCommandHandler/LogoutUserCommandHandlerMock.h"
 #include "server/application/services/tokenService/TokenServiceMock.h"
 
 using namespace ::testing;

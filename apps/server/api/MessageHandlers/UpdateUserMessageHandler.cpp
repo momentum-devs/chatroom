@@ -24,7 +24,7 @@ common::messages::Message UpdateUserMessageHandler::handleMessage(const common::
 
         auto userId = tokenService->getUserIdFromToken(token);
 
-        server::application::UpdateUserCommandHandlerPayload payload{userId};
+        server::application::UpdateUserCommandHandlerPayload payload{userId, std::nullopt, std::nullopt};
 
         if (payloadJson["data"].contains("nickname"))
         {
@@ -42,10 +42,8 @@ common::messages::Message UpdateUserMessageHandler::handleMessage(const common::
             "ok",
         };
 
-        auto message = common::messages::Message{common::messages::MessageId::UpdateUserResponse,
-                                                 common::bytes::Bytes{responsePayload.dump()}};
-
-        return message;
+        return common::messages::Message{common::messages::MessageId::UpdateUserResponse,
+                                         common::bytes::Bytes{responsePayload.dump()}};
     }
     catch (const std::exception& e)
     {

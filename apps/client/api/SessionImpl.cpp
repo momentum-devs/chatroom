@@ -122,7 +122,10 @@ void SessionImpl::storeToken(const std::string& tokenInit)
 
 void SessionImpl::logout()
 {
-    sendMessage(common::messages::MessageId::Logout, {});
+    if (token)
+    {
+        sendMessage(common::messages::MessageId::Logout, {});
+    }
 
     token = std::nullopt;
 }

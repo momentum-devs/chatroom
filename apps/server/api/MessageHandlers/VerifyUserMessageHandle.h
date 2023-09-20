@@ -3,8 +3,8 @@
 #include <memory>
 
 #include "server/api/MessageHandler.h"
-#include "server/application/commandHandlers/verifyUserEmailCommandHandler/VerifyUserEmailCommandHandler.h"
-#include "server/application/queryHandlers/findUserQueryHandler/FindUserQueryHandler.h"
+#include "server/application/commandHandlers/user/verifyUserEmailCommandHandler/VerifyUserEmailCommandHandler.h"
+#include "server/application/queryHandlers/user/findUserQueryHandler/FindUserQueryHandler.h"
 #include "server/application/services/tokenService/TokenService.h"
 
 namespace server::api

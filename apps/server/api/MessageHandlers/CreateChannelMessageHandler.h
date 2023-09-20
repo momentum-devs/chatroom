@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "server/api/MessageHandler.h"
-#include "server/application/commandHandlers/createChannelCommandHandler/CreateChannelCommandHandler.h"
+#include "server/application/commandHandlers/channel/createChannelCommandHandler/CreateChannelCommandHandler.h"
 #include "server/application/services/tokenService/TokenService.h"
 
 namespace server::api

@@ -3,7 +3,7 @@
 #include "common/messages/MessageReader.h"
 #include "common/messages/MessageSender.h"
 #include "MessageRouter.h"
-#include "server/application/commandHandlers/logoutUserCommandHandler/LogoutUserCommandHandler.h"
+#include "server/application/commandHandlers/user/logoutUserCommandHandler/LogoutUserCommandHandler.h"
 #include "server/application/services/tokenService/TokenService.h"
 #include "Session.h"
 
