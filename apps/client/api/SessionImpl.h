@@ -17,12 +17,14 @@ public:
     SessionImpl(std::unique_ptr<common::messages::MessageReader> messageReader,
                 std::unique_ptr<common::messages::MessageSender> messageSender,
                 std::unique_ptr<SocketConnector> socketConnector, std::unique_ptr<MessageFactory> messageFactory);
+    ~SessionImpl();
     void connect(const ConnectorPayload& connectorPayload) override;
     void sendMessage(const common::messages::Message& message) override;
     void sendMessage(common::messages::MessageId messageId, const nlohmann::json& data) override;
     void addMessageHandler(const MessageHandlerPayload& messageHandlerPayload) override;
     void removeMessageHandler(const MessageHandlerPayload& messageHandlerPayload) override;
     void storeToken(const std::string& token) override;
+    void logout() override;
 
 private:
     void handleMessage(const common::messages::Message& message);

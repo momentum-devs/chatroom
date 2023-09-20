@@ -37,6 +37,8 @@ void VerifyUserController::verificationRequest(const QString& verificationCode)
 
 void VerifyUserController::goToLoginState()
 {
+    session->logout();
+    
     stateMachine->clear(stateFactory.createLoginState());
 }
 

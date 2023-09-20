@@ -10,10 +10,12 @@
 #include "MessageHandlers/UpdateUserMessageHandler.h"
 #include "MessageHandlers/VerifyUserMessageHandle.h"
 #include "MessageRouterImpl.h"
+#include "server/api/MessageHandlers/LogoutMessageHandler.h"
 #include "server/application/commandHandlers/addUserToChannelCommandHandler/AddUserToChannelCommandHandlerImpl.h"
 #include "server/application/commandHandlers/createChannelCommandHandler/CreateChannelCommandHandlerImpl.h"
 #include "server/application/commandHandlers/deleteUserCommandHandler/DeleteUserCommandHandlerImpl.h"
 #include "server/application/commandHandlers/loginUserCommandHandler/LoginUserCommandHandlerImpl.h"
+#include "server/application/commandHandlers/logoutUserCommandHandler/LogoutUserCommandHandlerImpl.h"
 #include "server/application/commandHandlers/registerUserCommandHandler/RegisterUserCommandHandlerImpl.h"
 #include "server/application/commandHandlers/sendRegistrationVerificationEmailCommandHandler/SendRegistrationVerificationEmailCommandHandlerImpl.h"
 #include "server/application/commandHandlers/updateUserCommandHandler/UpdateUserCommandHandlerImpl.h"
@@ -112,6 +114,10 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
     auto verifyUserMessageHandler = std::make_shared<VerifyUserMessageHandle>(
         tokenService, std::move(verifyUserEmailCommandHandler), findUserQueryHandler);
 
+    auto logoutCommandHandler = std::make_unique<server::application::LogoutUserCommandHandlerImpl>(userRepository);
+
+    auto logoutMessageHandler = std::make_shared<LogoutMessageHandler>(tokenService, std::move(logoutCommandHandler));
+
     std::unordered_map<common::messages::MessageId, std::shared_ptr<MessageHandler>> messageHandlers{
         {common::messages::MessageId::CreateChannel, createChannelMessageHandler},
         {common::messages::MessageId::GetUserChannels, getUserChannelsMessageHandler},
@@ -121,7 +127,7 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
         {common::messages::MessageId::UpdateUser, updateUserMessageHandler},
         {common::messages::MessageId::DeleteUser, deleteUserMessageHandler},
         {common::messages::MessageId::VerifyUser, verifyUserMessageHandler},
-    };
+        {common::messages::MessageId::Logout, logoutMessageHandler}};
 
     return std::make_unique<MessageRouterImpl>(std::move(messageHandlers));
 }

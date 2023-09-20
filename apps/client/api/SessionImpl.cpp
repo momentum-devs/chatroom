@@ -16,6 +16,11 @@ SessionImpl::SessionImpl(std::unique_ptr<common::messages::MessageReader> messag
 {
 }
 
+SessionImpl::~SessionImpl()
+{
+    logout();
+}
+
 void SessionImpl::connect(const ConnectorPayload& connectorPayload)
 {
     socketConnector->connect(connectorPayload);
@@ -31,7 +36,7 @@ void SessionImpl::sendMessage(const common::messages::Message& message)
 void SessionImpl::sendMessage(common::messages::MessageId messageId, const nlohmann::json& data)
 {
     auto message = messageFactory->createMessage(messageId, data, token);
-    
+
     sendMessage(message);
 }
 
@@ -113,5 +118,12 @@ void SessionImpl::removeMessageHandler(const MessageHandlerPayload& messageHandl
 void SessionImpl::storeToken(const std::string& tokenInit)
 {
     token = tokenInit;
+}
+
+void SessionImpl::logout()
+{
+    sendMessage(common::messages::MessageId::Logout, {});
+
+    token = std::nullopt;
 }
 }

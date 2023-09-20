@@ -41,6 +41,8 @@ void MainController::logout()
 {
     LOG_S(INFO) << "Handle logout";
 
+    session->logout();
+
     stateMachine->returnToThePreviousState();
 }
 
