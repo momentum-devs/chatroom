@@ -13,5 +13,9 @@ void SocketConnectorImpl::connect(const ConnectorPayload& connectorPayload)
                                             connectorPayload.port};
 
     socket->connect(endpoint);
+
+    boost::asio::socket_base::keep_alive option(true);
+    
+    socket->set_option(option);
 }
 }
