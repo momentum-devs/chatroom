@@ -21,6 +21,10 @@ void MessageReaderImpl::startReadingMessages(std::function<void(const common::me
 {
     onReadMessageCallback = onReadMessageInit;
 
+    boost::asio::socket_base::keep_alive option(true);
+
+    socket->set_option(option);
+
     startReadingNewMessage();
 }
 

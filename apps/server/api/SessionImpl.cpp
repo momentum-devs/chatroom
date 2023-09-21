@@ -33,10 +33,6 @@ void SessionImpl::startReceivingMessage()
 {
     LOG_S(INFO) << "Start reading messages";
 
-    boost::asio::socket_base::keep_alive option(true);
-
-    messageReader->getSocket().set_option(option);
-
     messageReader->startReadingMessages([this](const common::messages::Message& message) { handleMessage(message); });
 }
 
