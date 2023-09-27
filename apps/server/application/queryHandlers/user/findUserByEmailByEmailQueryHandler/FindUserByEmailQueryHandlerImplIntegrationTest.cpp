@@ -4,7 +4,7 @@
 #include "faker-cxx/Date.h"
 #include "faker-cxx/Internet.h"
 #include "faker-cxx/String.h"
-#include "FindUserQueryHandlerImpl.h"
+#include "FindUserByEmailQueryHandlerImpl.h"
 #include "server/application/errors/ResourceNotFoundError.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "server/infrastructure/repositories/userRepository/UserRepositoryImpl.h"
@@ -16,7 +16,7 @@ using namespace server;
 using namespace server::infrastructure;
 using namespace server::application;
 
-class FindUserQueryHandlerImplIntegrationTest : public Test
+class FindUserByEmailQueryHandlerImplIntegrationTest : public Test
 {
 public:
     void SetUp() override
@@ -44,17 +44,17 @@ public:
 
     std::shared_ptr<domain::UserRepository> userRepository = std::make_shared<UserRepositoryImpl>(db, userMapper);
 
-    FindUserQueryHandlerImpl findUserQueryHandler{userRepository};
+    FindUserByEmailQueryHandlerImpl findUserByEmailQueryHandler{userRepository};
 };
 
-TEST_F(FindUserQueryHandlerImplIntegrationTest, findNotExistingUser_shouldThrow)
+TEST_F(FindUserByEmailQueryHandlerImplIntegrationTest, findNotExistingUser_shouldThrow)
 {
     const auto id = faker::String::uuid();
 
-    ASSERT_THROW(findUserQueryHandler.execute({id}), errors::ResourceNotFoundError);
+    ASSERT_THROW(findUserByEmailQueryHandler.execute({id}), errors::ResourceNotFoundError);
 }
 
-TEST_F(FindUserQueryHandlerImplIntegrationTest, findUserById)
+TEST_F(FindUserByEmailQueryHandlerImplIntegrationTest, findUserByEmail)
 {
     const auto id = faker::String::uuid();
     const auto email = faker::Internet::email();
@@ -78,7 +78,7 @@ TEST_F(FindUserQueryHandlerImplIntegrationTest, findUserById)
         transaction.commit();
     }
 
-    const auto [user] = findUserQueryHandler.execute({id});
+    const auto [user] = findUserByEmailQueryHandler.execute({email});
 
     ASSERT_EQ(user.getId(), id);
 }
