@@ -39,8 +39,6 @@
 
 // CLIENT:
 
-* delete channel (only creator)
-* send channel invitation (only creator)
 * create channel invitation
 * reject channel invitation
 * leave channel

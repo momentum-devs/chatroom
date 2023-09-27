@@ -32,7 +32,9 @@ common::messages::Message GetUserChannelsMessageHandler::handleMessage(const com
 
         for (const auto& channel : channels)
         {
-            nlohmann::json channelJson{{"id", channel.getId()}, {"name", channel.getName()}};
+            bool isOwner = channel.getCreatorId() == userId;
+
+            nlohmann::json channelJson{{"id", channel.getId()}, {"name", channel.getName()}, {"isOwner", isOwner}};
 
             channelsJsonArray.push_back(channelJson);
         }

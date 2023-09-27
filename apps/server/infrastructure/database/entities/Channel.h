@@ -64,10 +64,7 @@ private:
 #pragma db id
     std::string id;
     std::string name;
-
-#pragma db not_null
-    std::shared_ptr<User> user;
-
+    std::string creator_id;
     std::string created_at;
     std::string updated_at;
 };

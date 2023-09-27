@@ -30,7 +30,7 @@ public:
     Q_INVOKABLE void deleteTheChannel();
 
 signals:
-    void addChannel(const QString& channelName, const QString& channelId);
+    void addChannel(const QString& channelName, const QString& channelId, bool isOwner);
     void clearChannelList();
 
 private:

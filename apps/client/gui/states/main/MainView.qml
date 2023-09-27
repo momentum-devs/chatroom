@@ -101,8 +101,8 @@ Rectangle {
         }
     }
     Connections {
-        function onAddChannel(channelName: string, channelId: string) {
-            channels.push([channelName, channelId]);
+        function onAddChannel(channelName: string, channelId: string, isOwner: bool) {
+            channels.push([channelName, channelId, isOwner]);
             channelsView.model = channels;
         }
         function onClearChannelList() {

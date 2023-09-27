@@ -89,13 +89,14 @@ void MainController::handleGetUserChannelsResponse(const common::messages::Messa
     {
         for (const auto& channel : responseJson.at("data"))
         {
-            if (channel.contains("id") and channel.contains("name"))
+            if (channel.contains("id") and channel.contains("name") and channel.contains("isOwner"))
             {
                 LOG_S(INFO) << std::format("Adding channel {} with id {} to list",
                                            channel.at("name").get<std::string>(), channel.at("id").get<std::string>());
 
                 emit addChannel(QString::fromStdString(channel.at("name").get<std::string>()),
-                                QString::fromStdString(channel.at("id").get<std::string>()));
+                                QString::fromStdString(channel.at("id").get<std::string>()),
+                                channel.at("isOwner").get<bool>());
             }
             else
             {
