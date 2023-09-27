@@ -39,11 +39,11 @@ CREATE TABLE "users_channels"
 ALTER TABLE "users_channels"
     ADD CONSTRAINT "user_fk"
         FOREIGN KEY ("user")
-            REFERENCES "users" ("id")
+            REFERENCES "users" ("id") ON DELETE CASCADE
             INITIALLY DEFERRED,
     ADD CONSTRAINT "channel_fk"
         FOREIGN KEY ("channel")
-            REFERENCES "channels" ("id")
+            REFERENCES "channels" ("id") ON DELETE CASCADE
             INITIALLY DEFERRED;
 
 DROP TABLE IF EXISTS "channels_invitations" CASCADE;
