@@ -20,12 +20,20 @@ public:
 
     void activate();
     void deactivate();
+
+    Q_INVOKABLE void goBack();
+    Q_INVOKABLE void sendChannelInvitation(const QString& email);
 signals:
+    void sendChannelInvitationFailure(const QString& message) const;
 
 private:
+    void handleSendChannelInvitationResponse(const common::messages::Message& message);
+
     std::shared_ptr<api::Session> session;
     const StateFactory& stateFactory;
     std::shared_ptr<StateMachine> stateMachine;
     std::string channelId;
+    inline static const std::string sendChannelInvitationResponseHandlerName{
+        "sendChannelInvitationResponseHandlerName"};
 };
 }

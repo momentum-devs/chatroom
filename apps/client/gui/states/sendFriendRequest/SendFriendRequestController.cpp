@@ -26,10 +26,12 @@ void SendFriendRequestController::deactivate()
         {common::messages::MessageId::CreateChannelResponse, sendFriendRequestResponseHandlerName});
 }
 
-void SendFriendRequestController::sendFriendRequest(const QString& friendEmail) {}
+void SendFriendRequestController::sendFriendRequest(const QString& /*friendEmail*/) {}
 
 void SendFriendRequestController::goBack()
 {
+    LOG_S(INFO) << "Return to previous state";
+    
     stateMachine->returnToThePreviousState();
 }
 

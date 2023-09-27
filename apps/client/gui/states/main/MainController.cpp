@@ -147,9 +147,21 @@ void MainController::addToChannel()
 
     stateMachine->addNextState(stateFactory.createInviteToChannelState(currentChannelId));
 }
+
 void MainController::leftTheChannel()
 {
     LOG_S(INFO) << "Left the chat";
+
+    nlohmann::json data{
+        {"channelId", channelId},
+    };
+
+    session->sendMessage(common::messages::MessageId::SendChannelInvitation, data);
+}
+
+void MainController::deleteTheChannel()
+{
+    LOG_S(INFO) << "Delete the chat";
 
     // TODO: implement message left the chat
 }

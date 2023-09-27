@@ -27,6 +27,7 @@ public:
     Q_INVOKABLE void setCurrentChannel(const QString& channelId);
     Q_INVOKABLE void addToChannel();
     Q_INVOKABLE void leftTheChannel();
+    Q_INVOKABLE void deleteTheChannel();
 
 signals:
     void addChannel(const QString& channelName, const QString& channelId);

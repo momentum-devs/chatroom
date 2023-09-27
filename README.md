@@ -37,9 +37,6 @@
 
 ### TODO:
 
-* logout not active user (closed connection, do not send request for long time period, etc.)
-
-* show list of channels
 * delete channel (only creator)
 * send channel invitation (only creator)
 * create channel invitation

@@ -42,6 +42,18 @@ Item {
                     mainController.leftTheChannel();
                 }
             }
+            Button {
+                anchors.horizontalCenter: parent.horizontalRight
+
+                contentItem: Text {
+                    color: "#FF0000"
+                    text: qsTr('Delete the channel')
+                }
+
+                onClicked: {
+                    mainController.deleteTheChannel();
+                }
+            }
         }
     }
 }
