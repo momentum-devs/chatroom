@@ -61,15 +61,15 @@ CREATE TABLE "channels_invitations"
 ALTER TABLE "channels_invitations"
     ADD CONSTRAINT "sender_fk"
         FOREIGN KEY ("sender")
-            REFERENCES "users" ("id")
+            REFERENCES "users" ("id") ON DELETE CASCADE
             INITIALLY DEFERRED,
     ADD CONSTRAINT "recipient_fk"
         FOREIGN KEY ("recipient")
-            REFERENCES "users" ("id")
+            REFERENCES "users" ("id") ON DELETE CASCADE
             INITIALLY DEFERRED,
     ADD CONSTRAINT "channel_fk"
         FOREIGN KEY ("channel")
-            REFERENCES "channels" ("id")
+            REFERENCES "channels" ("id") ON DELETE CASCADE
             INITIALLY DEFERRED;
 
 DROP TABLE IF EXISTS "friends_invitations" CASCADE;
@@ -86,11 +86,11 @@ CREATE TABLE "friends_invitations"
 ALTER TABLE "friends_invitations"
     ADD CONSTRAINT "sender_fk"
         FOREIGN KEY ("sender")
-            REFERENCES "users" ("id")
+            REFERENCES "users" ("id") ON DELETE CASCADE
             INITIALLY DEFERRED,
     ADD CONSTRAINT "recipient_fk"
         FOREIGN KEY ("recipient")
-            REFERENCES "users" ("id")
+            REFERENCES "users" ("id") ON DELETE CASCADE
             INITIALLY DEFERRED;
 
 DROP TABLE IF EXISTS "friendships" CASCADE;
@@ -107,11 +107,11 @@ CREATE TABLE "friendships"
 ALTER TABLE "friendships"
     ADD CONSTRAINT "user_fk"
         FOREIGN KEY ("user")
-            REFERENCES "users" ("id")
+            REFERENCES "users" ("id") ON DELETE CASCADE
             INITIALLY DEFERRED,
     ADD CONSTRAINT "user_friend_fk"
         FOREIGN KEY ("user_friend")
-            REFERENCES "users" ("id")
+            REFERENCES "users" ("id") ON DELETE CASCADE
             INITIALLY DEFERRED;
 
 DROP TABLE IF EXISTS "conversations" CASCADE;
@@ -129,13 +129,13 @@ CREATE TABLE "conversations"
 ALTER TABLE "conversations"
     ADD CONSTRAINT "user_fk"
         FOREIGN KEY ("user")
-            REFERENCES "users" ("id")
+            REFERENCES "users" ("id") ON DELETE CASCADE
             INITIALLY DEFERRED,
     ADD CONSTRAINT "recipient_fk"
         FOREIGN KEY ("recipient")
-            REFERENCES "users" ("id")
+            REFERENCES "users" ("id") ON DELETE CASCADE
             INITIALLY DEFERRED,
     ADD CONSTRAINT "channel_fk"
         FOREIGN KEY ("channel")
-            REFERENCES "channels" ("id")
+            REFERENCES "channels" ("id") ON DELETE CASCADE
             INITIALLY DEFERRED;

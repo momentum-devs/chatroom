@@ -1,5 +1,9 @@
 #include "gtest/gtest.h"
 
+#include "faker-cxx/Datatype.h"
+#include "faker-cxx/Date.h"
+#include "faker-cxx/Internet.h"
+#include "faker-cxx/String.h"
 #include "RegisterUserCommandHandlerImpl.h"
 #include "server/application/errors/ResourceAlreadyExistsError.h"
 #include "server/application/services/hashService/HashServiceImpl.h"
@@ -49,7 +53,7 @@ public:
 
 TEST_F(RegisterUserCommandImplIntegrationTest, registerUser)
 {
-    const auto email = "email@example.com";
+    const auto email = faker::Internet::email();
     const auto password = "password";
     const auto expectedHashPassword = "5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8";
 
@@ -61,17 +65,18 @@ TEST_F(RegisterUserCommandImplIntegrationTest, registerUser)
 
 TEST_F(RegisterUserCommandImplIntegrationTest, givenUserWithSameEmail_shouldThrow)
 {
-    const auto id = "id";
-    const auto email = "email@example.com";
-    const auto password = "password";
-    const auto nickname = "nickname";
-    const auto active = true;
-    const auto emailVerified = false;
-    const auto createdAt = "2023-06-16";
-    const auto updatedAt = "2023-06-16";
+    const auto id = faker::String::uuid();
+    const auto email = faker::Internet::email();
+    const auto password = faker::Internet::password();
+    const auto nickname = faker::Internet::username();
+    const auto active = faker::Datatype::boolean();
+    const auto emailVerified = faker::Datatype::boolean();
+    const auto verificationCode = faker::String::numeric(8);
+    const auto createdAt = faker::Date::pastDate();
+    const auto updatedAt = faker::Date::recentDate();
 
-    infrastructure::User existingUser{id,    email,     password, nickname, active, emailVerified,
-                                      "123", createdAt, updatedAt};
+    infrastructure::User existingUser{id,        email,    password, nickname, active, emailVerified, verificationCode,
+                                      createdAt, updatedAt};
 
     {
         odb::transaction transaction(db->begin());

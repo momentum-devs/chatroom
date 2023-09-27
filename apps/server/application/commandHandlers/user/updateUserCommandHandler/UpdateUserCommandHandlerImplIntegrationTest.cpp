@@ -1,5 +1,7 @@
 #include "gtest/gtest.h"
 
+#include "faker-cxx/Datatype.h"
+#include "faker-cxx/Date.h"
 #include "faker-cxx/Internet.h"
 #include "faker-cxx/String.h"
 #include "server/application/errors/ResourceNotFoundError.h"
@@ -64,13 +66,14 @@ TEST_F(UpdateUserCommandImplIntegrationTest, updatePassword)
     const auto password = faker::Internet::password();
     const auto updatedPassword = faker::Internet::password();
     const auto nickname = faker::Internet::username();
-    const auto active = true;
-    const auto emailVerified = false;
-    const auto createdAt = "2023-06-16";
-    const auto updatedAt = "2023-06-16";
+    const auto active = faker::Datatype::boolean();
+    const auto emailVerified = faker::Datatype::boolean();
+    const auto verificationCode = faker::String::numeric(8);
+    const auto createdAt = faker::Date::pastDate();
+    const auto updatedAt = faker::Date::recentDate();
 
-    infrastructure::User existingUser{id,    email,     password, nickname, active, emailVerified,
-                                      "123", createdAt, updatedAt};
+    infrastructure::User existingUser{id,        email,    password, nickname, active, emailVerified, verificationCode,
+                                      createdAt, updatedAt};
 
     {
         odb::transaction transaction(db->begin());
@@ -93,13 +96,14 @@ TEST_F(UpdateUserCommandImplIntegrationTest, updateNickname)
     const auto password = faker::Internet::password();
     const auto nickname = faker::Internet::username();
     const auto updatedNickname = faker::Internet::username();
-    const auto active = true;
-    const auto emailVerified = false;
-    const auto createdAt = "2023-06-16";
-    const auto updatedAt = "2023-06-16";
+    const auto active = faker::Datatype::boolean();
+    const auto emailVerified = faker::Datatype::boolean();
+    const auto verificationCode = faker::String::numeric(8);
+    const auto createdAt = faker::Date::pastDate();
+    const auto updatedAt = faker::Date::recentDate();
 
-    infrastructure::User existingUser{id,    email,     password, nickname, active, emailVerified,
-                                      "123", createdAt, updatedAt};
+    infrastructure::User existingUser{id,        email,    password, nickname, active, emailVerified, verificationCode,
+                                      createdAt, updatedAt};
 
     {
         odb::transaction transaction(db->begin());

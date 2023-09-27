@@ -1,5 +1,7 @@
 #include "gtest/gtest.h"
 
+#include "faker-cxx/Datatype.h"
+#include "faker-cxx/Date.h"
 #include "faker-cxx/Internet.h"
 #include "faker-cxx/String.h"
 #include "LogoutUserCommandHandlerImpl.h"
@@ -51,12 +53,14 @@ TEST_F(LogoutUserCommandImplIntegrationTest, logoutExistingUser)
     const auto email = faker::Internet::email();
     const auto password = faker::Internet::password();
     const auto nickname = faker::Internet::username();
-    const auto active = true;
-    const auto emailVerified = false;
-    const auto createdAt = "2023-06-16";
-    const auto updatedAt = "2023-06-16";
+    const auto active = faker::Datatype::boolean();
+    const auto emailVerified = faker::Datatype::boolean();
+    const auto verificationCode = faker::String::numeric(8);
+    const auto createdAt = faker::Date::pastDate();
+    const auto updatedAt = faker::Date::recentDate();
 
-    server::infrastructure::User user{id, email, password, email, active, emailVerified, "123", createdAt, updatedAt};
+    server::infrastructure::User user{id,        email,    password, email, active, emailVerified, verificationCode,
+                                      createdAt, updatedAt};
 
     {
         odb::transaction transaction(db->begin());

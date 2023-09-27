@@ -37,6 +37,8 @@
 
 ### TODO:
 
+// CLIENT:
+
 * delete channel (only creator)
 * send channel invitation (only creator)
 * create channel invitation
@@ -55,6 +57,10 @@
 * messages in channel
 * user has history of direct messages and messages in channel
 
+// SERVER:
 
-* validate sender user when inviting to channel
 * delete channel when creator leaves it
+* generate verification code
+* direct messages between users
+* messages in channel
+* user has history of direct messages and messages in channel

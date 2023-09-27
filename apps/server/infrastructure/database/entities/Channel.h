@@ -5,6 +5,8 @@
 #include <string>
 #include <utility>
 
+#include "User.h"
+
 namespace server::infrastructure
 {
 #pragma db object table("channels")
@@ -62,7 +64,10 @@ private:
 #pragma db id
     std::string id;
     std::string name;
-    std::string creator_id;
+
+#pragma db not_null
+    std::shared_ptr<User> user;
+
     std::string created_at;
     std::string updated_at;
 };
