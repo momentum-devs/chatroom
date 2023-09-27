@@ -105,6 +105,10 @@ Rectangle {
             channels.push([channelName, channelId]);
             channelsView.model = channels;
         }
+        function onClearChannelList() {
+            channels = [];
+            channelsView.model = channels;
+        }
 
         target: mainController
     }

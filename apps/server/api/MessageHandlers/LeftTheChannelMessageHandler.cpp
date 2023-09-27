@@ -9,7 +9,7 @@ namespace server::api
 {
 LeftTheChannelMessageHandler::LeftTheChannelMessageHandler(
     std::shared_ptr<server::application::TokenService> tokenServiceInit,
-    std::shared_ptr<server::application::RemoveUserFromChannelCommandHandler> removeUserFromChannelCommandHandlerInit)
+    std::unique_ptr<server::application::RemoveUserFromChannelCommandHandler> removeUserFromChannelCommandHandlerInit)
     : tokenService{std::move(tokenServiceInit)},
       removeUserFromChannelCommandHandler{std::move(removeUserFromChannelCommandHandlerInit)}
 {
