@@ -16,6 +16,7 @@
 #include "MessageRouterImpl.h"
 #include "server/application/commandHandlers/channel/addUserToChannelCommandHandler/AddUserToChannelCommandHandlerImpl.h"
 #include "server/application/commandHandlers/channel/createChannelCommandHandler/CreateChannelCommandHandlerImpl.h"
+#include "server/application/commandHandlers/channel/createChannelInvitationCommandHandler/CreateChannelInvitationCommandHandlerImpl.h"
 #include "server/application/commandHandlers/channel/deleteChannelCommandHandler/DeleteChannelCommandHandlerImpl.h"
 #include "server/application/commandHandlers/channel/removeUserFromChannelCommandHandler/RemoveUserFromChannelCommandHandlerImpl.h"
 #include "server/application/commandHandlers/user/deleteUserCommandHandler/DeleteUserCommandHandlerImpl.h"
@@ -26,9 +27,12 @@
 #include "server/application/commandHandlers/user/updateUserCommandHandler/UpdateUserCommandHandlerImpl.h"
 #include "server/application/commandHandlers/user/verifyUserEmailCommandHandler/VerifyUserEmailCommandHandlerImpl.h"
 #include "server/application/queryHandlers/channel/findChannelsToWhichUserBelongsQueryHandler/FindChannelsToWhichUserBelongsQueryHandlerImpl.h"
+#include "server/application/queryHandlers/user/findUserByEmailQueryHandler/FindUserByEmailQueryHandlerImpl.h"
 #include "server/application/queryHandlers/user/findUserQueryHandler/FindUserQueryHandlerImpl.h"
 #include "server/application/services/hashService/HashServiceImpl.h"
 #include "server/application/services/tokenService/TokenServiceImpl.h"
+#include "server/infrastructure/repositories/channelInvitationRepository/channelInvitationMapper/ChannelInvitationMapperImpl.h"
+#include "server/infrastructure/repositories/channelInvitationRepository/ChannelInvitationRepositoryImpl.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
 #include "server/infrastructure/repositories/channelRepository/ChannelRepositoryImpl.h"
 #include "server/infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapperImpl.h"
@@ -68,6 +72,12 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
 
     auto userChannelRepository = std::make_shared<server::infrastructure::UserChannelRepositoryImpl>(
         db, userChannelMapper, userMapper, channelMapper);
+
+    auto channelInvitationMapper =
+        std::make_shared<server::infrastructure::ChannelInvitationMapperImpl>(userMapper, channelMapper);
+
+    auto channelInvitationRepository = std::make_shared<server::infrastructure::ChannelInvitationRepositoryImpl>(
+        db, channelInvitationMapper, userMapper, channelMapper);
 
     auto findChannelsToWhichUserBelongsQueryHandler =
         std::make_unique<server::application::FindChannelsToWhichUserBelongsQueryHandlerImpl>(userChannelRepository);
@@ -123,8 +133,15 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
 
     auto logoutMessageHandler = std::make_shared<LogoutMessageHandler>(tokenService, std::move(logoutCommandHandler));
 
+    auto findUserByEmailQueryHandler =
+        std::make_shared<server::application::FindUserByEmailQueryHandlerImpl>(userRepository);
+
+    auto createChannelInvitationCommandHandler =
+        std::make_unique<server::application::CreateChannelInvitationCommandHandlerImpl>(
+            channelInvitationRepository, userRepository, channelRepository);
+
     auto sendChannelInvitationMessageHandler = std::make_shared<SendChannelInvitationMessageHandler>(
-        tokenService, findUserQueryHandler, addUserToChannelCommandHandler);
+        tokenService, findUserByEmailQueryHandler, std::move(createChannelInvitationCommandHandler));
 
     auto removeUserFromChannelCommandHandler =
         std::make_unique<server::application::RemoveUserFromChannelCommandHandlerImpl>(userChannelRepository);
