@@ -60,5 +60,4 @@
 
 
 * validate sender user when inviting to channel
-* get channel by id
-* get user by email
+* delete channel when creator leaves it
