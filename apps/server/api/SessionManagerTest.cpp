@@ -8,15 +8,13 @@
 using namespace ::testing;
 using namespace server::api;
 
-namespace
-{
-std::shared_ptr<SessionMock> activeSessionMock = std::make_shared<StrictMock<SessionMock>>();
-std::shared_ptr<SessionMock> inactiveSessionMock = std::make_shared<StrictMock<SessionMock>>();
-}
-
 class SessionManagerTest : public Test
 {
 public:
+    std::shared_ptr<SessionMock> activeSessionMock = std::make_shared<StrictMock<SessionMock>>();
+
+    std::shared_ptr<SessionMock> inactiveSessionMock = std::make_shared<StrictMock<SessionMock>>();
+
     std::unique_ptr<ConnectionAcceptorMock> connectionAcceptorMockInit =
         std::make_unique<StrictMock<ConnectionAcceptorMock>>();
     ConnectionAcceptorMock* connectionAcceptorMock = connectionAcceptorMockInit.get();
