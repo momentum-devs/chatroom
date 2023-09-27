@@ -37,6 +37,8 @@
 
 ### TODO:
 
+// CLIENT:
+
 * logout not active user (closed connection, do not send request for long time period, etc.)
 
 * show list of channels
@@ -58,7 +60,10 @@
 * messages in channel
 * user has history of direct messages and messages in channel
 
+// SERVER:
 
-* validate sender user when inviting to channel
 * delete channel when creator leaves it
 * generate verification code
+* direct messages between users
+* messages in channel
+* user has history of direct messages and messages in channel
