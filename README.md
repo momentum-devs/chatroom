@@ -61,3 +61,4 @@
 
 * validate sender user when inviting to channel
 * delete channel when creator leaves it
+* generate verification code
