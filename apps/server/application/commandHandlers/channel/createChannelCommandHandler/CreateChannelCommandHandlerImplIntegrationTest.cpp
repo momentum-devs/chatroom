@@ -3,6 +3,9 @@
 #include "gtest/gtest.h"
 
 #include "CreateChannelCommandHandlerImpl.h"
+#include "faker-cxx/Internet.h"
+#include "faker-cxx/String.h"
+#include "faker-cxx/Word.h"
 #include "server/application/commandHandlers/channel/addUserToChannelCommandHandler/AddUserToChannelCommandHandlerImpl.h"
 #include "server/application/services/hashService/HashServiceImpl.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
@@ -88,13 +91,14 @@ public:
 
 TEST_F(CreateChannelCommandImplIntegrationTest, createChannel)
 {
-    const auto userId = "userId";
-    const auto userEmail = "email@gmail.com";
-    const auto userPassword = "password";
+    const auto userId = faker::String::uuid();
+    const auto userEmail = faker::Internet::email();
+    const auto userPassword = faker::Internet::password();
 
     const auto user = createUser(userId, userEmail, userPassword);
 
-    const auto name = "name";
+    const auto channelId = faker::String::uuid();
+    const auto name = faker::Word::noun();
     const auto creatorId = user.getId();
 
     const auto [channel] = createChannelCommandHandler.execute({name, creatorId});
