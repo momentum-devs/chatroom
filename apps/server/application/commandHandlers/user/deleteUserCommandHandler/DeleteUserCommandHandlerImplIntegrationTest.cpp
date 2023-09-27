@@ -3,6 +3,8 @@
 #include "gtest/gtest.h"
 
 #include "DeleteUserCommandHandlerImpl.h"
+#include "faker-cxx/Internet.h"
+#include "faker-cxx/String.h"
 #include "server/application/errors/ResourceNotFoundError.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "server/infrastructure/repositories/userRepository/UserRepositoryImpl.h"
@@ -63,9 +65,9 @@ public:
 
 TEST_F(DeleteUserCommandImplIntegrationTest, givenExistingUser_shouldDeleteUser)
 {
-    const auto userId = "userId";
-    const auto userEmail = "email@gmail.com";
-    const auto userPassword = "password";
+    const auto userId = faker::String::uuid();
+    const auto userEmail = faker::Internet::email();
+    const auto userPassword = faker::Internet::password();
 
     const auto user = createUser(userId, userEmail, userPassword);
 
@@ -86,7 +88,7 @@ TEST_F(DeleteUserCommandImplIntegrationTest, givenExistingUser_shouldDeleteUser)
 
 TEST_F(DeleteUserCommandImplIntegrationTest, givenNonExistingChannel_shouldThrow)
 {
-    const auto userId = "userId";
+    const auto userId = faker::String::uuid();
 
     ASSERT_THROW(deleteUserCommandHandler.execute({userId}), errors::ResourceNotFoundError);
 }

@@ -34,6 +34,7 @@ set(SOURCES
         application/commandHandlers/user/verifyUserEmailCommandHandler/VerifyUserEmailCommandHandlerImpl.cpp
         application/commandHandlers/user/sendRegistrationVerificationEmailCommandHandler/SendRegistrationVerificationEmailCommandHandlerImpl.cpp
         application/queryHandlers/user/findUserQueryHandler/FindUserQueryHandlerImpl.cpp
+        application/queryHandlers/user/findUserByEmailQueryHandler/FindUserByEmailQueryHandlerImpl.cpp
 
         domain/entities/channel/Channel.cpp
         domain/entities/userChannel/UserChannel.cpp
@@ -50,6 +51,7 @@ set(SOURCES
         application/commandHandlers/channel/removeUserFromChannelCommandHandler/RemoveUserFromChannelCommandHandlerImpl.cpp
         application/queryHandlers/channel/findUsersBelongingToChannelQueryHandler/FindUsersBelongingToChannelQueryHandlerImpl.cpp
         application/queryHandlers/channel/findChannelsToWhichUserBelongsQueryHandler/FindChannelsToWhichUserBelongsQueryHandlerImpl.cpp
+        application/queryHandlers/channel/findChannelByIdQueryHandler/FindChannelByIdQueryHandlerImpl.cpp
         application/commandHandlers/channel/createChannelInvitationCommandHandler/CreateChannelInvitationCommandHandlerImpl.cpp
         application/commandHandlers/channel/acceptChannelInvitationCommandHandler/AcceptChannelInvitationCommandHandlerImpl.cpp
         application/commandHandlers/channel/rejectChannelInvitationCommandHandler/RejectChannelInvitationCommandHandlerImpl.cpp
@@ -68,6 +70,10 @@ set(SOURCES
         application/queryHandlers/friend/findReceivedFriendInvitationsQueryHandler/FindReceivedFriendInvitationsQueryHandlerImpl.cpp
         application/queryHandlers/friend/findUserFriendsQueryHandler/FindUserFriendsQueryHandlerImpl.cpp
 
+        domain/entities/conversation/Conversation.cpp
+        infrastructure/repositories/conversationRepository/conversationMapper/ConversationMapperImpl.cpp
+        infrastructure/repositories/conversationRepository/ConversationRepositoryImpl.cpp
+
         api/MessageHandlers/UpdateUserMessageHandler.cpp
         api/MessageHandlers/DeleteUserMessageHandler.cpp
         api/MessageHandlers/VerifyUserMessageHandle.cpp
@@ -77,7 +83,6 @@ set(SOURCES
 set(UT_SOURCES
         api/SessionImplTest.cpp
         api/SessionManagerTest.cpp
-        infrastructure/services/emailService/EmailServiceImplTest.cpp
         api/MessageRouterImplTest.cpp
         api/MessageHandlers/CreateChannelMessageHandlerTest.cpp
         api/MessageHandlers/DeleteUserMessageHandlerTest.cpp
@@ -86,14 +91,17 @@ set(UT_SOURCES
         api/MessageHandlers/LoginMessageHandlerTest.cpp
         api/MessageHandlers/RegisterMessageHandlerTest.cpp
         api/MessageHandlers/UpdateUserMessageHandlerTest.cpp
+        api/MessageHandlers/LogoutMessageHandlerTest.cpp
+        api/MessageHandlers/VerifyUserMessageHandleTest.cpp
+        infrastructure/services/emailService/EmailServiceImplTest.cpp
         infrastructure/repositories/userRepository/userMapper/UserMapperImplTest.cpp
         infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImplTest.cpp
         infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapperImplTest.cpp
-        api/MessageHandlers/VerifyUserMessageHandleTest.cpp
         application/commandHandlers/user/sendRegistrationVerificationEmailCommandHandler/SendRegistrationVerificationEmailCommandHandlerImplTest.cpp
         infrastructure/repositories/channelInvitationRepository/channelInvitationMapper/ChannelInvitationMapperImplTest.cpp
         infrastructure/repositories/friendInvitationRepository/friendInvitationMapper/FriendInvitationMapperImplTest.cpp
-        infrastructure/repositories/friendshipRepository/friendshipMapper/FriendshipMapperImplTest.cpp api/MessageHandlers/LogoutMessageHandlerTest.cpp api/MessageHandlers/SendChannelInvitationMessageHandlerTest.cpp)
+        infrastructure/repositories/friendshipRepository/friendshipMapper/FriendshipMapperImplTest.cpp
+        infrastructure/repositories/conversationRepository/conversationMapper/ConversationMapperImplTest.cpp api/MessageHandlers/SendChannelInvitationMessageHandlerTest.cpp)
 
 set(IT_SOURCES
         infrastructure/repositories/userRepository/UserRepositoryImplIntegrationTest.cpp
@@ -106,6 +114,7 @@ set(IT_SOURCES
         application/commandHandlers/user/logoutUserCommandHandler/LogoutUserCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/user/verifyUserEmailCommandHandler/VerifyUserEmailCommandHandlerImplIntegrationTest.cpp
         application/queryHandlers/user/findUserQueryHandler/FindUserQueryHandlerImplIntegrationTest.cpp
+        application/queryHandlers/user/findUserByEmailQueryHandler/FindUserByEmailQueryHandlerImplIntegrationTest.cpp
 
         infrastructure/repositories/channelRepository/ChannelRepositoryImplIntegrationTest.cpp
         infrastructure/repositories/userChannelRepository/UserChannelRepositoryImplIntegrationTest.cpp
@@ -117,6 +126,7 @@ set(IT_SOURCES
         application/commandHandlers/channel/createChannelInvitationCommandHandler/CreateChannelInvitationCommandHandlerImplIntegrationTest.cpp
         application/queryHandlers/channel/findUsersBelongingToChannelQueryHandler/FindUsersBelongingToChannelQueryHandlerImplIntegrationTest.cpp
         application/queryHandlers/channel/findChannelsToWhichUserBelongsQueryHandler/FindChannelsToWhichUserBelongsQueryHandlerImplIntegrationTest.cpp
+        application/queryHandlers/channel/findChannelByIdQueryHandler/FindChannelByIdQueryHandlerImplIntegrationTest.cpp
         application/commandHandlers/channel/acceptChannelInvitationCommandHandler/AcceptChannelInvitationCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/channel/rejectChannelInvitationCommandHandler/RejectChannelInvitationCommandHandlerImplIntegrationTest.cpp
 
@@ -129,6 +139,8 @@ set(IT_SOURCES
         application/commandHandlers/friend/deleteFriendshipCommandHandler/DeleteFriendshipCommandHandlerImplIntegrationTest.cpp
         application/queryHandlers/friend/findReceivedFriendInvitationsQueryHandler/FindReceivedFriendInvitationsQueryHandlerImplIntegrationTest.cpp
         application/queryHandlers/friend/findUserFriendsQueryHandler/FindUserFriendsQueryHandlerImplIntegrationTest.cpp
+
+        infrastructure/repositories/conversationRepository/ConversationRepositoryImplIntegrationTest.cpp
         )
 
 set(ODB_HEADERS
@@ -138,6 +150,7 @@ set(ODB_HEADERS
         infrastructure/database/entities/ChannelInvitation.h
         infrastructure/database/entities/FriendInvitation.h
         infrastructure/database/entities/Friendship.h
+        infrastructure/database/entities/Conversation.h
         )
 
 odb_compile(
@@ -159,6 +172,7 @@ set(ODB_SOURCES
         infrastructure/database/entities/ChannelInvitation.cpp
         infrastructure/database/entities/FriendInvitation.cpp
         infrastructure/database/entities/Friendship.cpp
+        infrastructure/database/entities/Conversation.cpp
         ${ODB_GENERATED_SOURCES}
         )
 

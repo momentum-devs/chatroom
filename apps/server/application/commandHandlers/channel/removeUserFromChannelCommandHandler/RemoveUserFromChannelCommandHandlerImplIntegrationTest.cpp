@@ -4,6 +4,9 @@
 
 #include "Channel.h"
 #include "Channel.odb.h"
+#include "faker-cxx/Internet.h"
+#include "faker-cxx/String.h"
+#include "faker-cxx/Word.h"
 #include "RemoveUserFromChannelCommandHandlerImpl.h"
 #include "server/application/errors/ResourceNotFoundError.h"
 #include "server/application/services/hashService/HashServiceImpl.h"
@@ -108,19 +111,19 @@ public:
 
 TEST_F(RemoveUserFromChannelCommandImplIntegrationTest, givenExistingUserChannel_shouldDeleteUserChannel)
 {
-    const auto id = "id1";
-
-    const auto userId = "userId";
-    const auto userEmail = "email@gmail.com";
-    const auto userPassword = "password";
+    const auto userId = faker::String::uuid();
+    const auto userEmail = faker::Internet::email();
+    const auto userPassword = faker::Internet::password();
 
     const auto user = createUser(userId, userEmail, userPassword);
 
-    const auto channelId = "channelId";
-    const auto name = "name";
+    const auto channelId = faker::String::uuid();
+    const auto name = faker::Word::noun();
     const auto creatorId = user->getId();
 
     const auto channel = createChannel(channelId, name, creatorId);
+
+    const auto id = faker::String::uuid();
 
     const auto userChannel = createUserChannel(id, user, channel);
 
@@ -141,9 +144,9 @@ TEST_F(RemoveUserFromChannelCommandImplIntegrationTest, givenExistingUserChannel
 
 TEST_F(RemoveUserFromChannelCommandImplIntegrationTest, givenNonExistingUserChannel_shouldThrow)
 {
-    const auto userId = "userId";
+    const auto userId = faker::String::uuid();
 
-    const auto userChannelId = "userChannelId";
+    const auto userChannelId = faker::String::uuid();
 
     ASSERT_THROW(removeUserFromChannelCommandHandler.execute({userId, userChannelId}), errors::ResourceNotFoundError);
 }

@@ -54,3 +54,8 @@
 * direct messages between users
 * messages in channel
 * user has history of direct messages and messages in channel
+
+
+* validate sender user when inviting to channel
+* get channel by id
+* get user by email

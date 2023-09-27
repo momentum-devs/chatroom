@@ -1,5 +1,9 @@
 #include "gtest/gtest.h"
 
+#include "faker-cxx/Datatype.h"
+#include "faker-cxx/Date.h"
+#include "faker-cxx/Internet.h"
+#include "faker-cxx/String.h"
 #include "LoginUserCommandHandlerImpl.h"
 #include "server/application/errors/ResourceNotFoundError.h"
 #include "server/application/services/hashService/HashServiceImpl.h"
@@ -54,17 +58,19 @@ public:
 
 TEST_F(LoginUserCommandImplIntegrationTest, loginExistingUserWithValidPassword)
 {
-    const auto id = "id";
-    const auto email = "email@example.com";
+    const auto id = faker::String::uuid();
+    const auto email = faker::Internet::email();
     const auto password = "password";
     const auto hashedPassword = "5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8";
-    const auto active = false;
-    const auto emailVerified = false;
-    const auto createdAt = "2023-06-16";
-    const auto updatedAt = "2023-06-16";
+    const auto nickname = faker::Internet::username();
+    const auto active = faker::Datatype::boolean();
+    const auto emailVerified = faker::Datatype::boolean();
+    const auto verificationCode = faker::String::numeric(8);
+    const auto createdAt = faker::Date::pastDate();
+    const auto updatedAt = faker::Date::recentDate();
 
-    server::infrastructure::User user{id,    email,     hashedPassword, email, active, emailVerified,
-                                      "123", createdAt, updatedAt};
+    server::infrastructure::User user{
+        id, email, hashedPassword, email, active, emailVerified, verificationCode, createdAt, updatedAt};
 
     {
         odb::transaction transaction(db->begin());
@@ -96,14 +102,16 @@ TEST_F(LoginUserCommandImplIntegrationTest, loginExistingUserWithValidPassword)
 
 TEST_F(LoginUserCommandImplIntegrationTest, loginExistingUserWithInvalidPassword)
 {
-    const auto id = "id";
-    const auto email = "email@example.com";
+    const auto id = faker::String::uuid();
+    const auto email = faker::Internet::email();
     const auto password = "invalidPassword";
     const auto hashedPassword = "5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8";
-    const auto active = false;
-    const auto emailVerified = false;
-    const auto createdAt = "2023-06-16";
-    const auto updatedAt = "2023-06-16";
+    const auto nickname = faker::Internet::username();
+    const auto active = faker::Datatype::boolean();
+    const auto emailVerified = faker::Datatype::boolean();
+    const auto verificationCode = faker::String::numeric(8);
+    const auto createdAt = faker::Date::pastDate();
+    const auto updatedAt = faker::Date::recentDate();
 
     server::infrastructure::User user{id,    email,     hashedPassword, email, active, emailVerified,
                                       "123", createdAt, updatedAt};
@@ -121,8 +129,8 @@ TEST_F(LoginUserCommandImplIntegrationTest, loginExistingUserWithInvalidPassword
 
 TEST_F(LoginUserCommandImplIntegrationTest, loginNotExistingUser)
 {
-    const auto email = "email@example.com";
-    const auto password = "password";
+    const auto email = faker::Internet::email();
+    const auto password = faker::Internet::password();
 
     ASSERT_THROW(loginUserCommandHandler.execute({email, password}), errors::ResourceNotFoundError);
 }
