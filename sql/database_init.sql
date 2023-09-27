@@ -113,3 +113,29 @@ ALTER TABLE "friendships"
         FOREIGN KEY ("user_friend")
             REFERENCES "users" ("id")
             INITIALLY DEFERRED;
+
+DROP TABLE IF EXISTS "conversations" CASCADE;
+
+CREATE TABLE "conversations"
+(
+    "id"         TEXT NOT NULL PRIMARY KEY,
+    "created_at" TEXT NOT NULL,
+    "updated_at" TEXT NOT NULL,
+    "user"       TEXT NULL,
+    "recipient"  TEXT NULL,
+    "channel"    TEXT NULL
+);
+
+ALTER TABLE "conversations"
+    ADD CONSTRAINT "user_fk"
+        FOREIGN KEY ("user")
+            REFERENCES "users" ("id")
+            INITIALLY DEFERRED,
+    ADD CONSTRAINT "recipient_fk"
+        FOREIGN KEY ("recipient")
+            REFERENCES "users" ("id")
+            INITIALLY DEFERRED,
+    ADD CONSTRAINT "channel_fk"
+        FOREIGN KEY ("channel")
+            REFERENCES "channels" ("id")
+            INITIALLY DEFERRED;

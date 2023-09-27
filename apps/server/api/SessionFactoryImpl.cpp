@@ -6,7 +6,6 @@
 #include "common/messages/MessageReaderImpl.h"
 #include "common/messages/MessageSenderImpl.h"
 #include "common/messages/MessageSerializerImpl.h"
-#include "server/application/commandHandlers/user/loginUserCommandHandler/LoginUserCommandHandlerImpl.h"
 #include "server/application/commandHandlers/user/logoutUserCommandHandler/LogoutUserCommandHandlerImpl.h"
 #include "server/application/services/tokenService/TokenServiceImpl.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
@@ -15,11 +14,12 @@
 
 namespace server::api
 {
-SessionFactoryImpl::SessionFactoryImpl(boost::asio::io_context& context, std::shared_ptr<odb::pgsql::database> dbInit,
+SessionFactoryImpl::SessionFactoryImpl(boost::asio::io_context& context,
+                                       const std::shared_ptr<odb::pgsql::database>& dbInit,
                                        const std::string& jwtSecret, int jwtExpireIn, const std::string& sendGridApiKey)
     : context{context},
       db{dbInit},
-      messageRouterFactory{dbInit, jwtSecret, jwtExpireIn, std::move(sendGridApiKey)},
+      messageRouterFactory{dbInit, jwtSecret, jwtExpireIn, sendGridApiKey},
       tokenService{std::make_shared<server::application::TokenServiceImpl>(jwtSecret, jwtExpireIn)}
 {
 }

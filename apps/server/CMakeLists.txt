@@ -68,6 +68,10 @@ set(SOURCES
         application/queryHandlers/friend/findReceivedFriendInvitationsQueryHandler/FindReceivedFriendInvitationsQueryHandlerImpl.cpp
         application/queryHandlers/friend/findUserFriendsQueryHandler/FindUserFriendsQueryHandlerImpl.cpp
 
+        domain/entities/conversation/Conversation.cpp
+        infrastructure/repositories/conversationRepository/conversationMapper/ConversationMapperImpl.cpp
+        infrastructure/repositories/conversationRepository/ConversationRepositoryImpl.cpp
+
         api/MessageHandlers/UpdateUserMessageHandler.cpp
         api/MessageHandlers/DeleteUserMessageHandler.cpp
         api/MessageHandlers/VerifyUserMessageHandle.cpp
@@ -77,7 +81,6 @@ set(SOURCES
 set(UT_SOURCES
         api/SessionImplTest.cpp
         api/SessionManagerTest.cpp
-        infrastructure/services/emailService/EmailServiceImplTest.cpp
         api/MessageRouterImplTest.cpp
         api/MessageHandlers/CreateChannelMessageHandlerTest.cpp
         api/MessageHandlers/DeleteUserMessageHandlerTest.cpp
@@ -86,14 +89,18 @@ set(UT_SOURCES
         api/MessageHandlers/LoginMessageHandlerTest.cpp
         api/MessageHandlers/RegisterMessageHandlerTest.cpp
         api/MessageHandlers/UpdateUserMessageHandlerTest.cpp
+        api/MessageHandlers/LogoutMessageHandlerTest.cpp
+        api/MessageHandlers/VerifyUserMessageHandleTest.cpp
+        infrastructure/services/emailService/EmailServiceImplTest.cpp
         infrastructure/repositories/userRepository/userMapper/UserMapperImplTest.cpp
         infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImplTest.cpp
         infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapperImplTest.cpp
-        api/MessageHandlers/VerifyUserMessageHandleTest.cpp
         application/commandHandlers/user/sendRegistrationVerificationEmailCommandHandler/SendRegistrationVerificationEmailCommandHandlerImplTest.cpp
         infrastructure/repositories/channelInvitationRepository/channelInvitationMapper/ChannelInvitationMapperImplTest.cpp
         infrastructure/repositories/friendInvitationRepository/friendInvitationMapper/FriendInvitationMapperImplTest.cpp
-        infrastructure/repositories/friendshipRepository/friendshipMapper/FriendshipMapperImplTest.cpp api/MessageHandlers/LogoutMessageHandlerTest.cpp)
+        infrastructure/repositories/friendshipRepository/friendshipMapper/FriendshipMapperImplTest.cpp
+        infrastructure/repositories/conversationRepository/conversationMapper/ConversationMapperImplTest.cpp
+        )
 
 set(IT_SOURCES
         infrastructure/repositories/userRepository/UserRepositoryImplIntegrationTest.cpp
@@ -129,6 +136,8 @@ set(IT_SOURCES
         application/commandHandlers/friend/deleteFriendshipCommandHandler/DeleteFriendshipCommandHandlerImplIntegrationTest.cpp
         application/queryHandlers/friend/findReceivedFriendInvitationsQueryHandler/FindReceivedFriendInvitationsQueryHandlerImplIntegrationTest.cpp
         application/queryHandlers/friend/findUserFriendsQueryHandler/FindUserFriendsQueryHandlerImplIntegrationTest.cpp
+
+        infrastructure/repositories/conversationRepository/ConversationRepositoryImplIntegrationTest.cpp
         )
 
 set(ODB_HEADERS
@@ -138,6 +147,7 @@ set(ODB_HEADERS
         infrastructure/database/entities/ChannelInvitation.h
         infrastructure/database/entities/FriendInvitation.h
         infrastructure/database/entities/Friendship.h
+        infrastructure/database/entities/Conversation.h
         )
 
 odb_compile(
@@ -159,6 +169,7 @@ set(ODB_SOURCES
         infrastructure/database/entities/ChannelInvitation.cpp
         infrastructure/database/entities/FriendInvitation.cpp
         infrastructure/database/entities/Friendship.cpp
+        infrastructure/database/entities/Conversation.cpp
         ${ODB_GENERATED_SOURCES}
         )
 

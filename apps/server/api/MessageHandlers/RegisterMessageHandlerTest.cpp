@@ -6,7 +6,6 @@
 
 #include "server/application//commandHandlers/user/sendRegistrationVerificationEmailCommandHandler/SendRegistrationVerificationEmailCommandHandlerMock.h"
 #include "server/application/commandHandlers/user/registerUserCommandHandler/RegisterUserCommandHandlerMock.h"
-#include "server/application/services/tokenService/TokenServiceMock.h"
 
 #include "nlohmann/json.hpp"
 
@@ -15,7 +14,6 @@ using namespace server::api;
 
 namespace
 {
-auto token = "token";
 auto userId = "id";
 auto userEmail = "userEmail@mail.com";
 auto userPassword = "userPassword";
