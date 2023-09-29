@@ -11,7 +11,7 @@ struct MessageHandlerPayload
 {
     common::messages::MessageId messageId;
     const std::string& name;
-    std::function<void(const common::messages::Message&)> handler;
+    std::function<void(const common::messages::Message&)> handler = nullptr;
 };
 
 inline bool operator==(const MessageHandlerPayload& lhs, const MessageHandlerPayload& rhs)

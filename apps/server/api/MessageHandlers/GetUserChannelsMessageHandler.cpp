@@ -32,17 +32,17 @@ common::messages::Message GetUserChannelsMessageHandler::handleMessage(const com
 
         for (const auto& channel : channels)
         {
-            nlohmann::json channelJson{{"id", channel.getId()}, {"name", channel.getName()}};
+            bool isOwner = channel.getCreator()->getId() == userId;
+
+            nlohmann::json channelJson{{"id", channel.getId()}, {"name", channel.getName()}, {"isOwner", isOwner}};
 
             channelsJsonArray.push_back(channelJson);
         }
 
         nlohmann::json responsePayload{{"data", channelsJsonArray}};
 
-        auto message = common::messages::Message{common::messages::MessageId::GetUserChannelsResponse,
-                                                 common::bytes::Bytes{responsePayload.dump()}};
-
-        return message;
+        return common::messages::Message{common::messages::MessageId::GetUserChannelsResponse,
+                                         common::bytes::Bytes{responsePayload.dump()}};
     }
     catch (const std::exception& e)
     {

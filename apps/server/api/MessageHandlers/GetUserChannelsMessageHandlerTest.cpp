@@ -7,6 +7,10 @@
 #include "server/application/queryHandlers/channel/findChannelsToWhichUserBelongsQueryHandler/FindChannelsToWhichUserBelongsQueryHandlerMock.h"
 #include "server/application/services/tokenService/TokenServiceMock.h"
 
+#include "faker-cxx/Datatype.h"
+#include "faker-cxx/Date.h"
+#include "faker-cxx/Internet.h"
+#include "faker-cxx/String.h"
 #include "nlohmann/json.hpp"
 
 using namespace ::testing;
@@ -15,7 +19,6 @@ using namespace server::api;
 namespace
 {
 auto token = "token";
-auto userId = "id";
 auto validPayloadJson = nlohmann::json{{"token", token}};
 auto validPayload = common::bytes::Bytes{validPayloadJson.dump()};
 auto message = common::messages::Message{common::messages::MessageId::GetUserChannels, validPayload};
@@ -29,8 +32,8 @@ auto channelName1 = "id1";
 auto channelId2 = "id1";
 auto channelName2 = "id1";
 auto fewChannelResponsePayloadJson =
-    nlohmann::json{{"data", nlohmann::json::array({{{"id", channelId1}, {"name", channelName1}},
-                                                   {{"id", channelId2}, {"name", channelName2}}})}};
+    nlohmann::json{{"data", nlohmann::json::array({{{"id", channelId1}, {"name", channelName1}, {"isOwner", true}},
+                                                   {{"id", channelId2}, {"name", channelName2}, {"isOwner", true}}})}};
 
 auto fewChannelMessageResponse = common::messages::Message{common::messages::MessageId::GetUserChannelsResponse,
                                                            common::bytes::Bytes{fewChannelResponsePayloadJson.dump()}};
@@ -42,6 +45,19 @@ auto invalidTokenMessageResponse = common::messages::Message{common::messages::M
 std::runtime_error getUserChannelsError("getUserChannelsError");
 auto getUserChannelsErrorMessageResponse = common::messages::Message{
     common::messages::MessageId::GetUserChannelsResponse, common::bytes::Bytes{R"({"error":"getUserChannelsError"})"}};
+
+const auto userId = faker::String::uuid();
+const auto email = faker::Internet::email();
+const auto password = faker::Internet::password();
+const auto nickname = faker::Internet::username();
+const auto active = faker::Datatype::boolean();
+const auto emailVerified = faker::Datatype::boolean();
+const auto verificationCode = faker::String::numeric(6);
+const auto createdAt = faker::Date::pastDate();
+const auto updatedAt = faker::Date::recentDate();
+
+const auto user = std::make_shared<server::domain::User>(userId, email, password, nickname, active, emailVerified,
+                                                         verificationCode, createdAt, updatedAt);
 }
 
 class GetUserChannelsMessageHandlerTest : public Test
@@ -74,11 +90,12 @@ TEST_F(GetUserChannelsMessageHandlerTest, handleValidGetUserChannelsMessageWithN
 
 TEST_F(GetUserChannelsMessageHandlerTest, handleValidGetUserChannelsMessageWithFewChannels)
 {
+
     EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(userId));
     EXPECT_CALL(*findChannelsToWhichUserBelongsQueryHandlerMock,
                 execute(server::application::FindChannelsToWhichUserBelongsQueryHandlerPayload{userId}))
         .WillOnce(Return(server::application::FindChannelsToWhichUserBelongsQueryHandlerResult{
-            {{channelId1, channelName1, {}, "", ""}, {channelId2, channelName2, {}, "", ""}}}));
+            {{channelId1, channelName1, user, "", ""}, {channelId2, channelName2, user, "", ""}}}));
 
     auto responseMessage = getUserChannelsMessageHandler.handleMessage(message);
 

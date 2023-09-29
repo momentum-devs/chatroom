@@ -27,6 +27,13 @@ void MainController::activate()
                                 [this](const auto& msg) { handleGetUserChannelsResponse(msg); }});
 
     session->sendMessage(common::messages::MessageId::GetUserChannels, {});
+
+    session->addMessageHandler({common::messages::MessageId::LeftTheChannelResponse, leftTheChannelResponseHandlerName,
+                                [this](const auto& msg) { handleLeftTheChannelResponse(msg); }});
+
+    session->addMessageHandler({common::messages::MessageId::DeleteTheChannelResponse,
+                                deleteTheChannelResponseHandlerName,
+                                [this](const auto& msg) { handleLeftTheChannelResponse(msg); }});
 }
 
 void MainController::deactivate()
@@ -35,6 +42,12 @@ void MainController::deactivate()
         {common::messages::MessageId::GetUserChannelsResponse, getUserChannelsResponseHandlerName});
 
     session->removeMessageHandler({common::messages::MessageId::GetUserDataResponse, getUserDataResponseHandlerName});
+
+    session->removeMessageHandler(
+        {common::messages::MessageId::LeftTheChannelResponse, leftTheChannelResponseHandlerName});
+
+    session->removeMessageHandler(
+        {common::messages::MessageId::DeleteTheChannelResponse, deleteTheChannelResponseHandlerName});
 }
 
 void MainController::logout()
@@ -70,17 +83,20 @@ void MainController::handleGetUserChannelsResponse(const common::messages::Messa
         LOG_S(ERROR) << std::format("Error while getting user data: {}", responseJson.at("error").get<std::string>());
     }
 
+    emit clearChannelList();
+
     if (responseJson.contains("data"))
     {
         for (const auto& channel : responseJson.at("data"))
         {
-            if (channel.contains("id") and channel.contains("name"))
+            if (channel.contains("id") and channel.contains("name") and channel.contains("isOwner"))
             {
                 LOG_S(INFO) << std::format("Adding channel {} with id {} to list",
                                            channel.at("name").get<std::string>(), channel.at("id").get<std::string>());
 
                 emit addChannel(QString::fromStdString(channel.at("name").get<std::string>()),
-                                QString::fromStdString(channel.at("id").get<std::string>()));
+                                QString::fromStdString(channel.at("id").get<std::string>()),
+                                channel.at("isOwner").get<bool>());
             }
             else
             {
@@ -147,10 +163,33 @@ void MainController::addToChannel()
 
     stateMachine->addNextState(stateFactory.createInviteToChannelState(currentChannelId));
 }
+
 void MainController::leftTheChannel()
 {
-    LOG_S(INFO) << "Left the chat";
+    LOG_S(INFO) << "Left the channel";
 
-    // TODO: implement message left the chat
+    nlohmann::json data{
+        {"channelId", currentChannelId},
+    };
+
+    session->sendMessage(common::messages::MessageId::LeftTheChannel, data);
+}
+
+void MainController::deleteTheChannel()
+{
+    LOG_S(INFO) << "Delete the channel";
+
+    nlohmann::json data{
+        {"channelId", currentChannelId},
+    };
+
+    session->sendMessage(common::messages::MessageId::DeleteTheChannel, data);
+}
+
+void MainController::handleLeftTheChannelResponse(const common::messages::Message& message)
+{
+    currentChannelId = "";
+
+    session->sendMessage(common::messages::MessageId::GetUserChannels, {});
 }
 }

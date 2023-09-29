@@ -17,21 +17,21 @@ Rectangle {
             text: "Send invitation to channel"
         }
         TextField {
-            id: friendEmailField
+            id: emailField
             anchors.horizontalCenter: parent.horizontalCenter
             focus: true
             placeholderText: qsTr('Email')
             width: parent.width
         }
         Row {
-            anchors.horizontalCenter: friendEmailField.horizontalCenter
+            anchors.horizontalCenter: emailField.horizontalCenter
 
             Button {
                 id: sendFriendRequestButton
                 function activate() {
-                    const friendEmail = friendEmailField.text;
-                    if (friendEmail.length !== 0) {
-                        sendFriendRequestController.sendFriendRequest(friendEmail);
+                    const email = emailField.text;
+                    if (email.length !== 0) {
+                        inviteToChannelController.sendChannelInvitation(email);
                         successPopup.open();
                     } else {
                         errorPopup.contentItem.text = "Email field is empty";
@@ -48,7 +48,7 @@ Rectangle {
             Button {
                 id: goBackButton
                 function activate() {
-                    sendFriendRequestController.goBack();
+                    inviteToChannelController.goBack();
                 }
 
                 text: qsTr('Go back')
@@ -58,12 +58,12 @@ Rectangle {
         }
     }
     Connections {
-        function onSendFriendRequestFailure(message: string) {
+        function onSendChannelInvitationFailure(message: string) {
             errorPopup.contentItem.text = message;
             errorPopup.open();
         }
 
-        target: sendFriendRequestController
+        target: inviteToChannelController
     }
     Popup {
         id: successPopup

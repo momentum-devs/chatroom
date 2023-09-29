@@ -27,7 +27,13 @@ enum class MessageId : unsigned char
     DeleteUserResponse,
     VerifyUser,
     VerifyUserResponse,
-    Logout
+    Logout,
+    SendChannelInvitation,
+    SendChannelInvitationResponse,
+    LeftTheChannel,
+    LeftTheChannelResponse,
+    DeleteTheChannel,
+    DeleteTheChannelResponse,
 };
 
 inline std::string toString(MessageId messageId)
@@ -52,7 +58,14 @@ inline std::string toString(MessageId messageId)
         {MessageId::DeleteUserResponse, "DeleteUserResponse"},
         {MessageId::VerifyUser, "VerifyUser"},
         {MessageId::VerifyUserResponse, "VerifyUserResponse"},
-        {MessageId::Logout, "Logout"}};
+        {MessageId::Logout, "Logout"},
+        {MessageId::SendChannelInvitation, "SendChannelInvitation"},
+        {MessageId::SendChannelInvitationResponse, "SendChannelInvitationResponse"},
+        {MessageId::LeftTheChannel, "LeftTheChannel"},
+        {MessageId::LeftTheChannelResponse, "LeftTheChannelResponse"},
+        {MessageId::DeleteTheChannel, "DeleteTheChannel"},
+        {MessageId::DeleteTheChannelResponse, "DeleteTheChannelResponse"},
+    };
 
     try
     {
