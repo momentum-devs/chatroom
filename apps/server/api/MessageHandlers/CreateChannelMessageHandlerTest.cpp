@@ -7,6 +7,10 @@
 #include "server/application/commandHandlers/channel/createChannelCommandHandler/CreateChannelCommandHandlerMock.h"
 #include "server/application/services/tokenService/TokenServiceMock.h"
 
+#include "faker-cxx/Datatype.h"
+#include "faker-cxx/Date.h"
+#include "faker-cxx/Internet.h"
+#include "faker-cxx/String.h"
 #include "nlohmann/json.hpp"
 
 using namespace ::testing;
@@ -30,6 +34,19 @@ auto invalidTokenMessageResponse = common::messages::Message{common::messages::M
 std::runtime_error createChannelError("createChannelError");
 auto createChannelErrorMessageResponse = common::messages::Message{
     common::messages::MessageId::CreateChannelResponse, common::bytes::Bytes{R"({"error":"createChannelError"})"}};
+
+const auto userId = faker::String::uuid();
+const auto email = faker::Internet::email();
+const auto password = faker::Internet::password();
+const auto nickname = faker::Internet::username();
+const auto active = faker::Datatype::boolean();
+const auto emailVerified = faker::Datatype::boolean();
+const auto verificationCode = faker::String::numeric(6);
+const auto createdAt = faker::Date::pastDate();
+const auto updatedAt = faker::Date::recentDate();
+
+const auto user = std::make_shared<server::domain::User>(userId, email, password, nickname, active, emailVerified,
+                                                         verificationCode, createdAt, updatedAt);
 }
 
 class CreateChannelMessageHandlerTest : public Test
@@ -52,7 +69,7 @@ TEST_F(CreateChannelMessageHandlerTest, handleValidCreateChannelMessage)
     EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(creatorId));
     EXPECT_CALL(*createChannelCommandHandlerMock,
                 execute(server::application::CreateChannelCommandHandlerPayload{channelName, creatorId}))
-        .WillOnce(Return(server::application::CreateChannelCommandHandlerResult{{"", "", {}, "", ""}}));
+        .WillOnce(Return(server::application::CreateChannelCommandHandlerResult{{"", "", user, "", ""}}));
 
     auto responseMessage = createChannelMessageHandler.handleMessage(message);
 
