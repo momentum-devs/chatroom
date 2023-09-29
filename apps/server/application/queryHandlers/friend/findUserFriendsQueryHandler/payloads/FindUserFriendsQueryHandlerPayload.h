@@ -9,8 +9,7 @@ struct FindUserFriendsQueryHandlerPayload
     const std::string userId;
 };
 
-inline bool operator==(const FindUserFriendsQueryHandlerPayload& lhs,
-                       const FindUserFriendsQueryHandlerPayload& rhs)
+inline bool operator==(const FindUserFriendsQueryHandlerPayload& lhs, const FindUserFriendsQueryHandlerPayload& rhs)
 {
     return lhs.userId == rhs.userId;
 }

@@ -60,7 +60,7 @@ int main(int argc, char* argv[])
         timer.expires_at(timer.expires_at() + refreshSessionsInterval);
         timer.async_wait(refreshSessions);
     };
-    
+
     timer.async_wait(refreshSessions);
 
     std::vector<std::thread> threads;

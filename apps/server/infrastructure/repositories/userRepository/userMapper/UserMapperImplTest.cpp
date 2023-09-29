@@ -2,6 +2,11 @@
 
 #include "gtest/gtest.h"
 
+#include "faker-cxx/Datatype.h"
+#include "faker-cxx/Date.h"
+#include "faker-cxx/Internet.h"
+#include "faker-cxx/String.h"
+
 using namespace ::testing;
 using namespace server;
 using namespace server::infrastructure;
@@ -14,22 +19,22 @@ public:
 
 TEST_F(UserMapperTest, givenPersistenceUser_shouldMapToDomainUser)
 {
-    const auto id = "id";
-    const auto email = "email@example.com";
-    const auto password = "password";
-    const auto nickname = "nickname";
-    const auto active = true;
-    const auto emailVerified = false;
-    const auto verificationCode = "verificationCode";
-    const auto createdAt = "2023-06-16";
-    const auto updatedAt = "2023-06-16";
+    const auto userId = faker::String::uuid();
+    const auto email = faker::Internet::email();
+    const auto password = faker::Internet::password();
+    const auto nickname = faker::Internet::username();
+    const auto active = faker::Datatype::boolean();
+    const auto emailVerified = faker::Datatype::boolean();
+    const auto verificationCode = faker::String::numeric(6);
+    const auto createdAt = faker::Date::pastDate();
+    const auto updatedAt = faker::Date::recentDate();
 
-    const auto persistenceUser = std::make_shared<User>(id, email, password, nickname, active, emailVerified,
+    const auto persistenceUser = std::make_shared<User>(userId, email, password, nickname, active, emailVerified,
                                                         verificationCode, createdAt, updatedAt);
 
     const auto domainUser = userMapper.mapToDomainUser(persistenceUser);
 
-    ASSERT_EQ(domainUser->getId(), id);
+    ASSERT_EQ(domainUser->getId(), userId);
     ASSERT_EQ(domainUser->getEmail(), email);
     ASSERT_EQ(domainUser->getPassword(), password);
     ASSERT_EQ(domainUser->getNickname(), nickname);
@@ -42,22 +47,22 @@ TEST_F(UserMapperTest, givenPersistenceUser_shouldMapToDomainUser)
 
 TEST_F(UserMapperTest, givenDomainUser_shouldMapToPersistenceUser)
 {
-    const auto id = "id";
-    const auto email = "email@example.com";
-    const auto password = "password";
-    const auto nickname = "nickname";
-    const auto active = true;
-    const auto emailVerified = false;
-    const auto verificationCode = "verificationCode";
-    const auto createdAt = "2023-06-16";
-    const auto updatedAt = "2023-06-16";
+    const auto userId = faker::String::uuid();
+    const auto email = faker::Internet::email();
+    const auto password = faker::Internet::password();
+    const auto nickname = faker::Internet::username();
+    const auto active = faker::Datatype::boolean();
+    const auto emailVerified = faker::Datatype::boolean();
+    const auto verificationCode = faker::String::numeric(6);
+    const auto createdAt = faker::Date::pastDate();
+    const auto updatedAt = faker::Date::recentDate();
 
-    const auto domainUser = std::make_shared<domain::User>(id, email, password, nickname, active, emailVerified,
+    const auto domainUser = std::make_shared<domain::User>(userId, email, password, nickname, active, emailVerified,
                                                            verificationCode, createdAt, updatedAt);
 
     const auto persistenceUser = userMapper.mapToPersistenceUser(domainUser);
 
-    ASSERT_EQ(persistenceUser->getId(), id);
+    ASSERT_EQ(persistenceUser->getId(), userId);
     ASSERT_EQ(persistenceUser->getEmail(), email);
     ASSERT_EQ(persistenceUser->getPassword(), password);
     ASSERT_EQ(persistenceUser->getNickname(), nickname);

@@ -2,6 +2,9 @@
 
 #include "gtest/gtest.h"
 
+#include "faker-cxx/Datatype.h"
+#include "faker-cxx/Date.h"
+#include "faker-cxx/Internet.h"
 #include "faker-cxx/String.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "User.odb.h"
@@ -44,16 +47,18 @@ public:
 
 TEST_F(UserRepositoryIntegrationTest, shouldCreateUser)
 {
-    const auto id = faker::String::uuid();
-    const auto email = "email@example.com";
-    const auto password = "password";
-    const auto nickname = "nickname";
-    const auto active = true;
-    const auto emailVerified = true;
-    const auto verificationCode = "verificationCode";
+    const auto userId = faker::String::uuid();
+    const auto email = faker::Internet::email();
+    const auto password = faker::Internet::password();
+    const auto nickname = faker::Internet::username();
+    const auto active = faker::Datatype::boolean();
+    const auto emailVerified = faker::Datatype::boolean();
+    const auto verificationCode = faker::String::numeric(6);
+    const auto createdAt = faker::Date::pastDate();
+    const auto updatedAt = faker::Date::recentDate();
 
     const auto user =
-        userRepository->createUser({id, email, password, nickname, active, emailVerified, verificationCode});
+        userRepository->createUser({userId, email, password, nickname, active, emailVerified, verificationCode});
 
     ASSERT_EQ(user->getEmail(), email);
     ASSERT_EQ(user->getPassword(), password);
@@ -62,17 +67,17 @@ TEST_F(UserRepositoryIntegrationTest, shouldCreateUser)
 
 TEST_F(UserRepositoryIntegrationTest, shouldDeleteExistingUser)
 {
-    const auto id = "id";
-    const auto email = "email@example.com";
-    const auto password = "password";
-    const auto nickname = "nickname";
-    const auto active = true;
-    const auto emailVerified = false;
-    const auto verificationCode = "verificationCode";
-    const auto createdAt = "2023-06-16";
-    const auto updatedAt = "2023-06-16";
+    const auto userId = faker::String::uuid();
+    const auto email = faker::Internet::email();
+    const auto password = faker::Internet::password();
+    const auto nickname = faker::Internet::username();
+    const auto active = faker::Datatype::boolean();
+    const auto emailVerified = faker::Datatype::boolean();
+    const auto verificationCode = faker::String::numeric(6);
+    const auto createdAt = faker::Date::pastDate();
+    const auto updatedAt = faker::Date::recentDate();
 
-    User user{id, email, password, nickname, active, emailVerified, verificationCode, createdAt, updatedAt};
+    User user{userId, email, password, nickname, active, emailVerified, verificationCode, createdAt, updatedAt};
 
     {
         odb::transaction transaction(db->begin());
@@ -83,7 +88,7 @@ TEST_F(UserRepositoryIntegrationTest, shouldDeleteExistingUser)
     }
 
     const auto domainUser =
-        domain::User{id, email, password, nickname, active, emailVerified, verificationCode, createdAt, updatedAt};
+        domain::User{userId, email, password, nickname, active, emailVerified, verificationCode, createdAt, updatedAt};
 
     userRepository->deleteUser({domainUser});
 
@@ -92,7 +97,7 @@ TEST_F(UserRepositoryIntegrationTest, shouldDeleteExistingUser)
     {
         odb::transaction transaction(db->begin());
 
-        std::shared_ptr<User> foundUser(db->query_one<User>(query::id == id));
+        std::shared_ptr<User> foundUser(db->query_one<User>(query::id == userId));
 
         ASSERT_FALSE(foundUser);
 
@@ -102,35 +107,35 @@ TEST_F(UserRepositoryIntegrationTest, shouldDeleteExistingUser)
 
 TEST_F(UserRepositoryIntegrationTest, delete_givenNonExistingUser_shouldThrowError)
 {
-    const auto id = "id";
-    const auto email = "email@example.com";
-    const auto password = "password";
-    const auto nickname = "nickname";
-    const auto active = true;
-    const auto emailVerified = false;
-    const auto verificationCode = "verificationCode";
-    const auto createdAt = "2023-06-16";
-    const auto updatedAt = "2023-06-16";
+    const auto userId = faker::String::uuid();
+    const auto email = faker::Internet::email();
+    const auto password = faker::Internet::password();
+    const auto nickname = faker::Internet::username();
+    const auto active = faker::Datatype::boolean();
+    const auto emailVerified = faker::Datatype::boolean();
+    const auto verificationCode = faker::String::numeric(6);
+    const auto createdAt = faker::Date::pastDate();
+    const auto updatedAt = faker::Date::recentDate();
 
     const auto domainUser =
-        domain::User{id, email, password, nickname, active, emailVerified, verificationCode, createdAt, updatedAt};
+        domain::User{userId, email, password, nickname, active, emailVerified, verificationCode, createdAt, updatedAt};
 
     ASSERT_ANY_THROW(userRepository->deleteUser({domainUser}));
 }
 
 TEST_F(UserRepositoryIntegrationTest, shouldFindExistingUserByEmail)
 {
-    const auto id = "id";
-    const auto email = "email@example.com";
-    const auto password = "password";
-    const auto nickname = "nickname";
-    const auto active = true;
-    const auto emailVerified = false;
-    const auto verificationCode = "verificationCode";
-    const auto createdAt = "2023-06-16";
-    const auto updatedAt = "2023-06-16";
+    const auto userId = faker::String::uuid();
+    const auto email = faker::Internet::email();
+    const auto password = faker::Internet::password();
+    const auto nickname = faker::Internet::username();
+    const auto active = faker::Datatype::boolean();
+    const auto emailVerified = faker::Datatype::boolean();
+    const auto verificationCode = faker::String::numeric(6);
+    const auto createdAt = faker::Date::pastDate();
+    const auto updatedAt = faker::Date::recentDate();
 
-    User user{id, email, password, nickname, active, emailVerified, verificationCode, createdAt, updatedAt};
+    User user{userId, email, password, nickname, active, emailVerified, verificationCode, createdAt, updatedAt};
 
     {
         odb::transaction transaction(db->begin());
@@ -148,7 +153,7 @@ TEST_F(UserRepositoryIntegrationTest, shouldFindExistingUserByEmail)
 
 TEST_F(UserRepositoryIntegrationTest, givenNonExistingUser_shouldNotFindAnyUserByEmail)
 {
-    const auto email = "email@example.com";
+    const auto email = faker::Internet::email();
 
     const auto user = userRepository->findUserByEmail({email});
 
@@ -157,17 +162,17 @@ TEST_F(UserRepositoryIntegrationTest, givenNonExistingUser_shouldNotFindAnyUserB
 
 TEST_F(UserRepositoryIntegrationTest, shouldFindExistingUserById)
 {
-    const auto id = "id";
-    const auto email = "email@example.com";
-    const auto password = "password";
-    const auto nickname = "nickname";
-    const auto active = true;
-    const auto emailVerified = false;
-    const auto verificationCode = "verificationCode";
-    const auto createdAt = "2023-06-16";
-    const auto updatedAt = "2023-06-16";
+    const auto userId = faker::String::uuid();
+    const auto email = faker::Internet::email();
+    const auto password = faker::Internet::password();
+    const auto nickname = faker::Internet::username();
+    const auto active = faker::Datatype::boolean();
+    const auto emailVerified = faker::Datatype::boolean();
+    const auto verificationCode = faker::String::numeric(6);
+    const auto createdAt = faker::Date::pastDate();
+    const auto updatedAt = faker::Date::recentDate();
 
-    User user{id, email, password, nickname, active, emailVerified, verificationCode, createdAt, updatedAt};
+    User user{userId, email, password, nickname, active, emailVerified, verificationCode, createdAt, updatedAt};
 
     {
         odb::transaction transaction(db->begin());
@@ -177,39 +182,39 @@ TEST_F(UserRepositoryIntegrationTest, shouldFindExistingUserById)
         transaction.commit();
     }
 
-    const auto foundUser = userRepository->findUserById({id});
+    const auto foundUser = userRepository->findUserById({userId});
 
     ASSERT_TRUE(foundUser);
-    ASSERT_EQ(foundUser->get()->getId(), id);
+    ASSERT_EQ(foundUser->get()->getId(), userId);
 }
 
 TEST_F(UserRepositoryIntegrationTest, givenNonExistingUser_shouldNotFindAnyUserById)
 {
-    const auto id = "id";
+    const auto userId = faker::String::uuid();
 
-    const auto user = userRepository->findUserById({id});
+    const auto user = userRepository->findUserById({userId});
 
     ASSERT_FALSE(user);
 }
 
 TEST_F(UserRepositoryIntegrationTest, shouldUpdateExistingUser)
 {
-    const auto id = "id";
-    const auto email = "email@example.com";
-    const auto password = "password1";
-    const auto updatedPassword = "password2";
-    const auto nickname = "nickname1";
-    const auto active = false;
-    const auto updatedActive = true;
-    const auto emailVerified = false;
-    const auto updatedEmailVerified = true;
-    const auto verificationCode = "verificationCode1";
-    const auto updatedVerificationCode = "verificationCode2";
-    const auto updatedNickname = "nickname2";
-    const auto createdAt = "2023-06-16";
-    const auto updatedAt = "2023-06-16";
+    const auto userId = faker::String::uuid();
+    const auto email = faker::Internet::email();
+    const auto password = faker::Internet::password();
+    const auto updatedPassword = faker::Internet::password();
+    const auto nickname = faker::Internet::username();
+    const auto updatedNickname = faker::Internet::username();
+    const auto active = faker::Datatype::boolean();
+    const auto updatedActive = faker::Datatype::boolean();
+    const auto emailVerified = faker::Datatype::boolean();
+    const auto updatedEmailVerified = faker::Datatype::boolean();
+    const auto verificationCode = faker::String::numeric(6);
+    const auto updatedVerificationCode = faker::String::numeric(6);
+    const auto createdAt = faker::Date::pastDate();
+    const auto updatedAt = faker::Date::recentDate();
 
-    User user{id, email, password, nickname, active, emailVerified, verificationCode, createdAt, updatedAt};
+    User user{userId, email, password, nickname, active, emailVerified, verificationCode, createdAt, updatedAt};
 
     {
         odb::transaction transaction(db->begin());
@@ -220,7 +225,7 @@ TEST_F(UserRepositoryIntegrationTest, shouldUpdateExistingUser)
     }
 
     auto domainUser =
-        domain::User{id, email, password, nickname, active, emailVerified, verificationCode, createdAt, updatedAt};
+        domain::User{userId, email, password, nickname, active, emailVerified, verificationCode, createdAt, updatedAt};
 
     domainUser.setPassword(updatedPassword);
     domainUser.setNickname(updatedNickname);
@@ -235,7 +240,7 @@ TEST_F(UserRepositoryIntegrationTest, shouldUpdateExistingUser)
 
         odb::transaction transaction(db->begin());
 
-        std::shared_ptr<User> updatedUser(db->query_one<User>(query::id == id));
+        std::shared_ptr<User> updatedUser(db->query_one<User>(query::id == userId));
 
         transaction.commit();
 
@@ -250,18 +255,18 @@ TEST_F(UserRepositoryIntegrationTest, shouldUpdateExistingUser)
 
 TEST_F(UserRepositoryIntegrationTest, update_givenNonExistingUser_shouldThrowError)
 {
-    const auto id = "id";
-    const auto email = "email@example.com";
-    const auto password = "password";
-    const auto nickname = "nickname";
-    const auto active = true;
-    const auto emailVerified = false;
-    const auto verificationCode = "verificationCode";
-    const auto createdAt = "2023-06-16";
-    const auto updatedAt = "2023-06-16";
+    const auto userId = faker::String::uuid();
+    const auto email = faker::Internet::email();
+    const auto password = faker::Internet::password();
+    const auto nickname = faker::Internet::username();
+    const auto active = faker::Datatype::boolean();
+    const auto emailVerified = faker::Datatype::boolean();
+    const auto verificationCode = faker::String::numeric(6);
+    const auto createdAt = faker::Date::pastDate();
+    const auto updatedAt = faker::Date::recentDate();
 
     const auto domainUser =
-        domain::User{id, email, password, nickname, active, emailVerified, verificationCode, createdAt, updatedAt};
+        domain::User{userId, email, password, nickname, active, emailVerified, verificationCode, createdAt, updatedAt};
 
     ASSERT_ANY_THROW(userRepository->updateUser({domainUser}));
 }

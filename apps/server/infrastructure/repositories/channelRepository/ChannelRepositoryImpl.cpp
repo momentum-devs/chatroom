@@ -24,8 +24,7 @@ std::shared_ptr<domain::Channel> ChannelRepositoryImpl::createChannel(const doma
 
             const auto creator = userMapper->mapToPersistenceUser(payload.creator);
 
-            const auto channel = std::make_shared<Channel>(
-                payload.id, payload.name, creator, currentDate, currentDate);
+            const auto channel = std::make_shared<Channel>(payload.id, payload.name, creator, currentDate, currentDate);
 
             odb::transaction transaction(db->begin());
 

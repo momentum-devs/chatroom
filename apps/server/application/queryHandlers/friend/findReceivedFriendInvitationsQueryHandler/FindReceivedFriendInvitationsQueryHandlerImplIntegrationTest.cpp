@@ -88,8 +88,7 @@ public:
 
     std::shared_ptr<domain::UserRepository> userRepository = std::make_shared<UserRepositoryImpl>(db, userMapper);
 
-    FindReceivedFriendInvitationsQueryHandlerImpl findReceivedFriendInvitationsQueryHandler{
-        friendInvitationRepository};
+    FindReceivedFriendInvitationsQueryHandlerImpl findReceivedFriendInvitationsQueryHandler{friendInvitationRepository};
 };
 
 TEST_F(FindReceivedFriendInvitationsQueryHandlerImplIntegrationTest, findUsersChannelsByUserId)

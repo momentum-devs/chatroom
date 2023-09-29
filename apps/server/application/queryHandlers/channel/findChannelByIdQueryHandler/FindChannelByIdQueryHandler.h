@@ -10,8 +10,7 @@ class FindChannelByIdQueryHandler
 public:
     virtual ~FindChannelByIdQueryHandler() = default;
 
-    virtual FindChannelByIdQueryHandlerResult
-    execute(const FindChannelByIdQueryHandlerPayload&) const = 0;
+    virtual FindChannelByIdQueryHandlerResult execute(const FindChannelByIdQueryHandlerPayload&) const = 0;
 };
 
 }

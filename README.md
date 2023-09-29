@@ -64,3 +64,5 @@
 * direct messages between users
 * messages in channel
 * user has history of direct messages and messages in channel
+* add tests factories
+* add tests db utils

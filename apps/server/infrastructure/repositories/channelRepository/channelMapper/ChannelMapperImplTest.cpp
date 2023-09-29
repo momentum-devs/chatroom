@@ -4,6 +4,12 @@
 
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperMock.h"
 
+#include "faker-cxx/Datatype.h"
+#include "faker-cxx/Date.h"
+#include "faker-cxx/Internet.h"
+#include "faker-cxx/String.h"
+#include "faker-cxx/Word.h"
+
 using namespace ::testing;
 using namespace server;
 using namespace server::infrastructure;
@@ -18,15 +24,15 @@ public:
 
 TEST_F(ChannelMapperTest, givenPersistenceChannel_shouldMapToDomainChannel)
 {
-    const auto userId = "userId";
-    const auto email = "email@example.com";
-    const auto password = "password";
-    const auto nickname = "nickname";
-    const auto active = true;
-    const auto emailVerified = false;
-    const auto verificationCode = "verificationCode";
-    const auto createdAt = "2023-06-16";
-    const auto updatedAt = "2023-06-16";
+    const auto userId = faker::String::uuid();
+    const auto email = faker::Internet::email();
+    const auto password = faker::Internet::password();
+    const auto nickname = faker::Internet::username();
+    const auto active = faker::Datatype::boolean();
+    const auto emailVerified = faker::Datatype::boolean();
+    const auto verificationCode = faker::String::numeric(6);
+    const auto createdAt = faker::Date::pastDate();
+    const auto updatedAt = faker::Date::recentDate();
 
     const auto user = std::make_shared<User>(userId, email, password, nickname, active, emailVerified, verificationCode,
                                              createdAt, updatedAt);
@@ -34,16 +40,16 @@ TEST_F(ChannelMapperTest, givenPersistenceChannel_shouldMapToDomainChannel)
     const auto domainUser = std::make_shared<domain::User>(userId, email, password, nickname, active, emailVerified,
                                                            verificationCode, createdAt, updatedAt);
 
-    const auto id = "id";
-    const auto name = "name";
+    const auto channelId = faker::String::uuid();
+    const auto name = faker::Word::noun();
 
-    const auto persistenceChannel = std::make_shared<Channel>(id, name, user, createdAt, updatedAt);
+    const auto persistenceChannel = std::make_shared<Channel>(channelId, name, user, createdAt, updatedAt);
 
     EXPECT_CALL(*userMapper, mapToDomainUser(user)).WillOnce(Return(domainUser));
 
     const auto domainChannel = channelMapper.mapToDomainChannel(persistenceChannel);
 
-    ASSERT_EQ(domainChannel->getId(), id);
+    ASSERT_EQ(domainChannel->getId(), channelId);
     ASSERT_EQ(domainChannel->getName(), name);
     ASSERT_EQ(domainChannel->getCreator()->getId(), userId);
     ASSERT_EQ(domainChannel->getCreatedAt(), createdAt);
@@ -52,15 +58,15 @@ TEST_F(ChannelMapperTest, givenPersistenceChannel_shouldMapToDomainChannel)
 
 TEST_F(ChannelMapperTest, givenDomainChannel_shouldMapToPersistenceChannel)
 {
-    const auto userId = "userId";
-    const auto email = "email@example.com";
-    const auto password = "password";
-    const auto nickname = "nickname";
-    const auto active = true;
-    const auto emailVerified = false;
-    const auto verificationCode = "verificationCode";
-    const auto createdAt = "2023-06-16";
-    const auto updatedAt = "2023-06-16";
+    const auto userId = faker::String::uuid();
+    const auto email = faker::Internet::email();
+    const auto password = faker::Internet::password();
+    const auto nickname = faker::Internet::username();
+    const auto active = faker::Datatype::boolean();
+    const auto emailVerified = faker::Datatype::boolean();
+    const auto verificationCode = faker::String::numeric(6);
+    const auto createdAt = faker::Date::pastDate();
+    const auto updatedAt = faker::Date::recentDate();
 
     const auto user = std::make_shared<User>(userId, email, password, nickname, active, emailVerified, verificationCode,
                                              createdAt, updatedAt);
@@ -68,16 +74,16 @@ TEST_F(ChannelMapperTest, givenDomainChannel_shouldMapToPersistenceChannel)
     const auto domainUser = std::make_shared<domain::User>(userId, email, password, nickname, active, emailVerified,
                                                            verificationCode, createdAt, updatedAt);
 
-    const auto id = "id";
-    const auto name = "name";
+    const auto channelId = faker::String::uuid();
+    const auto name = faker::Word::noun();
 
-    const auto domainChannel = std::make_shared<domain::Channel>(id, name, domainUser, createdAt, updatedAt);
+    const auto domainChannel = std::make_shared<domain::Channel>(channelId, name, domainUser, createdAt, updatedAt);
 
     EXPECT_CALL(*userMapper, mapToPersistenceUser(domainUser)).WillOnce(Return(user));
 
     const auto persistenceChannel = channelMapper.mapToPersistenceChannel(domainChannel);
 
-    ASSERT_EQ(persistenceChannel->getId(), id);
+    ASSERT_EQ(persistenceChannel->getId(), channelId);
     ASSERT_EQ(persistenceChannel->getName(), name);
     ASSERT_EQ(persistenceChannel->getCreator()->getId(), userId);
     ASSERT_EQ(persistenceChannel->getCreatedAt(), createdAt);

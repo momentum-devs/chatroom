@@ -4,6 +4,9 @@
 
 #include "Channel.h"
 #include "Channel.odb.h"
+#include "faker-cxx/Internet.h"
+#include "faker-cxx/String.h"
+#include "faker-cxx/Word.h"
 #include "FindChannelsToWhichUserBelongsQueryHandlerImpl.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
 #include "server/infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapperImpl.h"
@@ -108,30 +111,30 @@ public:
 
 TEST_F(FindChannelsToWhichUserBelongsQueryHandlerImplIntegrationTest, findUsersChannelsByUserId)
 {
-    const auto userId1 = "userId1";
-    const auto userEmail1 = "email1@gmail.com";
-    const auto userPassword1 = "password";
+    const auto userId1 = faker::String::uuid();
+    const auto userEmail1 = faker::Internet::email();
+    const auto userPassword1 = faker::Internet::password();
 
     const auto user1 = createUser(userId1, userEmail1, userPassword1);
 
-    const auto channelId1 = "channelId1";
-    const auto name1 = "name";
+    const auto channelId1 = faker::String::uuid();
+    const auto name1 = faker::Word::noun();
 
     const auto channel1 = createChannel(channelId1, name1, user1);
 
-    const auto userId2 = "userId2";
-    const auto userEmail2 = "email2@gmail.com";
-    const auto userPassword2 = "password";
+    const auto userId2 = faker::String::uuid();
+    const auto userEmail2 = faker::Internet::email();
+    const auto userPassword2 = faker::Internet::password();
 
     const auto user2 = createUser(userId2, userEmail2, userPassword2);
 
-    const auto channelId2 = "channelId2";
-    const auto name2 = "name2";
+    const auto channelId2 = faker::String::uuid();
+    const auto name2 = faker::Word::noun();
 
     const auto channel2 = createChannel(channelId2, name2, user2);
 
-    const auto userUserId1 = "userUserId1";
-    const auto userUserId2 = "userUserId2";
+    const auto userUserId1 = faker::String::uuid();
+    const auto userUserId2 = faker::String::uuid();
 
     const auto userChannel1 = createUserChannel(userUserId1, user1, channel1);
     const auto userChannel2 = createUserChannel(userUserId2, user2, channel2);

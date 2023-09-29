@@ -45,10 +45,10 @@ TEST_F(ConversationMapperTest, givenPersistenceConversationWithUsers_shouldMapTo
                                                            verificationCode, createdAt, updatedAt);
 
     const auto recipient = std::make_shared<User>(userId2, email2, password, nickname, active, emailVerified,
-                                                   verificationCode, createdAt, updatedAt);
+                                                  verificationCode, createdAt, updatedAt);
 
     const auto domainRecipient = std::make_shared<domain::User>(userId2, email2, password, nickname, active,
-                                                                 emailVerified, verificationCode, createdAt, updatedAt);
+                                                                emailVerified, verificationCode, createdAt, updatedAt);
 
     const auto id = faker::String::uuid();
 
@@ -68,7 +68,6 @@ TEST_F(ConversationMapperTest, givenPersistenceConversationWithUsers_shouldMapTo
     ASSERT_EQ(domainConversation.getUpdatedAt(), updatedAt);
 }
 
-
 TEST_F(ConversationMapperTest, givenPersistenceConversationWithChannel_shouldMapToDomainConversation)
 {
     const auto userId = faker::String::uuid();
@@ -81,8 +80,8 @@ TEST_F(ConversationMapperTest, givenPersistenceConversationWithChannel_shouldMap
     const auto createdAt = faker::Date::pastDate();
     const auto updatedAt = faker::Date::recentDate();
 
-    const auto user = std::make_shared<User>(userId, email, password, nickname, active, emailVerified,
-                                             verificationCode, createdAt, updatedAt);
+    const auto user = std::make_shared<User>(userId, email, password, nickname, active, emailVerified, verificationCode,
+                                             createdAt, updatedAt);
 
     const auto domainUser = std::make_shared<domain::User>(userId, email, password, nickname, active, emailVerified,
                                                            verificationCode, createdAt, updatedAt);

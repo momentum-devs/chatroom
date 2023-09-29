@@ -1,8 +1,8 @@
 #pragma once
 
+#include "ConversationMapper.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapper.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapper.h"
-#include "ConversationMapper.h"
 
 namespace server::infrastructure
 {

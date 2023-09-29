@@ -4,6 +4,10 @@
 #include "gtest/gtest.h"
 
 #include "Channel.h"
+#include "faker-cxx/Date.h"
+#include "faker-cxx/Internet.h"
+#include "faker-cxx/String.h"
+#include "faker-cxx/Word.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
 #include "server/infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapperImpl.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
@@ -109,17 +113,16 @@ public:
 
 TEST_F(UserChannelRepositoryIntegrationTest, shouldCreateUserChannel)
 {
-    const auto id = "id1";
+    const auto id = faker::String::uuid();
 
-    const auto userId = "userId";
-    const auto userEmail = "email@gmail.com";
-    const auto userPassword = "password";
+    const auto userId = faker::String::uuid();
+    const auto email = faker::Internet::email();
+    const auto password = faker::Internet::password();
 
-    const auto user = createUser(userId, userEmail, userPassword);
+    const auto user = createUser(userId, email, password);
 
-    const auto channelId = "channelId";
-    const auto name = "name";
-    const auto creatorId = user->getId();
+    const auto channelId = faker::String::uuid();
+    const auto name = faker::Word::noun();
 
     const auto channel = createChannel(channelId, name, user);
 
@@ -132,17 +135,16 @@ TEST_F(UserChannelRepositoryIntegrationTest, shouldCreateUserChannel)
 
 TEST_F(UserChannelRepositoryIntegrationTest, shouldDeleteExistingUserChannel)
 {
-    const auto id = "id1";
+    const auto id = faker::String::uuid();
 
-    const auto userId = "userId";
-    const auto userEmail = "email@gmail.com";
-    const auto userPassword = "password";
+    const auto userId = faker::String::uuid();
+    const auto email = faker::Internet::email();
+    const auto password = faker::Internet::password();
 
-    const auto user = createUser(userId, userEmail, userPassword);
+    const auto user = createUser(userId, email, password);
 
-    const auto channelId = "channelId";
-    const auto name = "name";
-    const auto creatorId = user->getId();
+    const auto channelId = faker::String::uuid();
+    const auto name = faker::Word::noun();
 
     const auto channel = createChannel(channelId, name, user);
 
@@ -169,19 +171,18 @@ TEST_F(UserChannelRepositoryIntegrationTest, shouldDeleteExistingUserChannel)
 
 TEST_F(UserChannelRepositoryIntegrationTest, delete_givenNonExistingUserChannel_shouldThrowError)
 {
-    const auto id = "id1";
-    const auto userId = "userId";
-    const auto channelId = "channelId";
-    const auto createdAt = "2023-06-16";
-    const auto updatedAt = "2023-06-16";
+    const auto id = faker::String::uuid();
 
-    const auto userEmail = "email@gmail.com";
-    const auto userPassword = "password";
+    const auto userId = faker::String::uuid();
+    const auto email = faker::Internet::email();
+    const auto password = faker::Internet::password();
+    const auto createdAt = faker::Date::pastDate();
+    const auto updatedAt = faker::Date::pastDate();
 
-    const auto user = createUser(userId, userEmail, userPassword);
+    const auto user = createUser(userId, email, password);
 
-    const auto name = "name";
-    const auto creatorId = user->getId();
+    const auto channelId = faker::String::uuid();
+    const auto name = faker::Word::noun();
 
     const auto channel = createChannel(channelId, name, user);
 
@@ -193,17 +194,16 @@ TEST_F(UserChannelRepositoryIntegrationTest, delete_givenNonExistingUserChannel_
 
 TEST_F(UserChannelRepositoryIntegrationTest, shouldFindUsersChannelsByUserId)
 {
-    const auto id = "id1";
+    const auto id = faker::String::uuid();
 
-    const auto userId = "userId";
-    const auto userEmail = "email@gmail.com";
-    const auto userPassword = "password";
+    const auto userId = faker::String::uuid();
+    const auto email = faker::Internet::email();
+    const auto password = faker::Internet::password();
 
-    const auto user = createUser(userId, userEmail, userPassword);
+    const auto user = createUser(userId, email, password);
 
-    const auto channelId = "channelId";
-    const auto name = "name";
-    const auto creatorId = user->getId();
+    const auto channelId = faker::String::uuid();
+    const auto name = faker::Word::noun();
 
     const auto channel = createChannel(channelId, name, user);
 
@@ -217,17 +217,16 @@ TEST_F(UserChannelRepositoryIntegrationTest, shouldFindUsersChannelsByUserId)
 
 TEST_F(UserChannelRepositoryIntegrationTest, shouldFindUsersChannelsByChannelId)
 {
-    const auto id = "id1";
+    const auto id = faker::String::uuid();
 
-    const auto userId = "userId";
-    const auto userEmail = "email@gmail.com";
-    const auto userPassword = "password";
+    const auto userId = faker::String::uuid();
+    const auto email = faker::Internet::email();
+    const auto password = faker::Internet::password();
 
-    const auto user = createUser(userId, userEmail, userPassword);
+    const auto user = createUser(userId, email, password);
 
-    const auto channelId = "channelId";
-    const auto name = "name";
-    const auto creatorId = user->getId();
+    const auto channelId = faker::String::uuid();
+    const auto name = faker::Word::noun();
 
     const auto channel = createChannel(channelId, name, user);
 

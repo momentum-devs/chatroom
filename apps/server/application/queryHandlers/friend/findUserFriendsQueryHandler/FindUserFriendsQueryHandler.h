@@ -10,8 +10,7 @@ class FindUserFriendsQueryHandler
 public:
     virtual ~FindUserFriendsQueryHandler() = default;
 
-    virtual FindUserFriendsQueryHandlerResult
-    execute(const FindUserFriendsQueryHandlerPayload&) const = 0;
+    virtual FindUserFriendsQueryHandlerResult execute(const FindUserFriendsQueryHandlerPayload&) const = 0;
 };
 
 }

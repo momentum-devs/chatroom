@@ -9,7 +9,7 @@ namespace server::application
 class FindUserFriendsQueryHandlerMock : public FindUserFriendsQueryHandler
 {
 public:
-    MOCK_METHOD(FindUserFriendsQueryHandlerResult, execute,
-                (const FindUserFriendsQueryHandlerPayload&), (const override));
+    MOCK_METHOD(FindUserFriendsQueryHandlerResult, execute, (const FindUserFriendsQueryHandlerPayload&),
+                (const override));
 };
 }

@@ -5,7 +5,10 @@
 
 #include "Channel.odb.h"
 #include "ChannelRepositoryImpl.h"
-#include "server/infrastructure/errors/ChannelRepositoryError.h"
+#include "faker-cxx/Date.h"
+#include "faker-cxx/Internet.h"
+#include "faker-cxx/String.h"
+#include "faker-cxx/Word.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "User.h"
@@ -68,37 +71,37 @@ public:
 
 TEST_F(ChannelRepositoryIntegrationTest, shouldCreateChannel)
 {
-    const auto userId = "userId";
-    const auto userEmail = "email@gmail.com";
-    const auto userPassword = "password";
+    const auto userId = faker::String::uuid();
+    const auto email = faker::Internet::email();
+    const auto password = faker::Internet::password();
 
-    const auto user = createUser(userId, userEmail, userPassword);
+    const auto user = createUser(userId, email, password);
 
-    const auto id = "id1";
-    const auto name = "name";
-    const auto creatorId = user->getId();
+    const auto channelId = faker::String::uuid();
+    const auto name = faker::Word::noun();
 
-    const auto channel = channelRepository->createChannel({id, name, userMapper->mapToDomainUser(user)});
+    const auto channel = channelRepository->createChannel({channelId, name, userMapper->mapToDomainUser(user)});
 
-    ASSERT_EQ(channel->getId(), id);
+    ASSERT_EQ(channel->getId(), channelId);
     ASSERT_EQ(channel->getName(), name);
     ASSERT_EQ(channel->getCreator()->getId(), userId);
 }
 
 TEST_F(ChannelRepositoryIntegrationTest, shouldDeleteExistingChannel)
 {
-    const auto userId = "userId";
-    const auto userEmail = "email@gmail.com";
-    const auto userPassword = "password";
+    const auto userId = faker::String::uuid();
+    const auto email = faker::Internet::email();
+    const auto password = faker::Internet::password();
+    const auto verificationCode = faker::String::numeric(6);
+    const auto createdAt = faker::Date::pastDate();
+    const auto updatedAt = faker::Date::recentDate();
 
-    const auto user = createUser(userId, userEmail, userPassword);
+    const auto user = createUser(userId, email, password);
 
-    const auto id = "id1";
-    const auto name = "name";
-    const auto createdAt = "2023-06-16";
-    const auto updatedAt = "2023-06-16";
+    const auto channelId = faker::String::uuid();
+    const auto name = faker::Word::noun();
 
-    Channel channel{id, name, user, createdAt, updatedAt};
+    Channel channel{channelId, name, user, createdAt, updatedAt};
 
     {
         odb::transaction transaction(db->begin());
@@ -108,7 +111,8 @@ TEST_F(ChannelRepositoryIntegrationTest, shouldDeleteExistingChannel)
         transaction.commit();
     }
 
-    const auto domainChannel = domain::Channel{id, name, userMapper->mapToDomainUser(user), createdAt, updatedAt};
+    const auto domainChannel =
+        domain::Channel{channelId, name, userMapper->mapToDomainUser(user), createdAt, updatedAt};
 
     channelRepository->deleteChannel({domainChannel});
 
@@ -117,7 +121,7 @@ TEST_F(ChannelRepositoryIntegrationTest, shouldDeleteExistingChannel)
     {
         odb::transaction transaction(db->begin());
 
-        std::shared_ptr<Channel> foundChannel(db->query_one<Channel>(query::id == id));
+        std::shared_ptr<Channel> foundChannel(db->query_one<Channel>(query::id == channelId));
 
         ASSERT_FALSE(foundChannel);
 
@@ -127,36 +131,38 @@ TEST_F(ChannelRepositoryIntegrationTest, shouldDeleteExistingChannel)
 
 TEST_F(ChannelRepositoryIntegrationTest, delete_givenNonExistingChannel_shouldThrowError)
 {
-    const auto userId = "userId";
-    const auto userEmail = "email@gmail.com";
-    const auto userPassword = "password";
+    const auto userId = faker::String::uuid();
+    const auto email = faker::Internet::email();
+    const auto password = faker::Internet::password();
+    const auto verificationCode = faker::String::numeric(6);
+    const auto createdAt = faker::Date::pastDate();
+    const auto updatedAt = faker::Date::recentDate();
 
-    const auto user = createUser(userId, userEmail, userPassword);
+    const auto user = createUser(userId, email, password);
 
-    const auto id = "id1";
-    const auto name = "name";
-    const auto createdAt = "2023-06-16";
-    const auto updatedAt = "2023-06-16";
+    const auto channelId = faker::String::uuid();
+    const auto name = faker::Word::noun();
 
-    const auto domainChannel = domain::Channel{id, name, userMapper->mapToDomainUser(user), createdAt, updatedAt};
+    const auto domainChannel =
+        domain::Channel{channelId, name, userMapper->mapToDomainUser(user), createdAt, updatedAt};
 
     ASSERT_ANY_THROW(channelRepository->deleteChannel({domainChannel}));
 }
 
 TEST_F(ChannelRepositoryIntegrationTest, shouldFindExistingChannelById)
 {
-    const auto userId = "userId";
-    const auto userEmail = "email@gmail.com";
-    const auto userPassword = "password";
+    const auto userId = faker::String::uuid();
+    const auto email = faker::Internet::email();
+    const auto password = faker::Internet::password();
+    const auto createdAt = faker::Date::pastDate();
+    const auto updatedAt = faker::Date::recentDate();
 
-    const auto user = createUser(userId, userEmail, userPassword);
+    const auto user = createUser(userId, email, password);
 
-    const auto id = "id1";
-    const auto name = "name";
-    const auto createdAt = "2023-06-16";
-    const auto updatedAt = "2023-06-16";
+    const auto channelId = faker::String::uuid();
+    const auto name = faker::Word::noun();
 
-    Channel channel{id, name, user, createdAt, updatedAt};
+    Channel channel{channelId, name, user, createdAt, updatedAt};
 
     {
         odb::transaction transaction(db->begin());
@@ -166,17 +172,17 @@ TEST_F(ChannelRepositoryIntegrationTest, shouldFindExistingChannelById)
         transaction.commit();
     }
 
-    const auto foundChannel = channelRepository->findChannelById({id});
+    const auto foundChannel = channelRepository->findChannelById({channelId});
 
     ASSERT_TRUE(foundChannel);
-    ASSERT_EQ(foundChannel->get()->getId(), id);
+    ASSERT_EQ(foundChannel->get()->getId(), channelId);
 }
 
 TEST_F(ChannelRepositoryIntegrationTest, givenNonExistingChannel_shouldNotFindAnyChannelById)
 {
-    const auto id = "id";
+    const auto channelId = faker::String::uuid();
 
-    const auto channel = channelRepository->findChannelById({id});
+    const auto channel = channelRepository->findChannelById({channelId});
 
     ASSERT_FALSE(channel);
 }
