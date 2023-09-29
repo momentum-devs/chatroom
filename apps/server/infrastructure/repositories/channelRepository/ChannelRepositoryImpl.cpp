@@ -9,8 +9,9 @@
 namespace server::infrastructure
 {
 ChannelRepositoryImpl::ChannelRepositoryImpl(std::shared_ptr<odb::pgsql::database> dbInit,
-                                             std::shared_ptr<ChannelMapper> channelMapperInit)
-    : db{std::move(dbInit)}, channelMapper{std::move(channelMapperInit)}
+                                             std::shared_ptr<ChannelMapper> channelMapperInit,
+                                             std::shared_ptr<UserMapper> userMapperInit)
+    : db{std::move(dbInit)}, channelMapper{std::move(channelMapperInit)}, userMapper{std::move(userMapperInit)}
 {
 }
 
@@ -21,8 +22,10 @@ std::shared_ptr<domain::Channel> ChannelRepositoryImpl::createChannel(const doma
         {
             const auto currentDate = to_iso_string(boost::posix_time::second_clock::universal_time());
 
-            const auto channel =
-                std::make_shared<Channel>(payload.id, payload.name, payload.creatorId, currentDate, currentDate);
+            const auto creator = userMapper->mapToPersistenceUser(payload.creator);
+
+            const auto channel = std::make_shared<Channel>(
+                payload.id, payload.name, creator, currentDate, currentDate);
 
             odb::transaction transaction(db->begin());
 

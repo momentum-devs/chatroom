@@ -22,7 +22,7 @@ void DeleteChannelCommandHandlerImpl::execute(const DeleteChannelCommandHandlerP
         throw errors::ResourceNotFoundError{std::format("Channel with id {} not found.", payload.channelId)};
     }
 
-    const auto creatorId = existingChannel->get()->getCreatorId();
+    const auto creatorId = existingChannel->get()->getCreator()->getId();
 
     if (payload.requesterUserId != creatorId)
     {

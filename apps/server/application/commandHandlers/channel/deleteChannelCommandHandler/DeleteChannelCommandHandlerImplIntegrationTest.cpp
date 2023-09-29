@@ -12,6 +12,7 @@
 #include "server/application/errors/ResourceNotFoundError.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
 #include "server/infrastructure/repositories/channelRepository/ChannelRepositoryImpl.h"
+#include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "User.h"
 #include "User.odb.h"
 
@@ -43,11 +44,11 @@ public:
         transaction.commit();
     }
 
-    User createUser(const std::string& id, const std::string& email, const std::string& password)
+    std::shared_ptr<User> createUser(const std::string& id, const std::string& email, const std::string& password)
     {
         const auto currentDate = to_iso_string(boost::posix_time::second_clock::universal_time());
 
-        User user{id, email, password, email, false, false, "123", currentDate, currentDate};
+        auto user = std::make_shared<User>(id, email, password, email, false, false, "123", currentDate, currentDate);
 
         odb::transaction transaction(db->begin());
 
@@ -58,11 +59,12 @@ public:
         return user;
     }
 
-    Channel createChannel(const std::string& id, const std::string& name, const std::string& creatorId)
+    std::shared_ptr<Channel> createChannel(const std::string& id, const std::string& name,
+                                           const std::shared_ptr<User>& creator)
     {
         const auto currentDate = to_iso_string(boost::posix_time::second_clock::universal_time());
 
-        Channel channel{id, name, creatorId, currentDate, currentDate};
+        auto channel = std::make_shared<Channel>(id, name, creator, currentDate, currentDate);
 
         odb::transaction transaction(db->begin());
 
@@ -73,13 +75,15 @@ public:
         return channel;
     }
 
-    std::unique_ptr<ChannelMapper> channelMapperInit = std::make_unique<ChannelMapperImpl>();
+    std::shared_ptr<UserMapper> userMapper = std::make_shared<UserMapperImpl>();
+
+    std::shared_ptr<ChannelMapper> channelMapper = std::make_shared<ChannelMapperImpl>(userMapper);
 
     std::shared_ptr<odb::pgsql::database> db =
         std::make_shared<odb::pgsql::database>("local", "local", "chatroom", "localhost", 5432);
 
     std::shared_ptr<domain::ChannelRepository> channelRepository =
-        std::make_shared<ChannelRepositoryImpl>(db, std::move(channelMapperInit));
+        std::make_shared<ChannelRepositoryImpl>(db, channelMapper, userMapper);
 
     DeleteChannelCommandHandlerImpl deleteChannelCommandHandler{channelRepository};
 };
@@ -94,11 +98,10 @@ TEST_F(DeleteChannelCommandImplIntegrationTest, givenExistingChannelAndRequester
 
     const auto channelId = faker::String::uuid();
     const auto name = faker::Word::noun();
-    const auto creatorId = user.getId();
 
-    const auto channel = createChannel(channelId, name, creatorId);
+    const auto channel = createChannel(channelId, name, user);
 
-    deleteChannelCommandHandler.execute({channel.getId(), creatorId});
+    deleteChannelCommandHandler.execute({channel->getId(), user->getId()});
 
     typedef odb::query<Channel> query;
 
@@ -123,13 +126,12 @@ TEST_F(DeleteChannelCommandImplIntegrationTest, givenExistingChannelAndRequester
 
     const auto channelId = faker::String::uuid();
     const auto name = faker::Word::noun();
-    const auto creatorId = user.getId();
 
-    const auto channel = createChannel(channelId, name, creatorId);
+    const auto channel = createChannel(channelId, name, user);
 
     const auto requesterId = faker::String::uuid();
 
-    ASSERT_THROW(deleteChannelCommandHandler.execute({channel.getId(), requesterId}), errors::OperationNotValidError);
+    ASSERT_THROW(deleteChannelCommandHandler.execute({channel->getId(), requesterId}), errors::OperationNotValidError);
 }
 
 TEST_F(DeleteChannelCommandImplIntegrationTest, givenNonExistingChannel_shouldThrow)

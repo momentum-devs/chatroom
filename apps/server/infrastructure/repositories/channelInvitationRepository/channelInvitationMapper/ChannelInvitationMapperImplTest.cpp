@@ -52,11 +52,10 @@ TEST_F(ChannelInvitationMapperTest, givenPersistenceChannelInvitation_shouldMapT
 
     const auto channelId = faker::String::uuid();
     const auto name = faker::Word::noun();
-    const auto creatorId = sender->getId();
 
-    const auto channel = std::make_shared<Channel>(channelId, name, creatorId, createdAt, updatedAt);
+    const auto channel = std::make_shared<Channel>(channelId, name, sender, createdAt, updatedAt);
 
-    const auto domainChannel = std::make_shared<domain::Channel>(channelId, name, creatorId, createdAt, updatedAt);
+    const auto domainChannel = std::make_shared<domain::Channel>(channelId, name, domainSender, createdAt, updatedAt);
 
     const auto id = faker::String::uuid();
 

@@ -18,8 +18,6 @@
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "server/infrastructure/repositories/userRepository/UserRepositoryImpl.h"
 #include "User.h"
-#include "UserChannel.h"
-#include "UserChannel.odb.h"
 
 using namespace ::testing;
 using namespace server;
@@ -68,11 +66,12 @@ public:
         return user;
     }
 
-    std::shared_ptr<Channel> createChannel(const std::string& id, const std::string& name, const std::string& creatorId)
+    std::shared_ptr<Channel> createChannel(const std::string& id, const std::string& name,
+                                           const std::shared_ptr<User>& creator)
     {
         const auto currentDate = to_iso_string(boost::posix_time::second_clock::universal_time());
 
-        auto channel = std::make_shared<Channel>(id, name, creatorId, currentDate, currentDate);
+        auto channel = std::make_shared<Channel>(id, name, creator, currentDate, currentDate);
 
         odb::transaction transaction(db->begin());
 
@@ -102,7 +101,7 @@ public:
 
     std::shared_ptr<UserMapper> userMapper = std::make_shared<UserMapperImpl>();
 
-    std::shared_ptr<ChannelMapper> channelMapper = std::make_shared<ChannelMapperImpl>();
+    std::shared_ptr<ChannelMapper> channelMapper = std::make_shared<ChannelMapperImpl>(userMapper);
 
     std::shared_ptr<ChannelInvitationMapper> channelInvitationMapperInit =
         std::make_shared<ChannelInvitationMapperImpl>(userMapper, channelMapper);
@@ -138,7 +137,7 @@ TEST_F(RejectChannelInvitationCommandImplIntegrationTest, rejectChannelInvitatio
     const auto channelId = faker::String::uuid();
     const auto name = faker::Word::noun();
 
-    const auto channel = createChannel(channelId, name, senderId);
+    const auto channel = createChannel(channelId, name, sender);
 
     const auto channelInvitation = createChannelInvitation(channelInvitationId, sender, recipient, channel);
 

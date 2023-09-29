@@ -59,11 +59,12 @@ public:
         return user;
     }
 
-    std::shared_ptr<Channel> createChannel(const std::string& id, const std::string& name, const std::string& creatorId)
+    std::shared_ptr<Channel> createChannel(const std::string& id, const std::string& name,
+                                           const std::shared_ptr<User>& creator)
     {
         const auto currentDate = to_iso_string(boost::posix_time::second_clock::universal_time());
 
-        auto channel = std::make_shared<Channel>(id, name, creatorId, currentDate, currentDate);
+        auto channel = std::make_shared<Channel>(id, name, creator, currentDate, currentDate);
 
         odb::transaction transaction(db->begin());
 
@@ -91,7 +92,7 @@ public:
 
     std::shared_ptr<UserMapper> userMapper = std::make_shared<UserMapperImpl>();
 
-    std::shared_ptr<ChannelMapper> channelMapper = std::make_shared<ChannelMapperImpl>();
+    std::shared_ptr<ChannelMapper> channelMapper = std::make_shared<ChannelMapperImpl>(userMapper);
 
     std::shared_ptr<UserChannelMapper> userChannelMapper =
         std::make_shared<UserChannelMapperImpl>(userMapper, channelMapper);
@@ -115,9 +116,8 @@ TEST_F(FindUsersBelongingToChannelQueryHandlerImplIntegrationTest, findUsersChan
 
     const auto channelId1 = "channelId1";
     const auto name1 = "name";
-    const auto creatorId1 = user1->getId();
 
-    const auto channel1 = createChannel(channelId1, name1, creatorId1);
+    const auto channel1 = createChannel(channelId1, name1, user1);
 
     const auto userId2 = "userId2";
     const auto userEmail2 = "email2@gmail.com";
@@ -127,9 +127,8 @@ TEST_F(FindUsersBelongingToChannelQueryHandlerImplIntegrationTest, findUsersChan
 
     const auto channelId2 = "channelId2";
     const auto name2 = "name2";
-    const auto creatorId2 = user2->getId();
 
-    const auto channel2 = createChannel(channelId2, name2, creatorId2);
+    const auto channel2 = createChannel(channelId2, name2, user2);
 
     const auto userChannelId1 = "userChannelId1";
     const auto userChannelId2 = "userChannelId2";

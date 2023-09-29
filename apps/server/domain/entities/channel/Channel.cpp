@@ -4,11 +4,11 @@
 
 namespace server::domain
 {
-Channel::Channel(std::string idInit, std::string nameInit, std::string creatorIdInit, std::string createdAtInit,
+Channel::Channel(std::string idInit, std::string nameInit, std::shared_ptr<User> creatorInit, std::string createdAtInit,
                  std::string updatedAtInit)
     : id{std::move(idInit)},
       name{std::move(nameInit)},
-      creatorId{std::move(creatorIdInit)},
+      creator{std::move(creatorInit)},
       createdAt{std::move(createdAtInit)},
       updatedAt{std::move(updatedAtInit)}
 {
@@ -24,9 +24,9 @@ std::string Channel::getName() const
     return name;
 }
 
-std::string Channel::getCreatorId() const
+std::shared_ptr<User> Channel::getCreator() const
 {
-    return creatorId;
+    return creator;
 }
 
 std::string Channel::getCreatedAt() const
@@ -42,7 +42,7 @@ std::string Channel::getUpdatedAt() const
 bool Channel::operator==(const Channel& channel) const
 {
     auto tieStruct = [](const Channel& channel)
-    { return std::tie(channel.id, channel.creatorId, channel.name, channel.createdAt, channel.updatedAt); };
+    { return std::tie(channel.id, channel.creator, channel.name, channel.createdAt, channel.updatedAt); };
 
     return tieStruct(*this) == tieStruct(channel);
 }

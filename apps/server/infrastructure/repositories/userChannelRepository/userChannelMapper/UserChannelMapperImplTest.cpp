@@ -5,6 +5,12 @@
 #include "../../userRepository/userMapper/UserMapperMock.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperMock.h"
 
+#include "faker-cxx/Datatype.h"
+#include "faker-cxx/Date.h"
+#include "faker-cxx/Internet.h"
+#include "faker-cxx/String.h"
+#include "faker-cxx/Word.h"
+
 using namespace ::testing;
 using namespace server;
 using namespace server::infrastructure;
@@ -20,15 +26,15 @@ public:
 
 TEST_F(UserChannelMapperTest, givenPersistenceUserChannel_shouldMapToDomainUserChannel)
 {
-    const auto userId = "userId";
-    const auto email = "email@example.com";
-    const auto password = "password";
-    const auto nickname = "nickname";
-    const auto active = true;
-    const auto emailVerified = false;
-    const auto verificationCode = "verificationCode";
-    const auto createdAt = "2023-06-16";
-    const auto updatedAt = "2023-06-16";
+    const auto userId = faker::String::uuid();
+    const auto email = faker::Internet::email();
+    const auto password = faker::Internet::password();
+    const auto nickname = faker::Internet::username();
+    const auto active = faker::Datatype::boolean();
+    const auto emailVerified = faker::Datatype::boolean();
+    const auto verificationCode = faker::String::numeric(6);
+    const auto createdAt = faker::Date::pastDate();
+    const auto updatedAt = faker::Date::recentDate();
 
     const auto user = std::make_shared<User>(userId, email, password, nickname, active, emailVerified, verificationCode,
                                              createdAt, updatedAt);
@@ -36,15 +42,14 @@ TEST_F(UserChannelMapperTest, givenPersistenceUserChannel_shouldMapToDomainUserC
     const auto domainUser = std::make_shared<domain::User>(userId, email, password, nickname, active, emailVerified,
                                                            verificationCode, createdAt, updatedAt);
 
-    const auto channelId = "channelId";
-    const auto name = "name";
-    const auto creatorId = "creatorId";
+    const auto channelId = faker::String::uuid();
+    const auto name = faker::Word::noun();
 
-    const auto channel = std::make_shared<Channel>(channelId, name, creatorId, createdAt, updatedAt);
+    const auto channel = std::make_shared<Channel>(channelId, name, user, createdAt, updatedAt);
 
-    const auto domainChannel = std::make_shared<domain::Channel>(channelId, name, creatorId, createdAt, updatedAt);
+    const auto domainChannel = std::make_shared<domain::Channel>(channelId, name, domainUser, createdAt, updatedAt);
 
-    const auto id = "id";
+    const auto id = faker::String::uuid();
 
     UserChannel persistenceUserChannel{id, user, channel, createdAt, updatedAt};
 

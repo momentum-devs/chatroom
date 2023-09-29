@@ -55,9 +55,10 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
     auto loginUserCommandHandler =
         std::make_unique<server::application::LoginUserCommandHandlerImpl>(userRepository, hashService, tokenService);
 
-    auto channelMapper = std::make_shared<server::infrastructure::ChannelMapperImpl>();
+    auto channelMapper = std::make_shared<server::infrastructure::ChannelMapperImpl>(userMapper);
 
-    auto channelRepository = std::make_shared<server::infrastructure::ChannelRepositoryImpl>(db, channelMapper);
+    auto channelRepository =
+        std::make_shared<server::infrastructure::ChannelRepositoryImpl>(db, channelMapper, userMapper);
 
     auto userChannelMapper = std::make_shared<server::infrastructure::UserChannelMapperImpl>(userMapper, channelMapper);
 
@@ -71,7 +72,7 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
         userChannelRepository, userRepository, channelRepository);
 
     auto createChannelCommandHandler = std::make_unique<server::application::CreateChannelCommandHandlerImpl>(
-        channelRepository, addUserToChannelCommandHandler);
+        channelRepository, addUserToChannelCommandHandler, userRepository);
 
     const std::shared_ptr<common::httpClient::HttpClient> httpClient =
         common::httpClient::HttpClientFactory::createHttpClient();

@@ -71,15 +71,28 @@ TEST_F(ConversationMapperTest, givenPersistenceConversationWithUsers_shouldMapTo
 
 TEST_F(ConversationMapperTest, givenPersistenceConversationWithChannel_shouldMapToDomainConversation)
 {
-    const auto channelId = faker::String::uuid();
-    const auto name = faker::Word::noun();
-    const auto creatorId = faker::String::uuid();
+    const auto userId = faker::String::uuid();
+    const auto email = faker::Internet::email();
+    const auto password = faker::Internet::password();
+    const auto nickname = faker::Internet::username();
+    const auto active = faker::Datatype::boolean();
+    const auto emailVerified = faker::Datatype::boolean();
+    const auto verificationCode = faker::String::numeric(6);
     const auto createdAt = faker::Date::pastDate();
     const auto updatedAt = faker::Date::recentDate();
 
-    const auto channel = std::make_shared<Channel>(channelId, name, creatorId, createdAt, updatedAt);
+    const auto user = std::make_shared<User>(userId, email, password, nickname, active, emailVerified,
+                                             verificationCode, createdAt, updatedAt);
 
-    const auto domainChannel = std::make_shared<domain::Channel>(channelId, name, creatorId, createdAt, updatedAt);
+    const auto domainUser = std::make_shared<domain::User>(userId, email, password, nickname, active, emailVerified,
+                                                           verificationCode, createdAt, updatedAt);
+
+    const auto channelId = faker::String::uuid();
+    const auto name = faker::Word::noun();
+
+    const auto channel = std::make_shared<Channel>(channelId, name, user, createdAt, updatedAt);
+
+    const auto domainChannel = std::make_shared<domain::Channel>(channelId, name, domainUser, createdAt, updatedAt);
 
     const auto id = faker::String::uuid();
 

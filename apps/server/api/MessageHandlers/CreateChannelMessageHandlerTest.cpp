@@ -52,7 +52,7 @@ TEST_F(CreateChannelMessageHandlerTest, handleValidCreateChannelMessage)
     EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(creatorId));
     EXPECT_CALL(*createChannelCommandHandlerMock,
                 execute(server::application::CreateChannelCommandHandlerPayload{channelName, creatorId}))
-        .WillOnce(Return(server::application::CreateChannelCommandHandlerResult{{"", "", "", "", ""}}));
+        .WillOnce(Return(server::application::CreateChannelCommandHandlerResult{{"", "", {}, "", ""}}));
 
     auto responseMessage = createChannelMessageHandler.handleMessage(message);
 

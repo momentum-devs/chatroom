@@ -78,7 +78,7 @@ TEST_F(GetUserChannelsMessageHandlerTest, handleValidGetUserChannelsMessageWithF
     EXPECT_CALL(*findChannelsToWhichUserBelongsQueryHandlerMock,
                 execute(server::application::FindChannelsToWhichUserBelongsQueryHandlerPayload{userId}))
         .WillOnce(Return(server::application::FindChannelsToWhichUserBelongsQueryHandlerResult{
-            {{channelId1, channelName1, "", "", ""}, {channelId2, channelName2, "", "", ""}}}));
+            {{channelId1, channelName1, {}, "", ""}, {channelId2, channelName2, {}, "", ""}}}));
 
     auto responseMessage = getUserChannelsMessageHandler.handleMessage(message);
 

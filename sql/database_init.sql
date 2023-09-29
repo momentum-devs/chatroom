@@ -19,10 +19,16 @@ CREATE TABLE "channels"
 (
     "id"         TEXT NOT NULL PRIMARY KEY,
     "name"       TEXT NOT NULL,
-    "creator_id" TEXT NOT NULL,
+    "creator"    TEXT NOT NULL,
     "created_at" TEXT NOT NULL,
     "updated_at" TEXT NOT NULL
 );
+
+ALTER TABLE "channels"
+    ADD CONSTRAINT "creator_fk"
+        FOREIGN KEY ("creator")
+            REFERENCES "users" ("id") ON DELETE CASCADE
+            INITIALLY DEFERRED;
 
 
 DROP TABLE IF EXISTS "users_channels" CASCADE;

@@ -65,28 +65,29 @@ public:
         return user;
     }
 
-    std::shared_ptr<ChannelMapper> channelMapper = std::make_shared<ChannelMapperImpl>();
+    std::shared_ptr<UserMapper> userMapper = std::make_shared<UserMapperImpl>();
+
+    std::shared_ptr<ChannelMapper> channelMapper = std::make_shared<ChannelMapperImpl>(userMapper);
 
     std::shared_ptr<odb::pgsql::database> db =
         std::make_shared<odb::pgsql::database>("local", "local", "chatroom", "localhost", 5432);
 
     std::shared_ptr<domain::ChannelRepository> channelRepository =
-        std::make_shared<ChannelRepositoryImpl>(db, channelMapper);
+        std::make_shared<ChannelRepositoryImpl>(db, channelMapper, userMapper);
 
-    std::shared_ptr<UserMapper> userMapper = std::make_shared<UserMapperImpl>();
-
-    std::shared_ptr<UserChannelMapper> channelMapperInit =
+    std::shared_ptr<UserChannelMapper> userChannelMapper =
         std::make_shared<UserChannelMapperImpl>(userMapper, channelMapper);
 
     std::shared_ptr<domain::UserChannelRepository> userChannelRepository =
-        std::make_shared<UserChannelRepositoryImpl>(db, std::move(channelMapperInit), userMapper, channelMapper);
+        std::make_shared<UserChannelRepositoryImpl>(db, userChannelMapper, userMapper, channelMapper);
 
     std::shared_ptr<domain::UserRepository> userRepository = std::make_shared<UserRepositoryImpl>(db, userMapper);
 
     std::shared_ptr<AddUserToChannelCommandHandler> addUserToChannelCommandHandler =
         std::make_shared<AddUserToChannelCommandHandlerImpl>(userChannelRepository, userRepository, channelRepository);
 
-    CreateChannelCommandHandlerImpl createChannelCommandHandler{channelRepository, addUserToChannelCommandHandler};
+    CreateChannelCommandHandlerImpl createChannelCommandHandler{channelRepository, addUserToChannelCommandHandler,
+                                                                userRepository};
 };
 
 TEST_F(CreateChannelCommandImplIntegrationTest, createChannel)
@@ -104,7 +105,7 @@ TEST_F(CreateChannelCommandImplIntegrationTest, createChannel)
     const auto [channel] = createChannelCommandHandler.execute({name, creatorId});
 
     ASSERT_EQ(channel.getName(), name);
-    ASSERT_EQ(channel.getCreatorId(), creatorId);
+    ASSERT_EQ(channel.getCreator()->getId(), creatorId);
 
     typedef odb::query<UserChannel> Query;
 

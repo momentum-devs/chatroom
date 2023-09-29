@@ -63,6 +63,8 @@
 // SERVER:
 
 * delete channel when creator leaves it
+* should not be possible to invite user that are already in channel
+* should not be possible to invite yourself
 * generate verification code
 * direct messages between users
 * messages in channel
