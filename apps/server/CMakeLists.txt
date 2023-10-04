@@ -86,6 +86,7 @@ set(SOURCES
 set(TEST_COMMON_SOURCES
         tests/factories/userTestFactory/UserTestFactory.cpp
         tests/factories/channelTestFactory/ChannelTestFactory.cpp
+        tests/factories/userChannelTestFactory/UserChannelTestFactory.cpp
         )
 
 set(UT_SOURCES
