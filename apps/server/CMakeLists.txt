@@ -128,6 +128,7 @@ set(IT_SOURCES
         tests/utils/channelInvitationTestUtils/ChannelInvitationTestUtils.cpp
         tests/utils/friendInvitationTestUtils/FriendInvitationTestUtils.cpp
         tests/utils/friendshipTestUtils/FriendshipTestUtils.cpp
+        tests/utils/conversationTestUtils/ConversationTestUtils.cpp
 
         infrastructure/repositories/userRepository/UserRepositoryImplIntegrationTest.cpp
         application/services/tokenService/TokenServiceImplIntegrationTest.cpp
