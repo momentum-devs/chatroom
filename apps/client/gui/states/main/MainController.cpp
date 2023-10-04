@@ -186,7 +186,7 @@ void MainController::deleteTheChannel()
     session->sendMessage(common::messages::MessageId::DeleteTheChannel, data);
 }
 
-void MainController::handleLeftTheChannelResponse(const common::messages::Message& message)
+void MainController::handleLeftTheChannelResponse(const common::messages::Message& /*message*/)
 {
     currentChannelId = "";
 

@@ -82,6 +82,7 @@ set(SOURCES
         api/MessageHandlers/SendChannelInvitationMessageHandler.cpp
         api/MessageHandlers/LeftTheChannelMessageHandler.cpp
         api/MessageHandlers/DeleteTheChannelMessageHandler.cpp
+        api/MessageHandlers/FriendRequestMessageHandler.cpp
         )
 
 set(TEST_COMMON_SOURCES
@@ -117,7 +118,7 @@ set(UT_SOURCES
         infrastructure/repositories/friendshipRepository/friendshipMapper/FriendshipMapperImplTest.cpp
         infrastructure/repositories/conversationRepository/conversationMapper/ConversationMapperImplTest.cpp
         api/MessageHandlers/SendChannelInvitationMessageHandlerTest.cpp
-        )
+        api/MessageHandlers/FriendRequestMessageHandlerTest.cpp api/MessageHandlers/DeleteTheChannelMessageHandlerTest.cpp api/MessageHandlers/LeftTheChannelMessageHandlerTest.cpp)
 
 set(IT_SOURCES
         tests/factories/databaseClientTestFactory/DatabaseClientTestFactory.cpp

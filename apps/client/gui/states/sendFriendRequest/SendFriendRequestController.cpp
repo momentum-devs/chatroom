@@ -15,7 +15,7 @@ SendFriendRequestController::SendFriendRequestController(std::shared_ptr<api::Se
 
 void SendFriendRequestController::activate()
 {
-    session->addMessageHandler({common::messages::MessageId::CreateChannelResponse,
+    session->addMessageHandler({common::messages::MessageId::SendFriendRequestResponse,
                                 sendFriendRequestResponseHandlerName,
                                 [this](const auto& msg) { handleSendFriendRequestResponse(msg); }});
 }
@@ -23,15 +23,24 @@ void SendFriendRequestController::activate()
 void SendFriendRequestController::deactivate()
 {
     session->removeMessageHandler(
-        {common::messages::MessageId::CreateChannelResponse, sendFriendRequestResponseHandlerName});
+        {common::messages::MessageId::SendFriendRequestResponse, sendFriendRequestResponseHandlerName});
 }
 
-void SendFriendRequestController::sendFriendRequest(const QString& /*friendEmail*/) {}
+void SendFriendRequestController::sendFriendRequest(const QString& friendEmail)
+{
+    LOG_S(INFO) << "Send invitation to friends to user " << friendEmail.toStdString();
+
+    nlohmann::json payload{
+        {"friend_email", friendEmail.toStdString()},
+    };
+
+    session->sendMessage(common::messages::MessageId::SendFriendRequest, payload);
+}
 
 void SendFriendRequestController::goBack()
 {
     LOG_S(INFO) << "Return to previous state";
-    
+
     stateMachine->returnToThePreviousState();
 }
 
