@@ -88,6 +88,8 @@ set(TEST_COMMON_SOURCES
         tests/factories/channelTestFactory/ChannelTestFactory.cpp
         tests/factories/userChannelTestFactory/UserChannelTestFactory.cpp
         tests/factories/friendshipTestFactory/FriendshipTestFactory.cpp
+        tests/factories/friendInvitationTestFactory/FriendInvitationTestFactory.cpp
+        tests/factories/channelInvitationTestFactory/ChannelInvitationTestFactory.cpp
         )
 
 set(UT_SOURCES
@@ -117,7 +119,7 @@ set(UT_SOURCES
 
 set(IT_SOURCES
         tests/factories/databaseClientTestFactory/DatabaseClientTestFactory.cpp
-        
+
         infrastructure/repositories/userRepository/UserRepositoryImplIntegrationTest.cpp
         application/services/tokenService/TokenServiceImplIntegrationTest.cpp
         application/services/hashService/HashServiceImplIntegrationTest.cpp
