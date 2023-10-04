@@ -26,10 +26,12 @@ void MainController::activate()
                                 getUserChannelsResponseHandlerName,
                                 [this](const auto& msg) { handleGetUserChannelsResponse(msg); }});
 
-    session->sendMessage(common::messages::MessageId::GetUserChannels, {});
-
     session->addMessageHandler({common::messages::MessageId::LeftTheChannelResponse, leftTheChannelResponseHandlerName,
                                 [this](const auto& msg) { handleLeftTheChannelResponse(msg); }});
+
+    session->addMessageHandler({common::messages::MessageId::GetUserChannelInvitationsResponse,
+                                getUserChannelInvitationsResponseHandlerName,
+                                [this](const auto& msg) { handleGetUserChannelInvitationsResponse(msg); }});
 
     session->addMessageHandler({common::messages::MessageId::DeleteTheChannelResponse,
                                 deleteTheChannelResponseHandlerName,
@@ -48,6 +50,9 @@ void MainController::deactivate()
 
     session->removeMessageHandler(
         {common::messages::MessageId::DeleteTheChannelResponse, deleteTheChannelResponseHandlerName});
+
+    session->removeMessageHandler(
+        {common::messages::MessageId::GetUserChannelInvitationsResponse, getUserChannelInvitationsResponseHandlerName});
 }
 
 void MainController::logout()
@@ -108,6 +113,8 @@ void MainController::handleGetUserChannelsResponse(const common::messages::Messa
     {
         LOG_S(ERROR) << "Response without data";
     }
+
+    session->sendMessage(common::messages::MessageId::GetUserChannelInvitations, {});
 }
 
 void MainController::handleGetUserDataResponse(const common::messages::Message& message)
@@ -120,7 +127,8 @@ void MainController::handleGetUserDataResponse(const common::messages::Message& 
 
     if (responseJson.contains("error"))
     {
-        LOG_S(ERROR) << std::format("Error while getting user data: {}", responseJson.at("error").get<std::string>());
+        LOG_S(ERROR) << std::format("Error while getting user channels: {}",
+                                    responseJson.at("error").get<std::string>());
     }
 
     if (responseJson.contains("data") and responseJson.at("data").contains("verified") and
@@ -134,6 +142,8 @@ void MainController::handleGetUserDataResponse(const common::messages::Message& 
     {
         LOG_S(INFO) << "User is verified";
     }
+
+    session->sendMessage(common::messages::MessageId::GetUserChannels, {});
 }
 
 void MainController::goToSendFriendRequest()
@@ -191,5 +201,43 @@ void MainController::handleLeftTheChannelResponse(const common::messages::Messag
     currentChannelId = "";
 
     session->sendMessage(common::messages::MessageId::GetUserChannels, {});
+}
+
+void MainController::handleGetUserChannelInvitationsResponse(const common::messages::Message& message)
+{
+    LOG_S(INFO) << "Handle get user's channel invitation data response";
+
+    auto responsePayload = static_cast<std::string>(message.payload);
+
+    auto responseJson = nlohmann::json::parse(responsePayload);
+
+    if (responseJson.contains("error"))
+    {
+        LOG_S(ERROR) << std::format("Error while getting user channel's invitations: {}",
+                                    responseJson.at("error").get<std::string>());
+    }
+
+    if (responseJson.contains("data"))
+    {
+        for (const auto& channel : responseJson.at("data"))
+        {
+            if (channel.contains("id") and channel.contains("name"))
+            {
+                LOG_S(INFO) << std::format("Adding channel invitation {} with id {} to list",
+                                           channel.at("name").get<std::string>(), channel.at("id").get<std::string>());
+
+                emit addChannelInvitation(QString::fromStdString(channel.at("name").get<std::string>()),
+                                          QString::fromStdString(channel.at("id").get<std::string>()));
+            }
+            else
+            {
+                LOG_S(ERROR) << "Wrong channel invitation format";
+            }
+        }
+    }
+    else
+    {
+        LOG_S(ERROR) << "Response without data";
+    }
 }
 }

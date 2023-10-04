@@ -83,7 +83,7 @@ set(SOURCES
         api/MessageHandlers/LeftTheChannelMessageHandler.cpp
         api/MessageHandlers/DeleteTheChannelMessageHandler.cpp
         api/MessageHandlers/FriendRequestMessageHandler.cpp
-        )
+        api/MessageHandlers/GetUserChannelInvitationsMessageHandler.cpp)
 
 set(TEST_COMMON_SOURCES
         tests/factories/userTestFactory/UserTestFactory.cpp

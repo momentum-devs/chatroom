@@ -5,14 +5,15 @@
 #include <nlohmann/json.hpp>
 #include <regex>
 
-server::api::LogoutMessageHandler::LogoutMessageHandler(
+namespace server::api
+{
+LogoutMessageHandler::LogoutMessageHandler(
     std::shared_ptr<server::application::TokenService> tokenServiceInit,
     std::unique_ptr<server::application::LogoutUserCommandHandler> logoutUserCommandHandlerInit)
     : tokenService{std::move(tokenServiceInit)}, logoutUserCommandHandler{std::move(logoutUserCommandHandlerInit)}
 {
 }
-common::messages::Message
-server::api::LogoutMessageHandler::handleMessage(const common::messages::Message& message) const
+common::messages::Message LogoutMessageHandler::handleMessage(const common::messages::Message& message) const
 {
     try
     {
@@ -32,4 +33,5 @@ server::api::LogoutMessageHandler::handleMessage(const common::messages::Message
 
         return {common::messages::MessageId::Error, common::bytes::Bytes{responsePayload.dump()}};
     }
+}
 }

@@ -69,7 +69,7 @@ TEST_F(FileSystemServiceImplTest, givenCorrectPath_shouldWriteToFileAtPosition)
 
     const auto actualFileContent = fileSystemService.read(pathForWritingAtPosition);
 
-    ASSERT_EQ(actualFileContent.size(), 43);
+    ASSERT_EQ(actualFileContent.size(), 43u);
     ASSERT_EQ(actualFileContent.substr(5, textToWriteAtPosition.size()), textToWriteAtPositionAsString);
     ASSERT_EQ(actualFileContent.substr(30, textToWriteAtPosition.size()), textToWriteAtPositionAsString);
 }

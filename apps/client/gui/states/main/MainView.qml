@@ -2,6 +2,7 @@ import QtQuick 6.4
 import QtQuick.Controls 6.4
 
 Rectangle {
+    property var channelInvitations: []
     property var channels: []
 
     color: "grey"
@@ -77,6 +78,39 @@ Rectangle {
                         }
                     }
                 }
+                ListView {
+                    id: channelInvitationsView
+                    contentWidth: parent.width
+                    spacing: 5
+
+                    delegate: Column {
+                        Text {
+                            text: modelData[0]
+                        }
+                        Row {
+                            Button {
+                                contentItem: Text {
+                                    color: "#00FF00"
+                                    text: qsTr('Accept')
+                                }
+
+                                onClicked: {
+                                    console.log('Accept');
+                                }
+                            }
+                            Button {
+                                contentItem: Text {
+                                    color: "#FF0000"
+                                    text: qsTr('Reject')
+                                }
+
+                                onClicked: {
+                                    console.log('Reject');
+                                }
+                            }
+                        }
+                    }
+                }
             }
             Rectangle {
                 color: 'black'
@@ -104,6 +138,10 @@ Rectangle {
         function onAddChannel(channelName: string, channelId: string, isOwner: bool) {
             channels.push([channelName, channelId, isOwner]);
             channelsView.model = channels;
+        }
+        function onAddChannelInvitation(channelName: string, channelId: string) {
+            channelInvitations.push([channelName, channelId, isOwner]);
+            channelInvitationsView.model = channelInvitations;
         }
         function onClearChannelList() {
             channels = [];

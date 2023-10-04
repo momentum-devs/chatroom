@@ -5,7 +5,9 @@
 #include <nlohmann/json.hpp>
 #include <regex>
 
-server::api::FriendRequestMessageHandler::FriendRequestMessageHandler(
+namespace server::api
+{
+FriendRequestMessageHandler::FriendRequestMessageHandler(
     std::shared_ptr<server::application::TokenService> tokenServiceInit,
     std::shared_ptr<server::application::FindUserByEmailQueryHandler> findUserByEmailQueryHandlerInit,
     std::unique_ptr<server::application::CreateFriendInvitationCommandHandler> createFriendInvitationCommandHandlerInit)
@@ -15,8 +17,7 @@ server::api::FriendRequestMessageHandler::FriendRequestMessageHandler(
 {
 }
 
-common::messages::Message
-server::api::FriendRequestMessageHandler::handleMessage(const common::messages::Message& message) const
+common::messages::Message FriendRequestMessageHandler::handleMessage(const common::messages::Message& message) const
 {
     try
     {
@@ -46,4 +47,5 @@ server::api::FriendRequestMessageHandler::handleMessage(const common::messages::
 
         return {common::messages::MessageId::SendFriendRequestResponse, common::bytes::Bytes{responsePayload.dump()}};
     }
+}
 }
