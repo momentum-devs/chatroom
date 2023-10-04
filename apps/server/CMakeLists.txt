@@ -125,6 +125,7 @@ set(IT_SOURCES
         tests/utils/userTestUtils/UserTestUtils.cpp
         tests/utils/channelTestUtils/ChannelTestUtils.cpp
         tests/utils/userChannelTestUtils/UserChannelTestUtils.cpp
+        tests/utils/channelInvitationTestUtils/ChannelInvitationTestUtils.cpp
 
         infrastructure/repositories/userRepository/UserRepositoryImplIntegrationTest.cpp
         application/services/tokenService/TokenServiceImplIntegrationTest.cpp
