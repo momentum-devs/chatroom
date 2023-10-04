@@ -13,7 +13,8 @@ namespace server::tests
 class ChannelTestFactory
 {
 public:
-    std::shared_ptr<domain::Channel> createDomainChannel(const std::shared_ptr<domain::User>& user);
-    std::shared_ptr<infrastructure::Channel> createPersistentChannel(const std::shared_ptr<infrastructure::User>& user);
+    std::shared_ptr<domain::Channel> createDomainChannel(const std::shared_ptr<domain::User>& creator);
+    std::shared_ptr<infrastructure::Channel>
+    createPersistentChannel(const std::shared_ptr<infrastructure::User>& creator);
 };
 }
