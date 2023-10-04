@@ -90,6 +90,7 @@ set(TEST_COMMON_SOURCES
         tests/factories/friendshipTestFactory/FriendshipTestFactory.cpp
         tests/factories/friendInvitationTestFactory/FriendInvitationTestFactory.cpp
         tests/factories/channelInvitationTestFactory/ChannelInvitationTestFactory.cpp
+        tests/factories/conversationTestFactory/ConversationTestFactory.cpp
         )
 
 set(UT_SOURCES
