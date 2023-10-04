@@ -91,7 +91,7 @@ public:
     FindReceivedFriendInvitationsQueryHandlerImpl findReceivedFriendInvitationsQueryHandler{friendInvitationRepository};
 };
 
-TEST_F(FindReceivedFriendInvitationsQueryHandlerImplIntegrationTest, findUsersChannelsByUserId)
+TEST_F(FindReceivedFriendInvitationsQueryHandlerImplIntegrationTest, findFriendInvitationsByRecipientId)
 {
     const auto friendInvitationId1 = faker::String::uuid();
     const auto friendInvitationId2 = faker::String::uuid();
