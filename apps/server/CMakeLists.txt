@@ -78,7 +78,14 @@ set(SOURCES
         api/MessageHandlers/DeleteUserMessageHandler.cpp
         api/MessageHandlers/VerifyUserMessageHandle.cpp
         api/MessageHandlers/LogoutMessageHandler.cpp
-        api/MessageHandlers/SendChannelInvitationMessageHandler.cpp api/MessageHandlers/LeftTheChannelMessageHandler.cpp api/MessageHandlers/DeleteTheChannelMessageHandler.cpp)
+        api/MessageHandlers/SendChannelInvitationMessageHandler.cpp
+        api/MessageHandlers/LeftTheChannelMessageHandler.cpp
+        api/MessageHandlers/DeleteTheChannelMessageHandler.cpp
+        )
+
+set(TEST_COMMON_SOURCES
+        tests/factories/userTestFactory/UserTestFactory.cpp
+        )
 
 set(UT_SOURCES
         api/SessionImplTest.cpp
@@ -101,7 +108,9 @@ set(UT_SOURCES
         infrastructure/repositories/channelInvitationRepository/channelInvitationMapper/ChannelInvitationMapperImplTest.cpp
         infrastructure/repositories/friendInvitationRepository/friendInvitationMapper/FriendInvitationMapperImplTest.cpp
         infrastructure/repositories/friendshipRepository/friendshipMapper/FriendshipMapperImplTest.cpp
-        infrastructure/repositories/conversationRepository/conversationMapper/ConversationMapperImplTest.cpp api/MessageHandlers/SendChannelInvitationMessageHandlerTest.cpp)
+        infrastructure/repositories/conversationRepository/conversationMapper/ConversationMapperImplTest.cpp
+        api/MessageHandlers/SendChannelInvitationMessageHandlerTest.cpp
+        )
 
 set(IT_SOURCES
         infrastructure/repositories/userRepository/UserRepositoryImplIntegrationTest.cpp
@@ -208,6 +217,7 @@ target_include_directories(${EXECUTABLE_NAME} PRIVATE
 add_executable(${EXECUTABLE_NAME}UT
         ${UT_SOURCES}
         ${SOURCES}
+        ${TEST_COMMON_SOURCES}
         ${ODB_SOURCES}
         )
 
@@ -234,6 +244,7 @@ target_code_coverage(${EXECUTABLE_NAME}UT ALL)
 add_executable(${EXECUTABLE_NAME}IT
         ${IT_SOURCES}
         ${SOURCES}
+        ${TEST_COMMON_SOURCES}
         ${ODB_SOURCES}
         )
 
