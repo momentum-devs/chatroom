@@ -120,6 +120,7 @@ set(UT_SOURCES
 
 set(IT_SOURCES
         tests/factories/databaseClientTestFactory/DatabaseClientTestFactory.cpp
+        tests/utils/userTestUtils/UserTestUtils.cpp
 
         infrastructure/repositories/userRepository/UserRepositoryImplIntegrationTest.cpp
         application/services/tokenService/TokenServiceImplIntegrationTest.cpp

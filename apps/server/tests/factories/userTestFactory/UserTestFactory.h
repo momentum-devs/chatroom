@@ -10,7 +10,7 @@ namespace server::tests
 class UserTestFactory
 {
 public:
-    static std::shared_ptr<domain::User> createDomainUser();
-    static std::shared_ptr<infrastructure::User> createPersistentUser();
+    std::shared_ptr<domain::User> createDomainUser();
+    std::shared_ptr<infrastructure::User> createPersistentUser();
 };
 }

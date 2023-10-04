@@ -14,11 +14,11 @@ namespace server::tests
 class ChannelInvitationTestFactory
 {
 public:
-    static std::shared_ptr<domain::ChannelInvitation>
+    std::shared_ptr<domain::ChannelInvitation>
     createDomainChannelInvitation(const std::shared_ptr<domain::User>& sender,
                                   const std::shared_ptr<domain::User>& recipient,
                                   const std::shared_ptr<domain::Channel>& channel);
-    static std::shared_ptr<infrastructure::ChannelInvitation>
+    std::shared_ptr<infrastructure::ChannelInvitation>
     createPersistentChannelInvitation(const std::shared_ptr<infrastructure::User>& sender,
                                       const std::shared_ptr<infrastructure::User>& recipient,
                                       const std::shared_ptr<infrastructure::Channel>& channel);

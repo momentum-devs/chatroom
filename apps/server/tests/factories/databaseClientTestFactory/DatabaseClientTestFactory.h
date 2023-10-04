@@ -8,6 +8,6 @@ namespace server::tests
 class DatabaseClientTestFactory
 {
 public:
-    static std::shared_ptr<odb::pgsql::database> create();
+    std::shared_ptr<odb::pgsql::database> create();
 };
 }

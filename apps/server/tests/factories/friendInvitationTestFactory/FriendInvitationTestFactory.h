@@ -14,10 +14,10 @@ namespace server::tests
 class FriendInvitationTestFactory
 {
 public:
-    static std::shared_ptr<domain::FriendInvitation>
+    std::shared_ptr<domain::FriendInvitation>
     createDomainFriendInvitation(const std::shared_ptr<domain::User>& sender,
                                  const std::shared_ptr<domain::User>& recipient);
-    static std::shared_ptr<infrastructure::FriendInvitation>
+    std::shared_ptr<infrastructure::FriendInvitation>
     createPersistentFriendInvitation(const std::shared_ptr<infrastructure::User>& sender,
                                      const std::shared_ptr<infrastructure::User>& recipient);
 };

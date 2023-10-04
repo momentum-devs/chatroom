@@ -14,9 +14,9 @@ namespace server::tests
 class FriendshipTestFactory
 {
 public:
-    static std::shared_ptr<domain::Friendship> createDomainFriendship(const std::shared_ptr<domain::User>& user,
-                                                                      const std::shared_ptr<domain::User>& userFriend);
-    static std::shared_ptr<infrastructure::Friendship>
+    std::shared_ptr<domain::Friendship> createDomainFriendship(const std::shared_ptr<domain::User>& user,
+                                                               const std::shared_ptr<domain::User>& userFriend);
+    std::shared_ptr<infrastructure::Friendship>
     createPersistentFriendship(const std::shared_ptr<infrastructure::User>& user,
                                const std::shared_ptr<infrastructure::User>& userFriend);
 };
