@@ -24,27 +24,27 @@ public:
     {
     }
 
-    std::string getId() const
+    [[nodiscard]] std::string getId() const
     {
         return id;
     }
 
-    std::shared_ptr<User> getSender() const
+    [[nodiscard]] std::shared_ptr<User> getSender() const
     {
         return sender;
     }
 
-    std::shared_ptr<User> getRecipient() const
+    [[nodiscard]] std::shared_ptr<User> getRecipient() const
     {
         return recipient;
     }
 
-    std::string getCreatedAt() const
+    [[nodiscard]] std::string getCreatedAt() const
     {
         return created_at;
     }
 
-    std::string getUpdatedAt() const
+    [[nodiscard]] std::string getUpdatedAt() const
     {
         return updated_at;
     }
