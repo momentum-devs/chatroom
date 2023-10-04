@@ -7,42 +7,38 @@
 #include "faker-cxx/Internet.h"
 #include "faker-cxx/String.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
+#include "server/tests/factories/databaseClientTestFactory/DatabaseClientTestFactory.h"
+#include "server/tests/utils/userTestUtils/UserTestUtils.h"
 #include "User.odb.h"
 #include "UserRepositoryImpl.h"
 
 using namespace ::testing;
 using namespace server;
 using namespace server::infrastructure;
+using namespace server::tests;
 
 class UserRepositoryIntegrationTest : public Test
 {
 public:
     void SetUp() override
     {
-        odb::transaction transaction(db->begin());
-
-        db->execute("DELETE FROM \"users\";");
-
-        transaction.commit();
+        userTestUtils->truncateTable();
     }
 
     void TearDown() override
     {
-        odb::transaction transaction(db->begin());
-
-        db->execute("DELETE FROM \"users\";");
-
-        transaction.commit();
+        userTestUtils->truncateTable();
     }
 
-    std::unique_ptr<server::infrastructure::UserMapper> userMapperInit =
-        std::make_unique<server::infrastructure::UserMapperImpl>();
+    std::shared_ptr<odb::pgsql::database> db = DatabaseClientTestFactory::create();
 
-    std::shared_ptr<odb::pgsql::database> db =
-        std::make_shared<odb::pgsql::database>("local", "local", "chatroom", "localhost", 5432);
+    std::unique_ptr<UserTestUtils> userTestUtils = std::make_unique<UserTestUtils>(db);
+
+    std::shared_ptr<server::infrastructure::UserMapper> userMapper =
+        std::make_shared<server::infrastructure::UserMapperImpl>();
 
     std::shared_ptr<server::domain::UserRepository> userRepository =
-        std::make_shared<server::infrastructure::UserRepositoryImpl>(db, std::move(userMapperInit));
+        std::make_shared<server::infrastructure::UserRepositoryImpl>(db, userMapper);
 };
 
 TEST_F(UserRepositoryIntegrationTest, shouldCreateUser)
