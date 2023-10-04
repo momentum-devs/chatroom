@@ -78,7 +78,7 @@ set(SOURCES
         api/MessageHandlers/DeleteUserMessageHandler.cpp
         api/MessageHandlers/VerifyUserMessageHandle.cpp
         api/MessageHandlers/LogoutMessageHandler.cpp
-        api/MessageHandlers/SendChannelInvitationMessageHandler.cpp api/MessageHandlers/LeftTheChannelMessageHandler.cpp api/MessageHandlers/DeleteTheChannelMessageHandler.cpp)
+        api/MessageHandlers/SendChannelInvitationMessageHandler.cpp api/MessageHandlers/LeftTheChannelMessageHandler.cpp api/MessageHandlers/DeleteTheChannelMessageHandler.cpp api/MessageHandlers/FriendRequestMessageHandler.cpp)
 
 set(UT_SOURCES
         api/SessionImplTest.cpp
@@ -101,7 +101,7 @@ set(UT_SOURCES
         infrastructure/repositories/channelInvitationRepository/channelInvitationMapper/ChannelInvitationMapperImplTest.cpp
         infrastructure/repositories/friendInvitationRepository/friendInvitationMapper/FriendInvitationMapperImplTest.cpp
         infrastructure/repositories/friendshipRepository/friendshipMapper/FriendshipMapperImplTest.cpp
-        infrastructure/repositories/conversationRepository/conversationMapper/ConversationMapperImplTest.cpp api/MessageHandlers/SendChannelInvitationMessageHandlerTest.cpp)
+        infrastructure/repositories/conversationRepository/conversationMapper/ConversationMapperImplTest.cpp api/MessageHandlers/SendChannelInvitationMessageHandlerTest.cpp api/MessageHandlers/FriendRequestMessageHandlerTest.cpp api/MessageHandlers/DeleteTheChannelMessageHandlerTest.cpp api/MessageHandlers/LeftTheChannelMessageHandlerTest.cpp)
 
 set(IT_SOURCES
         infrastructure/repositories/userRepository/UserRepositoryImplIntegrationTest.cpp
