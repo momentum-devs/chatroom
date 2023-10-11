@@ -83,30 +83,32 @@ Rectangle {
                     contentWidth: parent.width
                     spacing: 5
 
-                    delegate: Column {
+                    delegate: Row {
                         Text {
-                            text: modelData[0]
+                            text: '<b>' + modelData[0] + ':    </b>'
                         }
-                        Row {
-                            Button {
-                                contentItem: Text {
-                                    color: "#00FF00"
-                                    text: qsTr('Accept')
-                                }
+                        Button {
+                            width: 30
 
-                                onClicked: {
-                                    console.log('Accept');
-                                }
+                            contentItem: Text {
+                                color: "#00FF00"
+                                text: qsTr('✓')
                             }
-                            Button {
-                                contentItem: Text {
-                                    color: "#FF0000"
-                                    text: qsTr('Reject')
-                                }
 
-                                onClicked: {
-                                    console.log('Reject');
-                                }
+                            onClicked: {
+                                mainController.acceptChannelInvitation(modelData[1]);
+                            }
+                        }
+                        Button {
+                            width: 30
+
+                            contentItem: Text {
+                                color: "#FF0000"
+                                text: qsTr('✕')
+                            }
+
+                            onClicked: {
+                                mainController.rejectChannelInvitation(modelData[1]);
                             }
                         }
                     }
@@ -140,7 +142,7 @@ Rectangle {
             channelsView.model = channels;
         }
         function onAddChannelInvitation(channelName: string, channelId: string) {
-            channelInvitations.push([channelName, channelId, isOwner]);
+            channelInvitations.push([channelName, channelId]);
             channelInvitationsView.model = channelInvitations;
         }
         function onClearChannelList() {

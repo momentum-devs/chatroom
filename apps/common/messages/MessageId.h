@@ -36,6 +36,9 @@ enum class MessageId : unsigned char
     DeleteTheChannelResponse,
     GetUserChannelInvitations,
     GetUserChannelInvitationsResponse,
+    AcceptChannelInvitation,
+    RejectChannelInvitation,
+    ChangeChannelInvitationResponse,
 };
 
 inline std::string toString(MessageId messageId)
@@ -69,6 +72,9 @@ inline std::string toString(MessageId messageId)
         {MessageId::DeleteTheChannelResponse, "DeleteTheChannelResponse"},
         {MessageId::GetUserChannelInvitations, "GetUserChannelInvitations"},
         {MessageId::GetUserChannelInvitationsResponse, "GetUserChannelInvitationsResponse"},
+        {MessageId::AcceptChannelInvitation, "AcceptChannelInvitation"},
+        {MessageId::RejectChannelInvitation, "RejectChannelInvitation"},
+        {MessageId::ChangeChannelInvitationResponse, "ChangeChannelInvitationResponse"},
     };
 
     try

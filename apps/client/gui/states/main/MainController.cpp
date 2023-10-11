@@ -36,6 +36,10 @@ void MainController::activate()
     session->addMessageHandler({common::messages::MessageId::DeleteTheChannelResponse,
                                 deleteTheChannelResponseHandlerName,
                                 [this](const auto& msg) { handleLeftTheChannelResponse(msg); }});
+
+    session->addMessageHandler({common::messages::MessageId::ChangeChannelInvitationResponse,
+                                changeChannelInvitationResponseHandlerName,
+                                [this](const auto& msg) { handleChangeChannelInvitationResponse(msg); }});
 }
 
 void MainController::deactivate()
@@ -53,6 +57,9 @@ void MainController::deactivate()
 
     session->removeMessageHandler(
         {common::messages::MessageId::GetUserChannelInvitationsResponse, getUserChannelInvitationsResponseHandlerName});
+
+    session->removeMessageHandler(
+        {common::messages::MessageId::ChangeChannelInvitationResponse, changeChannelInvitationResponseHandlerName});
 }
 
 void MainController::logout()
@@ -238,6 +245,47 @@ void MainController::handleGetUserChannelInvitationsResponse(const common::messa
     else
     {
         LOG_S(ERROR) << "Response without data";
+    }
+}
+
+void MainController::acceptChannelInvitation(const QString& channelId)
+{
+    LOG_S(INFO) << std::format("Accept invitation to channel id {}", channelId.toStdString());
+
+    nlohmann::json data{
+        {"channelId", channelId.toStdString()},
+    };
+
+    session->sendMessage(common::messages::MessageId::AcceptChannelInvitation, data);
+}
+
+void MainController::rejectChannelInvitation(const QString& channelId)
+{
+    LOG_S(INFO) << std::format("Reject invitation to channel id {}", channelId.toStdString());
+
+    nlohmann::json data{
+        {"channelId", channelId.toStdString()},
+    };
+
+    session->sendMessage(common::messages::MessageId::RejectChannelInvitation, data);
+}
+
+void MainController::handleChangeChannelInvitationResponse(const common::messages::Message& message)
+{
+    LOG_S(INFO) << "Handle change channel invitation response";
+
+    auto responsePayload = static_cast<std::string>(message.payload);
+
+    auto responseJson = nlohmann::json::parse(responsePayload);
+
+    if (responseJson.contains("error"))
+    {
+        LOG_S(ERROR) << std::format("Error while getting user channel's invitations: {}",
+                                    responseJson.at("error").get<std::string>());
+    }
+    else
+    {
+        session->sendMessage(common::messages::MessageId::GetUserChannels, {});
     }
 }
 }
