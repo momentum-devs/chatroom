@@ -1,5 +1,3 @@
-#include <boost/date_time/posix_time/posix_time.hpp>
-
 #include "gtest/gtest.h"
 
 #include "Channel.h"
