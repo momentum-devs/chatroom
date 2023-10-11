@@ -1,85 +1,49 @@
 #include "gtest/gtest.h"
 
-#include "faker-cxx/Date.h"
-#include "faker-cxx/Internet.h"
-#include "faker-cxx/String.h"
 #include "FindReceivedFriendInvitationsQueryHandlerImpl.h"
-#include "FriendInvitation.h"
-#include "FriendInvitation.odb.h"
 #include "server/application/commandHandlers/friend/createFriendshipCommandHandler/CreateFriendshipCommandHandlerImpl.h"
 #include "server/infrastructure/repositories/friendInvitationRepository/friendInvitationMapper/FriendInvitationMapperImpl.h"
 #include "server/infrastructure/repositories/friendInvitationRepository/FriendInvitationRepositoryImpl.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "server/infrastructure/repositories/userRepository/UserRepositoryImpl.h"
+#include "server/tests/factories/databaseClientTestFactory/DatabaseClientTestFactory.h"
+#include "server/tests/utils/friendInvitationTestUtils/FriendInvitationTestUtils.h"
+#include "server/tests/utils/userTestUtils/UserTestUtils.h"
 #include "User.h"
-#include "User.odb.h"
 
 using namespace ::testing;
 using namespace server;
 using namespace server::infrastructure;
 using namespace server::application;
+using namespace server::tests;
 
 class FindReceivedFriendInvitationsQueryHandlerImplIntegrationTest : public Test
 {
 public:
     void SetUp() override
     {
-        odb::transaction transaction(db->begin());
+        friendInvitationTestUtils.truncateTable();
 
-        db->execute("DELETE FROM \"friends_invitations\";");
-        db->execute("DELETE FROM \"users\";");
-
-        transaction.commit();
+        userTestUtils.truncateTable();
     }
 
     void TearDown() override
     {
-        odb::transaction transaction(db->begin());
+        friendInvitationTestUtils.truncateTable();
 
-        db->execute("DELETE FROM \"friends_invitations\";");
-        db->execute("DELETE FROM \"users\";");
-
-        transaction.commit();
+        userTestUtils.truncateTable();
     }
 
-    std::shared_ptr<User> createUser(const std::string& id, const std::string& email, const std::string& password)
-    {
-        const auto currentDate = to_iso_string(boost::posix_time::second_clock::universal_time());
+    std::shared_ptr<odb::pgsql::database> db = DatabaseClientTestFactory::create();
 
-        auto user = std::make_shared<User>(id, email, password, email, false, false, "123", currentDate, currentDate);
+    UserTestUtils userTestUtils{db};
 
-        odb::transaction transaction(db->begin());
-
-        db->persist(user);
-
-        transaction.commit();
-
-        return user;
-    }
-
-    FriendInvitation createFriendInvitation(const std::string& id, std::shared_ptr<User> sender,
-                                            std::shared_ptr<User> recipient)
-    {
-        const auto currentDate = to_iso_string(boost::posix_time::second_clock::universal_time());
-
-        FriendInvitation friendInvitation{id, std::move(sender), std::move(recipient), currentDate, currentDate};
-
-        odb::transaction transaction(db->begin());
-
-        db->persist(friendInvitation);
-
-        transaction.commit();
-
-        return friendInvitation;
-    }
+    FriendInvitationTestUtils friendInvitationTestUtils{db};
 
     std::shared_ptr<UserMapper> userMapper = std::make_shared<UserMapperImpl>();
 
     std::shared_ptr<FriendInvitationMapper> friendInvitationMapperInit =
         std::make_shared<FriendInvitationMapperImpl>(userMapper);
-
-    std::shared_ptr<odb::pgsql::database> db =
-        std::make_shared<odb::pgsql::database>("local", "local", "chatroom", "localhost", 5432);
 
     std::shared_ptr<domain::FriendInvitationRepository> friendInvitationRepository =
         std::make_shared<FriendInvitationRepositoryImpl>(db, friendInvitationMapperInit, userMapper);
@@ -91,28 +55,17 @@ public:
 
 TEST_F(FindReceivedFriendInvitationsQueryHandlerImplIntegrationTest, findFriendInvitationsByRecipientId)
 {
-    const auto friendInvitationId1 = faker::String::uuid();
-    const auto friendInvitationId2 = faker::String::uuid();
+    const auto sender = userTestUtils.createAndPersist();
 
-    const auto senderId = faker::String::uuid();
-    const auto recipientId1 = faker::String::uuid();
-    const auto recipientId2 = faker::String::uuid();
-    const auto senderEmail = faker::Internet::email();
-    const auto recipientEmail1 = faker::Internet::email();
-    const auto recipientEmail2 = faker::Internet::email();
-    const auto password = faker::Internet::password();
+    const auto recipient1 = userTestUtils.createAndPersist();
 
-    const auto sender = createUser(senderId, senderEmail, password);
+    const auto recipient2 = userTestUtils.createAndPersist();
 
-    const auto recipient1 = createUser(recipientEmail1, recipientEmail1, password);
-
-    const auto recipient2 = createUser(recipientEmail2, recipientEmail2, password);
-
-    createFriendInvitation(friendInvitationId1, sender, recipient1);
-    createFriendInvitation(friendInvitationId2, sender, recipient2);
+    const auto friendInvitation1 = friendInvitationTestUtils.createAndPersist(sender, recipient1);
+    friendInvitationTestUtils.createAndPersist(sender, recipient2);
 
     const auto [friendInvitations] = findReceivedFriendInvitationsQueryHandler.execute({recipient1->getId()});
 
     ASSERT_EQ(friendInvitations.size(), 1);
-    ASSERT_EQ(friendInvitations[0].getId(), friendInvitationId1);
+    ASSERT_EQ(friendInvitations[0].getId(), friendInvitation1->getId());
 }

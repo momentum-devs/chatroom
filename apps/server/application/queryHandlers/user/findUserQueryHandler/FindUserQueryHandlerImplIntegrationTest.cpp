@@ -1,46 +1,38 @@
 #include "gtest/gtest.h"
 
-#include "faker-cxx/Datatype.h"
-#include "faker-cxx/Date.h"
-#include "faker-cxx/Internet.h"
 #include "faker-cxx/String.h"
 #include "FindUserQueryHandlerImpl.h"
 #include "server/application/errors/ResourceNotFoundError.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "server/infrastructure/repositories/userRepository/UserRepositoryImpl.h"
+#include "server/tests/factories/databaseClientTestFactory/DatabaseClientTestFactory.h"
+#include "server/tests/utils/userTestUtils/UserTestUtils.h"
 #include "User.h"
-#include "User.odb.h"
 
 using namespace ::testing;
 using namespace server;
 using namespace server::infrastructure;
 using namespace server::application;
+using namespace server::tests;
 
 class FindUserQueryHandlerImplIntegrationTest : public Test
 {
 public:
     void SetUp() override
     {
-        odb::transaction transaction(db->begin());
-
-        db->execute("DELETE FROM \"users\";");
-
-        transaction.commit();
+        userTestUtils.truncateTable();
     }
 
     void TearDown() override
     {
-        odb::transaction transaction(db->begin());
-
-        db->execute("DELETE FROM \"users\";");
-
-        transaction.commit();
+        userTestUtils.truncateTable();
     }
 
-    std::shared_ptr<UserMapper> userMapper = std::make_shared<UserMapperImpl>();
+    std::shared_ptr<odb::pgsql::database> db = DatabaseClientTestFactory::create();
 
-    std::shared_ptr<odb::pgsql::database> db =
-        std::make_shared<odb::pgsql::database>("local", "local", "chatroom", "localhost", 5432);
+    UserTestUtils userTestUtils{db};
+
+    std::shared_ptr<UserMapper> userMapper = std::make_shared<UserMapperImpl>();
 
     std::shared_ptr<domain::UserRepository> userRepository = std::make_shared<UserRepositoryImpl>(db, userMapper);
 
@@ -56,29 +48,9 @@ TEST_F(FindUserQueryHandlerImplIntegrationTest, findNotExistingUser_shouldThrow)
 
 TEST_F(FindUserQueryHandlerImplIntegrationTest, findUserById)
 {
-    const auto id = faker::String::uuid();
-    const auto email = faker::Internet::email();
-    const auto password = faker::Internet::password();
-    const auto updatedPassword = faker::Internet::password();
-    const auto nickname = faker::Internet::username();
-    const auto active = faker::Datatype::boolean();
-    const auto emailVerified = faker::Datatype::boolean();
-    const auto verificationCode = faker::String::numeric(8);
-    const auto createdAt = faker::Date::pastDate();
-    const auto updatedAt = faker::Date::recentDate();
+    const auto user = userTestUtils.createAndPersist();
 
-    infrastructure::User existingUser{id,        email,    password, nickname, active, emailVerified, verificationCode,
-                                      createdAt, updatedAt};
+    const auto [foundUser] = findUserQueryHandler.execute({user->getId()});
 
-    {
-        odb::transaction transaction(db->begin());
-
-        db->persist(existingUser);
-
-        transaction.commit();
-    }
-
-    const auto [user] = findUserQueryHandler.execute({id});
-
-    ASSERT_EQ(user.getId(), id);
+    ASSERT_EQ(foundUser.getId(), user->getId());
 }
