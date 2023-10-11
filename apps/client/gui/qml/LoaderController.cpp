@@ -2,6 +2,7 @@
 
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QQuickItem>
 
 namespace client::gui
 {
@@ -12,6 +13,10 @@ LoaderController::LoaderController()
     view.setSource(qUrl);
 
     view.setResizeMode(QQuickView::SizeRootObjectToView);
+    
+    view.setMinimumWidth(view.rootObject()->property("minWidth").toInt());
+
+    view.setMinimumHeight(view.rootObject()->property("minHeight").toInt());
 
     view.show();
 }

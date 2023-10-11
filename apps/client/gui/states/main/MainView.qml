@@ -10,43 +10,86 @@ Rectangle {
 
     Row {
         anchors.fill: parent
-        spacing: 5
 
         Column {
-            id: menuColumn
+            id: leftColumn
             height: parent.height
             spacing: 5
 
-            Button {
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: qsTr('Create channel')
+            Column {
+                id: menuColumn
+                spacing: 5
+                width: parent.width
 
-                onClicked: {
-                    mainController.goToCreateChannel();
+                Button {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: qsTr('Create channel')
+                    width: parent.width
+
+                    onClicked: {
+                        mainController.goToCreateChannel();
+                    }
+                }
+                Button {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: qsTr('Invite friend')
+                    width: parent.width
+
+                    onClicked: {
+                        mainController.goToSendFriendRequest();
+                    }
+                }
+                Button {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: qsTr('Settings')
+                    width: parent.width
+
+                    onClicked: {
+                        mainController.goToUserSettings();
+                    }
+                }
+                Button {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: qsTr('Logout')
+                    width: parent.width
+
+                    onClicked: {
+                        mainController.logout();
+                    }
+                }
+                Rectangle {
+                    color: 'black'
+                    height: 2
+                    width: parent.width
                 }
             }
-            Button {
+            Text {
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: qsTr('Send friend request')
-
-                onClicked: {
-                    mainController.goToSendFriendRequest();
-                }
+                text: '<b>Channels:</b> '
             }
-            Button {
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: qsTr('User settings')
+            ScrollView {
+                clip: true
+                height: (parent.height - menuColumn.height) / 2
+                width: parent.width
 
-                onClicked: {
-                    mainController.goToUserSettings();
-                }
-            }
-            Button {
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: qsTr('Logout')
+                ListView {
+                    id: channelsView
+                    contentWidth: parent.width
+                    spacing: 5
+                    width: parent.width
 
-                onClicked: {
-                    mainController.logout();
+                    delegate: Button {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: modelData[0]
+                        width: parent.width
+
+                        onClicked: {
+                            channelView.visible = true;
+                            defaultView.visible = false;
+                            channelView.setChannel(modelData);
+                            mainController.setCurrentChannel(modelData[1]);
+                        }
+                    }
                 }
             }
             Rectangle {
@@ -56,38 +99,27 @@ Rectangle {
             }
             Text {
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: '<b>Channels:</b> '
+                text: '<b>Channel Invitations:</b> '
             }
             ScrollView {
-                height: parent.height / 3
+                clip: true
+                height: (parent.height - menuColumn.height) / 2
                 width: parent.width
 
-                ListView {
-                    id: channelsView
-                    contentWidth: parent.width
-                    spacing: 5
-
-                    delegate: Button {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        text: modelData[0]
-
-                        onClicked: {
-                            channelView.visible = true;
-                            channelView.setChannel(modelData);
-                            mainController.setCurrentChannel(modelData[1]);
-                        }
-                    }
-                }
                 ListView {
                     id: channelInvitationsView
                     contentWidth: parent.width
                     spacing: 5
 
                     delegate: Row {
+                        height: 30
+                        width: parent.width
+
                         Text {
                             text: '<b>' + modelData[0] + ':    </b>'
                         }
                         Button {
+                            id: acceptChannelInvitation
                             width: 30
 
                             contentItem: Text {
@@ -114,15 +146,6 @@ Rectangle {
                     }
                 }
             }
-            Rectangle {
-                color: 'black'
-                height: 2
-                width: parent.width
-            }
-            Text {
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: '<b>Friends:</b> '
-            }
         }
         Rectangle {
             color: 'black'
@@ -133,7 +156,27 @@ Rectangle {
             id: channelView
             height: parent.height
             visible: false
-            width: parent.width - menuColumn.width
+            width: parent.width - leftColumn.width - rightColumn.width
+        }
+        Item {
+            id: defaultView
+            height: parent.height
+            visible: true
+            width: parent.width - leftColumn.width - rightColumn.width
+        }
+        Rectangle {
+            color: 'black'
+            height: parent.height
+            width: 2
+        }
+        Column {
+            id: rightColumn
+            width: leftColumn.width
+
+            Text {
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: '<b>Friends:</b> '
+            }
         }
     }
     Connections {
