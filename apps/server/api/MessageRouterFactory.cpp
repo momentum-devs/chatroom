@@ -1,6 +1,7 @@
 #include "MessageRouterFactory.h"
 
 #include "httpClient/HttpClientFactory.h"
+#include "MessageHandlers/AcceptChannelInvitationMessageHandler.h"
 #include "MessageHandlers/CreateChannelMessageHandler.h"
 #include "MessageHandlers/DeleteTheChannelMessageHandler.h"
 #include "MessageHandlers/DeleteUserMessageHandler.h"
@@ -12,14 +13,17 @@
 #include "MessageHandlers/LoginMessageHandler.h"
 #include "MessageHandlers/LogoutMessageHandler.h"
 #include "MessageHandlers/RegisterMessageHandler.h"
+#include "MessageHandlers/RejectChannelInvitationMessageHandler.h"
 #include "MessageHandlers/SendChannelInvitationMessageHandler.h"
 #include "MessageHandlers/UpdateUserMessageHandler.h"
 #include "MessageHandlers/VerifyUserMessageHandle.h"
 #include "MessageRouterImpl.h"
+#include "server/application/commandHandlers/channel/acceptChannelInvitationCommandHandler/AcceptChannelInvitationCommandHandlerImpl.h"
 #include "server/application/commandHandlers/channel/addUserToChannelCommandHandler/AddUserToChannelCommandHandlerImpl.h"
 #include "server/application/commandHandlers/channel/createChannelCommandHandler/CreateChannelCommandHandlerImpl.h"
 #include "server/application/commandHandlers/channel/createChannelInvitationCommandHandler/CreateChannelInvitationCommandHandlerImpl.h"
 #include "server/application/commandHandlers/channel/deleteChannelCommandHandler/DeleteChannelCommandHandlerImpl.h"
+#include "server/application/commandHandlers/channel/rejectChannelInvitationCommandHandler/RejectChannelInvitationCommandHandlerImpl.h"
 #include "server/application/commandHandlers/channel/removeUserFromChannelCommandHandler/RemoveUserFromChannelCommandHandlerImpl.h"
 #include "server/application/commandHandlers/friend/createFriendInvitationCommandHandler/CreateFriendInvitationCommandHandlerImpl.h"
 #include "server/application/commandHandlers/user/deleteUserCommandHandler/DeleteUserCommandHandlerImpl.h"
@@ -186,6 +190,19 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
     auto getUserChannelInvitationsMessageHandler = std::make_shared<GetUserChannelInvitationsMessageHandler>(
         tokenService, std::move(findReceivedChannelInvitationsQueryHandler));
 
+    auto acceptChannelInvitationCommandHandler =
+        std::make_unique<server::application::AcceptChannelInvitationCommandHandlerImpl>(
+            channelInvitationRepository, userRepository, addUserToChannelCommandHandler);
+
+    auto acceptChannelInvitationMessageHandler = std::make_shared<AcceptChannelInvitationMessageHandler>(
+        tokenService, std::move(acceptChannelInvitationCommandHandler));
+
+    auto rejectChannelInvitationCommandHandler =
+        std::make_unique<server::application::RejectChannelInvitationCommandHandlerImpl>(channelInvitationRepository,
+                                                                                         userRepository);
+    auto rejectChannelInvitationMessageHandler = std::make_shared<RejectChannelInvitationMessageHandler>(
+        tokenService, std::move(rejectChannelInvitationCommandHandler));
+
     std::unordered_map<common::messages::MessageId, std::shared_ptr<MessageHandler>> messageHandlers{
         {common::messages::MessageId::CreateChannel, createChannelMessageHandler},
         {common::messages::MessageId::GetUserChannels, getUserChannelsMessageHandler},
@@ -201,6 +218,8 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
         {common::messages::MessageId::DeleteTheChannel, deleteTheChannelMessageHandler},
         {common::messages::MessageId::SendFriendRequest, friendRequestMessageHandler},
         {common::messages::MessageId::GetUserChannelInvitations, getUserChannelInvitationsMessageHandler},
+        {common::messages::MessageId::AcceptChannelInvitation, acceptChannelInvitationMessageHandler},
+        {common::messages::MessageId::RejectChannelInvitation, rejectChannelInvitationMessageHandler},
     };
 
     return std::make_unique<MessageRouterImpl>(std::move(messageHandlers));

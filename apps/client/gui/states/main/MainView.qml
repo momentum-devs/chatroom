@@ -79,7 +79,6 @@ Rectangle {
                     width: parent.width
 
                     delegate: Button {
-                        anchors.horizontalCenter: parent.horizontalCenter
                         text: modelData[0]
                         width: parent.width
 
@@ -191,6 +190,8 @@ Rectangle {
         function onClearChannelList() {
             channels = [];
             channelsView.model = channels;
+            channelInvitations = [];
+            channelInvitationsView.model = channelInvitations;
         }
 
         target: mainController
