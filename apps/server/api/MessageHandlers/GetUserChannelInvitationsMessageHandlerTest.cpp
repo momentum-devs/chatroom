@@ -30,11 +30,11 @@ auto noChannelMessageResponse =
 
 auto channelId1 = "id1";
 auto channelName1 = "id1";
-auto channelId2 = "id1";
-auto channelName2 = "id1";
+auto channelId2 = "channelId2";
+auto channelName2 = "channelName2";
 auto fewChannelResponsePayloadJson =
-    nlohmann::json{{"data", nlohmann::json::array({{{"id", channelId1}, {"name", channelName1}, {"isOwner", true}},
-                                                   {{"id", channelId2}, {"name", channelName2}, {"isOwner", true}}})}};
+    nlohmann::json{{"data", nlohmann::json::array({{{"id", channelId1}, {"name", channelName1}},
+                                                   {{"id", channelId2}, {"name", channelName2}}})}};
 
 auto fewChannelMessageResponse =
     common::messages::Message{common::messages::MessageId::GetUserChannelInvitationsResponse,
@@ -81,32 +81,36 @@ TEST_F(GetUserChannelInvitationsMessageHandlerTest, handleValidGetUserChannelsMe
     EXPECT_EQ(responseMessage, noChannelMessageResponse);
 }
 
-// TODO:
-// TEST_F(GetUserChannelInvitationsMessageHandlerTest, handleValidGetUserChannelsMessageWithFewChannels)
-//{
-//    const auto userId = faker::String::uuid();
-//    const auto email = faker::Internet::email();
-//    const auto password = faker::Internet::password();
-//    const auto nickname = faker::Internet::username();
-//    const auto active = faker::Datatype::boolean();
-//    const auto emailVerified = faker::Datatype::boolean();
-//    const auto verificationCode = faker::String::numeric(6);
-//    const auto createdAt = faker::Date::pastDate();
-//    const auto updatedAt = faker::Date::recentDate();
-//
-//    const auto user = std::make_shared<server::domain::User>(userId, email, password, nickname, active, emailVerified,
-//                                                             verificationCode, createdAt, updatedAt);
-//
-//    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(userId));
-//    EXPECT_CALL(*findReceivedChannelInvitationsQueryHandlerMock,
-//                execute(server::application::FindReceivedChannelInvitationsQueryHandlerPayload{userId}))
-//        .WillOnce(Return(server::application::FindReceivedChannelInvitationsQueryHandlerResult{
-//            {{channelId1, user, user, nullptr, "", ""}, {channelId2, user, user, nullptr, "", ""}}}));
-//
-//    auto responseMessage = getUserChannelInvitationsMessageHandler.handleMessage(message);
-//
-//    EXPECT_EQ(responseMessage, fewChannelMessageResponse);
-//}
+TEST_F(GetUserChannelInvitationsMessageHandlerTest, handleValidGetUserChannelsMessageWithFewChannels)
+{
+    const auto userId = faker::String::uuid();
+    const auto email = faker::Internet::email();
+    const auto password = faker::Internet::password();
+    const auto nickname = faker::Internet::username();
+    const auto active = faker::Datatype::boolean();
+    const auto emailVerified = faker::Datatype::boolean();
+    const auto verificationCode = faker::String::numeric(6);
+    const auto createdAt = faker::Date::pastDate();
+    const auto updatedAt = faker::Date::recentDate();
+
+    const auto user = std::make_shared<server::domain::User>(userId, email, password, nickname, active, emailVerified,
+                                                             verificationCode, createdAt, updatedAt);
+
+    const auto channel1 =
+        std::make_shared<server::domain::Channel>(channelId1, channelName1, user, createdAt, updatedAt);
+    const auto channel2 =
+        std::make_shared<server::domain::Channel>(channelId2, channelName2, user, createdAt, updatedAt);
+
+    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(userId));
+    EXPECT_CALL(*findReceivedChannelInvitationsQueryHandlerMock,
+                execute(server::application::FindReceivedChannelInvitationsQueryHandlerPayload{userId}))
+        .WillOnce(Return(server::application::FindReceivedChannelInvitationsQueryHandlerResult{
+            {{channelId1, user, user, channel1, "", ""}, {channelId2, user, user, channel2, "", ""}}}));
+
+    auto responseMessage = getUserChannelInvitationsMessageHandler.handleMessage(message);
+
+    EXPECT_EQ(responseMessage, fewChannelMessageResponse);
+}
 
 TEST_F(GetUserChannelInvitationsMessageHandlerTest, handleGetUserChannelsMessageWithInvalidToken)
 {

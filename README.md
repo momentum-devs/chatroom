@@ -41,9 +41,7 @@
 
 * create channel invitation
 * reject channel invitation
-* leave channel
 
-* send friend invitation
 * show list of friends
 * friend online/offline
 * accept friend invitation
