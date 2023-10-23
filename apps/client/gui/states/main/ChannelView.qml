@@ -21,9 +21,17 @@ Item {
         spacing: 5
         width: parent.width
 
+        Item {
+            height: 6
+            width: parent.width
+        }
         Text {
             id: channelName
             anchors.horizontalCenter: parent.horizontalCenter
+        }
+        Item {
+            height: 6
+            width: parent.width
         }
         Row {
             spacing: 5
@@ -62,6 +70,11 @@ Item {
                     mainController.deleteTheChannel();
                 }
             }
+        }
+        Rectangle {
+            color: '#3f4147'
+            height: 1
+            width: parent.width
         }
     }
 }

@@ -1,0 +1,50 @@
+#include "GetUserFriendsMessageHandler.h"
+
+#include <format>
+#include <loguru.hpp>
+#include <nlohmann/json.hpp>
+#include <regex>
+
+namespace server::api
+{
+GetUserFriendsMessageHandler::GetUserFriendsMessageHandler(
+    std::shared_ptr<server::application::TokenService> tokenServiceInit,
+    std::unique_ptr<server::application::FindUserFriendsQueryHandler> findUserFriendsQueryHandlerInit)
+    : tokenService{std::move(tokenServiceInit)}, findUserFriendsQueryHandler{std::move(findUserFriendsQueryHandlerInit)}
+{
+}
+
+common::messages::Message GetUserFriendsMessageHandler::handleMessage(const common::messages::Message& message) const
+{
+    try
+    {
+        auto payloadJson = nlohmann::json::parse(static_cast<std::string>(message.payload));
+
+        auto token = payloadJson["token"].get<std::string>();
+
+        auto userId = tokenService->getUserIdFromToken(token);
+
+        const auto& [friends] = findUserFriendsQueryHandler->execute({userId});
+
+        nlohmann::json friendsJsonArray = nlohmann::json::array();
+
+        for (const auto& userFriend : friends)
+        {
+            nlohmann::json friendJson{{"id", userFriend.getId()}, {"name", userFriend.getNickname()}};
+
+            friendsJsonArray.push_back(friendJson);
+        }
+
+        nlohmann::json responsePayload{{"data", friendsJsonArray}};
+
+        return common::messages::Message{common::messages::MessageId::GetUserFriendsResponse,
+                                         common::bytes::Bytes{responsePayload.dump()}};
+    }
+    catch (const std::exception& e)
+    {
+        nlohmann::json responsePayload{{"error", e.what()}};
+
+        return {common::messages::MessageId::GetUserFriendsResponse, common::bytes::Bytes{responsePayload.dump()}};
+    }
+}
+}

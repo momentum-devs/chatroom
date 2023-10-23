@@ -14,6 +14,7 @@ Rectangle {
         anchors.fill: parent
 
         Rectangle {
+            id: leftRectangle
             color: "#2b2d31"
             height: parent.height
             width: leftColumn.width + 16
@@ -103,6 +104,7 @@ Rectangle {
                             onClicked: {
                                 channelView.visible = true;
                                 defaultView.visible = false;
+                                friendView.visible = false;
                                 channelView.setChannel(modelData);
                                 mainController.setCurrentChannel(modelData[1]);
                             }
@@ -167,116 +169,132 @@ Rectangle {
                 }
             }
         }
-        // Rectangle {
-        //     color: '#3f4147'
-        //     height: parent.height
-        //     width: 1
-        // }
         ChannelView {
             id: channelView
             height: parent.height
             visible: false
-            width: parent.width - leftColumn.width - rightColumn.width
+            width: parent.width - leftRectangle.width - rightRectangle.width
         }
         Item {
             id: defaultView
             height: parent.height
             visible: true
-            width: parent.width - leftColumn.width - rightColumn.width
+            width: parent.width - leftRectangle.width - rightRectangle.width
+        }
+        FriendView {
+            id: friendView
+            height: parent.height
+            visible: false
+            width: parent.width - leftRectangle.width - rightRectangle.width
         }
         Rectangle {
             color: '#3f4147'
             height: parent.height
             width: 1
         }
-        Column {
-            id: rightColumn
+        Rectangle {
+            id: rightRectangle
+            color: "#313338"
             height: parent.height
-            width: leftColumn.width
+            width: leftRectangle.width
 
-            Text {
-                id: firendsText
-                anchors.horizontalCenter: parent.horizontalCenter
-                color: "white"
-                text: 'Friends: '
-            }
-            ScrollView {
-                clip: true
-                height: parent.height / 2 - firendsText.height
-                width: parent.width
+            Column {
+                id: rightColumn
+                anchors.left: parent.left
+                anchors.leftMargin: 7
+                height: parent.height
+                spacing: 5
+                width: leftColumn.width
 
-                ListView {
-                    id: friendsView
-                    contentWidth: parent.width
-                    spacing: 5
+                Item {
+                    height: 6
+                    width: parent.width
+                }
+                Text {
+                    id: firendsText
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    color: "white"
+                    text: 'Friends: '
+                }
+                ScrollView {
+                    clip: true
+                    height: parent.height / 2 - firendsText.height
                     width: parent.width
 
-                    delegate: Button {
-                        text: modelData[0]
+                    ListView {
+                        id: friendsView
+                        contentWidth: parent.width
+                        spacing: 5
                         width: parent.width
 
-                        onClicked:
-                        // channelView.visible = true;
-                        // defaultView.visible = false;
-                        // channelView.setChannel(modelData);
-                        // mainController.setCurrentChannel(modelData[1]);
-                        {
+                        delegate: Button {
+                            text: modelData[0]
+                            width: parent.width
+
+                            onClicked: {
+                                channelView.visible = false;
+                                defaultView.visible = false;
+                                friendView.visible = true;
+                                friendView.setFriend(modelData);
+                                // mainController.setCurrentChannel(modelData[1]);
+                            }
                         }
                     }
                 }
-            }
-            Rectangle {
-                color: '#3f4147'
-                height: 1
-                width: parent.width
-            }
-            Text {
-                color: "white"
-                text: 'Friend Requests:'
-            }
-            ScrollView {
-                clip: true
-                height: parent.height / 2
-                width: parent.width
+                Rectangle {
+                    color: '#3f4147'
+                    height: 1
+                    width: parent.width
+                }
+                Text {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    color: "white"
+                    text: 'Friend Requests:'
+                }
+                ScrollView {
+                    clip: true
+                    height: parent.height / 2
+                    width: parent.width
 
-                ListView {
-                    id: friendRequestsView
-                    contentWidth: parent.width
-                    spacing: 5
+                    ListView {
+                        id: friendRequestsView
+                        contentWidth: parent.width
+                        spacing: 5
 
-                    delegate: Column {
-                        width: parent.width
-
-                        Text {
-                            color: "white"
-                            text: modelData[0]
-                        }
-                        Row {
+                        delegate: Column {
                             width: parent.width
 
-                            Button {
-                                id: acceptFriendRequest
-                                width: 30
-
-                                contentItem: Text {
-                                    color: "#00FF00"
-                                    text: qsTr('✓')
-                                }
-
-                                onClicked: {
-                                    mainController.acceptFriendRequest(modelData[1]);
-                                }
+                            Text {
+                                color: "white"
+                                text: modelData[0]
                             }
-                            Button {
-                                width: 30
+                            Row {
+                                width: parent.width
 
-                                contentItem: Text {
-                                    color: "#FF0000"
-                                    text: qsTr('✕')
+                                Button {
+                                    id: acceptFriendRequest
+                                    width: 30
+
+                                    contentItem: Text {
+                                        color: "#00FF00"
+                                        text: qsTr('✓')
+                                    }
+
+                                    onClicked: {
+                                        mainController.acceptFriendRequest(modelData[1]);
+                                    }
                                 }
+                                Button {
+                                    width: 30
 
-                                onClicked: {
-                                    mainController.rejectFriendRequest(modelData[1]);
+                                    contentItem: Text {
+                                        color: "#FF0000"
+                                        text: qsTr('✕')
+                                    }
+
+                                    onClicked: {
+                                        mainController.rejectFriendRequest(modelData[1]);
+                                    }
                                 }
                             }
                         }

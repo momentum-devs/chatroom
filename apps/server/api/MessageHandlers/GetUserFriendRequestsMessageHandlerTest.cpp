@@ -19,7 +19,7 @@ namespace
 auto token = "token";
 auto validPayloadJson = nlohmann::json{{"token", token}};
 auto validPayload = common::bytes::Bytes{validPayloadJson.dump()};
-auto message = common::messages::Message{common::messages::MessageId::GetUserChannelInvitations, validPayload};
+auto message = common::messages::Message{common::messages::MessageId::GetFriendRequests, validPayload};
 
 auto noFriendRequestResponsePayloadJson = nlohmann::json{{"data", nlohmann::json::array()}};
 auto noFriendRequestMessageResponse =
@@ -42,10 +42,10 @@ std::runtime_error invalidToken("invalidToken");
 auto invalidTokenMessageResponse = common::messages::Message{common::messages::MessageId::GetFriendRequestsResponse,
                                                              common::bytes::Bytes{R"({"error":"invalidToken"})"}};
 
-std::runtime_error getUserChannelsError("getUserChannelsError");
-auto getUserChannelsErrorMessageResponse =
+std::runtime_error getFriendRequestsError("getFriendRequestsError");
+auto getFriendRequestsErrorMessageResponse =
     common::messages::Message{common::messages::MessageId::GetFriendRequestsResponse,
-                              common::bytes::Bytes{R"({"error":"getUserChannelsError"})"}};
+                              common::bytes::Bytes{R"({"error":"getFriendRequestsError"})"}};
 }
 
 class GetUserFriendRequestsMessageHandlerTest : public Test
@@ -64,7 +64,7 @@ public:
         tokenServiceMock, std::move(findReceivedFriendInvitationsQueryHandlerMockInit)};
 };
 
-TEST_F(GetUserFriendRequestsMessageHandlerTest, handleValidGetUserFriendRequestsMessageWithNoChannels)
+TEST_F(GetUserFriendRequestsMessageHandlerTest, handleValidGetUserFriendRequestsMessageWithNoFriendRequests)
 {
     const auto userId = faker::String::uuid();
 
@@ -78,7 +78,7 @@ TEST_F(GetUserFriendRequestsMessageHandlerTest, handleValidGetUserFriendRequests
     EXPECT_EQ(responseMessage, noFriendRequestMessageResponse);
 }
 
-TEST_F(GetUserFriendRequestsMessageHandlerTest, handleValidGetUserFriendRequestsMessageWithFewChannels)
+TEST_F(GetUserFriendRequestsMessageHandlerTest, handleValidGetUserFriendRequestsMessageWithFewFriendRequests)
 {
     const auto userId = faker::String::uuid();
     const auto email = "email";
@@ -126,9 +126,9 @@ TEST_F(GetUserFriendRequestsMessageHandlerTest, handleGetUserFriendRequestsMessa
     EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(userId));
     EXPECT_CALL(*findReceivedFriendInvitationsQueryHandlerMock,
                 execute(server::application::FindReceivedFriendInvitationsQueryHandlerPayload{userId}))
-        .WillOnce(Throw(getUserChannelsError));
+        .WillOnce(Throw(getFriendRequestsError));
 
     auto responseMessage = getUserFriendRequestsMessageHandler.handleMessage(message);
 
-    EXPECT_EQ(responseMessage, getUserChannelsErrorMessageResponse);
+    EXPECT_EQ(responseMessage, getFriendRequestsErrorMessageResponse);
 }
