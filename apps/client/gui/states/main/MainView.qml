@@ -5,152 +5,171 @@ Rectangle {
     property var channelInvitations: []
     property var channels: []
 
-    color: "grey"
+    color: "#313338"
     focus: true
 
     Row {
         anchors.fill: parent
 
-        Column {
-            id: leftColumn
+        Rectangle {
+            color: "#2b2d31"
             height: parent.height
-            spacing: 5
+            width: leftColumn.width + 16
 
             Column {
-                id: menuColumn
+                id: leftColumn
+                anchors.left: parent.left
+                anchors.leftMargin: 7
+                height: parent.height
                 spacing: 5
-                width: parent.width
 
-                Button {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    text: qsTr('Create channel')
-                    width: parent.width
-
-                    onClicked: {
-                        mainController.goToCreateChannel();
-                    }
-                }
-                Button {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    text: qsTr('Invite friend')
-                    width: parent.width
-
-                    onClicked: {
-                        mainController.goToSendFriendRequest();
-                    }
-                }
-                Button {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    text: qsTr('Settings')
-                    width: parent.width
-
-                    onClicked: {
-                        mainController.goToUserSettings();
-                    }
-                }
-                Button {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    text: qsTr('Logout')
-                    width: parent.width
-
-                    onClicked: {
-                        mainController.logout();
-                    }
-                }
-                Rectangle {
-                    color: 'black'
-                    height: 2
-                    width: parent.width
-                }
-            }
-            Text {
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: '<b>Channels:</b> '
-            }
-            ScrollView {
-                clip: true
-                height: (parent.height - menuColumn.height) / 2
-                width: parent.width
-
-                ListView {
-                    id: channelsView
-                    contentWidth: parent.width
+                Column {
+                    id: menuColumn
                     spacing: 5
                     width: parent.width
 
-                    delegate: Button {
-                        text: modelData[0]
+                    Item {
+                        height: 6
+                        width: parent.width
+                    }
+                    Button {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: qsTr('Create channel')
                         width: parent.width
 
                         onClicked: {
-                            channelView.visible = true;
-                            defaultView.visible = false;
-                            channelView.setChannel(modelData);
-                            mainController.setCurrentChannel(modelData[1]);
+                            mainController.goToCreateChannel();
                         }
                     }
-                }
-            }
-            Rectangle {
-                color: 'black'
-                height: 2
-                width: parent.width
-            }
-            Text {
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: '<b>Channel Invitations:</b> '
-            }
-            ScrollView {
-                clip: true
-                height: (parent.height - menuColumn.height) / 2
-                width: parent.width
-
-                ListView {
-                    id: channelInvitationsView
-                    contentWidth: parent.width
-                    spacing: 5
-
-                    delegate: Row {
-                        height: 30
+                    Button {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: qsTr('Invite friend')
                         width: parent.width
 
-                        Text {
-                            text: '<b>' + modelData[0] + ':    </b>'
+                        onClicked: {
+                            mainController.goToSendFriendRequest();
                         }
-                        Button {
-                            id: acceptChannelInvitation
-                            width: 30
+                    }
+                    Button {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: qsTr('Settings')
+                        width: parent.width
 
-                            contentItem: Text {
-                                color: "#00FF00"
-                                text: qsTr('✓')
-                            }
+                        onClicked: {
+                            mainController.goToUserSettings();
+                        }
+                    }
+                    Button {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: qsTr('Logout')
+                        width: parent.width
+
+                        onClicked: {
+                            mainController.logout();
+                        }
+                    }
+                    Item {
+                        height: 1
+                        width: parent.width
+                    }
+                    Rectangle {
+                        color: '#3f4147'
+                        height: 1
+                        width: parent.width
+                    }
+                }
+                Text {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    color: "white"
+                    text: 'Channels: '
+                }
+                ScrollView {
+                    clip: true
+                    height: (parent.height - menuColumn.height) / 2
+                    width: parent.width
+
+                    ListView {
+                        id: channelsView
+                        contentWidth: parent.width
+                        spacing: 5
+                        width: parent.width
+
+                        delegate: Button {
+                            text: modelData[0]
+                            width: parent.width
 
                             onClicked: {
-                                mainController.acceptChannelInvitation(modelData[1]);
+                                channelView.visible = true;
+                                defaultView.visible = false;
+                                channelView.setChannel(modelData);
+                                mainController.setCurrentChannel(modelData[1]);
                             }
                         }
-                        Button {
-                            width: 30
+                    }
+                }
+                Rectangle {
+                    color: '#3f4147'
+                    height: 1
+                    width: parent.width
+                }
+                Text {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    color: "white"
+                    text: 'Channel Invitations:'
+                }
+                ScrollView {
+                    clip: true
+                    height: (parent.height - menuColumn.height) / 2
+                    width: parent.width
 
-                            contentItem: Text {
-                                color: "#FF0000"
-                                text: qsTr('✕')
+                    ListView {
+                        id: channelInvitationsView
+                        contentWidth: parent.width
+                        spacing: 5
+
+                        delegate: Row {
+                            height: 30
+                            width: parent.width
+
+                            Text {
+                                color: "white"
+                                text: modelData[0]
                             }
+                            Button {
+                                id: acceptChannelInvitation
+                                width: 30
 
-                            onClicked: {
-                                mainController.rejectChannelInvitation(modelData[1]);
+                                contentItem: Text {
+                                    color: "#00FF00"
+                                    text: qsTr('✓')
+                                }
+
+                                onClicked: {
+                                    mainController.acceptChannelInvitation(modelData[1]);
+                                }
+                            }
+                            Button {
+                                width: 30
+
+                                contentItem: Text {
+                                    color: "#FF0000"
+                                    text: qsTr('✕')
+                                }
+
+                                onClicked: {
+                                    mainController.rejectChannelInvitation(modelData[1]);
+                                }
                             }
                         }
                     }
                 }
             }
         }
-        Rectangle {
-            color: 'black'
-            height: parent.height
-            width: 2
-        }
+        // Rectangle {
+        //     color: '#3f4147'
+        //     height: parent.height
+        //     width: 1
+        // }
         ChannelView {
             id: channelView
             height: parent.height
@@ -164,9 +183,9 @@ Rectangle {
             width: parent.width - leftColumn.width - rightColumn.width
         }
         Rectangle {
-            color: 'black'
+            color: '#3f4147'
             height: parent.height
-            width: 2
+            width: 1
         }
         Column {
             id: rightColumn
@@ -174,7 +193,8 @@ Rectangle {
 
             Text {
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: '<b>Friends:</b> '
+                color: "white"
+                text: 'Friends: '
             }
         }
     }
@@ -187,11 +207,13 @@ Rectangle {
             channelInvitations.push([channelName, channelId]);
             channelInvitationsView.model = channelInvitations;
         }
+        function onClearChannelInvitationList() {
+            channelInvitations = [];
+            channelInvitationsView.model = channelInvitations;
+        }
         function onClearChannelList() {
             channels = [];
             channelsView.model = channels;
-            channelInvitations = [];
-            channelInvitationsView.model = channelInvitations;
         }
 
         target: mainController

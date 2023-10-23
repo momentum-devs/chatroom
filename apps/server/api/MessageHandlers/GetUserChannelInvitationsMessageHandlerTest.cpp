@@ -23,17 +23,17 @@ auto validPayloadJson = nlohmann::json{{"token", token}};
 auto validPayload = common::bytes::Bytes{validPayloadJson.dump()};
 auto message = common::messages::Message{common::messages::MessageId::GetUserChannelInvitations, validPayload};
 
-auto noChannelResponsePayloadJson = nlohmann::json{{"data", nlohmann::json::array()}};
-auto noChannelMessageResponse =
+auto noFriendRequestResponsePayloadJson = nlohmann::json{{"data", nlohmann::json::array()}};
+auto noFriendRequestMessageResponse =
     common::messages::Message{common::messages::MessageId::GetUserChannelInvitationsResponse,
-                              common::bytes::Bytes{noChannelResponsePayloadJson.dump()}};
+                              common::bytes::Bytes{noFriendRequestResponsePayloadJson.dump()}};
 
-auto channelId1 = "id1";
-auto channelName1 = "id1";
+auto requestId1 = "id1";
+auto friendName1 = "id1";
 auto channelId2 = "channelId2";
 auto channelName2 = "channelName2";
 auto fewChannelResponsePayloadJson =
-    nlohmann::json{{"data", nlohmann::json::array({{{"id", channelId1}, {"name", channelName1}},
+    nlohmann::json{{"data", nlohmann::json::array({{{"id", requestId1}, {"name", friendName1}},
                                                    {{"id", channelId2}, {"name", channelName2}}})}};
 
 auto fewChannelMessageResponse =
@@ -78,7 +78,7 @@ TEST_F(GetUserChannelInvitationsMessageHandlerTest, handleValidGetUserChannelsMe
 
     auto responseMessage = getUserChannelInvitationsMessageHandler.handleMessage(message);
 
-    EXPECT_EQ(responseMessage, noChannelMessageResponse);
+    EXPECT_EQ(responseMessage, noFriendRequestMessageResponse);
 }
 
 TEST_F(GetUserChannelInvitationsMessageHandlerTest, handleValidGetUserChannelsMessageWithFewChannels)
@@ -97,7 +97,7 @@ TEST_F(GetUserChannelInvitationsMessageHandlerTest, handleValidGetUserChannelsMe
                                                              verificationCode, createdAt, updatedAt);
 
     const auto channel1 =
-        std::make_shared<server::domain::Channel>(channelId1, channelName1, user, createdAt, updatedAt);
+        std::make_shared<server::domain::Channel>(requestId1, friendName1, user, createdAt, updatedAt);
     const auto channel2 =
         std::make_shared<server::domain::Channel>(channelId2, channelName2, user, createdAt, updatedAt);
 
@@ -105,7 +105,7 @@ TEST_F(GetUserChannelInvitationsMessageHandlerTest, handleValidGetUserChannelsMe
     EXPECT_CALL(*findReceivedChannelInvitationsQueryHandlerMock,
                 execute(server::application::FindReceivedChannelInvitationsQueryHandlerPayload{userId}))
         .WillOnce(Return(server::application::FindReceivedChannelInvitationsQueryHandlerResult{
-            {{channelId1, user, user, channel1, "", ""}, {channelId2, user, user, channel2, "", ""}}}));
+            {{requestId1, user, user, channel1, "", ""}, {channelId2, user, user, channel2, "", ""}}}));
 
     auto responseMessage = getUserChannelInvitationsMessageHandler.handleMessage(message);
 

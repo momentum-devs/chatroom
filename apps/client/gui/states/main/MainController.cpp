@@ -40,6 +40,13 @@ void MainController::activate()
     session->addMessageHandler({common::messages::MessageId::ChangeChannelInvitationResponse,
                                 changeChannelInvitationResponseHandlerName,
                                 [this](const auto& msg) { handleChangeChannelInvitationResponse(msg); }});
+
+    session->addMessageHandler({common::messages::MessageId::GetUserFriendsResponse, getUserFriendsResponseHandlerName,
+                                [this](const auto& msg) { handleGetUserFriendsResponse(msg); }});
+
+    session->addMessageHandler({common::messages::MessageId::GetFriendRequestsResponse,
+                                getUserFriendRequestsResponseHandlerName,
+                                [this](const auto& msg) { handleGetUserFriendRequestsResponse(msg); }});
 }
 
 void MainController::deactivate()
@@ -60,6 +67,12 @@ void MainController::deactivate()
 
     session->removeMessageHandler(
         {common::messages::MessageId::ChangeChannelInvitationResponse, changeChannelInvitationResponseHandlerName});
+
+    session->removeMessageHandler(
+        {common::messages::MessageId::GetUserFriendsResponse, getUserFriendsResponseHandlerName});
+
+    session->removeMessageHandler(
+        {common::messages::MessageId::GetFriendRequestsResponse, getUserFriendRequestsResponseHandlerName});
 }
 
 void MainController::logout()
@@ -120,8 +133,6 @@ void MainController::handleGetUserChannelsResponse(const common::messages::Messa
     {
         LOG_S(ERROR) << "Response without data";
     }
-
-    session->sendMessage(common::messages::MessageId::GetUserChannelInvitations, {});
 }
 
 void MainController::handleGetUserDataResponse(const common::messages::Message& message)
@@ -151,6 +162,9 @@ void MainController::handleGetUserDataResponse(const common::messages::Message& 
     }
 
     session->sendMessage(common::messages::MessageId::GetUserChannels, {});
+    session->sendMessage(common::messages::MessageId::GetUserChannelInvitations, {});
+    session->sendMessage(common::messages::MessageId::GetUserFriends, {});
+    session->sendMessage(common::messages::MessageId::GetFriendRequests, {});
 }
 
 void MainController::goToSendFriendRequest()
@@ -212,6 +226,8 @@ void MainController::handleLeftTheChannelResponse(const common::messages::Messag
 
 void MainController::handleGetUserChannelInvitationsResponse(const common::messages::Message& message)
 {
+    emit clearChannelInvitationList();
+
     LOG_S(INFO) << "Handle get user's channel invitation data response";
 
     auto responsePayload = static_cast<std::string>(message.payload);
@@ -286,6 +302,17 @@ void MainController::handleChangeChannelInvitationResponse(const common::message
     else
     {
         session->sendMessage(common::messages::MessageId::GetUserChannels, {});
+        session->sendMessage(common::messages::MessageId::GetUserChannelInvitations, {});
     }
+}
+
+void MainController::handleGetUserFriendsResponse(const common::messages::Message& message)
+{
+    LOG_S(ERROR) << std::format("Received friend list");
+}
+
+void MainController::handleGetUserFriendRequestsResponse(const common::messages::Message& message)
+{
+    LOG_S(ERROR) << std::format("Received friend request list");
 }
 }

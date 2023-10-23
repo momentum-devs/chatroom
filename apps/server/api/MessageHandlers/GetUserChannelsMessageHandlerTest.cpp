@@ -23,16 +23,17 @@ auto validPayloadJson = nlohmann::json{{"token", token}};
 auto validPayload = common::bytes::Bytes{validPayloadJson.dump()};
 auto message = common::messages::Message{common::messages::MessageId::GetUserChannels, validPayload};
 
-auto noChannelResponsePayloadJson = nlohmann::json{{"data", nlohmann::json::array()}};
-auto noChannelMessageResponse = common::messages::Message{common::messages::MessageId::GetUserChannelsResponse,
-                                                          common::bytes::Bytes{noChannelResponsePayloadJson.dump()}};
+auto noFriendRequestResponsePayloadJson = nlohmann::json{{"data", nlohmann::json::array()}};
+auto noFriendRequestMessageResponse =
+    common::messages::Message{common::messages::MessageId::GetUserChannelsResponse,
+                              common::bytes::Bytes{noFriendRequestResponsePayloadJson.dump()}};
 
-auto channelId1 = "id1";
-auto channelName1 = "id1";
+auto requestId1 = "id1";
+auto friendName1 = "id1";
 auto channelId2 = "id1";
 auto channelName2 = "id1";
 auto fewChannelResponsePayloadJson =
-    nlohmann::json{{"data", nlohmann::json::array({{{"id", channelId1}, {"name", channelName1}, {"isOwner", true}},
+    nlohmann::json{{"data", nlohmann::json::array({{{"id", requestId1}, {"name", friendName1}, {"isOwner", true}},
                                                    {{"id", channelId2}, {"name", channelName2}, {"isOwner", true}}})}};
 
 auto fewChannelMessageResponse = common::messages::Message{common::messages::MessageId::GetUserChannelsResponse,
@@ -85,7 +86,7 @@ TEST_F(GetUserChannelsMessageHandlerTest, handleValidGetUserChannelsMessageWithN
 
     auto responseMessage = getUserChannelsMessageHandler.handleMessage(message);
 
-    EXPECT_EQ(responseMessage, noChannelMessageResponse);
+    EXPECT_EQ(responseMessage, noFriendRequestMessageResponse);
 }
 
 TEST_F(GetUserChannelsMessageHandlerTest, handleValidGetUserChannelsMessageWithFewChannels)
@@ -107,7 +108,7 @@ TEST_F(GetUserChannelsMessageHandlerTest, handleValidGetUserChannelsMessageWithF
     EXPECT_CALL(*findChannelsToWhichUserBelongsQueryHandlerMock,
                 execute(server::application::FindChannelsToWhichUserBelongsQueryHandlerPayload{userId}))
         .WillOnce(Return(server::application::FindChannelsToWhichUserBelongsQueryHandlerResult{
-            {{channelId1, channelName1, user, "", ""}, {channelId2, channelName2, user, "", ""}}}));
+            {{requestId1, friendName1, user, "", ""}, {channelId2, channelName2, user, "", ""}}}));
 
     auto responseMessage = getUserChannelsMessageHandler.handleMessage(message);
 

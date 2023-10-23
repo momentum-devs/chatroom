@@ -2,7 +2,7 @@ import QtQuick 6.2
 import QtQuick.Controls 6.2
 
 Rectangle {
-    color: "grey"
+    color: "#313338"
 
     Keys.onEnterPressed: loginButton.activate()
     Keys.onReturnPressed: loginButton.activate()
@@ -15,6 +15,7 @@ Rectangle {
 
         Text {
             anchors.horizontalCenter: parent.horizontalCenter
+            color: "white"
             text: "Login"
         }
         TextField {
