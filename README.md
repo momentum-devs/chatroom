@@ -54,17 +54,15 @@
 * direct messages between users
 * messages in channel
 * user has history of direct messages and messages in channel
-* push messages, invitations instead of polling
+* push messages, invitations, online/offline instead of polling
 
 // SERVER:
 
-* delete channel when creator leaves it
 * should not be possible to invite user that are already in channel
 * duplicate channel/friend invitations
 * should not be possible to invite yourself
 * generate verification code
+* sender email from config
 * direct messages between users
 * messages in channel
 * user has history of direct messages and messages in channel
-* add tests factories
-* add tests db utils

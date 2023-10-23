@@ -153,7 +153,8 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
         tokenService, findUserByEmailQueryHandler, std::move(createChannelInvitationCommandHandler));
 
     auto removeUserFromChannelCommandHandler =
-        std::make_unique<server::application::RemoveUserFromChannelCommandHandlerImpl>(userChannelRepository);
+        std::make_unique<server::application::RemoveUserFromChannelCommandHandlerImpl>(userChannelRepository,
+                                                                                       channelRepository);
 
     auto leftTheChannelMessageHandler =
         std::make_shared<LeftTheChannelMessageHandler>(tokenService, std::move(removeUserFromChannelCommandHandler));

@@ -4,13 +4,13 @@
 #include "RemoveUserFromChannelCommandHandlerImpl.h"
 #include "server/application/errors/ResourceNotFoundError.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
+#include "server/infrastructure/repositories/channelRepository/ChannelRepositoryImpl.h"
 #include "server/infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapperImpl.h"
 #include "server/infrastructure/repositories/userChannelRepository/UserChannelRepositoryImpl.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "server/tests/factories/databaseClientTestFactory/DatabaseClientTestFactory.h"
 #include "server/tests/utils/channelTestUtils/ChannelTestUtils.h"
 #include "server/tests/utils/userChannelTestUtils/UserChannelTestUtils.h"
-#include "server/tests/utils/userTestUtils/UserTestUtils.h"
 #include "User.h"
 
 using namespace ::testing;
@@ -53,13 +53,17 @@ public:
     std::shared_ptr<UserChannelMapper> userChannelMapper =
         std::make_shared<UserChannelMapperImpl>(userMapper, channelMapper);
 
-    std::shared_ptr<domain::UserChannelRepository> channelRepository =
+    std::shared_ptr<domain::ChannelRepository> channelRepository =
+        std::make_shared<ChannelRepositoryImpl>(db, channelMapper, userMapper);
+
+    std::shared_ptr<domain::UserChannelRepository> userChannelRepository =
         std::make_shared<UserChannelRepositoryImpl>(db, userChannelMapper, userMapper, channelMapper);
 
-    RemoveUserFromChannelCommandHandlerImpl removeUserFromChannelCommandHandler{channelRepository};
+    RemoveUserFromChannelCommandHandlerImpl removeUserFromChannelCommandHandler{userChannelRepository,
+                                                                                channelRepository};
 };
 
-TEST_F(RemoveUserFromChannelCommandImplIntegrationTest, givenExistingUserChannel_shouldDeleteUserChannel)
+TEST_F(RemoveUserFromChannelCommandImplIntegrationTest, givenExistingUserChannelWithoutCreator_shouldDeleteUserChannel)
 {
     const auto user = userTestUtils.createAndPersist();
 
@@ -72,6 +76,25 @@ TEST_F(RemoveUserFromChannelCommandImplIntegrationTest, givenExistingUserChannel
     const auto foundUserChannel = userChannelTestUtils.find(user->getId(), channel->getId());
 
     ASSERT_FALSE(foundUserChannel);
+}
+
+TEST_F(RemoveUserFromChannelCommandImplIntegrationTest, givenExistingUserChannelWithCreator_shouldDeleteUserChannelAndChannel)
+{
+    const auto user = userTestUtils.createAndPersist();
+
+    const auto channel = channelTestUtils.createAndPersist(user);
+
+    const auto userChannel = userChannelTestUtils.createAndPersist(user, channel);
+
+    removeUserFromChannelCommandHandler.execute({user->getId(), channel->getId()});
+
+    const auto foundUserChannel = userChannelTestUtils.find(user->getId(), channel->getId());
+
+    ASSERT_FALSE(foundUserChannel);
+
+    const auto foundChannel = channelTestUtils.findById(channel->getId());
+
+    ASSERT_FALSE(foundChannel);
 }
 
 TEST_F(RemoveUserFromChannelCommandImplIntegrationTest, givenNonExistingUserChannel_shouldThrow)
