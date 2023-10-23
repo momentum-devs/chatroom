@@ -2,6 +2,7 @@
 
 #include "httpClient/HttpClientFactory.h"
 #include "MessageHandlers/AcceptChannelInvitationMessageHandler.h"
+#include "MessageHandlers/AcceptFriendRequestMessageHandler.h"
 #include "MessageHandlers/CreateChannelMessageHandler.h"
 #include "MessageHandlers/DeleteTheChannelMessageHandler.h"
 #include "MessageHandlers/DeleteUserMessageHandler.h"
@@ -10,18 +11,18 @@
 #include "MessageHandlers/GetUserChannelsMessageHandler.h"
 #include "MessageHandlers/GetUserDataMessageHandler.h"
 #include "MessageHandlers/GetUserFriendRequestsMessageHandler.h"
+#include "MessageHandlers/GetUserFriendsMessageHandler.h"
 #include "MessageHandlers/LeftTheChannelMessageHandler.h"
 #include "MessageHandlers/LoginMessageHandler.h"
 #include "MessageHandlers/LogoutMessageHandler.h"
 #include "MessageHandlers/RegisterMessageHandler.h"
 #include "MessageHandlers/RejectChannelInvitationMessageHandler.h"
+#include "MessageHandlers/RejectFriendRequestMessageHandler.h"
+#include "MessageHandlers/RemoveFromFriendsMessageHandler.h"
 #include "MessageHandlers/SendChannelInvitationMessageHandler.h"
 #include "MessageHandlers/UpdateUserMessageHandler.h"
 #include "MessageHandlers/VerifyUserMessageHandle.h"
 #include "MessageRouterImpl.h"
-#include "server/api/MessageHandlers/AcceptFriendRequestMessageHandler.h"
-#include "server/api/MessageHandlers/GetUserFriendsMessageHandler.h"
-#include "server/api/MessageHandlers/RejectFriendRequestMessageHandler.h"
 #include "server/application/commandHandlers/channel/acceptChannelInvitationCommandHandler/AcceptChannelInvitationCommandHandlerImpl.h"
 #include "server/application/commandHandlers/channel/addUserToChannelCommandHandler/AddUserToChannelCommandHandlerImpl.h"
 #include "server/application/commandHandlers/channel/createChannelCommandHandler/CreateChannelCommandHandlerImpl.h"
@@ -247,6 +248,12 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
     auto getUserFriendsMessageHandler =
         std::make_shared<GetUserFriendsMessageHandler>(tokenService, std::move(findUserFriendsQueryHandler));
 
+    auto deleteFriendshipCommandHandler =
+        std::make_unique<server::application::DeleteFriendshipCommandHandlerImpl>(friendshipRepository, userRepository);
+
+    auto removeFromFriendsMessageHandler =
+        std::make_shared<RemoveFromFriendsMessageHandler>(tokenService, std::move(deleteFriendshipCommandHandler));
+
     std::unordered_map<common::messages::MessageId, std::shared_ptr<MessageHandler>> messageHandlers{
         {common::messages::MessageId::CreateChannel, createChannelMessageHandler},
         {common::messages::MessageId::GetUserChannels, getUserChannelsMessageHandler},
@@ -268,6 +275,7 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
         {common::messages::MessageId::AcceptFriendRequests, acceptFriendRequestMessageHandler},
         {common::messages::MessageId::RejectFriendRequests, rejectFriendRequestMessageHandler},
         {common::messages::MessageId::GetUserFriends, getUserFriendsMessageHandler},
+        {common::messages::MessageId::RemoveFromFriends, removeFromFriendsMessageHandler},
     };
 
     return std::make_unique<MessageRouterImpl>(std::move(messageHandlers));

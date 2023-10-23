@@ -51,6 +51,10 @@ void MainController::activate()
     session->addMessageHandler({common::messages::MessageId::ChangeFriendRequestsResponse,
                                 changeFriendRequestResponseHandlerName,
                                 [this](const auto& msg) { handleChangeFriendRequestResponse(msg); }});
+
+    session->addMessageHandler({common::messages::MessageId::RemoveFromFriendsResponse,
+                                removeFromFriendsResponseHandlerName,
+                                [this](const auto& msg) { handleRemoveFromFriendsResponse(msg); }});
 }
 
 void MainController::deactivate()
@@ -80,6 +84,9 @@ void MainController::deactivate()
 
     session->removeMessageHandler(
         {common::messages::MessageId::ChangeFriendRequestsResponse, changeFriendRequestResponseHandlerName});
+
+    session->removeMessageHandler(
+        {common::messages::MessageId::RemoveFromFriendsResponse, removeFromFriendsResponseHandlerName});
 }
 
 void MainController::logout()
@@ -456,7 +463,7 @@ void MainController::removeFromFriends()
     LOG_S(INFO) << std::format("Remove user with id {} from friends", currentFriendId);
 
     nlohmann::json data{
-        {"userId", currentFriendId},
+        {"userFriendId", currentFriendId},
     };
 
     session->sendMessage(common::messages::MessageId::RemoveFromFriends, data);

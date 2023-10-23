@@ -228,11 +228,12 @@ Rectangle {
                         width: parent.width
 
                         delegate: Row {
+                            spacing: 5
                             width: parent.width
 
                             Button {
                                 text: modelData[0]
-                                width: parent.width - firendActive.width
+                                width: parent.width - firendActive.width - 5
 
                                 onClicked: {
                                     channelView.visible = false;
@@ -329,8 +330,8 @@ Rectangle {
             channelInvitations.push([channelName, channelId]);
             channelInvitationsView.model = channelInvitations;
         }
-        function onAddFriend(friendName: string, friendId: string) {
-            friends.push([friendName, friendId]);
+        function onAddFriend(friendName: string, friendId: string, isActive: bool) {
+            friends.push([friendName, friendId, isActive]);
             friendsView.model = friends;
         }
         function onAddFriendRequest(friendName: string, requestId: string) {

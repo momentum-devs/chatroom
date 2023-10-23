@@ -46,6 +46,10 @@
 * remove from friends
 
 
+* add nickname field while registration
+* add characters limit to nickname
+
+
 * show list of users in channel
 * show list of invitation to channel
 * delete invitation to channel (only creator)

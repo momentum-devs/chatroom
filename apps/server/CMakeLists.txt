@@ -85,7 +85,13 @@ set(SOURCES
         api/MessageHandlers/FriendRequestMessageHandler.cpp
         api/MessageHandlers/GetUserChannelInvitationsMessageHandler.cpp
         api/MessageHandlers/AcceptChannelInvitationMessageHandler.cpp
-        api/MessageHandlers/RejectChannelInvitationMessageHandler.cpp api/MessageHandlers/GetUserFriendRequestsMessageHandler.cpp api/MessageHandlers/AcceptFriendRequestMessageHandler.cpp api/MessageHandlers/RejectFriendRequestMessageHandler.cpp api/MessageHandlers/GetUserFriendsMessageHandler.cpp)
+        api/MessageHandlers/RejectChannelInvitationMessageHandler.cpp
+        api/MessageHandlers/GetUserFriendRequestsMessageHandler.cpp
+        api/MessageHandlers/AcceptFriendRequestMessageHandler.cpp
+        api/MessageHandlers/RejectFriendRequestMessageHandler.cpp
+        api/MessageHandlers/GetUserFriendsMessageHandler.cpp
+        api/MessageHandlers/RemoveFromFriendsMessageHandler.cpp
+        )
 
 set(TEST_COMMON_SOURCES
         tests/factories/userTestFactory/UserTestFactory.cpp
@@ -125,7 +131,13 @@ set(UT_SOURCES
         api/MessageHandlers/LeftTheChannelMessageHandlerTest.cpp
         api/MessageHandlers/GetUserChannelInvitationsMessageHandlerTest.cpp
         api/MessageHandlers/AcceptChannelInvitationMessageHandlerTest.cpp
-        api/MessageHandlers/RejectChannelInvitationMessageHandlerTest.cpp api/MessageHandlers/GetUserFriendRequestsMessageHandlerTest.cpp api/MessageHandlers/AcceptFriendRequestMessageHandlerTest.cpp api/MessageHandlers/RejectFriendRequestMessageHandlerTest.cpp api/MessageHandlers/GetUserFriendsMessageHandlerTest.cpp)
+        api/MessageHandlers/RejectChannelInvitationMessageHandlerTest.cpp
+        api/MessageHandlers/GetUserFriendRequestsMessageHandlerTest.cpp
+        api/MessageHandlers/AcceptFriendRequestMessageHandlerTest.cpp
+        api/MessageHandlers/RejectFriendRequestMessageHandlerTest.cpp
+        api/MessageHandlers/GetUserFriendsMessageHandlerTest.cpp
+        api/MessageHandlers/RemoveFromFriendsMessageHandlerTest.cpp
+        )
 
 set(IT_SOURCES
         tests/factories/databaseClientTestFactory/DatabaseClientTestFactory.cpp
