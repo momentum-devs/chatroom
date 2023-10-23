@@ -14,5 +14,13 @@ services:
       - postgres-data:/var/lib/postgresql/data
       - ./sql/database_init.sql:/docker-entrypoint-initdb.d/database_init.sql
 
+  chatroom-redis:
+    container_name: chatroom-redis
+    image: 'bitnami/redis:latest'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - '6379:6379'
+
 volumes:
   postgres-data:
