@@ -44,7 +44,6 @@
 // CLIENT:
 
 * remove from friends
-* user and friends online/offline
 
 
 * show list of users in channel

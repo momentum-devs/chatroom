@@ -190,9 +190,11 @@ void MainController::goToUserSettings()
 
 void MainController::setCurrentChannel(const QString& channelId)
 {
-    LOG_S(INFO) << std::format("Set current chat to id {}", channelId.toStdString());
+    LOG_S(INFO) << std::format("Set current channel to id {}", channelId.toStdString());
 
     currentChannelId = channelId.toStdString();
+
+    currentFriendId = "";
 }
 
 void MainController::addToChannel()
@@ -229,6 +231,8 @@ void MainController::handleLeftTheChannelResponse(const common::messages::Messag
     currentChannelId = "";
 
     session->sendMessage(common::messages::MessageId::GetUserChannels, {});
+
+    emit returnToDefaultView();
 }
 
 void MainController::handleGetUserChannelInvitationsResponse(const common::messages::Message& message)
@@ -331,15 +335,17 @@ void MainController::handleGetUserFriendsResponse(const common::messages::Messag
 
     if (responseJson.contains("data"))
     {
-        for (const auto& channel : responseJson.at("data"))
+        for (const auto& userFriend : responseJson.at("data"))
         {
-            if (channel.contains("id") and channel.contains("name"))
+            if (userFriend.contains("id") and userFriend.contains("name") and userFriend.contains("isActive"))
             {
-                LOG_S(INFO) << std::format("Adding friend {} with id {} to list", channel.at("name").get<std::string>(),
-                                           channel.at("id").get<std::string>());
+                LOG_S(INFO) << std::format("Adding friend {} with id {} to list",
+                                           userFriend.at("name").get<std::string>(),
+                                           userFriend.at("id").get<std::string>());
 
-                emit addFriend(QString::fromStdString(channel.at("name").get<std::string>()),
-                               QString::fromStdString(channel.at("id").get<std::string>()));
+                emit addFriend(QString::fromStdString(userFriend.at("name").get<std::string>()),
+                               QString::fromStdString(userFriend.at("id").get<std::string>()),
+                               userFriend.at("isActive").get<bool>());
             }
             else
             {
@@ -371,15 +377,16 @@ void MainController::handleGetUserFriendRequestsResponse(const common::messages:
 
     if (responseJson.contains("data"))
     {
-        for (const auto& channel : responseJson.at("data"))
+        for (const auto& friendRequest : responseJson.at("data"))
         {
-            if (channel.contains("id") and channel.contains("name"))
+            if (friendRequest.contains("id") and friendRequest.contains("name"))
             {
                 LOG_S(INFO) << std::format("Adding friend request {} with id {} to list",
-                                           channel.at("name").get<std::string>(), channel.at("id").get<std::string>());
+                                           friendRequest.at("name").get<std::string>(),
+                                           friendRequest.at("id").get<std::string>());
 
-                emit addFriendRequest(QString::fromStdString(channel.at("name").get<std::string>()),
-                                      QString::fromStdString(channel.at("id").get<std::string>()));
+                emit addFriendRequest(QString::fromStdString(friendRequest.at("name").get<std::string>()),
+                                      QString::fromStdString(friendRequest.at("id").get<std::string>()));
             }
             else
             {
@@ -433,5 +440,34 @@ void MainController::handleChangeFriendRequestResponse(const common::messages::M
         session->sendMessage(common::messages::MessageId::GetUserFriends, {});
         session->sendMessage(common::messages::MessageId::GetFriendRequests, {});
     }
+}
+
+void MainController::setCurrentFriend(const QString& friendId)
+{
+    LOG_S(INFO) << std::format("Set current friend to id {}", friendId.toStdString());
+
+    currentChannelId = "";
+
+    currentFriendId = friendId.toStdString();
+}
+
+void MainController::removeFromFriends()
+{
+    LOG_S(INFO) << std::format("Remove user with id {} from friends", currentFriendId);
+
+    nlohmann::json data{
+        {"userId", currentFriendId},
+    };
+
+    session->sendMessage(common::messages::MessageId::RemoveFromFriends, data);
+}
+
+void MainController::handleRemoveFromFriendsResponse(const common::messages::Message& message)
+{
+    currentFriendId = "";
+
+    session->sendMessage(common::messages::MessageId::GetUserFriends, {});
+
+    emit returnToDefaultView();
 }
 }

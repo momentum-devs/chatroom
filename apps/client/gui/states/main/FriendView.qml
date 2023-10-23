@@ -41,9 +41,8 @@ Item {
                     text: qsTr('Remove from friends')
                 }
 
-                onClicked:
-                //mainController.deleteTheChannel();
-                {
+                onClicked: {
+                    mainController.removeFromFriends();
                 }
             }
         }

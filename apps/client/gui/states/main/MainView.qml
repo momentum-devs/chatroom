@@ -227,16 +227,33 @@ Rectangle {
                         spacing: 5
                         width: parent.width
 
-                        delegate: Button {
-                            text: modelData[0]
+                        delegate: Row {
                             width: parent.width
 
-                            onClicked: {
-                                channelView.visible = false;
-                                defaultView.visible = false;
-                                friendView.visible = true;
-                                friendView.setFriend(modelData);
-                                // mainController.setCurrentChannel(modelData[1]);
+                            Button {
+                                text: modelData[0]
+                                width: parent.width - firendActive.width
+
+                                onClicked: {
+                                    channelView.visible = false;
+                                    defaultView.visible = false;
+                                    friendView.visible = true;
+                                    friendView.setFriend(modelData);
+                                    mainController.setCurrentFriend(modelData[1]);
+                                }
+                            }
+                            Text {
+                                id: firendActive
+                                color: "green"
+                                font.pointSize: 15
+                                text: "●"
+                                visible: modelData[2]
+                            }
+                            Text {
+                                color: "grey"
+                                font.pointSize: 15
+                                text: "○"
+                                visible: !modelData[2]
                             }
                         }
                     }
@@ -335,6 +352,11 @@ Rectangle {
         function onClearFriendRequestList() {
             friendRequests = [];
             friendRequestsView.model = friendRequests;
+        }
+        function onReturnToDefaultView() {
+            channelView.visible = false;
+            defaultView.visible = true;
+            friendView.visible = false;
         }
 
         target: mainController

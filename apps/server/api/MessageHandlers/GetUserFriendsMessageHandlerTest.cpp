@@ -30,9 +30,9 @@ auto friendId1 = "id1";
 auto friendName1 = "friendName1";
 auto friendId2 = "id2";
 auto friendName2 = "friendName2";
-auto fewFriendRequestsResponsePayloadJson = nlohmann::json{
-    {"data",
-     nlohmann::json::array({{{"id", friendId1}, {"name", friendName1}}, {{"id", friendId2}, {"name", friendName2}}})}};
+auto fewFriendRequestsResponsePayloadJson =
+    nlohmann::json{{"data", nlohmann::json::array({{{"id", friendId1}, {"name", friendName1}, {"isActive", false}},
+                                                   {{"id", friendId2}, {"name", friendName2}, {"isActive", true}}})}};
 
 auto fewFriendRequestsMessageResponse =
     common::messages::Message{common::messages::MessageId::GetUserFriendsResponse,
@@ -81,15 +81,14 @@ TEST_F(GetUserFriendsMessageHandlerTest, handleValidGetUserFriendsMessageWithFew
     const auto userId = faker::String::uuid();
     const auto email = "email";
     const auto password = "password";
-    const auto active = true;
     const auto emailVerified = true;
     const auto verificationCode = faker::String::numeric(6);
     const auto createdAt = faker::Date::pastDate();
     const auto updatedAt = faker::Date::recentDate();
 
-    const auto user1 = std::make_shared<server::domain::User>(friendId1, email, password, friendName1, active,
+    const auto user1 = std::make_shared<server::domain::User>(friendId1, email, password, friendName1, false,
                                                               emailVerified, verificationCode, createdAt, updatedAt);
-    const auto user2 = std::make_shared<server::domain::User>(friendId2, email, password, friendName2, active,
+    const auto user2 = std::make_shared<server::domain::User>(friendId2, email, password, friendName2, true,
                                                               emailVerified, verificationCode, createdAt, updatedAt);
 
     EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(userId));

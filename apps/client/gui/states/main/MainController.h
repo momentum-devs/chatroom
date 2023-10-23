@@ -32,16 +32,19 @@ public:
     Q_INVOKABLE void rejectChannelInvitation(const QString& channelId);
     Q_INVOKABLE void acceptFriendRequest(const QString& channelId);
     Q_INVOKABLE void rejectFriendRequest(const QString& channelId);
+    Q_INVOKABLE void setCurrentFriend(const QString& friendId);
+    Q_INVOKABLE void removeFromFriends();
 
 signals:
     void addChannel(const QString& channelName, const QString& channelId, bool isOwner);
     void addChannelInvitation(const QString& channelName, const QString& channelId);
     void clearChannelList();
     void clearChannelInvitationList();
-    void addFriend(const QString& friendName, const QString& friendId);
+    void addFriend(const QString& friendName, const QString& friendId, bool isActive);
     void addFriendRequest(const QString& friendName, const QString& requestId);
     void clearFriendList();
     void clearFriendRequestList();
+    void returnToDefaultView();
 
 private:
     void handleGetUserChannelsResponse(const common::messages::Message& message);
@@ -52,12 +55,14 @@ private:
     void handleGetUserFriendsResponse(const common::messages::Message& message);
     void handleGetUserFriendRequestsResponse(const common::messages::Message& message);
     void handleChangeFriendRequestResponse(const common::messages::Message& message);
+    void handleRemoveFromFriendsResponse(const common::messages::Message& message);
 
     std::shared_ptr<api::Session> session;
     const StateFactory& stateFactory;
     std::shared_ptr<StateMachine> stateMachine;
     std::optional<std::shared_ptr<State>> nextState = std::nullopt;
     std::string currentChannelId;
+    std::string currentFriendId;
 
     inline static const std::string getUserChannelsResponseHandlerName{"getUserChannelsResponseHandlerName"};
     inline static const std::string getUserDataResponseHandlerName{"getUserChannelsResponseHandlerName"};
@@ -71,5 +76,6 @@ private:
     inline static const std::string getUserFriendRequestsResponseHandlerName{
         "getUserFriendRequestsResponseHandlerName"};
     inline static const std::string changeFriendRequestResponseHandlerName{"changeFriendRequestResponseHandlerName"};
+    inline static const std::string removeFromFriendsResponseHandlerName{"removeFromFriendsResponseHandlerName"};
 };
 }

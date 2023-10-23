@@ -30,7 +30,8 @@ common::messages::Message GetUserFriendsMessageHandler::handleMessage(const comm
 
         for (const auto& userFriend : friends)
         {
-            nlohmann::json friendJson{{"id", userFriend.getId()}, {"name", userFriend.getNickname()}};
+            nlohmann::json friendJson{
+                {"id", userFriend.getId()}, {"name", userFriend.getNickname()}, {"isActive", userFriend.isActive()}};
 
             friendsJsonArray.push_back(friendJson);
         }
