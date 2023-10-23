@@ -35,6 +35,7 @@ signals:
     void addChannel(const QString& channelName, const QString& channelId, bool isOwner);
     void addChannelInvitation(const QString& channelName, const QString& channelId);
     void clearChannelList();
+    void clearChannelInvitationList();
 
 private:
     void handleGetUserChannelsResponse(const common::messages::Message& message);
@@ -42,6 +43,8 @@ private:
     void handleLeftTheChannelResponse(const common::messages::Message& message);
     void handleGetUserChannelInvitationsResponse(const common::messages::Message& message);
     void handleChangeChannelInvitationResponse(const common::messages::Message& message);
+    void handleGetUserFriendsResponse(const common::messages::Message& message);
+    void handleGetUserFriendRequestsResponse(const common::messages::Message& message);
 
     std::shared_ptr<api::Session> session;
     const StateFactory& stateFactory;
@@ -57,5 +60,8 @@ private:
         "changeChannelInvitationResponseHandlerName"};
     inline static const std::string getUserChannelInvitationsResponseHandlerName{
         "getUserChannelInvitationsResponseHandlerName"};
+    inline static const std::string getUserFriendsResponseHandlerName{"getUserFriendsResponseHandlerName"};
+    inline static const std::string getUserFriendRequestsResponseHandlerName{
+        "getUserFriendRequestsResponseHandlerName"};
 };
 }

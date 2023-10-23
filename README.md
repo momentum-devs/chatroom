@@ -39,17 +39,11 @@
 
 // CLIENT:
 
-* create channel invitation
-* reject channel invitation
-* leave channel
-
-* send friend invitation
-* show list of friends
-* friend online/offline
 * accept friend invitation
 * reject friend invitation
+* show list of friends
 * remove from friends
-* user online/offline
+* user and friends online/offline
 
 * direct messages between users
 * messages in channel

@@ -83,7 +83,9 @@ set(SOURCES
         api/MessageHandlers/LeftTheChannelMessageHandler.cpp
         api/MessageHandlers/DeleteTheChannelMessageHandler.cpp
         api/MessageHandlers/FriendRequestMessageHandler.cpp
-        api/MessageHandlers/GetUserChannelInvitationsMessageHandler.cpp)
+        api/MessageHandlers/GetUserChannelInvitationsMessageHandler.cpp
+        api/MessageHandlers/AcceptChannelInvitationMessageHandler.cpp
+        api/MessageHandlers/RejectChannelInvitationMessageHandler.cpp api/MessageHandlers/GetUserFriendRequestsMessageHandler.cpp)
 
 set(TEST_COMMON_SOURCES
         tests/factories/userTestFactory/UserTestFactory.cpp
@@ -118,7 +120,12 @@ set(UT_SOURCES
         infrastructure/repositories/friendshipRepository/friendshipMapper/FriendshipMapperImplTest.cpp
         infrastructure/repositories/conversationRepository/conversationMapper/ConversationMapperImplTest.cpp
         api/MessageHandlers/SendChannelInvitationMessageHandlerTest.cpp
-        api/MessageHandlers/FriendRequestMessageHandlerTest.cpp api/MessageHandlers/DeleteTheChannelMessageHandlerTest.cpp api/MessageHandlers/LeftTheChannelMessageHandlerTest.cpp api/MessageHandlers/GetUserChannelInvitationsMessageHandlerTest.cpp)
+        api/MessageHandlers/FriendRequestMessageHandlerTest.cpp
+        api/MessageHandlers/DeleteTheChannelMessageHandlerTest.cpp
+        api/MessageHandlers/LeftTheChannelMessageHandlerTest.cpp
+        api/MessageHandlers/GetUserChannelInvitationsMessageHandlerTest.cpp
+        api/MessageHandlers/AcceptChannelInvitationMessageHandlerTest.cpp
+        api/MessageHandlers/RejectChannelInvitationMessageHandlerTest.cpp api/MessageHandlers/GetUserFriendRequestsMessageHandlerTest.cpp)
 
 set(IT_SOURCES
         tests/factories/databaseClientTestFactory/DatabaseClientTestFactory.cpp
