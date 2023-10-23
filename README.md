@@ -58,7 +58,6 @@
 
 // SERVER:
 
-* should not be possible to invite yourself
 * generate verification code
 * sender email from config
 * direct messages between users
