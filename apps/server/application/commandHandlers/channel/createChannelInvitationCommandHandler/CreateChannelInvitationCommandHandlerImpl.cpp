@@ -5,6 +5,7 @@
 #include <format>
 
 #include "loguru.hpp"
+#include "server/application/errors/OperationNotValidError.h"
 #include "server/application/errors/ResourceNotFoundError.h"
 
 namespace server::application
@@ -12,10 +13,12 @@ namespace server::application
 CreateChannelInvitationCommandHandlerImpl::CreateChannelInvitationCommandHandlerImpl(
     std::shared_ptr<domain::ChannelInvitationRepository> channelInvitationRepositoryInit,
     std::shared_ptr<domain::UserRepository> userRepositoryInit,
-    std::shared_ptr<domain::ChannelRepository> channelRepositoryInit)
+    std::shared_ptr<domain::ChannelRepository> channelRepositoryInit,
+    std::shared_ptr<domain::UserChannelRepository> userChannelRepositoryInit)
     : channelInvitationRepository{std::move(channelInvitationRepositoryInit)},
       userRepository{std::move(userRepositoryInit)},
-      channelRepository{std::move(channelRepositoryInit)}
+      channelRepository{std::move(channelRepositoryInit)},
+      userChannelRepository{std::move(userChannelRepositoryInit)}
 {
 }
 
@@ -44,6 +47,15 @@ void CreateChannelInvitationCommandHandlerImpl::execute(
     if (!channel)
     {
         throw errors::ResourceNotFoundError{std::format("Channel with id {} not found.", payload.channelId)};
+    }
+
+    const auto userChannelWithRecipient =
+        userChannelRepository->findUserChannel({payload.recipientId, payload.channelId});
+
+    if (userChannelWithRecipient)
+    {
+        throw errors::OperationNotValidError{std::format("Recipient with id {} already is a member of channel {}.",
+                                                         payload.recipientId, payload.channelId)};
     }
 
     std::stringstream uuid;

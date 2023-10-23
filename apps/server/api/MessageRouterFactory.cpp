@@ -147,7 +147,7 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
 
     auto createChannelInvitationCommandHandler =
         std::make_unique<server::application::CreateChannelInvitationCommandHandlerImpl>(
-            channelInvitationRepository, userRepository, channelRepository);
+            channelInvitationRepository, userRepository, channelRepository, userChannelRepository);
 
     auto sendChannelInvitationMessageHandler = std::make_shared<SendChannelInvitationMessageHandler>(
         tokenService, findUserByEmailQueryHandler, std::move(createChannelInvitationCommandHandler));
