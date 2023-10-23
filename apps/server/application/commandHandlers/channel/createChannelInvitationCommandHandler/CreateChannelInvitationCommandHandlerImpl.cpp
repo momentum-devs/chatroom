@@ -28,6 +28,13 @@ void CreateChannelInvitationCommandHandlerImpl::execute(
     LOG_S(INFO) << std::format("Creating channel invitation... {{senderId: {}, recipientId: {}, channelId: {}}}",
                                payload.senderId, payload.recipientId, payload.channelId);
 
+    if (payload.senderId == payload.recipientId)
+    {
+        throw errors::OperationNotValidError{std::format(
+            "Channel invitation's sender and recipient cannot be the same user. {{senderId: {}, recipientId: {}}}.",
+            payload.senderId, payload.recipientId)};
+    }
+
     const auto existingInvitation =
         channelInvitationRepository->findChannelInvitation({payload.senderId, payload.recipientId, payload.channelId});
 
