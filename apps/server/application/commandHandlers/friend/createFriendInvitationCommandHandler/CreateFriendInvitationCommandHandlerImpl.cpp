@@ -25,6 +25,13 @@ void CreateFriendInvitationCommandHandlerImpl::execute(const CreateFriendInvitat
     LOG_S(INFO) << std::format("Creating friend invitation... {{senderId: {}, recipientId: {}}}", payload.senderId,
                                payload.recipientId);
 
+    if (payload.senderId == payload.recipientId)
+    {
+        throw errors::OperationNotValidError{std::format(
+            "Friend invitation's sender and recipient cannot be the same user. {{senderId: {}, recipientId: {}}}.",
+            payload.senderId, payload.recipientId)};
+    }
+
     const auto sender = userRepository->findUserById({payload.senderId});
 
     if (!sender)

@@ -79,6 +79,16 @@ TEST_F(CreateFriendInvitationCommandImplIntegrationTest, createFriendInvitation)
     ASSERT_TRUE(foundFriendInvitation);
 }
 
+TEST_F(CreateFriendInvitationCommandImplIntegrationTest, throwsAnError_whenRecipientAndSenderIsSameUser)
+{
+    const auto sender = userTestUtils.createAndPersist();
+
+    friendInvitationTestUtils.createAndPersist(sender, sender);
+
+    ASSERT_THROW(createFriendInvitationCommandHandler.execute({sender->getId(), sender->getId()}),
+                 errors::OperationNotValidError);
+}
+
 TEST_F(CreateFriendInvitationCommandImplIntegrationTest, throwsAnError_whenFriendInvitationAlreadyExists)
 {
     const auto sender = userTestUtils.createAndPersist();

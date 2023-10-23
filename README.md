@@ -58,7 +58,6 @@
 
 // SERVER:
 
-* duplicate channel/friend invitations
 * should not be possible to invite yourself
 * generate verification code
 * sender email from config
