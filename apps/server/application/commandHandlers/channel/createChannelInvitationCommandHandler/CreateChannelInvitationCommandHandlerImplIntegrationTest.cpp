@@ -93,6 +93,19 @@ TEST_F(CreateChannelInvitationCommandImplIntegrationTest, createChannelInvitatio
     ASSERT_TRUE(foundChannelInvitation);
 }
 
+TEST_F(CreateChannelInvitationCommandImplIntegrationTest, throwsError_whenRecipientIsAlreadyInvited)
+{
+    const auto sender = userTestUtils.createAndPersist();
+
+    const auto recipient = userTestUtils.createAndPersist();
+
+    const auto channel = channelTestUtils.createAndPersist(sender);
+
+    channelInvitationTestUtils.createAndPersist(sender, recipient, channel);
+
+    ASSERT_THROW(createChannelInvitationCommandHandler.execute({sender->getId(), recipient->getId(), channel->getId()}), errors::OperationNotValidError);
+}
+
 TEST_F(CreateChannelInvitationCommandImplIntegrationTest, throwsError_whenRecipientIsAlreadyMemberOfChannel)
 {
     const auto sender = userTestUtils.createAndPersist();

@@ -58,7 +58,6 @@
 
 // SERVER:
 
-* should not be possible to invite user that are already in channel
 * duplicate channel/friend invitations
 * should not be possible to invite yourself
 * generate verification code

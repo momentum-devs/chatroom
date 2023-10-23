@@ -8,6 +8,7 @@
 #include "payloads/DeleteChannelInvitationPayload.h"
 #include "payloads/FindChannelInvitationByIdPayload.h"
 #include "payloads/FindChannelInvitationsByRecipientIdPayload.h"
+#include "server/domain/repositories/channelInvitationRepository/payloads/FindChannelInvitationPayload.h"
 
 namespace server::domain
 {
@@ -17,6 +18,7 @@ public:
     virtual ~ChannelInvitationRepository() = default;
 
     virtual ChannelInvitation createChannelInvitation(const CreateChannelInvitationPayload&) const = 0;
+    virtual std::optional<ChannelInvitation> findChannelInvitation(const FindChannelInvitationPayload&) const = 0;
     virtual std::optional<ChannelInvitation>
     findChannelInvitationById(const FindChannelInvitationByIdPayload&) const = 0;
     virtual std::vector<ChannelInvitation>

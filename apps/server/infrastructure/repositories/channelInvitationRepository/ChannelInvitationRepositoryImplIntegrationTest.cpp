@@ -10,7 +10,6 @@
 #include "server/tests/factories/databaseClientTestFactory/DatabaseClientTestFactory.h"
 #include "server/tests/utils/channelInvitationTestUtils/ChannelInvitationTestUtils.h"
 #include "server/tests/utils/channelTestUtils/ChannelTestUtils.h"
-#include "server/tests/utils/userTestUtils/UserTestUtils.h"
 #include "User.h"
 
 using namespace ::testing;

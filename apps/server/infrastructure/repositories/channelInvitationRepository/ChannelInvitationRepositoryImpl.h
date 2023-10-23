@@ -18,6 +18,7 @@ public:
                                     std::shared_ptr<UserMapper>, std::shared_ptr<ChannelMapper>);
 
     domain::ChannelInvitation createChannelInvitation(const domain::CreateChannelInvitationPayload&) const;
+    std::optional<domain::ChannelInvitation> findChannelInvitation(const domain::FindChannelInvitationPayload&) const;
     std::optional<domain::ChannelInvitation>
     findChannelInvitationById(const domain::FindChannelInvitationByIdPayload&) const;
     std::vector<domain::ChannelInvitation>

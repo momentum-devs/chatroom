@@ -48,6 +48,34 @@ ChannelInvitationRepositoryImpl::createChannelInvitation(const domain::CreateCha
     }
 }
 
+std::optional<domain::ChannelInvitation>
+ChannelInvitationRepositoryImpl::findChannelInvitation(const domain::FindChannelInvitationPayload& payload) const
+{
+    try
+    {
+        odb::transaction transaction(db->begin());
+
+        typedef odb::query<ChannelInvitation> Query;
+
+        std::shared_ptr<ChannelInvitation> channelInvitation(db->query_one<ChannelInvitation>(
+            Query::channel->id == payload.channelId && Query::sender->id == payload.senderId &&
+            Query::recipient->id == payload.recipientId));
+
+        transaction.commit();
+
+        if (!channelInvitation)
+        {
+            return std::nullopt;
+        }
+
+        return channelInvitationMapper->mapToDomainChannelInvitation(*channelInvitation);
+    }
+    catch (const std::exception& error)
+    {
+        throw errors::ChannelInvitationRepositoryError{error.what()};
+    }
+}
+
 std::optional<domain::ChannelInvitation> ChannelInvitationRepositoryImpl::findChannelInvitationById(
     const domain::FindChannelInvitationByIdPayload& payload) const
 {
