@@ -4,6 +4,8 @@ import QtQuick.Controls 6.4
 Rectangle {
     property var channelInvitations: []
     property var channels: []
+    property var friendRequests: []
+    property var friends: []
 
     color: "#313338"
     focus: true
@@ -189,12 +191,98 @@ Rectangle {
         }
         Column {
             id: rightColumn
+            height: parent.height
             width: leftColumn.width
 
             Text {
+                id: firendsText
                 anchors.horizontalCenter: parent.horizontalCenter
                 color: "white"
                 text: 'Friends: '
+            }
+            ScrollView {
+                clip: true
+                height: parent.height / 2 - firendsText.height
+                width: parent.width
+
+                ListView {
+                    id: friendsView
+                    contentWidth: parent.width
+                    spacing: 5
+                    width: parent.width
+
+                    delegate: Button {
+                        text: modelData[0]
+                        width: parent.width
+
+                        onClicked:
+                        // channelView.visible = true;
+                        // defaultView.visible = false;
+                        // channelView.setChannel(modelData);
+                        // mainController.setCurrentChannel(modelData[1]);
+                        {
+                        }
+                    }
+                }
+            }
+            Rectangle {
+                color: '#3f4147'
+                height: 1
+                width: parent.width
+            }
+            Text {
+                anchors.horizontalCenter: parent.horizontalCenter - 1
+                color: "white"
+                text: 'Friend Requests:'
+            }
+            ScrollView {
+                clip: true
+                height: parent.height / 2
+                width: parent.width
+
+                ListView {
+                    id: friendRequestsView
+                    contentWidth: parent.width
+                    spacing: 5
+
+                    delegate: Column {
+                        width: parent.width
+
+                        Text {
+                            color: "white"
+                            text: modelData[0]
+                        }
+                        Row {
+                            width: parent.width
+
+                            Button {
+                                id: acceptFriendRequest
+                                width: 30
+
+                                contentItem: Text {
+                                    color: "#00FF00"
+                                    text: qsTr('✓')
+                                }
+
+                                onClicked: {
+                                    mainController.acceptFriendRequest(modelData[1]);
+                                }
+                            }
+                            Button {
+                                width: 30
+
+                                contentItem: Text {
+                                    color: "#FF0000"
+                                    text: qsTr('✕')
+                                }
+
+                                onClicked: {
+                                    mainController.rejectFriendRequest(modelData[1]);
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -207,6 +295,14 @@ Rectangle {
             channelInvitations.push([channelName, channelId]);
             channelInvitationsView.model = channelInvitations;
         }
+        function onAddFriend(friendName: string, friendId: string) {
+            friends.push([friendName, friendId]);
+            friendsView.model = friends;
+        }
+        function onAddFriendRequest(friendName: string, requestId: string) {
+            friendRequests.push([friendName, requestId]);
+            friendRequestsView.model = friendRequests;
+        }
         function onClearChannelInvitationList() {
             channelInvitations = [];
             channelInvitationsView.model = channelInvitations;
@@ -214,6 +310,14 @@ Rectangle {
         function onClearChannelList() {
             channels = [];
             channelsView.model = channels;
+        }
+        function onClearFriendList() {
+            friends = [];
+            friendsView.model = friends;
+        }
+        function onClearFriendRequestList() {
+            friendRequests = [];
+            friendRequestsView.model = friendRequests;
         }
 
         target: mainController

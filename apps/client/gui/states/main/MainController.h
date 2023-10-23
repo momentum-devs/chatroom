@@ -30,12 +30,18 @@ public:
     Q_INVOKABLE void deleteTheChannel();
     Q_INVOKABLE void acceptChannelInvitation(const QString& channelId);
     Q_INVOKABLE void rejectChannelInvitation(const QString& channelId);
+    Q_INVOKABLE void acceptFriendRequest(const QString& channelId);
+    Q_INVOKABLE void rejectFriendRequest(const QString& channelId);
 
 signals:
     void addChannel(const QString& channelName, const QString& channelId, bool isOwner);
     void addChannelInvitation(const QString& channelName, const QString& channelId);
     void clearChannelList();
     void clearChannelInvitationList();
+    void addFriend(const QString& friendName, const QString& friendId);
+    void addFriendRequest(const QString& friendName, const QString& requestId);
+    void clearFriendList();
+    void clearFriendRequestList();
 
 private:
     void handleGetUserChannelsResponse(const common::messages::Message& message);

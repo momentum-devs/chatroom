@@ -308,11 +308,68 @@ void MainController::handleChangeChannelInvitationResponse(const common::message
 
 void MainController::handleGetUserFriendsResponse(const common::messages::Message& message)
 {
-    LOG_S(ERROR) << std::format("Received friend list");
+    LOG_S(INFO) << std::format("Received friend list");
 }
 
 void MainController::handleGetUserFriendRequestsResponse(const common::messages::Message& message)
 {
-    LOG_S(ERROR) << std::format("Received friend request list");
+    LOG_S(INFO) << std::format("Received friend requests list");
+
+    emit clearFriendRequestList();
+
+    auto responsePayload = static_cast<std::string>(message.payload);
+
+    auto responseJson = nlohmann::json::parse(responsePayload);
+
+    if (responseJson.contains("error"))
+    {
+        LOG_S(ERROR) << std::format("Error while getting user friend requests: {}",
+                                    responseJson.at("error").get<std::string>());
+    }
+
+    if (responseJson.contains("data"))
+    {
+        for (const auto& channel : responseJson.at("data"))
+        {
+            if (channel.contains("id") and channel.contains("name"))
+            {
+                LOG_S(INFO) << std::format("Adding friend request {} with id {} to list",
+                                           channel.at("name").get<std::string>(), channel.at("id").get<std::string>());
+
+                emit addFriendRequest(QString::fromStdString(channel.at("name").get<std::string>()),
+                                      QString::fromStdString(channel.at("id").get<std::string>()));
+            }
+            else
+            {
+                LOG_S(ERROR) << "Wrong friend request format";
+            }
+        }
+    }
+    else
+    {
+        LOG_S(ERROR) << "Response without data";
+    }
+}
+
+void MainController::acceptFriendRequest(const QString& requestId)
+{
+    LOG_S(INFO) << std::format("Accept friend request with id {}", requestId.toStdString());
+
+    nlohmann::json data{
+        {"requestId", requestId.toStdString()},
+    };
+
+    session->sendMessage(common::messages::MessageId::AcceptFriendRequests, data);
+}
+
+void MainController::rejectFriendRequest(const QString& requestId)
+{
+    LOG_S(INFO) << std::format("Reject friend request with id {}", requestId.toStdString());
+
+    nlohmann::json data{
+        {"requestId", requestId.toStdString()},
+    };
+
+    session->sendMessage(common::messages::MessageId::RejectFriendRequests, data);
 }
 }
