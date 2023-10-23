@@ -67,7 +67,8 @@ TEST_F(ConversationMapperTest, givenPersistenceConversationWithChannel_shouldMap
 
     const auto channel = channelTestFactory.createPersistentChannel(user);
 
-    const auto domainChannel = channelMapper->mapToDomainChannel(channel);
+    const auto domainChannel = std::make_shared<domain::Channel>(channel->getId(), channel->getName(), domainUser,
+                                                                 channel->getCreatedAt(), channel->getUpdatedAt());
 
     const auto conversation = conversationTestFactory.createPersistentChannelConversation(channel);
 

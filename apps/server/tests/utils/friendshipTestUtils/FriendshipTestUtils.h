@@ -20,6 +20,7 @@ public:
     createAndPersist(const std::shared_ptr<infrastructure::User>& user,
                      const std::shared_ptr<infrastructure::User>& userFriend);
     std::shared_ptr<infrastructure::Friendship> findById(const std::string& id);
+    std::shared_ptr<infrastructure::Friendship> find(const std::string& userId, const std::string& userFriendId);
     void truncateTable();
 
 private:

@@ -56,6 +56,20 @@ std::shared_ptr<infrastructure::UserChannel> UserChannelTestUtils::findById(cons
     return foundUserChannel;
 }
 
+std::shared_ptr<infrastructure::UserChannel> UserChannelTestUtils::find(const std::string& userId, const std::string& channelId)
+{
+    typedef odb::query<infrastructure::UserChannel> query;
+
+    odb::transaction transaction(databaseClient->begin());
+
+    std::shared_ptr<infrastructure::UserChannel> foundUserChannel(
+        databaseClient->query_one<infrastructure::UserChannel>(query::user->id == userId && query::channel->id == channelId));
+
+    transaction.commit();
+
+    return foundUserChannel;
+}
+
 void UserChannelTestUtils::truncateTable()
 {
     odb::transaction transaction(databaseClient->begin());

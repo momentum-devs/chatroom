@@ -1,50 +1,42 @@
 #include "gtest/gtest.h"
 
-#include "faker-cxx/Datatype.h"
-#include "faker-cxx/Date.h"
 #include "faker-cxx/Internet.h"
 #include "faker-cxx/String.h"
 #include "server/application/errors/ResourceNotFoundError.h"
 #include "server/application/services/hashService/HashServiceImpl.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "server/infrastructure/repositories/userRepository/UserRepositoryImpl.h"
+#include "server/tests/factories/databaseClientTestFactory/DatabaseClientTestFactory.h"
+#include "server/tests/utils/userTestUtils/UserTestUtils.h"
 #include "UpdateUserCommandHandlerImpl.h"
-#include "User.odb.h"
 
 using namespace ::testing;
 using namespace server;
 using namespace server::infrastructure;
 using namespace server::application;
 using namespace server::domain;
+using namespace server::tests;
 
 class UpdateUserCommandImplIntegrationTest : public Test
 {
 public:
     void SetUp() override
     {
-        odb::transaction transaction(db->begin());
-
-        db->execute("DELETE FROM \"users\";");
-
-        transaction.commit();
+        userTestUtils.truncateTable();
     }
 
     void TearDown() override
     {
-        odb::transaction transaction(db->begin());
-
-        db->execute("DELETE FROM \"users\";");
-
-        transaction.commit();
+        userTestUtils.truncateTable();
     }
 
-    std::unique_ptr<UserMapper> userMapperInit = std::make_unique<UserMapperImpl>();
+    std::shared_ptr<odb::pgsql::database> db = DatabaseClientTestFactory::create();
 
-    std::shared_ptr<odb::pgsql::database> db =
-        std::make_shared<odb::pgsql::database>("local", "local", "chatroom", "localhost", 5432);
+    UserTestUtils userTestUtils{db};
 
-    std::shared_ptr<UserRepository> userRepository =
-        std::make_shared<UserRepositoryImpl>(db, std::move(userMapperInit));
+    std::shared_ptr<UserMapper> userMapper = std::make_shared<UserMapperImpl>();
+
+    std::shared_ptr<UserRepository> userRepository = std::make_shared<UserRepositoryImpl>(db, userMapper);
 
     std::shared_ptr<HashServiceImpl> hashService = std::make_shared<HashServiceImpl>();
 
@@ -61,60 +53,24 @@ TEST_F(UpdateUserCommandImplIntegrationTest, updateNotExistingUser_shouldThrow)
 
 TEST_F(UpdateUserCommandImplIntegrationTest, updatePassword)
 {
-    const auto id = faker::String::uuid();
-    const auto email = faker::Internet::email();
-    const auto password = faker::Internet::password();
+    const auto user = userTestUtils.createAndPersist();
+
     const auto updatedPassword = faker::Internet::password();
-    const auto nickname = faker::Internet::username();
-    const auto active = faker::Datatype::boolean();
-    const auto emailVerified = faker::Datatype::boolean();
-    const auto verificationCode = faker::String::numeric(8);
-    const auto createdAt = faker::Date::pastDate();
-    const auto updatedAt = faker::Date::recentDate();
 
-    infrastructure::User existingUser{id,        email,    password, nickname, active, emailVerified, verificationCode,
-                                      createdAt, updatedAt};
+    const auto [updatedUser] = updateUserCommandHandler.execute({user->getId(), std::nullopt, updatedPassword});
 
-    {
-        odb::transaction transaction(db->begin());
-
-        db->persist(existingUser);
-
-        transaction.commit();
-    }
-
-    const auto [user] = updateUserCommandHandler.execute({id, std::nullopt, updatedPassword});
-
-    ASSERT_EQ(user.getId(), id);
-    ASSERT_EQ(user.getPassword(), hashService->hash(updatedPassword));
+    ASSERT_EQ(updatedUser.getId(), user->getId());
+    ASSERT_EQ(updatedUser.getPassword(), hashService->hash(updatedPassword));
 }
 
 TEST_F(UpdateUserCommandImplIntegrationTest, updateNickname)
 {
-    const auto id = faker::String::uuid();
-    const auto email = faker::Internet::email();
-    const auto password = faker::Internet::password();
-    const auto nickname = faker::Internet::username();
+    const auto user = userTestUtils.createAndPersist();
+
     const auto updatedNickname = faker::Internet::username();
-    const auto active = faker::Datatype::boolean();
-    const auto emailVerified = faker::Datatype::boolean();
-    const auto verificationCode = faker::String::numeric(8);
-    const auto createdAt = faker::Date::pastDate();
-    const auto updatedAt = faker::Date::recentDate();
 
-    infrastructure::User existingUser{id,        email,    password, nickname, active, emailVerified, verificationCode,
-                                      createdAt, updatedAt};
+    const auto [updatedUser] = updateUserCommandHandler.execute({user->getId(), updatedNickname, std::nullopt});
 
-    {
-        odb::transaction transaction(db->begin());
-
-        db->persist(existingUser);
-
-        transaction.commit();
-    }
-
-    const auto [user] = updateUserCommandHandler.execute({id, updatedNickname, std::nullopt});
-
-    ASSERT_EQ(user.getId(), id);
-    ASSERT_EQ(user.getNickname(), updatedNickname);
+    ASSERT_EQ(updatedUser.getId(), user->getId());
+    ASSERT_EQ(updatedUser.getNickname(), updatedNickname);
 }

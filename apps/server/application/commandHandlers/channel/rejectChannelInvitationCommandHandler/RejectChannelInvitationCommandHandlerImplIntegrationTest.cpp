@@ -1,102 +1,55 @@
-#include <utility>
-
 #include "gtest/gtest.h"
 
-#include "Channel.h"
-#include "Channel.odb.h"
-#include "ChannelInvitation.h"
-#include "ChannelInvitation.odb.h"
-#include "faker-cxx/Date.h"
-#include "faker-cxx/Internet.h"
-#include "faker-cxx/String.h"
-#include "faker-cxx/Word.h"
 #include "RejectChannelInvitationCommandHandlerImpl.h"
 #include "server/infrastructure/repositories/channelInvitationRepository/channelInvitationMapper/ChannelInvitationMapperImpl.h"
 #include "server/infrastructure/repositories/channelInvitationRepository/ChannelInvitationRepositoryImpl.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "server/infrastructure/repositories/userRepository/UserRepositoryImpl.h"
+#include "server/tests/factories/databaseClientTestFactory/DatabaseClientTestFactory.h"
+#include "server/tests/utils/channelInvitationTestUtils/ChannelInvitationTestUtils.h"
+#include "server/tests/utils/channelTestUtils/ChannelTestUtils.h"
+#include "server/tests/utils/userChannelTestUtils/UserChannelTestUtils.h"
+#include "server/tests/utils/userTestUtils/UserTestUtils.h"
 #include "User.h"
 
 using namespace ::testing;
 using namespace server;
 using namespace server::infrastructure;
 using namespace server::application;
+using namespace server::tests;
 
 class RejectChannelInvitationCommandImplIntegrationTest : public Test
 {
 public:
     void SetUp() override
     {
-        odb::transaction transaction(db->begin());
+        channelInvitationTestUtils.truncateTable();
 
-        db->execute("DELETE FROM \"channels_invitations\";");
-        db->execute("DELETE FROM \"users_channels\";");
-        db->execute("DELETE FROM \"channels\";");
-        db->execute("DELETE FROM \"users\";");
+        userChannelTestUtils.truncateTable();
 
-        transaction.commit();
+        channelTestUtils.truncateTable();
+
+        userTestUtils.truncateTable();
     }
 
     void TearDown() override
     {
-        odb::transaction transaction(db->begin());
+        channelInvitationTestUtils.truncateTable();
 
-        db->execute("DELETE FROM \"channels_invitations\";");
-        db->execute("DELETE FROM \"users_channels\";");
-        db->execute("DELETE FROM \"channels\";");
-        db->execute("DELETE FROM \"users\";");
+        userChannelTestUtils.truncateTable();
 
-        transaction.commit();
+        channelTestUtils.truncateTable();
+
+        userTestUtils.truncateTable();
     }
 
-    std::shared_ptr<User> createUser(const std::string& id, const std::string& email, const std::string& password)
-    {
-        const auto currentDate = to_iso_string(boost::posix_time::second_clock::universal_time());
+    std::shared_ptr<odb::pgsql::database> db = DatabaseClientTestFactory::create();
 
-        auto user = std::make_shared<User>(id, email, password, email, false, false, "123", currentDate, currentDate);
-
-        odb::transaction transaction(db->begin());
-
-        db->persist(user);
-
-        transaction.commit();
-
-        return user;
-    }
-
-    std::shared_ptr<Channel> createChannel(const std::string& id, const std::string& name,
-                                           const std::shared_ptr<User>& creator)
-    {
-        const auto currentDate = to_iso_string(boost::posix_time::second_clock::universal_time());
-
-        auto channel = std::make_shared<Channel>(id, name, creator, currentDate, currentDate);
-
-        odb::transaction transaction(db->begin());
-
-        db->persist(channel);
-
-        transaction.commit();
-
-        return channel;
-    }
-
-    ChannelInvitation createChannelInvitation(const std::string& id, std::shared_ptr<User> sender,
-                                              std::shared_ptr<User> recipient, std::shared_ptr<Channel> channel)
-    {
-        const auto currentDate = to_iso_string(boost::posix_time::second_clock::universal_time());
-
-        ChannelInvitation channelInvitation{id,          std::move(sender), std::move(recipient), std::move(channel),
-                                            currentDate, currentDate};
-
-        odb::transaction transaction(db->begin());
-
-        db->persist(channelInvitation);
-
-        transaction.commit();
-
-        return channelInvitation;
-    }
+    UserTestUtils userTestUtils{db};
+    ChannelTestUtils channelTestUtils{db};
+    UserChannelTestUtils userChannelTestUtils{db};
+    ChannelInvitationTestUtils channelInvitationTestUtils{db};
 
     std::shared_ptr<UserMapper> userMapper = std::make_shared<UserMapperImpl>();
 
@@ -104,9 +57,6 @@ public:
 
     std::shared_ptr<ChannelInvitationMapper> channelInvitationMapperInit =
         std::make_shared<ChannelInvitationMapperImpl>(userMapper, channelMapper);
-
-    std::shared_ptr<odb::pgsql::database> db =
-        std::make_shared<odb::pgsql::database>("local", "local", "chatroom", "localhost", 5432);
 
     std::shared_ptr<domain::ChannelInvitationRepository> channelInvitationRepository =
         std::make_shared<ChannelInvitationRepositoryImpl>(db, channelInvitationMapperInit, userMapper, channelMapper);
@@ -119,39 +69,21 @@ public:
 
 TEST_F(RejectChannelInvitationCommandImplIntegrationTest, rejectChannelInvitation)
 {
-    const auto channelInvitationId = faker::String::uuid();
-    const auto createdAt = faker::Date::pastDate();
-    const auto updatedAt = faker::Date::recentDate();
+    const auto sender = userTestUtils.createAndPersist();
 
-    const auto senderId = faker::String::uuid();
-    const auto recipientId = faker::String::uuid();
-    const auto senderEmail = faker::Internet::email();
-    const auto recipientEmail = faker::Internet::email();
-    const auto password = faker::Internet::password();
+    const auto recipient = userTestUtils.createAndPersist();
 
-    const auto sender = createUser(senderId, senderEmail, password);
+    const auto channel = channelTestUtils.createAndPersist(sender);
 
-    const auto recipient = createUser(recipientId, recipientEmail, password);
+    const auto channelInvitation = channelInvitationTestUtils.createAndPersist(sender, recipient, channel);
 
-    const auto channelId = faker::String::uuid();
-    const auto name = faker::Word::noun();
+    rejectChannelInvitationCommandHandler.execute({recipient->getId(), channelInvitation->getId()});
 
-    const auto channel = createChannel(channelId, name, sender);
+    const auto foundChannelInvitation = channelInvitationTestUtils.findById(channelInvitation->getId());
 
-    const auto channelInvitation = createChannelInvitation(channelInvitationId, sender, recipient, channel);
+    ASSERT_FALSE(foundChannelInvitation);
 
-    rejectChannelInvitationCommandHandler.execute({recipient->getId(), channelInvitation.getId()});
+    const auto foundUserChannel = userChannelTestUtils.find(recipient->getId(), channel->getId());
 
-    typedef odb::query<ChannelInvitation> ChannelInvitationQuery;
-
-    {
-        odb::transaction transaction(db->begin());
-
-        std::shared_ptr<ChannelInvitation> foundChannelInvitation(
-            db->query_one<ChannelInvitation>(ChannelInvitationQuery::id == channelInvitationId));
-
-        ASSERT_FALSE(foundChannelInvitation);
-
-        transaction.commit();
-    }
+    ASSERT_FALSE(foundUserChannel);
 }

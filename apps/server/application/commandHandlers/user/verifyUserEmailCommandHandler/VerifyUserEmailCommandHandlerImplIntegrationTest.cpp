@@ -7,42 +7,37 @@
 #include "server/application/errors/ResourceNotFoundError.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "server/infrastructure/repositories/userRepository/UserRepositoryImpl.h"
-#include "User.odb.h"
+#include "server/tests/factories/databaseClientTestFactory/DatabaseClientTestFactory.h"
+#include "server/tests/utils/userTestUtils/UserTestUtils.h"
 #include "VerifyUserEmailCommandHandlerImpl.h"
 
 using namespace ::testing;
 using namespace server;
 using namespace server::infrastructure;
 using namespace server::application;
+using namespace server::tests;
 
 class VerifyUserEmailCommandImplIntegrationTest : public Test
 {
 public:
     void SetUp() override
     {
-        odb::transaction transaction(db->begin());
-
-        db->execute("DELETE FROM \"users\";");
-
-        transaction.commit();
+        userTestUtils.truncateTable();
     }
 
     void TearDown() override
     {
-        odb::transaction transaction(db->begin());
-
-        db->execute("DELETE FROM \"users\";");
-
-        transaction.commit();
+        userTestUtils.truncateTable();
     }
 
-    std::unique_ptr<UserMapper> userMapperInit = std::make_unique<UserMapperImpl>();
+    std::shared_ptr<odb::pgsql::database> db = DatabaseClientTestFactory::create();
 
-    std::shared_ptr<odb::pgsql::database> db =
-        std::make_shared<odb::pgsql::database>("local", "local", "chatroom", "localhost", 5432);
+    UserTestUtils userTestUtils{db};
+
+    std::shared_ptr<UserMapper> userMapper = std::make_shared<UserMapperImpl>();
 
     std::shared_ptr<domain::UserRepository> userRepository =
-        std::make_shared<UserRepositoryImpl>(db, std::move(userMapperInit));
+        std::make_shared<UserRepositoryImpl>(db, userMapper);
 
     VerifyUserEmailCommandHandlerImpl verifyUserEmailCommandHandler{userRepository};
 };
@@ -50,7 +45,7 @@ public:
 TEST_F(VerifyUserEmailCommandImplIntegrationTest, verifyNotExistingUser)
 {
     const auto email = faker::Internet::email();
-    const auto verificationCode = "123";
+    const auto verificationCode = faker::String::numeric(6);
 
     ASSERT_THROW(verifyUserEmailCommandHandler.execute({email, verificationCode}), errors::ResourceNotFoundError);
 }
@@ -59,24 +54,19 @@ TEST_F(VerifyUserEmailCommandImplIntegrationTest, verifyExistingUserWithInvalidV
 {
     const auto id = faker::String::uuid();
     const auto email = faker::Internet::email();
-    const auto hashedPassword = "5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8";
+    const auto password = faker::Internet::password();
     const auto active = faker::Datatype::boolean();
     const auto emailVerified = false;
-    const auto verificationCode = "123";
-    const auto invalidVerificationCode = "12";
+    const auto verificationCode = faker::String::numeric(6);
     const auto createdAt = faker::Date::pastDate();
     const auto updatedAt = faker::Date::recentDate();
 
-    server::infrastructure::User user{
-        id, email, hashedPassword, email, active, emailVerified, verificationCode, createdAt, updatedAt};
+    const auto invalidVerificationCode = faker::String::numeric(5);
 
-    {
-        odb::transaction transaction(db->begin());
+    const auto user = std::make_shared<server::infrastructure::User>(
+        id, email, password, email, active, emailVerified, verificationCode, createdAt, updatedAt);
 
-        db->persist(user);
-
-        transaction.commit();
-    }
+    userTestUtils.persist(user);
 
     const auto [verified] = verifyUserEmailCommandHandler.execute({email, invalidVerificationCode});
 
@@ -87,24 +77,18 @@ TEST_F(VerifyUserEmailCommandImplIntegrationTest, verifyAlreadyVerifiedUser)
 {
     const auto id = faker::String::uuid();
     const auto email = faker::Internet::email();
-    const auto hashedPassword = "5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8";
+    const auto password = faker::Internet::password();
     const auto active = faker::Datatype::boolean();
     const auto emailVerified = true;
-    const auto verificationCode = "123";
-    const auto invalidVerificationCode = "12";
+    const auto verificationCode = faker::String::numeric(6);
+    const auto invalidVerificationCode = faker::String::numeric(5);
     const auto createdAt = faker::Date::pastDate();
     const auto updatedAt = faker::Date::recentDate();
 
-    server::infrastructure::User user{
-        id, email, hashedPassword, email, active, emailVerified, verificationCode, createdAt, updatedAt};
+    const auto user = std::make_shared<server::infrastructure::User>(
+        id, email, password, email, active, emailVerified, verificationCode, createdAt, updatedAt);
 
-    {
-        odb::transaction transaction(db->begin());
-
-        db->persist(user);
-
-        transaction.commit();
-    }
+    userTestUtils.persist(user);
 
     const auto [verified] = verifyUserEmailCommandHandler.execute({email, invalidVerificationCode});
 
@@ -115,38 +99,24 @@ TEST_F(VerifyUserEmailCommandImplIntegrationTest, verifyExistingUserWithValidVer
 {
     const auto id = faker::String::uuid();
     const auto email = faker::Internet::email();
-    const auto hashedPassword = "5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8";
+    const auto password = faker::Internet::password();
     const auto active = faker::Datatype::boolean();
     const auto emailVerified = false;
-    const auto verificationCode = "123";
+    const auto verificationCode = faker::String::numeric(6);
     const auto createdAt = faker::Date::pastDate();
     const auto updatedAt = faker::Date::recentDate();
 
-    server::infrastructure::User user{
-        id, email, hashedPassword, email, active, emailVerified, verificationCode, createdAt, updatedAt};
+    const auto user = std::make_shared<server::infrastructure::User>(
+        id, email, password, email, active, emailVerified, verificationCode, createdAt, updatedAt);
 
-    {
-        odb::transaction transaction(db->begin());
-
-        db->persist(user);
-
-        transaction.commit();
-    }
+    userTestUtils.persist(user);
 
     const auto [verified] = verifyUserEmailCommandHandler.execute({email, verificationCode});
 
     ASSERT_TRUE(verified);
 
-    {
-        typedef odb::query<User> Query;
+    const auto foundUser = userTestUtils.findById(id);
 
-        odb::transaction transaction(db->begin());
-
-        std::shared_ptr<User> loggedInUser(db->query_one<User>(Query::id == id));
-
-        transaction.commit();
-
-        ASSERT_TRUE(loggedInUser);
-        ASSERT_EQ(loggedInUser->isEmailVerified(), true);
-    }
+    ASSERT_TRUE(foundUser);
+    ASSERT_EQ(foundUser->isEmailVerified(), true);
 }

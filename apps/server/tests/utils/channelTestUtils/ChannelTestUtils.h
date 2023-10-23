@@ -16,7 +16,8 @@ public:
     explicit ChannelTestUtils(std::shared_ptr<odb::pgsql::database> databaseClient);
 
     void persist(const std::shared_ptr<infrastructure::Channel>& channel);
-    std::shared_ptr<infrastructure::Channel> createAndPersist(const std::shared_ptr<infrastructure::User>& user);
+    std::shared_ptr<infrastructure::Channel>
+    createAndPersist(const std::shared_ptr<infrastructure::User>& user = nullptr);
     std::shared_ptr<infrastructure::Channel> findById(const std::string& id);
     void truncateTable();
 

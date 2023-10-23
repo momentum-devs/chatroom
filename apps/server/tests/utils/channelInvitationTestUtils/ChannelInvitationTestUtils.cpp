@@ -59,6 +59,22 @@ std::shared_ptr<infrastructure::ChannelInvitation> ChannelInvitationTestUtils::f
     return foundChannelInvitation;
 }
 
+std::shared_ptr<infrastructure::ChannelInvitation> ChannelInvitationTestUtils::find(const std::string& senderId,
+                                                                                    const std::string& recipientId,
+                                                                                    const std::string& channelId)
+{
+    typedef odb::query<infrastructure::ChannelInvitation> query;
+
+    odb::transaction transaction(databaseClient->begin());
+
+    std::shared_ptr<infrastructure::ChannelInvitation> foundChannelInvitation(databaseClient->query_one<infrastructure::ChannelInvitation>(
+        query::sender->id == senderId && query::recipient->id == recipientId && query::channel->id == channelId));
+
+    transaction.commit();
+
+    return foundChannelInvitation;
+}
+
 void ChannelInvitationTestUtils::truncateTable()
 {
     odb::transaction transaction(databaseClient->begin());
@@ -67,4 +83,5 @@ void ChannelInvitationTestUtils::truncateTable()
 
     transaction.commit();
 }
+
 }

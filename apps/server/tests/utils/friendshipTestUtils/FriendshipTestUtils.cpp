@@ -54,6 +54,21 @@ std::shared_ptr<infrastructure::Friendship> FriendshipTestUtils::findById(const 
     return foundFriendship;
 }
 
+std::shared_ptr<infrastructure::Friendship> FriendshipTestUtils::find(const std::string& userId,
+                                                                      const std::string& userFriendId)
+{
+    typedef odb::query<infrastructure::Friendship> query;
+
+    odb::transaction transaction(databaseClient->begin());
+
+    std::shared_ptr<infrastructure::Friendship> foundFriendship(databaseClient->query_one<infrastructure::Friendship>(
+        query::user->id == userId && query::user_friend->id == userFriendId));
+
+    transaction.commit();
+
+    return foundFriendship;
+}
+
 void FriendshipTestUtils::truncateTable()
 {
     odb::transaction transaction(databaseClient->begin());
@@ -62,4 +77,5 @@ void FriendshipTestUtils::truncateTable()
 
     transaction.commit();
 }
+
 }

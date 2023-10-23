@@ -1,11 +1,7 @@
 #include "gtest/gtest.h"
 
 #include "CreateChannelCommandHandlerImpl.h"
-#include "faker-cxx/Internet.h"
-#include "faker-cxx/String.h"
-#include "faker-cxx/Word.h"
 #include "server/application/commandHandlers/channel/addUserToChannelCommandHandler/AddUserToChannelCommandHandlerImpl.h"
-#include "server/application/services/hashService/HashServiceImpl.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
 #include "server/infrastructure/repositories/channelRepository/ChannelRepositoryImpl.h"
 #include "server/infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapper.h"
@@ -13,62 +9,50 @@
 #include "server/infrastructure/repositories/userChannelRepository/UserChannelRepositoryImpl.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "server/infrastructure/repositories/userRepository/UserRepositoryImpl.h"
+#include "server/tests/factories/databaseClientTestFactory/DatabaseClientTestFactory.h"
+#include "server/tests/utils/channelTestUtils/ChannelTestUtils.h"
+#include "server/tests/utils/userChannelTestUtils/UserChannelTestUtils.h"
+#include "server/tests/utils/userTestUtils/UserTestUtils.h"
 #include "User.h"
-#include "User.odb.h"
-#include "UserChannel.h"
-#include "UserChannel.odb.h"
 
 using namespace ::testing;
 using namespace server;
 using namespace server::infrastructure;
 using namespace server::application;
+using namespace server::tests;
 
 class CreateChannelCommandImplIntegrationTest : public Test
 {
 public:
     void SetUp() override
     {
-        odb::transaction transaction(db->begin());
+        userChannelTestUtils.truncateTable();
 
-        db->execute("DELETE FROM \"users_channels\";");
-        db->execute("DELETE FROM \"channels\";");
-        db->execute("DELETE FROM \"users\";");
+        channelTestUtils.truncateTable();
 
-        transaction.commit();
+        userTestUtils.truncateTable();
     }
 
     void TearDown() override
     {
-        odb::transaction transaction(db->begin());
+        userChannelTestUtils.truncateTable();
 
-        db->execute("DELETE FROM \"users_channels\";");
-        db->execute("DELETE FROM \"channels\";");
-        db->execute("DELETE FROM \"users\";");
+        channelTestUtils.truncateTable();
 
-        transaction.commit();
+        userTestUtils.truncateTable();
     }
 
-    User createUser(const std::string& id, const std::string& email, const std::string& password)
-    {
-        const auto currentDate = to_iso_string(boost::posix_time::second_clock::universal_time());
+    std::shared_ptr<odb::pgsql::database> db = DatabaseClientTestFactory::create();
 
-        User user{id, email, password, email, false, false, "123", currentDate, currentDate};
+    ChannelTestFactory channelTestFactory;
 
-        odb::transaction transaction(db->begin());
-
-        db->persist(user);
-
-        transaction.commit();
-
-        return user;
-    }
+    UserTestUtils userTestUtils{db};
+    ChannelTestUtils channelTestUtils{db};
+    UserChannelTestUtils userChannelTestUtils{db};
 
     std::shared_ptr<UserMapper> userMapper = std::make_shared<UserMapperImpl>();
 
     std::shared_ptr<ChannelMapper> channelMapper = std::make_shared<ChannelMapperImpl>(userMapper);
-
-    std::shared_ptr<odb::pgsql::database> db =
-        std::make_shared<odb::pgsql::database>("local", "local", "chatroom", "localhost", 5432);
 
     std::shared_ptr<domain::ChannelRepository> channelRepository =
         std::make_shared<ChannelRepositoryImpl>(db, channelMapper, userMapper);
@@ -90,31 +74,21 @@ public:
 
 TEST_F(CreateChannelCommandImplIntegrationTest, createChannel)
 {
-    const auto userId = faker::String::uuid();
-    const auto userEmail = faker::Internet::email();
-    const auto userPassword = faker::Internet::password();
+    const auto user = userTestUtils.createAndPersist();
 
-    const auto user = createUser(userId, userEmail, userPassword);
+    const auto channel = channelTestFactory.createPersistentChannel(user);
 
-    const auto channelId = faker::String::uuid();
-    const auto name = faker::Word::noun();
-    const auto creatorId = user.getId();
+    const auto [createdChannel] = createChannelCommandHandler.execute({channel->getName(), user->getId()});
 
-    const auto [channel] = createChannelCommandHandler.execute({name, creatorId});
+    ASSERT_EQ(createdChannel.getName(), channel->getName());
 
-    ASSERT_EQ(channel.getName(), name);
-    ASSERT_EQ(channel.getCreator()->getId(), creatorId);
+    ASSERT_EQ(channel->getCreator()->getId(), user->getId());
 
-    typedef odb::query<UserChannel> Query;
+    const auto foundChannel = channelTestUtils.findById(channel->getId());
 
-    {
-        odb::transaction transaction(db->begin());
+    ASSERT_TRUE(foundChannel);
 
-        std::shared_ptr<UserChannel> foundUserChannel(
-            db->query_one<UserChannel>(Query::user->id == userId && Query::channel->id == channel.getId()));
+    const auto foundUserChannel = userChannelTestUtils.find(user->getId(), channel->getId());
 
-        ASSERT_TRUE(foundUserChannel);
-
-        transaction.commit();
-    }
+    ASSERT_TRUE(foundUserChannel);
 }

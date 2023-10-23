@@ -24,6 +24,8 @@ public:
                      const std::shared_ptr<infrastructure::User>& recipient,
                      const std::shared_ptr<infrastructure::Channel>& channel);
     std::shared_ptr<infrastructure::ChannelInvitation> findById(const std::string& id);
+    std::shared_ptr<infrastructure::ChannelInvitation> find(const std::string& senderId, const std::string& recipientId,
+                                                            const std::string& channelId);
     void truncateTable();
 
 private:

@@ -10,12 +10,14 @@
 #include "server/application/services/tokenService/TokenServiceImpl.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "server/infrastructure/repositories/userRepository/UserRepositoryImpl.h"
-#include "User.odb.h"
+#include "server/tests/factories/databaseClientTestFactory/DatabaseClientTestFactory.h"
+#include "server/tests/utils/userTestUtils/UserTestUtils.h"
 
 using namespace ::testing;
 using namespace server;
 using namespace server::infrastructure;
 using namespace server::application;
+using namespace server::tests;
 
 const auto jwtSecret = "12321313423565365654546654121890008";
 const auto jwtExpiresIn = 86400;
@@ -25,29 +27,21 @@ class LoginUserCommandImplIntegrationTest : public Test
 public:
     void SetUp() override
     {
-        odb::transaction transaction(db->begin());
-
-        db->execute("DELETE FROM \"users\";");
-
-        transaction.commit();
+        userTestUtils.truncateTable();
     }
 
     void TearDown() override
     {
-        odb::transaction transaction(db->begin());
-
-        db->execute("DELETE FROM \"users\";");
-
-        transaction.commit();
+        userTestUtils.truncateTable();
     }
 
-    std::unique_ptr<UserMapper> userMapperInit = std::make_unique<UserMapperImpl>();
+    std::shared_ptr<odb::pgsql::database> db = DatabaseClientTestFactory::create();
 
-    std::shared_ptr<odb::pgsql::database> db =
-        std::make_shared<odb::pgsql::database>("local", "local", "chatroom", "localhost", 5432);
+    UserTestUtils userTestUtils{db};
 
-    std::shared_ptr<domain::UserRepository> userRepository =
-        std::make_shared<UserRepositoryImpl>(db, std::move(userMapperInit));
+    std::shared_ptr<UserMapper> userMapper = std::make_shared<UserMapperImpl>();
+
+    std::shared_ptr<domain::UserRepository> userRepository = std::make_shared<UserRepositoryImpl>(db, userMapper);
 
     std::shared_ptr<HashService> hashService = std::make_shared<HashServiceImpl>();
 
@@ -69,35 +63,19 @@ TEST_F(LoginUserCommandImplIntegrationTest, loginExistingUserWithValidPassword)
     const auto createdAt = faker::Date::pastDate();
     const auto updatedAt = faker::Date::recentDate();
 
-    server::infrastructure::User user{
-        id, email, hashedPassword, email, active, emailVerified, verificationCode, createdAt, updatedAt};
+    const auto user = std::make_shared<server::infrastructure::User>(
+        id, email, hashedPassword, email, active, emailVerified, verificationCode, createdAt, updatedAt);
 
-    {
-        odb::transaction transaction(db->begin());
-
-        db->persist(user);
-
-        transaction.commit();
-    }
-
-    const auto userId = user.getId();
+    userTestUtils.persist(user);
 
     const auto [token] = loginUserCommandHandler.execute({email, password});
 
-    {
-        typedef odb::query<User> Query;
+    const auto foundUser = userTestUtils.findById(user->getId());
 
-        odb::transaction transaction(db->begin());
+    ASSERT_TRUE(foundUser);
+    ASSERT_EQ(foundUser->isActive(), true);
 
-        std::shared_ptr<User> loggedInUser(db->query_one<User>(Query::id == id));
-
-        transaction.commit();
-
-        ASSERT_TRUE(loggedInUser);
-        ASSERT_EQ(loggedInUser->isActive(), true);
-    }
-
-    ASSERT_EQ(tokenService->getUserIdFromToken(token), userId);
+    ASSERT_EQ(tokenService->getUserIdFromToken(token), user->getId());
 }
 
 TEST_F(LoginUserCommandImplIntegrationTest, loginExistingUserWithInvalidPassword)
@@ -113,16 +91,10 @@ TEST_F(LoginUserCommandImplIntegrationTest, loginExistingUserWithInvalidPassword
     const auto createdAt = faker::Date::pastDate();
     const auto updatedAt = faker::Date::recentDate();
 
-    server::infrastructure::User user{id,    email,     hashedPassword, email, active, emailVerified,
-                                      "123", createdAt, updatedAt};
+    const auto user = std::make_shared<server::infrastructure::User>(
+        id, email, hashedPassword, email, active, emailVerified, verificationCode, createdAt, updatedAt);
 
-    {
-        odb::transaction transaction(db->begin());
-
-        db->persist(user);
-
-        transaction.commit();
-    }
+    userTestUtils.persist(user);
 
     ASSERT_THROW(loginUserCommandHandler.execute({email, password}), errors::ResourceNotFoundError);
 }

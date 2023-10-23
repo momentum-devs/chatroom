@@ -54,6 +54,21 @@ std::shared_ptr<infrastructure::FriendInvitation> FriendInvitationTestUtils::fin
     return foundFriendInvitation;
 }
 
+std::shared_ptr<infrastructure::FriendInvitation> FriendInvitationTestUtils::find(const std::string& senderId,
+                                                                                  const std::string& recipientId)
+{
+    typedef odb::query<infrastructure::FriendInvitation> query;
+
+    odb::transaction transaction(databaseClient->begin());
+
+    std::shared_ptr<infrastructure::FriendInvitation> foundFriendInvitation(
+        databaseClient->query_one<infrastructure::FriendInvitation>(query::sender->id == senderId && query::recipient->id == recipientId));
+
+    transaction.commit();
+
+    return foundFriendInvitation;
+}
+
 void FriendInvitationTestUtils::truncateTable()
 {
     odb::transaction transaction(databaseClient->begin());
@@ -62,4 +77,5 @@ void FriendInvitationTestUtils::truncateTable()
 
     transaction.commit();
 }
+
 }
