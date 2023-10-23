@@ -42,8 +42,8 @@ int main(int argc, char* argv[])
 
     boost::asio::io_context context;
 
-    auto sessionFactory =
-        std::make_unique<server::api::SessionFactoryImpl>(context, db, jwtSecret, jwtExpireIn, sendGridApiKey);
+    auto sessionFactory = std::make_unique<server::api::SessionFactoryImpl>(context, db, jwtSecret, jwtExpireIn,
+                                                                            sendGridApiKey, sendGridEmail);
 
     auto connectionAcceptor =
         std::make_unique<server::api::ConnectionAcceptorImpl>(context, serverPort, std::move(sessionFactory));
