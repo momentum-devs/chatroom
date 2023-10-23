@@ -65,7 +65,7 @@ TEST_F(FriendInvitationRepositoryIntegrationTest, shouldCreateFriendInvitation)
         {friendInvitationId, userMapper->mapToDomainUser(sender), userMapper->mapToDomainUser(recipient)});
 
     ASSERT_EQ(friendInvitation.getSender()->getId(), sender->getId());
-    ASSERT_EQ(friendInvitation.getRecipient()->getId(), sender->getId());
+    ASSERT_EQ(friendInvitation.getRecipient()->getId(), recipient->getId());
 
     const auto foundFriendInvitation = friendInvitationTestUtils.findById(friendInvitationId);
 

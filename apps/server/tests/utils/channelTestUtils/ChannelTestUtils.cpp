@@ -10,8 +10,9 @@ namespace server::tests
 {
 
 ChannelTestUtils::ChannelTestUtils(std::shared_ptr<odb::pgsql::database> databaseClientInit)
-    : databaseClient{std::move(databaseClientInit)}, channelTestFactory{std::make_unique<ChannelTestFactory>()},
-      userTestFactory{std::make_unique<UserTestFactory>()}
+    : databaseClient{std::move(databaseClientInit)},
+      channelTestFactory{std::make_unique<ChannelTestFactory>()},
+      userTestUtils{std::make_unique<UserTestUtils>(databaseClient)}
 {
 }
 
@@ -27,7 +28,7 @@ void ChannelTestUtils::persist(const std::shared_ptr<infrastructure::Channel>& c
 std::shared_ptr<infrastructure::Channel>
 ChannelTestUtils::createAndPersist(const std::shared_ptr<infrastructure::User>& user)
 {
-    const auto creator = user? user: userTestFactory->createPersistentUser();
+    const auto creator = user ? user : userTestUtils->createAndPersist();
 
     auto channel = channelTestFactory->createPersistentChannel(creator);
 

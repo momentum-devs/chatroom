@@ -31,6 +31,8 @@ public:
 
     UserTestUtils userTestUtils{db};
 
+    UserTestFactory userTestFactory;
+
     std::shared_ptr<UserMapper> userMapper = std::make_shared<UserMapperImpl>();
 
     std::shared_ptr<domain::UserRepository> userRepository = std::make_shared<UserRepositoryImpl>(db, userMapper);
@@ -40,7 +42,13 @@ public:
 
 TEST_F(LogoutUserCommandImplIntegrationTest, logoutExistingUser)
 {
-    const auto user = userTestUtils.createAndPersist();
+    auto user = userTestFactory.createPersistentUser();
+
+    user->setActive(true);
+
+    userTestUtils.persist(user);
+
+    logoutUserCommandHandler.execute({user->getId()});
 
     const auto foundUser = userTestUtils.findById(user->getId());
 

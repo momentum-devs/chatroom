@@ -60,14 +60,14 @@ TEST_F(DeleteChannelCommandImplIntegrationTest, givenExistingChannelAndRequester
 
     const auto foundChannel = channelTestUtils.findById(channel->getId());
 
-    ASSERT_TRUE(foundChannel);
+    ASSERT_FALSE(foundChannel);
 }
 
 TEST_F(DeleteChannelCommandImplIntegrationTest, givenExistingChannelAndRequesterIsNotChannelCreator_shouldThrow)
 {
     const auto user = userTestUtils.createAndPersist();
 
-    const auto channel = channelTestUtils.createAndPersist(user);
+    const auto channel = channelTestUtils.createAndPersist();
 
     ASSERT_THROW(deleteChannelCommandHandler.execute({channel->getId(), user->getId()}),
                  errors::OperationNotValidError);

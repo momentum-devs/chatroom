@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 
 #include "CreateChannelCommandHandlerImpl.h"
+#include "faker-cxx/Word.h"
 #include "server/application/commandHandlers/channel/addUserToChannelCommandHandler/AddUserToChannelCommandHandlerImpl.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
 #include "server/infrastructure/repositories/channelRepository/ChannelRepositoryImpl.h"
@@ -76,19 +77,19 @@ TEST_F(CreateChannelCommandImplIntegrationTest, createChannel)
 {
     const auto user = userTestUtils.createAndPersist();
 
-    const auto channel = channelTestFactory.createPersistentChannel(user);
+    const auto name = faker::Word::noun();
 
-    const auto [createdChannel] = createChannelCommandHandler.execute({channel->getName(), user->getId()});
+    const auto [createdChannel] = createChannelCommandHandler.execute({name, user->getId()});
 
-    ASSERT_EQ(createdChannel.getName(), channel->getName());
+    ASSERT_EQ(createdChannel.getName(), name);
 
-    ASSERT_EQ(channel->getCreator()->getId(), user->getId());
+    ASSERT_EQ(createdChannel.getCreator()->getId(), user->getId());
 
-    const auto foundChannel = channelTestUtils.findById(channel->getId());
+    const auto foundChannel = channelTestUtils.findById(createdChannel.getId());
 
     ASSERT_TRUE(foundChannel);
 
-    const auto foundUserChannel = userChannelTestUtils.find(user->getId(), channel->getId());
+    const auto foundUserChannel = userChannelTestUtils.find(user->getId(), createdChannel.getId());
 
     ASSERT_TRUE(foundUserChannel);
 }

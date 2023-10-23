@@ -5,7 +5,7 @@
 
 #include "Channel.h"
 #include "server/tests/factories/channelTestFactory/ChannelTestFactory.h"
-#include "server/tests/factories/userTestFactory/UserTestFactory.h"
+#include "server/tests/utils/userTestUtils/UserTestUtils.h"
 #include "User.h"
 
 namespace server::tests
@@ -24,6 +24,6 @@ public:
 private:
     std::shared_ptr<odb::pgsql::database> databaseClient;
     std::unique_ptr<ChannelTestFactory> channelTestFactory;
-    std::unique_ptr<UserTestFactory> userTestFactory;
+    std::unique_ptr<UserTestUtils> userTestUtils;
 };
 }
