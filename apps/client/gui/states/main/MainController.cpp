@@ -47,6 +47,10 @@ void MainController::activate()
     session->addMessageHandler({common::messages::MessageId::GetFriendRequestsResponse,
                                 getUserFriendRequestsResponseHandlerName,
                                 [this](const auto& msg) { handleGetUserFriendRequestsResponse(msg); }});
+
+    session->addMessageHandler({common::messages::MessageId::ChangeFriendRequestsResponse,
+                                changeFriendRequestResponseHandlerName,
+                                [this](const auto& msg) { handleChangeFriendRequestResponse(msg); }});
 }
 
 void MainController::deactivate()
@@ -73,6 +77,9 @@ void MainController::deactivate()
 
     session->removeMessageHandler(
         {common::messages::MessageId::GetFriendRequestsResponse, getUserFriendRequestsResponseHandlerName});
+
+    session->removeMessageHandler(
+        {common::messages::MessageId::ChangeFriendRequestsResponse, changeFriendRequestResponseHandlerName});
 }
 
 void MainController::logout()
@@ -371,5 +378,25 @@ void MainController::rejectFriendRequest(const QString& requestId)
     };
 
     session->sendMessage(common::messages::MessageId::RejectFriendRequests, data);
+}
+
+void MainController::handleChangeFriendRequestResponse(const common::messages::Message& message)
+{
+    LOG_S(INFO) << "Handle change friend request response";
+
+    auto responsePayload = static_cast<std::string>(message.payload);
+
+    auto responseJson = nlohmann::json::parse(responsePayload);
+
+    if (responseJson.contains("error"))
+    {
+        LOG_S(ERROR) << std::format("Error while change user friend request: {}",
+                                    responseJson.at("error").get<std::string>());
+    }
+    else
+    {
+        session->sendMessage(common::messages::MessageId::GetUserFriends, {});
+        session->sendMessage(common::messages::MessageId::GetFriendRequests, {});
+    }
 }
 }

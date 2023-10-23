@@ -35,6 +35,7 @@ Rectangle {
         Row {
             id: buttonRow
             anchors.horizontalCenter: parent.horizontalCenter
+            spacing: 5
 
             Button {
                 id: loginButton

@@ -51,6 +51,7 @@ private:
     void handleChangeChannelInvitationResponse(const common::messages::Message& message);
     void handleGetUserFriendsResponse(const common::messages::Message& message);
     void handleGetUserFriendRequestsResponse(const common::messages::Message& message);
+    void handleChangeFriendRequestResponse(const common::messages::Message& message);
 
     std::shared_ptr<api::Session> session;
     const StateFactory& stateFactory;
@@ -69,5 +70,6 @@ private:
     inline static const std::string getUserFriendsResponseHandlerName{"getUserFriendsResponseHandlerName"};
     inline static const std::string getUserFriendRequestsResponseHandlerName{
         "getUserFriendRequestsResponseHandlerName"};
+    inline static const std::string changeFriendRequestResponseHandlerName{"changeFriendRequestResponseHandlerName"};
 };
 }

@@ -2,8 +2,7 @@ import QtQuick 6.4
 import QtQuick.Controls 6.4
 
 Rectangle {
-    color: "grey"
-    width: Math.round(parent.width / 3)
+    color: "#313338"
 
     Keys.onEnterPressed: sendFriendRequestButton.activate()
     Keys.onEscapePressed: goBackButton.activate()
@@ -14,7 +13,8 @@ Rectangle {
 
         Text {
             anchors.horizontalCenter: parent.horizontalCenter
-            text: "Send friend request"
+            color: "white"
+            text: "Invite friend:"
         }
         TextField {
             id: friendEmailField
@@ -25,6 +25,7 @@ Rectangle {
         }
         Row {
             anchors.horizontalCenter: friendEmailField.horizontalCenter
+            spacing: 5
 
             Button {
                 id: sendFriendRequestButton
@@ -39,7 +40,7 @@ Rectangle {
                     }
                 }
 
-                text: qsTr('Send friend request')
+                text: qsTr('Invite')
 
                 Keys.onEnterPressed: activate()
                 Keys.onReturnPressed: activate()

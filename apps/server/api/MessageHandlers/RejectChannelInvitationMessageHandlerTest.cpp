@@ -27,10 +27,10 @@ std::runtime_error invalidToken("invalidToken");
 auto invalidTokenMessageResponse = common::messages::Message{
     common::messages::MessageId::ChangeChannelInvitationResponse, common::bytes::Bytes{R"({"error":"invalidToken"})"}};
 
-std::runtime_error acceptInvitationToChannelError("acceptInvitationToChannelError");
+std::runtime_error acceptInvitationToChannelError("rejectInvitationToChannelError");
 auto createChannelErrorMessageResponse =
     common::messages::Message{common::messages::MessageId::ChangeChannelInvitationResponse,
-                              common::bytes::Bytes{R"({"error":"acceptInvitationToChannelError"})"}};
+                              common::bytes::Bytes{R"({"error":"rejectInvitationToChannelError"})"}};
 }
 
 class RejectChannelInvitationMessageHandlerTest : public Test

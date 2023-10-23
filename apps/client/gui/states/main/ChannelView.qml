@@ -7,6 +7,8 @@ Item {
 
     function setChannel(channel) {
         channelName.text = '<b>' + channel[0] + '</b>';
+        channelName.color = "white";
+        channelName.font.pointSize = 18;
         channelId = channel[1];
         isOwner = channel[2];
         deleteChannelButton.visible = isOwner;

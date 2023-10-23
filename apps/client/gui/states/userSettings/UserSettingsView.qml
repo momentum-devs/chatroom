@@ -2,7 +2,7 @@ import QtQuick 6.4
 import QtQuick.Controls 6.4
 
 Rectangle {
-    color: "grey"
+    color: "#313338"
 
     Column {
         anchors.centerIn: parent
@@ -11,6 +11,7 @@ Rectangle {
 
         Text {
             anchors.horizontalCenter: parent.horizontalCenter
+            color: "white"
             text: "User Settings"
         }
         TextField {

@@ -231,7 +231,6 @@ Rectangle {
                 width: parent.width
             }
             Text {
-                anchors.horizontalCenter: parent.horizontalCenter - 1
                 color: "white"
                 text: 'Friend Requests:'
             }
