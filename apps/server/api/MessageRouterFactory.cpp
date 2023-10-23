@@ -52,11 +52,13 @@
 namespace server::api
 {
 MessageRouterFactory::MessageRouterFactory(std::shared_ptr<odb::pgsql::database> dbInit, const std::string& jwtSecret,
-                                           const int jwtExpireIn, std::string sendGridApiKeyInit)
+                                           const int jwtExpireIn, std::string sendGridApiKeyInit,
+                                           std::string sendGridEmailInit)
     : db{std::move(dbInit)},
       hashService{std::make_shared<server::application::HashServiceImpl>()},
       tokenService{std::make_shared<server::application::TokenServiceImpl>(jwtSecret, jwtExpireIn)},
-      sendGridApiKey{std::move(sendGridApiKeyInit)}
+      sendGridApiKey{std::move(sendGridApiKeyInit)},
+      sendGridEmail{std::move(sendGridEmailInit)}
 {
 }
 
@@ -100,7 +102,8 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
     const std::shared_ptr<common::httpClient::HttpClient> httpClient =
         common::httpClient::HttpClientFactory::createHttpClient();
 
-    const auto emailService = std::make_shared<application::EmailServiceImpl>(httpClient, sendGridApiKey);
+    const auto emailService =
+        std::make_shared<application::EmailServiceImpl>(httpClient, sendGridApiKey, sendGridEmail);
 
     auto sendRegistrationVerificationEmailCommandHandler =
         std::make_shared<server::application::SendRegistrationVerificationEmailCommandHandlerImpl>(userRepository,

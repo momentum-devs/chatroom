@@ -10,12 +10,14 @@ namespace server::application
 class EmailServiceImpl : public EmailService
 {
 public:
-    EmailServiceImpl(std::shared_ptr<common::httpClient::HttpClient>, std::string sendApiKey);
+    EmailServiceImpl(std::shared_ptr<common::httpClient::HttpClient>, std::string sendGridApiKey,
+                     std::string sendGridEmail);
 
     void sendEmail(const SendEmailPayload& payload) const override;
 
 private:
     std::shared_ptr<common::httpClient::HttpClient> httpClient;
     std::string sendGridApiKey;
+    std::string sendGridEmail;
 };
 }

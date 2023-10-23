@@ -12,8 +12,8 @@ namespace server::api
 class MessageRouterFactory
 {
 public:
-    MessageRouterFactory(std::shared_ptr<odb::pgsql::database> db, const std::string& jwtSecret, const int jwtExpireIn,
-                         std::string sendGridApiKey);
+    MessageRouterFactory(std::shared_ptr<odb::pgsql::database> db, const std::string& jwtSecret, int jwtExpireIn,
+                         std::string sendGridApiKey, std::string sendGridEmail);
 
     std::unique_ptr<MessageRouter> createMessageRouter() const;
 
@@ -22,5 +22,6 @@ private:
     std::shared_ptr<server::application::HashService> hashService;
     std::shared_ptr<server::application::TokenService> tokenService;
     std::string sendGridApiKey;
+    std::string sendGridEmail;
 };
 }

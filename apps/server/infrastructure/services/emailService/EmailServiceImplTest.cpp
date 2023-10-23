@@ -21,14 +21,14 @@ public:
         std::make_shared<StrictMock<common::httpClient::HttpClientMock>>();
 
     const std::string sendGridSecret = faker::Internet::password();
+    const std::string sendGridEmail = faker::Internet::email();
 
-    EmailServiceImpl emailService{httpClient, sendGridSecret};
+    EmailServiceImpl emailService{httpClient, sendGridSecret, sendGridEmail};
 };
 
 TEST_F(EmailServiceImplTest, shouldSendEmail)
 {
     const auto to = faker::Internet::email();
-    const auto from = faker::Internet::email();
     const auto subject = faker::Word::noun();
     const auto emailData = faker::Lorem::paragraph();
 
@@ -40,7 +40,7 @@ TEST_F(EmailServiceImplTest, shouldSendEmail)
     const auto body =
         std::format("{{\"personalizations\": [{{\"to\": [{{\"email\": \"{}\"}}]}}],\"from\": {{\"email\": "
                     "\"{}\"}},\"subject\": \"{}\",\"content\": [{{\"type\": \"text/plain\", \"value\": \"{}\"}}]}}",
-                    to, from, subject, emailData);
+                    to, sendGridEmail, subject, emailData);
 
     const common::httpClient::HttpPostRequestPayload postRequestPayload{sendGridApiUrl, headers, body};
 
@@ -48,5 +48,5 @@ TEST_F(EmailServiceImplTest, shouldSendEmail)
 
     EXPECT_CALL(*httpClient, post(postRequestPayload)).WillOnce(Return(response));
 
-    emailService.sendEmail({to, from, subject, emailData});
+    emailService.sendEmail({to, subject, emailData});
 }

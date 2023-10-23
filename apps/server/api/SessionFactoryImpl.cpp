@@ -16,10 +16,11 @@ namespace server::api
 {
 SessionFactoryImpl::SessionFactoryImpl(boost::asio::io_context& context,
                                        const std::shared_ptr<odb::pgsql::database>& dbInit,
-                                       const std::string& jwtSecret, int jwtExpireIn, const std::string& sendGridApiKey)
+                                       const std::string& jwtSecret, int jwtExpireIn, const std::string& sendGridApiKey,
+                                       const std::string& sendGridEmail)
     : context{context},
       db{dbInit},
-      messageRouterFactory{dbInit, jwtSecret, jwtExpireIn, sendGridApiKey},
+      messageRouterFactory{dbInit, jwtSecret, jwtExpireIn, sendGridApiKey, sendGridEmail},
       tokenService{std::make_shared<server::application::TokenServiceImpl>(jwtSecret, jwtExpireIn)}
 {
 }

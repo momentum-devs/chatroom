@@ -47,12 +47,10 @@ TEST_F(SendRegistrationVerificationEmailCommandHandlerImplTest, givenExistingUse
 
     const auto expectedFindUserByEmailPayload = domain::FindUserByEmailPayload{user->getEmail()};
 
-    const auto expectedFromAddress = "michal.andrzej.cieslar@gmail.com";
-
     const auto expectedEmailSubject = "Chatroom Registration Verification";
 
-    const auto expectedSendEmailPayload = application::SendEmailPayload{
-        user->getEmail(), expectedFromAddress, expectedEmailSubject, user->getVerificationCode()};
+    const auto expectedSendEmailPayload =
+        application::SendEmailPayload{user->getEmail(), expectedEmailSubject, user->getVerificationCode()};
 
     EXPECT_CALL(*userRepository, findUserByEmail(expectedFindUserByEmailPayload)).WillOnce(Return(user));
     EXPECT_CALL(*emailService, sendEmail(expectedSendEmailPayload));
