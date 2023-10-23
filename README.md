@@ -58,7 +58,6 @@
 
 // SERVER:
 
-* generate verification code
 * sender email from config
 * direct messages between users
 * messages in channel

@@ -32,6 +32,7 @@ int main(int argc, char* argv[])
     const auto jwtSecret = configProvider.getJwtSecret();
     const auto jwtExpireIn = configProvider.getJwtExpireIn();
     const auto sendGridApiKey = configProvider.getSendGridApiKey();
+    const auto sendGridEmail = configProvider.getSendGridEmail();
     const auto refreshSessionsInterval = boost::posix_time::seconds{configProvider.getRefreshSessionsInterval()};
 
     const auto numberOfSupportedThreads = std::thread::hardware_concurrency();
