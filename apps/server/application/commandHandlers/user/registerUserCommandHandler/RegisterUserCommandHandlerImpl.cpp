@@ -38,7 +38,7 @@ RegisterUserCommandHandlerImpl::execute(const RegisterUserCommandHandlerPayload&
     const auto verificationCode = common::random::StringGenerator::numeric(6);
 
     const auto user = userRepository->createUser(
-        {userId, payload.email, hashedPassword, payload.email, false, false, verificationCode});
+        {userId, payload.email, hashedPassword, payload.nickname, false, false, verificationCode});
 
     LOG_S(INFO) << std::format("User with email \"{}\" registered.", payload.email);
 

@@ -17,7 +17,7 @@ namespace
 auto userId = "id";
 auto userEmail = "userEmail@mail.com";
 auto userPassword = "userPassword";
-auto userNickname = "userNickname";
+auto userNickname = "nickname";
 auto userIsActive = true;
 auto userEmailVerified = true;
 auto validPayloadJson = nlohmann::json{{"email", userEmail}, {"password", userPassword}};
@@ -60,7 +60,7 @@ public:
 TEST_F(RegisterMessageHandlerTest, handleValidRegisterUserMessage)
 {
     EXPECT_CALL(*registerUserCommandHandlerMock,
-                execute(server::application::RegisterUserCommandHandlerPayload{userEmail, userPassword}))
+                execute(server::application::RegisterUserCommandHandlerPayload{userEmail, userPassword, userNickname}))
         .WillOnce(Return(server::application::RegisterUserCommandHandlerResult{
             {userId, userEmail, userPassword, userNickname, userIsActive, userEmailVerified, "123", "", ""}}));
 
@@ -82,7 +82,7 @@ TEST_F(RegisterMessageHandlerTest, handleRegisterUserMessageWithInvalidEmail)
 TEST_F(RegisterMessageHandlerTest, handleRegisterUserMessageWithErrorWhileHandling)
 {
     EXPECT_CALL(*registerUserCommandHandlerMock,
-                execute(server::application::RegisterUserCommandHandlerPayload{userEmail, userPassword}))
+                execute(server::application::RegisterUserCommandHandlerPayload{userEmail, userPassword, userNickname}))
         .WillOnce(Throw(registerUserError));
 
     auto responseMessage = registerMessageHandler.handleMessage(message);

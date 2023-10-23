@@ -47,17 +47,19 @@ TEST_F(RegisterUserCommandImplIntegrationTest, registerUser)
     const auto email = faker::Internet::email();
     const auto password = "password";
     const auto expectedHashPassword = "5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8";
+    const auto nickname = faker::Internet::username();
 
-    const auto [user] = registerUserCommandHandler.execute({email, password});
+    const auto [user] = registerUserCommandHandler.execute({email, password, nickname});
 
     ASSERT_EQ(user.getEmail(), email);
     ASSERT_EQ(user.getPassword(), expectedHashPassword);
+    ASSERT_EQ(user.getNickname(), nickname);
 }
 
 TEST_F(RegisterUserCommandImplIntegrationTest, givenUserWithSameEmail_shouldThrow)
 {
     const auto user = userTestUtils.createAndPersist();
 
-    ASSERT_THROW(registerUserCommandHandler.execute({user->getEmail(), user->getPassword()}),
+    ASSERT_THROW(registerUserCommandHandler.execute({user->getEmail(), user->getPassword(), user->getNickname()}),
                  errors::ResourceAlreadyExistsError);
 }

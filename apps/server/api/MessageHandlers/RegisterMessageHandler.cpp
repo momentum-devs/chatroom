@@ -37,7 +37,9 @@ common::messages::Message RegisterMessageHandler::handleMessage(const common::me
 
     try
     {
-        registerUserCommandHandlerResult = registerUserCommandHandler->execute({email, password});
+        const auto nickname = "nickname";
+
+        registerUserCommandHandlerResult = registerUserCommandHandler->execute({email, password, nickname});
     }
     catch (const std::exception& e)
     {
