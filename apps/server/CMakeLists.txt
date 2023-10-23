@@ -225,6 +225,7 @@ target_link_libraries(${EXECUTABLE_NAME} PRIVATE
         filesystem
         collection
         httpClient
+        random
         ${ODB_LIBRARIES}
         )
 
@@ -249,6 +250,7 @@ target_link_libraries(${EXECUTABLE_NAME}UT PRIVATE
         filesystem
         collection
         httpClient
+        random
         ${ODB_LIBRARIES}
         faker-cxx
         )
@@ -276,6 +278,7 @@ target_link_libraries(${EXECUTABLE_NAME}IT PRIVATE
         filesystem
         collection
         httpClient
+        random
         ${ODB_LIBRARIES}
         faker-cxx
         )

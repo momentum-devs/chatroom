@@ -5,6 +5,7 @@
 #include <format>
 
 #include "loguru.hpp"
+#include "random/StringGenerator.h"
 #include "server/application/errors/ResourceAlreadyExistsError.h"
 
 namespace server::application
@@ -34,9 +35,10 @@ RegisterUserCommandHandlerImpl::execute(const RegisterUserCommandHandlerPayload&
 
     const auto userId = uuid.str();
 
-    // TODO: generate verification code
-    const auto user =
-        userRepository->createUser({userId, payload.email, hashedPassword, payload.email, false, false, "123"});
+    const auto verificationCode = common::random::StringGenerator::numeric(6);
+
+    const auto user = userRepository->createUser(
+        {userId, payload.email, hashedPassword, payload.email, false, false, verificationCode});
 
     LOG_S(INFO) << std::format("User with email \"{}\" registered.", payload.email);
 
