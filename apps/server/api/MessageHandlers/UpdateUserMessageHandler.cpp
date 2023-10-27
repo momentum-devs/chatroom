@@ -29,6 +29,11 @@ common::messages::Message UpdateUserMessageHandler::handleMessage(const common::
         if (payloadJson["data"].contains("nickname"))
         {
             payload.nickname = payloadJson["data"]["nickname"].get<std::string>();
+
+            if (payload.nickname->size() > 13)
+            {
+                throw std::runtime_error{"nickname is to long"};
+            }
         }
 
         if (payloadJson["data"].contains("password"))

@@ -469,7 +469,7 @@ void MainController::removeFromFriends()
     session->sendMessage(common::messages::MessageId::RemoveFromFriends, data);
 }
 
-void MainController::handleRemoveFromFriendsResponse(const common::messages::Message& message)
+void MainController::handleRemoveFromFriendsResponse(const common::messages::Message& /*message*/)
 {
     currentFriendId = "";
 

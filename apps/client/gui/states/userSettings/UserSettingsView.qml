@@ -27,7 +27,7 @@ Rectangle {
             width: parent.width
         }
         Button {
-            id: changeNicknaem
+            id: changeNickname
             function activate() {
                 const nickname = nicknameField.text;
                 if (nickname.length !== 0) {
@@ -41,6 +41,7 @@ Rectangle {
 
             anchors.horizontalCenter: nicknameField.horizontalCenter
             text: qsTr('Change nickname')
+            width: changePassword.width
 
             onClicked: activate()
         }
@@ -82,9 +83,11 @@ Rectangle {
             }
 
             anchors.horizontalCenter: passwordRepeatField.horizontalCenter
+            width: changePassword.width
 
             contentItem: Text {
                 color: "#FF0000"
+                horizontalAlignment: Text.AlignHCenter
                 text: qsTr('Delete user')
             }
 
@@ -98,6 +101,7 @@ Rectangle {
 
             anchors.horizontalCenter: passwordRepeatField.horizontalCenter
             text: qsTr('Go back')
+            width: changePassword.width
 
             onClicked: activate()
         }

@@ -232,6 +232,7 @@ Rectangle {
                             width: parent.width
 
                             Button {
+                                id: friendButton
                                 text: modelData[0]
                                 width: parent.width - firendActive.width - 5
 
@@ -245,14 +246,16 @@ Rectangle {
                             }
                             Text {
                                 id: firendActive
+                                anchors.verticalCenter: friendButton.verticalCenter
                                 color: "green"
-                                font.pointSize: 15
+                                font.pointSize: 12
                                 text: "●"
                                 visible: modelData[2]
                             }
                             Text {
+                                anchors.verticalCenter: friendButton.verticalCenter
                                 color: "grey"
-                                font.pointSize: 15
+                                font.pointSize: 12
                                 text: "○"
                                 visible: !modelData[2]
                             }
