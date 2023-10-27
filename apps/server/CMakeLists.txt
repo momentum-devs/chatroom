@@ -245,6 +245,7 @@ target_link_libraries(${EXECUTABLE_NAME} PRIVATE
         collection
         httpClient
         random
+        redis-cpp
         ${ODB_LIBRARIES}
         )
 
@@ -270,6 +271,7 @@ target_link_libraries(${EXECUTABLE_NAME}UT PRIVATE
         collection
         httpClient
         random
+        redis-cpp
         ${ODB_LIBRARIES}
         faker-cxx
         )
@@ -298,6 +300,7 @@ target_link_libraries(${EXECUTABLE_NAME}IT PRIVATE
         collection
         httpClient
         random
+        redis-cpp
         ${ODB_LIBRARIES}
         faker-cxx
         )

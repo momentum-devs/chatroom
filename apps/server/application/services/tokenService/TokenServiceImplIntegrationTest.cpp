@@ -1,5 +1,7 @@
 #include "gtest/gtest.h"
 
+#include "faker-cxx/String.h"
+#include "server/application/errors/InvalidTokenError.h"
 #include "TokenServiceImpl.h"
 
 using namespace ::testing;
@@ -20,11 +22,24 @@ public:
 
 TEST_F(TokenServiceImplIntegrationTest, shouldCreateTokenAndHaveTheSameUserIdAfterVerifyingToken)
 {
-    const auto userId = "1";
+    const auto userId = faker::String::uuid();
 
     const auto token = tokenService.createToken(userId);
 
-    const auto userIdFromToken = tokenService.verifyToken(token);
+    const auto [actualUserId] = tokenService.verifyToken(token);
 
-    ASSERT_EQ(userIdFromToken, userId);
+    ASSERT_EQ(actualUserId, userId);
+}
+
+TEST_F(TokenServiceImplIntegrationTest, shouldInvalidateToken)
+{
+    const auto userId = faker::String::uuid();
+
+    const auto token = tokenService.createToken(userId);
+
+    ASSERT_NO_THROW(tokenService.verifyToken(token));
+
+    tokenService.invalidateToken(token);
+
+    ASSERT_THROW(tokenService.verifyToken(token), errors::InvalidTokenError);
 }
