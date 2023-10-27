@@ -11,6 +11,7 @@ public:
 
     std::string createToken(const std::string& userId) const override;
     VerifyTokenResult verifyToken(const std::string& token) const override;
+    void invalidateToken(const std::string& token) const override;
 
 private:
     std::string jwtSecret;

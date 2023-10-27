@@ -14,5 +14,6 @@ public:
 
     virtual std::string createToken(const std::string& userId) const = 0;
     virtual VerifyTokenResult verifyToken(const std::string& token) const = 0;
+    virtual void invalidateToken(const std::string& token) const = 0;
 };
 }

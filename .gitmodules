@@ -19,6 +19,6 @@
 [submodule "externals/cpr"]
 	path = externals/cpr
 	url = https://github.com/libcpr/cpr.git
-[submodule "externals/redis-plus-plus"]
-	path = externals/redis-plus-plus
-	url = https://github.com/sewenew/redis-plus-plus.git
+[submodule "externals/cpp_redis"]
+	path = externals/cpp_redis
+	url = https://github.com/cpp-redis/cpp_redis.git

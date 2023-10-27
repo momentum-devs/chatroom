@@ -31,4 +31,6 @@ VerifyTokenResult TokenServiceImpl::verifyToken(const std::string& token) const
     return {userId};
 }
 
+void TokenServiceImpl::invalidateToken(const std::string& token) const {}
+
 }

@@ -23,10 +23,6 @@
 
 ```sudo apt install libcutl-1.10 postgresql libpq-dev sqlite3 libsqlite3-dev odb```
 
-#### Install Redis
-
-``` sudo apt-get install libhiredis-dev```
-
 #### Install libs:
 
 ```cd externals && ./install_externals.sh```
