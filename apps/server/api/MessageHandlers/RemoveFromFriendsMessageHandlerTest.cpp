@@ -16,6 +16,7 @@ namespace
 {
 auto token = "token";
 auto userId = "id";
+const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
 auto userFriendId = "userFriendId";
 auto validPayloadJson = nlohmann::json{{"data", {{"userFriendId", userFriendId}}}, {"token", token}};
 auto validPayload = common::bytes::Bytes{validPayloadJson.dump()};
@@ -50,7 +51,7 @@ public:
 
 TEST_F(RemoveFromFriendsMessageHandlerTest, handleValidRemoveFromFriendsMessage)
 {
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(userId));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*deleteFriendshipCommandHandlerMock,
                 execute(server::application::DeleteFriendshipCommandHandlerPayload{userId, userFriendId}));
 
@@ -61,7 +62,7 @@ TEST_F(RemoveFromFriendsMessageHandlerTest, handleValidRemoveFromFriendsMessage)
 
 TEST_F(RemoveFromFriendsMessageHandlerTest, handleRemoveFromFriendsMessageWithInvalidToken)
 {
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Throw(invalidToken));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Throw(invalidToken));
 
     auto responseMessage = removeFromFriendsMessageHandler.handleMessage(message);
 
@@ -70,7 +71,7 @@ TEST_F(RemoveFromFriendsMessageHandlerTest, handleRemoveFromFriendsMessageWithIn
 
 TEST_F(RemoveFromFriendsMessageHandlerTest, handleRemoveFromFriendsMessageWithErrorWhileHandling)
 {
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(userId));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*deleteFriendshipCommandHandlerMock,
                 execute(server::application::DeleteFriendshipCommandHandlerPayload{userId, userFriendId}))
         .WillOnce(Throw(removeFromFriendsError));

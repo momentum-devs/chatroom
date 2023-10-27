@@ -17,6 +17,7 @@ namespace
 auto requestId = "requestId";
 auto token = "token";
 auto recipientId = "id";
+const auto verifyTokenResult = server::application::VerifyTokenResult{recipientId};
 auto validPayloadJson = nlohmann::json{{"data", nlohmann::json{{"requestId", requestId}}}, {"token", token}};
 auto validPayload = common::bytes::Bytes{validPayloadJson.dump()};
 auto message = common::messages::Message{common::messages::MessageId::RejectFriendRequests, validPayload};
@@ -51,7 +52,7 @@ public:
 
 TEST_F(RejectFriendRequestMessageHandlerTest, handleValidRejectFriendRequestMessage)
 {
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(recipientId));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*rejectFriendInvitationCommandHandlerMock,
                 execute(server::application::RejectFriendInvitationCommandHandlerPayload{recipientId, requestId}));
 
@@ -62,7 +63,7 @@ TEST_F(RejectFriendRequestMessageHandlerTest, handleValidRejectFriendRequestMess
 
 TEST_F(RejectFriendRequestMessageHandlerTest, handleRejectFriendRequestMessageWithInvalidToken)
 {
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Throw(invalidToken));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Throw(invalidToken));
 
     auto responseMessage = rejectFriendRequestMessageHandler.handleMessage(message);
 
@@ -71,7 +72,7 @@ TEST_F(RejectFriendRequestMessageHandlerTest, handleRejectFriendRequestMessageWi
 
 TEST_F(RejectFriendRequestMessageHandlerTest, handleRejectFriendRequestMessageWithErrorWhileHandling)
 {
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(recipientId));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*rejectFriendInvitationCommandHandlerMock,
                 execute(server::application::RejectFriendInvitationCommandHandlerPayload{recipientId, requestId}))
         .WillOnce(Throw(rejectFriendRequestError));

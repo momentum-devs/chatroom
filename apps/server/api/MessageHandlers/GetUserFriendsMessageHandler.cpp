@@ -22,7 +22,7 @@ common::messages::Message GetUserFriendsMessageHandler::handleMessage(const comm
 
         auto token = payloadJson["token"].get<std::string>();
 
-        auto userId = tokenService->getUserIdFromToken(token);
+        auto [userId] = tokenService->verifyToken(token);
 
         const auto& [friends] = findUserFriendsQueryHandler->execute({userId});
 

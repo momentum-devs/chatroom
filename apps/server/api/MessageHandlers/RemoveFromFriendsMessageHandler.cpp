@@ -25,16 +25,16 @@ common::messages::Message RemoveFromFriendsMessageHandler::handleMessage(const c
 
         auto token = payloadJson["token"].get<std::string>();
 
-        auto userId = tokenService->getUserIdFromToken(token);
+        auto [userId] = tokenService->verifyToken(token);
 
         deleteFriendshipCommandHandler->execute({userId, userFriendId});
 
         LOG_S(INFO) << std::format("User with id: {} remove user with id: {} from friends", userId, userFriendId);
 
-        common::messages::Message message{common::messages::MessageId::RemoveFromFriendsResponse,
-                                          common::bytes::Bytes{R"(["ok"])"}};
+        common::messages::Message responseMessage{common::messages::MessageId::RemoveFromFriendsResponse,
+                                                  common::bytes::Bytes{R"(["ok"])"}};
 
-        return message;
+        return responseMessage;
     }
     catch (const std::exception& e)
     {

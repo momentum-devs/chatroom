@@ -26,16 +26,16 @@ AcceptFriendRequestMessageHandler::handleMessage(const common::messages::Message
 
         auto token = payloadJson["token"].get<std::string>();
 
-        auto recipientId = tokenService->getUserIdFromToken(token);
+        auto [recipientId] = tokenService->verifyToken(token);
 
         acceptFriendInvitationCommandHandler->execute({recipientId, requestId});
 
         LOG_S(INFO) << std::format("Accept friend invitation with id {} by user with id {}", requestId, recipientId);
 
-        common::messages::Message message{common::messages::MessageId::ChangeFriendRequestsResponse,
-                                          common::bytes::Bytes{R"(["ok"])"}};
+        common::messages::Message responseMessage{common::messages::MessageId::ChangeFriendRequestsResponse,
+                                                  common::bytes::Bytes{R"(["ok"])"}};
 
-        return message;
+        return responseMessage;
     }
     catch (const std::exception& e)
     {
