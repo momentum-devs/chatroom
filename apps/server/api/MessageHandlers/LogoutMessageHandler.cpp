@@ -25,6 +25,8 @@ common::messages::Message LogoutMessageHandler::handleMessage(const common::mess
 
         logoutUserCommandHandler->execute({userId});
 
+        tokenService->invalidateToken(token);
+        
         return {};
     }
     catch (const std::exception& e)
