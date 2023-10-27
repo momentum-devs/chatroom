@@ -17,6 +17,7 @@ namespace
 auto channelInvitationId = "channelInvitationId";
 auto token = "token";
 auto recipientId = "id";
+const auto verifyTokenResult = server::application::VerifyTokenResult{recipientId};
 auto validPayloadJson = nlohmann::json{{"data", nlohmann::json{{"channelId", channelInvitationId}}}, {"token", token}};
 auto validPayload = common::bytes::Bytes{validPayloadJson.dump()};
 auto message = common::messages::Message{common::messages::MessageId::AcceptChannelInvitation, validPayload};
@@ -51,7 +52,8 @@ public:
 
 TEST_F(AcceptChannelInvitationMessageHandlerTest, handleValidCreateChannelMessage)
 {
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(recipientId));
+
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(
         *acceptChannelInvitationCommandHandlerMock,
         execute(server::application::AcceptChannelInvitationCommandHandlerPayload{recipientId, channelInvitationId}));
@@ -63,7 +65,7 @@ TEST_F(AcceptChannelInvitationMessageHandlerTest, handleValidCreateChannelMessag
 
 TEST_F(AcceptChannelInvitationMessageHandlerTest, handleCreateChannelMessageWithInvalidToken)
 {
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Throw(invalidToken));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Throw(invalidToken));
 
     auto responseMessage = acceptChannelInvitationMessageHandler.handleMessage(message);
 
@@ -72,7 +74,7 @@ TEST_F(AcceptChannelInvitationMessageHandlerTest, handleCreateChannelMessageWith
 
 TEST_F(AcceptChannelInvitationMessageHandlerTest, handleCreateChannelMessageWithErrorWhileHandling)
 {
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(recipientId));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(
         *acceptChannelInvitationCommandHandlerMock,
         execute(server::application::AcceptChannelInvitationCommandHandlerPayload{recipientId, channelInvitationId}))

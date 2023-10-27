@@ -21,7 +21,7 @@ common::messages::Message LogoutMessageHandler::handleMessage(const common::mess
 
         auto token = payloadJson["token"].get<std::string>();
 
-        auto userId = tokenService->getUserIdFromToken(token);
+        auto [userId] = tokenService->verifyToken(token);
 
         logoutUserCommandHandler->execute({userId});
 

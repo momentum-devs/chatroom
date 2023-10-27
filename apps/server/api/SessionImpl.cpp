@@ -79,7 +79,7 @@ void SessionImpl::storeCurrentUser(const common::messages::Message& message)
 
         auto token = payloadJson["token"].get<std::string>();
 
-        userId = tokenService->getUserIdFromToken(token);
+        userId = tokenService->verifyToken(token).userId;
     }
     catch (const std::exception& e)
     {

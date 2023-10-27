@@ -19,7 +19,6 @@ add_subdirectory(externals)
 set(GMOCK_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/externals/googletest/googlemock/include")
 set(GTEST_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/externals/googletest/googletest/include")
 set(DOTENV_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/externals/dotenv-cpp/include")
-set(FAKER_CXX_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/externals/faker-cxx/include")
 
 enable_testing()
 

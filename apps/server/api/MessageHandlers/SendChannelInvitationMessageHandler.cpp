@@ -31,7 +31,7 @@ SendChannelInvitationMessageHandler::handleMessage(const common::messages::Messa
 
         auto token = payloadJson["token"].get<std::string>();
 
-        auto senderId = tokenService->getUserIdFromToken(token);
+        auto [senderId] = tokenService->verifyToken(token);
 
         auto invitedId = findUserByEmailQueryHandler->execute({email}).user.getId();
 
@@ -40,10 +40,10 @@ SendChannelInvitationMessageHandler::handleMessage(const common::messages::Messa
         LOG_S(INFO) << std::format("Sent invitation to channel {} to user with id {} by user with id {}", channelId,
                                    invitedId, senderId);
 
-        common::messages::Message message{common::messages::MessageId::SendChannelInvitationResponse,
-                                          common::bytes::Bytes{R"(["ok"])"}};
+        common::messages::Message responseMessage{common::messages::MessageId::SendChannelInvitationResponse,
+                                                  common::bytes::Bytes{R"(["ok"])"}};
 
-        return message;
+        return responseMessage;
     }
     catch (const std::exception& e)
     {

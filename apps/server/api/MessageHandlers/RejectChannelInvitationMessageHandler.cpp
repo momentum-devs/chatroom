@@ -27,16 +27,16 @@ RejectChannelInvitationMessageHandler::handleMessage(const common::messages::Mes
 
         auto token = payloadJson["token"].get<std::string>();
 
-        auto recipientId = tokenService->getUserIdFromToken(token);
+        auto [recipientId] = tokenService->verifyToken(token);
 
         rejectChannelInvitationCommandHandler->execute({recipientId, channelId});
 
         LOG_S(INFO) << std::format("Reject invitation to channel {} by user with id {}", channelId, recipientId);
 
-        common::messages::Message message{common::messages::MessageId::ChangeChannelInvitationResponse,
-                                          common::bytes::Bytes{R"(["ok"])"}};
+        common::messages::Message responseMessage{common::messages::MessageId::ChangeChannelInvitationResponse,
+                                                  common::bytes::Bytes{R"(["ok"])"}};
 
-        return message;
+        return responseMessage;
     }
     catch (const std::exception& e)
     {

@@ -9,10 +9,10 @@
 
 namespace server::api
 {
-class VerifyUserMessageHandle : public MessageHandler
+class VerifyUserMessageHandler : public MessageHandler
 {
 public:
-    VerifyUserMessageHandle(
+    VerifyUserMessageHandler(
         std::shared_ptr<server::application::TokenService> tokenService,
         std::unique_ptr<server::application::VerifyUserEmailCommandHandler> verifyUserEmailCommandHandler,
         std::shared_ptr<server::application::FindUserQueryHandler> findUserQueryHandler);

@@ -1,13 +1,13 @@
-#include "VerifyUserMessageHandle.h"
-
 #include <format>
 #include <loguru.hpp>
 #include <nlohmann/json.hpp>
 #include <regex>
 
+#include "VerifyUserMessageHandler.h"
+
 namespace server::api
 {
-VerifyUserMessageHandle::VerifyUserMessageHandle(
+VerifyUserMessageHandler::VerifyUserMessageHandler(
     std::shared_ptr<server::application::TokenService> tokenServiceInit,
     std::unique_ptr<server::application::VerifyUserEmailCommandHandler> verifyUserEmailCommandHandlerInit,
     std::shared_ptr<server::application::FindUserQueryHandler> findUserQueryHandlerInit)
@@ -16,7 +16,7 @@ VerifyUserMessageHandle::VerifyUserMessageHandle(
       findUserQueryHandler{std::move(findUserQueryHandlerInit)}
 {
 }
-common::messages::Message VerifyUserMessageHandle::handleMessage(const common::messages::Message& message) const
+common::messages::Message VerifyUserMessageHandler::handleMessage(const common::messages::Message& message) const
 {
     try
     {
@@ -24,7 +24,7 @@ common::messages::Message VerifyUserMessageHandle::handleMessage(const common::m
 
         auto token = payloadJson["token"].get<std::string>();
 
-        auto userId = tokenService->getUserIdFromToken(token);
+        auto [userId] = tokenService->verifyToken(token);
 
         server::application::VerifyUserEmailCommandHandlerPayload payload;
 
@@ -46,10 +46,10 @@ common::messages::Message VerifyUserMessageHandle::handleMessage(const common::m
             "ok",
         };
 
-        auto message = common::messages::Message{common::messages::MessageId::VerifyUserResponse,
-                                                 common::bytes::Bytes{responsePayload.dump()}};
+        auto responseMessage = common::messages::Message{common::messages::MessageId::VerifyUserResponse,
+                                                         common::bytes::Bytes{responsePayload.dump()}};
 
-        return message;
+        return responseMessage;
     }
     catch (const std::exception& e)
     {

@@ -77,7 +77,7 @@ set(SOURCES
 
         api/MessageHandlers/UpdateUserMessageHandler.cpp
         api/MessageHandlers/DeleteUserMessageHandler.cpp
-        api/MessageHandlers/VerifyUserMessageHandle.cpp
+        api/MessageHandlers/VerifyUserMessageHandler.cpp
         api/MessageHandlers/LogoutMessageHandler.cpp
         api/MessageHandlers/SendChannelInvitationMessageHandler.cpp
         api/MessageHandlers/LeftTheChannelMessageHandler.cpp
@@ -109,7 +109,7 @@ set(UT_SOURCES
         api/MessageHandlers/RegisterMessageHandlerTest.cpp
         api/MessageHandlers/UpdateUserMessageHandlerTest.cpp
         api/MessageHandlers/LogoutMessageHandlerTest.cpp
-        api/MessageHandlers/VerifyUserMessageHandleTest.cpp
+        api/MessageHandlers/VerifyUserMessageHandlerTest.cpp
         infrastructure/services/emailService/EmailServiceImplTest.cpp
         infrastructure/repositories/userRepository/userMapper/UserMapperImplTest.cpp
         infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImplTest.cpp

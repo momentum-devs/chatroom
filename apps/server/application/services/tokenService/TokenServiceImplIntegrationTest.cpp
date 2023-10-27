@@ -24,7 +24,7 @@ TEST_F(TokenServiceImplIntegrationTest, shouldCreateTokenAndHaveTheSameUserIdAft
 
     const auto token = tokenService.createToken(userId);
 
-    const auto userIdFromToken = tokenService.getUserIdFromToken(token);
+    const auto userIdFromToken = tokenService.verifyToken(token);
 
     ASSERT_EQ(userIdFromToken, userId);
 }

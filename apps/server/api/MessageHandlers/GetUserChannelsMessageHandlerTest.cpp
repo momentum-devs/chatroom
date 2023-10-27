@@ -79,7 +79,9 @@ TEST_F(GetUserChannelsMessageHandlerTest, handleValidGetUserChannelsMessageWithN
     const auto user = std::make_shared<server::domain::User>(userId, email, password, nickname, active, emailVerified,
                                                              verificationCode, createdAt, updatedAt);
 
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(userId));
+    const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
+
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*findChannelsToWhichUserBelongsQueryHandlerMock,
                 execute(server::application::FindChannelsToWhichUserBelongsQueryHandlerPayload{userId}))
         .WillOnce(Return(server::application::FindChannelsToWhichUserBelongsQueryHandlerResult{}));
@@ -104,7 +106,9 @@ TEST_F(GetUserChannelsMessageHandlerTest, handleValidGetUserChannelsMessageWithF
     const auto user = std::make_shared<server::domain::User>(userId, email, password, nickname, active, emailVerified,
                                                              verificationCode, createdAt, updatedAt);
 
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(userId));
+    const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
+
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*findChannelsToWhichUserBelongsQueryHandlerMock,
                 execute(server::application::FindChannelsToWhichUserBelongsQueryHandlerPayload{userId}))
         .WillOnce(Return(server::application::FindChannelsToWhichUserBelongsQueryHandlerResult{
@@ -117,7 +121,7 @@ TEST_F(GetUserChannelsMessageHandlerTest, handleValidGetUserChannelsMessageWithF
 
 TEST_F(GetUserChannelsMessageHandlerTest, handleGetUserChannelsMessageWithInvalidToken)
 {
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Throw(invalidToken));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Throw(invalidToken));
 
     auto responseMessage = getUserChannelsMessageHandler.handleMessage(message);
 
@@ -139,7 +143,9 @@ TEST_F(GetUserChannelsMessageHandlerTest, handleGetUserChannelsMessageWithErrorW
     const auto user = std::make_shared<server::domain::User>(userId, email, password, nickname, active, emailVerified,
                                                              verificationCode, createdAt, updatedAt);
 
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(userId));
+    const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
+
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*findChannelsToWhichUserBelongsQueryHandlerMock,
                 execute(server::application::FindChannelsToWhichUserBelongsQueryHandlerPayload{userId}))
         .WillOnce(Throw(getUserChannelsError));

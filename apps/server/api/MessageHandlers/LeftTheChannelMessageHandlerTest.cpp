@@ -16,6 +16,7 @@ namespace
 {
 auto token = "token";
 auto userId = "id";
+const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
 auto channelId = "channelId";
 auto validPayloadJson = nlohmann::json{{"data", {{"channelId", channelId}}}, {"token", token}};
 auto validPayload = common::bytes::Bytes{validPayloadJson.dump()};
@@ -50,7 +51,7 @@ public:
 
 TEST_F(LeftTheChannelMessageHandlerTest, handleValidFriendRequestMessage)
 {
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(userId));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*removeUserFromChannelCommandHandlerMock,
                 execute(server::application::RemoveUserFromChannelCommandHandlerPayload{userId, channelId}));
 
@@ -61,7 +62,7 @@ TEST_F(LeftTheChannelMessageHandlerTest, handleValidFriendRequestMessage)
 
 TEST_F(LeftTheChannelMessageHandlerTest, handleFriendRequestMessageWithInvalidToken)
 {
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Throw(invalidToken));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Throw(invalidToken));
 
     auto responseMessage = leftTheChannelMessageHandler.handleMessage(message);
 
@@ -70,7 +71,7 @@ TEST_F(LeftTheChannelMessageHandlerTest, handleFriendRequestMessageWithInvalidTo
 
 TEST_F(LeftTheChannelMessageHandlerTest, handleFriendRequestMessageWithErrorWhileHandling)
 {
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(userId));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*removeUserFromChannelCommandHandlerMock,
                 execute(server::application::RemoveUserFromChannelCommandHandlerPayload{userId, channelId}))
         .WillOnce(Throw(sendFriendRequestError));

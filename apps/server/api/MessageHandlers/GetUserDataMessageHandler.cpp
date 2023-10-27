@@ -21,7 +21,7 @@ common::messages::Message GetUserDataMessageHandler::handleMessage(const common:
 
         auto token = payloadJson["token"].get<std::string>();
 
-        auto userId = tokenService->getUserIdFromToken(token);
+        auto [userId] = tokenService->verifyToken(token);
 
         const auto& [user] = findUserQueryHandler->execute({userId});
 
@@ -30,10 +30,10 @@ common::messages::Message GetUserDataMessageHandler::handleMessage(const common:
 
         nlohmann::json responsePayload{{"data", userData}};
 
-        auto message = common::messages::Message{common::messages::MessageId::GetUserDataResponse,
-                                                 common::bytes::Bytes{responsePayload.dump()}};
+        auto responseMessage = common::messages::Message{common::messages::MessageId::GetUserDataResponse,
+                                                         common::bytes::Bytes{responsePayload.dump()}};
 
-        return message;
+        return responseMessage;
     }
     catch (const std::exception& e)
     {

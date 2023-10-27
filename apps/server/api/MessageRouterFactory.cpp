@@ -16,7 +16,7 @@
 #include "MessageHandlers/RejectChannelInvitationMessageHandler.h"
 #include "MessageHandlers/SendChannelInvitationMessageHandler.h"
 #include "MessageHandlers/UpdateUserMessageHandler.h"
-#include "MessageHandlers/VerifyUserMessageHandle.h"
+#include "MessageHandlers/VerifyUserMessageHandler.h"
 #include "MessageRouterImpl.h"
 #include "server/application/commandHandlers/channel/acceptChannelInvitationCommandHandler/AcceptChannelInvitationCommandHandlerImpl.h"
 #include "server/application/commandHandlers/channel/addUserToChannelCommandHandler/AddUserToChannelCommandHandlerImpl.h"
@@ -142,7 +142,7 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
     auto verifyUserEmailCommandHandler =
         std::make_unique<server::application::VerifyUserEmailCommandHandlerImpl>(userRepository);
 
-    auto verifyUserMessageHandler = std::make_shared<VerifyUserMessageHandle>(
+    auto verifyUserMessageHandler = std::make_shared<VerifyUserMessageHandler>(
         tokenService, std::move(verifyUserEmailCommandHandler), findUserQueryHandler);
 
     auto logoutCommandHandler = std::make_unique<server::application::LogoutUserCommandHandlerImpl>(userRepository);

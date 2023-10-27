@@ -21,6 +21,7 @@ namespace
 auto channelName = "channelName";
 auto token = "token";
 auto creatorId = "id";
+const auto verifyTokenResult = server::application::VerifyTokenResult{creatorId};
 auto validPayloadJson = nlohmann::json{{"data", nlohmann::json{{"channelName", channelName}}}, {"token", token}};
 auto validPayload = common::bytes::Bytes{validPayloadJson.dump()};
 auto message = common::messages::Message{common::messages::MessageId::CreateChannel, validPayload};
@@ -66,7 +67,7 @@ TEST_F(CreateChannelMessageHandlerTest, handleValidCreateChannelMessage)
     const auto user = std::make_shared<server::domain::User>(userId, email, password, nickname, active, emailVerified,
                                                              verificationCode, createdAt, updatedAt);
 
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(creatorId));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*createChannelCommandHandlerMock,
                 execute(server::application::CreateChannelCommandHandlerPayload{channelName, creatorId}))
         .WillOnce(Return(server::application::CreateChannelCommandHandlerResult{{"", "", user, "", ""}}));
@@ -78,7 +79,7 @@ TEST_F(CreateChannelMessageHandlerTest, handleValidCreateChannelMessage)
 
 TEST_F(CreateChannelMessageHandlerTest, handleCreateChannelMessageWithInvalidToken)
 {
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Throw(invalidToken));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Throw(invalidToken));
 
     auto responseMessage = createChannelMessageHandler.handleMessage(message);
 
@@ -87,7 +88,7 @@ TEST_F(CreateChannelMessageHandlerTest, handleCreateChannelMessageWithInvalidTok
 
 TEST_F(CreateChannelMessageHandlerTest, handleCreateChannelMessageWithErrorWhileHandling)
 {
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(creatorId));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*createChannelCommandHandlerMock,
                 execute(server::application::CreateChannelCommandHandlerPayload{channelName, creatorId}))
         .WillOnce(Throw(createChannelError));

@@ -24,7 +24,7 @@ common::messages::Message CreateChannelMessageHandler::handleMessage(const commo
 
         auto token = payloadJson["token"].get<std::string>();
 
-        auto creatorId = tokenService->getUserIdFromToken(token);
+        auto [creatorId] = tokenService->verifyToken(token);
 
         createChannelCommandHandler->execute({channelName, creatorId});
 

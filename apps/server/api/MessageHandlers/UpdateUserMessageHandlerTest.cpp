@@ -21,7 +21,7 @@ auto userPassword = "userPassword";
 auto userNickname = "userNickname";
 auto userIsActive = true;
 auto userEmailVerified = true;
-
+const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
 auto validPayloadJson =
     nlohmann::json{{"data", {{"password", userPassword}, {"nickname", userNickname}}}, {"token", token}};
 auto validPayload = common::bytes::Bytes{validPayloadJson.dump()};
@@ -56,7 +56,7 @@ public:
 
 TEST_F(UpdateUserMessageHandlerTest, handleValidUpdateUserMessage)
 {
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(userId));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*updateUserCommandHandlerMock,
                 execute(server::application::UpdateUserCommandHandlerPayload{userId, userNickname, userPassword}))
         .WillOnce(Return(server::application::UpdateUserCommandHandlerResult{
@@ -69,7 +69,7 @@ TEST_F(UpdateUserMessageHandlerTest, handleValidUpdateUserMessage)
 
 TEST_F(UpdateUserMessageHandlerTest, handleUpdateUserMessageWithInvalidToken)
 {
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Throw(invalidToken));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Throw(invalidToken));
 
     auto responseMessage = updateUserMessageHandler.handleMessage(message);
 
@@ -78,7 +78,7 @@ TEST_F(UpdateUserMessageHandlerTest, handleUpdateUserMessageWithInvalidToken)
 
 TEST_F(UpdateUserMessageHandlerTest, handleUpdateUserMessageWithErrorWhileHandling)
 {
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(userId));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*updateUserCommandHandlerMock,
                 execute(server::application::UpdateUserCommandHandlerPayload{userId, userNickname, userPassword}))
         .WillOnce(Throw(updateUserDataError));

@@ -25,7 +25,7 @@ GetUserFriendRequestsMessageHandler::handleMessage(const common::messages::Messa
 
         auto token = payloadJson["token"].get<std::string>();
 
-        auto userId = tokenService->getUserIdFromToken(token);
+        auto [userId] = tokenService->verifyToken(token);
 
         const auto& [friendInvitations] = findReceivedFriendInvitationsQueryHandler->execute({userId});
 

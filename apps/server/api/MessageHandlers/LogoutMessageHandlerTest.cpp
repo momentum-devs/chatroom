@@ -16,12 +16,11 @@ namespace
 {
 auto token = "token";
 auto userId = "id";
-
 auto validPayloadJson = nlohmann::json{{"data", {}}, {"token", token}};
 auto validPayload = common::bytes::Bytes{validPayloadJson.dump()};
 auto message = common::messages::Message{common::messages::MessageId::Logout, validPayload};
 auto validMessageResponse = common::messages::Message{};
-
+const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
 std::runtime_error invalidToken("invalidToken");
 auto invalidTokenMessageResponse =
     common::messages::Message{common::messages::MessageId::Error, common::bytes::Bytes{R"({"error":"invalidToken"})"}};
@@ -43,7 +42,7 @@ public:
 
 TEST_F(LogoutMessageHandlerTest, handleValidLogout)
 {
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(userId));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*logoutUserCommandHandlerMock, execute(server::application::LogoutUserCommandHandlerPayload{userId}));
 
     auto responseMessage = logoutMessageHandler.handleMessage(message);
@@ -53,7 +52,7 @@ TEST_F(LogoutMessageHandlerTest, handleValidLogout)
 
 TEST_F(LogoutMessageHandlerTest, handleLogoutMessageWithInvalidToken)
 {
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Throw(invalidToken));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Throw(invalidToken));
 
     auto responseMessage = logoutMessageHandler.handleMessage(message);
 

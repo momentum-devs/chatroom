@@ -1,4 +1,4 @@
-#include "VerifyUserMessageHandle.h"
+#include "VerifyUserMessageHandler.h"
 
 #include <format>
 #include <gtest/gtest.h>
@@ -17,6 +17,7 @@ namespace
 {
 auto token = "token";
 auto userId = "id";
+const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
 auto userEmail = "userEmail";
 auto validVerificationCode = "validVerificationCode";
 
@@ -45,7 +46,7 @@ auto invalidVerificationCodeMessageResponse = common::messages::Message{
     common::messages::MessageId::VerifyUserResponse, common::bytes::Bytes{R"({"error":"invalid verification code"})"}};
 }
 
-class VerifyUserMessageHandleTest : public Test
+class VerifyUserMessageHandlerTest : public Test
 {
 public:
     std::shared_ptr<server::application::TokenServiceMock> tokenServiceMock =
@@ -59,13 +60,13 @@ public:
     std::shared_ptr<server::application::FindUserQueryHandlerMock> findUserQueryHandlerMock =
         std::make_shared<StrictMock<server::application::FindUserQueryHandlerMock>>();
 
-    VerifyUserMessageHandle verifyUserMessageHandle{tokenServiceMock, std::move(verifyUserEmailCommandHandlerInit),
-                                                    findUserQueryHandlerMock};
+    VerifyUserMessageHandler verifyUserMessageHandle{tokenServiceMock, std::move(verifyUserEmailCommandHandlerInit),
+                                                     findUserQueryHandlerMock};
 };
 
-TEST_F(VerifyUserMessageHandleTest, handleValidUserVerifyRequest)
+TEST_F(VerifyUserMessageHandlerTest, handleValidUserVerifyRequest)
 {
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(userId));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*findUserQueryHandlerMock, execute(server::application::FindUserQueryHandlerPayload{userId}))
         .WillOnce(Return(
             server::application::FindUserQueryHandlerResult{{userId, userEmail, "", "", false, false, "123", "", ""}}));
@@ -78,18 +79,18 @@ TEST_F(VerifyUserMessageHandleTest, handleValidUserVerifyRequest)
     EXPECT_EQ(responseMessage, validMessageResponse);
 }
 
-TEST_F(VerifyUserMessageHandleTest, handleUserVerifyRequestWithInvalidToken)
+TEST_F(VerifyUserMessageHandlerTest, handleUserVerifyRequestWithInvalidToken)
 {
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Throw(invalidToken));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Throw(invalidToken));
 
     auto responseMessage = verifyUserMessageHandle.handleMessage(message);
 
     EXPECT_EQ(responseMessage, invalidTokenMessageResponse);
 }
 
-TEST_F(VerifyUserMessageHandleTest, handleUserVerifyRequestForNotExistingUser)
+TEST_F(VerifyUserMessageHandlerTest, handleUserVerifyRequestForNotExistingUser)
 {
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(userId));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*findUserQueryHandlerMock, execute(server::application::FindUserQueryHandlerPayload{userId}))
         .WillOnce(Throw(userNotFoundError));
 
@@ -98,9 +99,9 @@ TEST_F(VerifyUserMessageHandleTest, handleUserVerifyRequestForNotExistingUser)
     EXPECT_EQ(responseMessage, userNotFoundErrorMessageResponse);
 }
 
-TEST_F(VerifyUserMessageHandleTest, handleUserVerifyRequestWithInvalidCode)
+TEST_F(VerifyUserMessageHandlerTest, handleUserVerifyRequestWithInvalidCode)
 {
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(userId));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*findUserQueryHandlerMock, execute(server::application::FindUserQueryHandlerPayload{userId}))
         .WillOnce(Return(
             server::application::FindUserQueryHandlerResult{{userId, userEmail, "", "", false, false, "123", "", ""}}));

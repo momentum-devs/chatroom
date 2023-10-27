@@ -16,6 +16,7 @@ namespace
 {
 auto token = "token";
 auto userId = "id";
+const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
 auto channelId = "channel_id";
 auto validPayloadJson = nlohmann::json{{"data", {{"channelId", channelId}}}, {"token", token}};
 auto validPayload = common::bytes::Bytes{validPayloadJson.dump()};
@@ -49,7 +50,7 @@ public:
 
 TEST_F(DeleteTheChannelMessageHandlerTest, handleValidDeleteTheChannelMessage)
 {
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(userId));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*deleteChannelCommandHandlerMock,
                 execute(server::application::DeleteChannelCommandHandlerPayload{channelId, userId}));
 
@@ -60,7 +61,7 @@ TEST_F(DeleteTheChannelMessageHandlerTest, handleValidDeleteTheChannelMessage)
 
 TEST_F(DeleteTheChannelMessageHandlerTest, handleDeleteTheChannelMessageWithInvalidToken)
 {
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Throw(invalidToken));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Throw(invalidToken));
 
     auto responseMessage = deleteTheChannelMessageHandler.handleMessage(message);
 
@@ -69,7 +70,7 @@ TEST_F(DeleteTheChannelMessageHandlerTest, handleDeleteTheChannelMessageWithInva
 
 TEST_F(DeleteTheChannelMessageHandlerTest, handleDeleteTheChannelMessageWithErrorWhileHandling)
 {
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(userId));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*deleteChannelCommandHandlerMock,
                 execute(server::application::DeleteChannelCommandHandlerPayload{channelId, userId}))
         .WillOnce(Throw(deleteChannelError));

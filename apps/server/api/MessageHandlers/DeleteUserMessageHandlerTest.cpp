@@ -16,6 +16,7 @@ namespace
 {
 auto token = "token";
 auto userId = "id";
+const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
 auto validPayloadJson = nlohmann::json{{"token", token}};
 auto validPayload = common::bytes::Bytes{validPayloadJson.dump()};
 auto message = common::messages::Message{common::messages::MessageId::DeleteUser, validPayload};
@@ -47,7 +48,7 @@ public:
 
 TEST_F(DeleteUserMessageHandlerTest, handleValidDeleteUserMessage)
 {
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(userId));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*deleteUserCommandHandlerMock, execute(server::application::DeleteUserCommandHandlerPayload{userId}));
 
     auto responseMessage = deleteUserMessageHandler.handleMessage(message);
@@ -57,7 +58,7 @@ TEST_F(DeleteUserMessageHandlerTest, handleValidDeleteUserMessage)
 
 TEST_F(DeleteUserMessageHandlerTest, handleDeleteUserMessageWithInvalidToken)
 {
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Throw(invalidToken));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Throw(invalidToken));
 
     auto responseMessage = deleteUserMessageHandler.handleMessage(message);
 
@@ -66,7 +67,7 @@ TEST_F(DeleteUserMessageHandlerTest, handleDeleteUserMessageWithInvalidToken)
 
 TEST_F(DeleteUserMessageHandlerTest, handleDeleteUserMessageWithErrorWhileHandling)
 {
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(userId));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*deleteUserCommandHandlerMock, execute(server::application::DeleteUserCommandHandlerPayload{userId}))
         .WillOnce(Throw(deleteUserError));
 

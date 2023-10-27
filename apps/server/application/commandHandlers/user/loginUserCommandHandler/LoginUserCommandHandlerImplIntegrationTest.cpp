@@ -75,7 +75,9 @@ TEST_F(LoginUserCommandImplIntegrationTest, loginExistingUserWithValidPassword)
     ASSERT_TRUE(foundUser);
     ASSERT_EQ(foundUser->isActive(), true);
 
-    ASSERT_EQ(tokenService->getUserIdFromToken(token), user->getId());
+    auto expectedVerifyTokenResult = VerifyTokenResult{user->getId()};
+
+    ASSERT_EQ(tokenService->verifyToken(token), expectedVerifyTokenResult);
 }
 
 TEST_F(LoginUserCommandImplIntegrationTest, loginExistingUserWithInvalidPassword)

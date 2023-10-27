@@ -25,16 +25,16 @@ common::messages::Message LeftTheChannelMessageHandler::handleMessage(const comm
 
         auto token = payloadJson["token"].get<std::string>();
 
-        auto userId = tokenService->getUserIdFromToken(token);
+        auto [userId] = tokenService->verifyToken(token);
 
         removeUserFromChannelCommandHandler->execute({userId, channelId});
 
         LOG_S(INFO) << std::format("Removed user with id: {} from channel with id {}", userId, channelId);
 
-        common::messages::Message message{common::messages::MessageId::LeftTheChannelResponse,
-                                          common::bytes::Bytes{R"(["ok"])"}};
+        common::messages::Message responseMessage{common::messages::MessageId::LeftTheChannelResponse,
+                                                  common::bytes::Bytes{R"(["ok"])"}};
 
-        return message;
+        return responseMessage;
     }
     catch (const std::exception& e)
     {

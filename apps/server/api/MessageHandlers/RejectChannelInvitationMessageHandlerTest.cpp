@@ -17,6 +17,7 @@ namespace
 auto channelInvitationId = "channelInvitationId";
 auto token = "token";
 auto recipientId = "id";
+const auto verifyTokenResult = server::application::VerifyTokenResult{recipientId};
 auto validPayloadJson = nlohmann::json{{"data", nlohmann::json{{"channelId", channelInvitationId}}}, {"token", token}};
 auto validPayload = common::bytes::Bytes{validPayloadJson.dump()};
 auto message = common::messages::Message{common::messages::MessageId::RejectChannelInvitation, validPayload};
@@ -51,7 +52,7 @@ public:
 
 TEST_F(RejectChannelInvitationMessageHandlerTest, handleValidCreateChannelMessage)
 {
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(recipientId));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(
         *rejectChannelInvitationCommandHandlerMock,
         execute(server::application::RejectChannelInvitationCommandHandlerPayload{recipientId, channelInvitationId}));
@@ -63,7 +64,7 @@ TEST_F(RejectChannelInvitationMessageHandlerTest, handleValidCreateChannelMessag
 
 TEST_F(RejectChannelInvitationMessageHandlerTest, handleCreateChannelMessageWithInvalidToken)
 {
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Throw(invalidToken));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Throw(invalidToken));
 
     auto responseMessage = rejectChannelInvitationMessageHandler.handleMessage(message);
 
@@ -72,7 +73,7 @@ TEST_F(RejectChannelInvitationMessageHandlerTest, handleCreateChannelMessageWith
 
 TEST_F(RejectChannelInvitationMessageHandlerTest, handleCreateChannelMessageWithErrorWhileHandling)
 {
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(recipientId));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(
         *rejectChannelInvitationCommandHandlerMock,
         execute(server::application::RejectChannelInvitationCommandHandlerPayload{recipientId, channelInvitationId}))

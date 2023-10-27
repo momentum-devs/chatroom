@@ -22,7 +22,7 @@ common::messages::Message UpdateUserMessageHandler::handleMessage(const common::
 
         auto token = payloadJson["token"].get<std::string>();
 
-        auto userId = tokenService->getUserIdFromToken(token);
+        auto [userId] = tokenService->verifyToken(token);
 
         server::application::UpdateUserCommandHandlerPayload payload{userId, std::nullopt, std::nullopt};
 

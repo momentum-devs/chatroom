@@ -68,7 +68,9 @@ TEST_F(GetUserFriendRequestsMessageHandlerTest, handleValidGetUserFriendRequests
 {
     const auto userId = faker::String::uuid();
 
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(userId));
+    const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
+
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*findReceivedFriendInvitationsQueryHandlerMock,
                 execute(server::application::FindReceivedFriendInvitationsQueryHandlerPayload{userId}))
         .WillOnce(Return(server::application::FindReceivedFriendInvitationsQueryHandlerResult{}));
@@ -94,12 +96,14 @@ TEST_F(GetUserFriendRequestsMessageHandlerTest, handleValidGetUserFriendRequests
     const auto user2 = std::make_shared<server::domain::User>(userId, email, password, friendName2, active,
                                                               emailVerified, verificationCode, createdAt, updatedAt);
 
+    const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
+
     const auto friendRequest1 =
         std::make_shared<server::domain::FriendInvitation>(requestId1, user1, user2, createdAt, updatedAt);
     const auto friendRequest2 =
         std::make_shared<server::domain::FriendInvitation>(requestId2, user2, user2, createdAt, updatedAt);
 
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(userId));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*findReceivedFriendInvitationsQueryHandlerMock,
                 execute(server::application::FindReceivedFriendInvitationsQueryHandlerPayload{userId}))
         .WillOnce(Return(
@@ -112,7 +116,7 @@ TEST_F(GetUserFriendRequestsMessageHandlerTest, handleValidGetUserFriendRequests
 
 TEST_F(GetUserFriendRequestsMessageHandlerTest, handleGetUserFriendRequestsMessageWithInvalidToken)
 {
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Throw(invalidToken));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Throw(invalidToken));
 
     auto responseMessage = getUserFriendRequestsMessageHandler.handleMessage(message);
 
@@ -123,7 +127,9 @@ TEST_F(GetUserFriendRequestsMessageHandlerTest, handleGetUserFriendRequestsMessa
 {
     const auto userId = faker::String::uuid();
 
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(userId));
+    const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
+    
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*findReceivedFriendInvitationsQueryHandlerMock,
                 execute(server::application::FindReceivedFriendInvitationsQueryHandlerPayload{userId}))
         .WillOnce(Throw(getUserChannelsError));

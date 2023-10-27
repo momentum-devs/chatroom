@@ -27,7 +27,7 @@ common::messages::Message FriendRequestMessageHandler::handleMessage(const commo
 
         auto token = payloadJson["token"].get<std::string>();
 
-        auto senderId = tokenService->getUserIdFromToken(token);
+        auto [senderId] = tokenService->verifyToken(token);
 
         auto invitedId = findUserByEmailQueryHandler->execute({friendEmail}).user.getId();
 
@@ -36,10 +36,10 @@ common::messages::Message FriendRequestMessageHandler::handleMessage(const commo
         LOG_S(INFO) << std::format("Sent invitation to friend to user with id {} by user with id {}", invitedId,
                                    senderId);
 
-        common::messages::Message message{common::messages::MessageId::SendFriendRequestResponse,
-                                          common::bytes::Bytes{R"(["ok"])"}};
+        common::messages::Message responseMessage{common::messages::MessageId::SendFriendRequestResponse,
+                                                  common::bytes::Bytes{R"(["ok"])"}};
 
-        return message;
+        return responseMessage;
     }
     catch (const std::exception& e)
     {

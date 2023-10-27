@@ -71,7 +71,9 @@ TEST_F(GetUserChannelInvitationsMessageHandlerTest, handleValidGetUserChannelsMe
 {
     const auto userId = faker::String::uuid();
 
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(userId));
+    const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
+
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*findReceivedChannelInvitationsQueryHandlerMock,
                 execute(server::application::FindReceivedChannelInvitationsQueryHandlerPayload{userId}))
         .WillOnce(Return(server::application::FindReceivedChannelInvitationsQueryHandlerResult{}));
@@ -96,12 +98,14 @@ TEST_F(GetUserChannelInvitationsMessageHandlerTest, handleValidGetUserChannelsMe
     const auto user = std::make_shared<server::domain::User>(userId, email, password, nickname, active, emailVerified,
                                                              verificationCode, createdAt, updatedAt);
 
+    const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
+
     const auto channel1 =
         std::make_shared<server::domain::Channel>(requestId1, friendName1, user, createdAt, updatedAt);
     const auto channel2 =
         std::make_shared<server::domain::Channel>(channelId2, channelName2, user, createdAt, updatedAt);
 
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(userId));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*findReceivedChannelInvitationsQueryHandlerMock,
                 execute(server::application::FindReceivedChannelInvitationsQueryHandlerPayload{userId}))
         .WillOnce(Return(server::application::FindReceivedChannelInvitationsQueryHandlerResult{
@@ -114,7 +118,7 @@ TEST_F(GetUserChannelInvitationsMessageHandlerTest, handleValidGetUserChannelsMe
 
 TEST_F(GetUserChannelInvitationsMessageHandlerTest, handleGetUserChannelsMessageWithInvalidToken)
 {
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Throw(invalidToken));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Throw(invalidToken));
 
     auto responseMessage = getUserChannelInvitationsMessageHandler.handleMessage(message);
 
@@ -125,7 +129,9 @@ TEST_F(GetUserChannelInvitationsMessageHandlerTest, handleGetUserChannelsMessage
 {
     const auto userId = faker::String::uuid();
 
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(userId));
+    const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
+
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*findReceivedChannelInvitationsQueryHandlerMock,
                 execute(server::application::FindReceivedChannelInvitationsQueryHandlerPayload{userId}))
         .WillOnce(Throw(getUserChannelsError));

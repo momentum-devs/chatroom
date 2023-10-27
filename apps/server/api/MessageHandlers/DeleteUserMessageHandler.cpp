@@ -22,7 +22,7 @@ common::messages::Message DeleteUserMessageHandler::handleMessage(const common::
 
         auto token = payloadJson["token"].get<std::string>();
 
-        auto userId = tokenService->getUserIdFromToken(token);
+        auto [userId] = tokenService->verifyToken(token);
 
         deleteUserCommandHandler->execute({userId});
 
@@ -30,10 +30,10 @@ common::messages::Message DeleteUserMessageHandler::handleMessage(const common::
             "ok",
         };
 
-        auto message = common::messages::Message{common::messages::MessageId::DeleteUserResponse,
-                                                 common::bytes::Bytes{responsePayload.dump()}};
+        auto responseMessage = common::messages::Message{common::messages::MessageId::DeleteUserResponse,
+                                                         common::bytes::Bytes{responsePayload.dump()}};
 
-        return message;
+        return responseMessage;
     }
     catch (const std::exception& e)
     {

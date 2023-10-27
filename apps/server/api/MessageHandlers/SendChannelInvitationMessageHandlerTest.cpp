@@ -17,6 +17,7 @@ namespace
 {
 auto token = "token";
 auto userId = "id";
+const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
 auto friendId = "friendId";
 auto channelId = "channelId";
 auto friendEmail = "friend_email";
@@ -63,9 +64,7 @@ public:
 
 TEST_F(SendChannelInvitationMessageHandlerTest, handleValidFriendRequestMessage)
 {
-    std::cout << validPayloadJson.dump();
-
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(userId));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*findUserByEmailQueryHandler,
                 execute(server::application::FindUserByEmailQueryHandlerPayload{friendEmail}))
         .WillOnce(Return(server::application::FindUserByEmailQueryHandlerResult{friendUser}));
@@ -80,7 +79,7 @@ TEST_F(SendChannelInvitationMessageHandlerTest, handleValidFriendRequestMessage)
 
 TEST_F(SendChannelInvitationMessageHandlerTest, handleFriendRequestMessageWithInvalidToken)
 {
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Throw(invalidToken));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Throw(invalidToken));
 
     auto responseMessage = sendChannelInvitationMessageHandler.handleMessage(message);
 
@@ -89,7 +88,7 @@ TEST_F(SendChannelInvitationMessageHandlerTest, handleFriendRequestMessageWithIn
 
 TEST_F(SendChannelInvitationMessageHandlerTest, handleFriendRequestMessageWithErrorWhileFindingFriendEmail)
 {
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(userId));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*findUserByEmailQueryHandler,
                 execute(server::application::FindUserByEmailQueryHandlerPayload{friendEmail}))
         .WillOnce(Throw(findFriendEmailError));
@@ -101,7 +100,7 @@ TEST_F(SendChannelInvitationMessageHandlerTest, handleFriendRequestMessageWithEr
 
 TEST_F(SendChannelInvitationMessageHandlerTest, handleFriendRequestMessageWithErrorWhileHandling)
 {
-    EXPECT_CALL(*tokenServiceMock, getUserIdFromToken(token)).WillOnce(Return(userId));
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*findUserByEmailQueryHandler,
                 execute(server::application::FindUserByEmailQueryHandlerPayload{friendEmail}))
         .WillOnce(Return(server::application::FindUserByEmailQueryHandlerResult{friendUser}));

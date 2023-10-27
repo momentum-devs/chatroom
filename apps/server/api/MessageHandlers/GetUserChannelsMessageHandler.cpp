@@ -24,7 +24,7 @@ common::messages::Message GetUserChannelsMessageHandler::handleMessage(const com
 
         auto token = payloadJson["token"].get<std::string>();
 
-        auto userId = tokenService->getUserIdFromToken(token);
+        auto [userId] = tokenService->verifyToken(token);
 
         const auto& [channels] = findChannelsToWhichUserBelongsQueryHandler->execute({userId});
 

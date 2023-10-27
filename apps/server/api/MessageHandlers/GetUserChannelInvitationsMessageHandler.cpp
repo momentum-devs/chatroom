@@ -25,7 +25,7 @@ GetUserChannelInvitationsMessageHandler::handleMessage(const common::messages::M
 
         auto token = payloadJson["token"].get<std::string>();
 
-        auto userId = tokenService->getUserIdFromToken(token);
+        auto [userId] = tokenService->verifyToken(token);
 
         const auto& [channels] = findReceivedChannelInvitationsQueryHandler->execute({userId});
 

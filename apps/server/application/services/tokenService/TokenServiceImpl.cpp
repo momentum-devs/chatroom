@@ -21,12 +21,14 @@ std::string TokenServiceImpl::createToken(const std::string& userId) const
     return jwtObject.signature();
 }
 
-std::string TokenServiceImpl::getUserIdFromToken(const std::string& token) const
+VerifyTokenResult TokenServiceImpl::verifyToken(const std::string& token) const
 {
-    auto decoded = jwt::decode(token, jwt::params::algorithms({"HS256"}), jwt::params::secret(jwtSecret),
-                               jwt::params::verify(true));
+    const auto decoded = jwt::decode(token, jwt::params::algorithms({"HS256"}), jwt::params::secret(jwtSecret),
+                                     jwt::params::verify(true));
 
-    return decoded.payload().get_claim_value<std::string>("userId");
+    const auto userId = decoded.payload().get_claim_value<std::string>("userId");
+
+    return {userId};
 }
 
 }
