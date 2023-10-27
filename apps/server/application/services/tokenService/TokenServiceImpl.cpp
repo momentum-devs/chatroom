@@ -31,6 +31,11 @@ VerifyTokenResult TokenServiceImpl::verifyToken(const std::string& token) const
     return {userId};
 }
 
-void TokenServiceImpl::invalidateToken(const std::string& token) const {}
+void TokenServiceImpl::invalidateToken(const std::string& token) const
+{
+    cpp_redis::client client;
+
+    client.connect();
+}
 
 }
