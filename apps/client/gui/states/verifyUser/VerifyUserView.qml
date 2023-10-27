@@ -2,9 +2,7 @@ import QtQuick 6.4
 import QtQuick.Controls 6.4
 
 Rectangle {
-    anchors.fill: parent
-    color: "grey"
-    width: Math.round(parent.width / 3)
+    color: "#313338"
 
     Keys.onEnterPressed: verifyButton.activate()
     Keys.onReturnPressed: verifyButton.activate()
@@ -15,6 +13,7 @@ Rectangle {
 
         Text {
             anchors.horizontalCenter: parent.horizontalCenter
+            color: "white"
             text: "Enter code from email to verify"
         }
         TextField {
@@ -26,6 +25,7 @@ Rectangle {
         }
         Row {
             anchors.horizontalCenter: verificationCodeField.horizontalCenter
+            spacing: 5
 
             Button {
                 id: verifyButton

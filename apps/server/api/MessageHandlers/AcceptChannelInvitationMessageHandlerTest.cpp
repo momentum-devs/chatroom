@@ -50,7 +50,7 @@ public:
         tokenServiceMock, std::move(acceptChannelInvitationCommandHandlerMockInit)};
 };
 
-TEST_F(AcceptChannelInvitationMessageHandlerTest, handleValidCreateChannelMessage)
+TEST_F(AcceptChannelInvitationMessageHandlerTest, handleValidAcceptChannelInvitationMessage)
 {
 
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
@@ -63,7 +63,7 @@ TEST_F(AcceptChannelInvitationMessageHandlerTest, handleValidCreateChannelMessag
     EXPECT_EQ(responseMessage, validMessageResponse);
 }
 
-TEST_F(AcceptChannelInvitationMessageHandlerTest, handleCreateChannelMessageWithInvalidToken)
+TEST_F(AcceptChannelInvitationMessageHandlerTest, handleAcceptChannelInvitationMessageWithInvalidToken)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Throw(invalidToken));
 
@@ -72,7 +72,7 @@ TEST_F(AcceptChannelInvitationMessageHandlerTest, handleCreateChannelMessageWith
     EXPECT_EQ(responseMessage, invalidTokenMessageResponse);
 }
 
-TEST_F(AcceptChannelInvitationMessageHandlerTest, handleCreateChannelMessageWithErrorWhileHandling)
+TEST_F(AcceptChannelInvitationMessageHandlerTest, handleAcceptChannelInvitationMessageWithErrorWhileHandling)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(

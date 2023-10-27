@@ -43,11 +43,18 @@
 
 // CLIENT:
 
-* accept friend invitation
-* reject friend invitation
-* show list of friends
 * remove from friends
-* user and friends online/offline
+
+
+* add nickname field while registration
+* add characters limit to nickname
+
+
+* show list of users in channel
+* show list of invitation to channel
+* delete invitation to channel (only creator)
+* delete user from channel (only creator)
+
 
 * direct messages between users
 * messages in channel

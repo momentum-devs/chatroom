@@ -46,6 +46,8 @@ enum class MessageId : unsigned char
     ChangeFriendRequestsResponse,
     GetUserFriends,
     GetUserFriendsResponse,
+    RemoveFromFriends,
+    RemoveFromFriendsResponse,
 };
 
 inline std::string toString(MessageId messageId)
@@ -89,6 +91,8 @@ inline std::string toString(MessageId messageId)
         {MessageId::ChangeFriendRequestsResponse, "ChangeFriendRequestsResponse"},
         {MessageId::GetUserFriends, "GetUserFriends"},
         {MessageId::GetUserFriendsResponse, "GetUserFriendsResponse"},
+        {MessageId::RemoveFromFriends, "RemoveFromFriends"},
+        {MessageId::RemoveFromFriendsResponse, "RemoveFromFriendsResponse"},
     };
 
     try

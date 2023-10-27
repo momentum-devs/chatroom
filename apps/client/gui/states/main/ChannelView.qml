@@ -7,6 +7,8 @@ Item {
 
     function setChannel(channel) {
         channelName.text = '<b>' + channel[0] + '</b>';
+        channelName.color = "white";
+        channelName.font.pointSize = 18;
         channelId = channel[1];
         isOwner = channel[2];
         deleteChannelButton.visible = isOwner;
@@ -19,9 +21,17 @@ Item {
         spacing: 5
         width: parent.width
 
+        Item {
+            height: 6
+            width: parent.width
+        }
         Text {
             id: channelName
             anchors.horizontalCenter: parent.horizontalCenter
+        }
+        Item {
+            height: 6
+            width: parent.width
         }
         Row {
             spacing: 5
@@ -60,6 +70,11 @@ Item {
                     mainController.deleteTheChannel();
                 }
             }
+        }
+        Rectangle {
+            color: '#3f4147'
+            height: 1
+            width: parent.width
         }
     }
 }

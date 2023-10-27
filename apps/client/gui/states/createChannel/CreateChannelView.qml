@@ -2,7 +2,7 @@ import QtQuick 6.4
 import QtQuick.Controls 6.4
 
 Rectangle {
-    color: "grey"
+    color: "#313338"
 
     Keys.onEnterPressed: createChannelButton.activate()
     Keys.onEscapePressed: goBackButton.activate()
@@ -14,6 +14,7 @@ Rectangle {
 
         Text {
             anchors.horizontalCenter: parent.horizontalCenter
+            color: "white"
             text: "Create Channel"
         }
         TextField {
@@ -24,6 +25,7 @@ Rectangle {
         }
         Row {
             anchors.horizontalCenter: channelNameField.horizontalCenter
+            spacing: 5
 
             Button {
                 id: createChannelButton

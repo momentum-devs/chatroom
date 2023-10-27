@@ -29,17 +29,17 @@ GetUserFriendRequestsMessageHandler::handleMessage(const common::messages::Messa
 
         const auto& [friendInvitations] = findReceivedFriendInvitationsQueryHandler->execute({userId});
 
-        nlohmann::json channelsJsonArray = nlohmann::json::array();
+        nlohmann::json friendRequestsJsonArray = nlohmann::json::array();
 
         for (const auto& friendInvitation : friendInvitations)
         {
-            nlohmann::json channelInvitationJson{{"id", friendInvitation.getId()},
-                                                 {"name", friendInvitation.getSender()->getNickname()}};
+            nlohmann::json friendRequestJson{{"id", friendInvitation.getId()},
+                                             {"name", friendInvitation.getSender()->getNickname()}};
 
-            channelsJsonArray.push_back(channelInvitationJson);
+            friendRequestsJsonArray.push_back(friendRequestJson);
         }
 
-        nlohmann::json responsePayload{{"data", channelsJsonArray}};
+        nlohmann::json responsePayload{{"data", friendRequestsJsonArray}};
 
         return common::messages::Message{common::messages::MessageId::GetFriendRequestsResponse,
                                          common::bytes::Bytes{responsePayload.dump()}};

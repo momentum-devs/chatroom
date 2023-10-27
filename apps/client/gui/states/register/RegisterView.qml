@@ -2,7 +2,7 @@ import QtQuick 6.2
 import QtQuick.Controls 6.2
 
 Rectangle {
-    color: "grey"
+    color: "#313338"
 
     Keys.onEnterPressed: registerUserButton.activate()
     Keys.onEscapePressed: goBackButton.activate()
@@ -14,6 +14,7 @@ Rectangle {
 
         Text {
             anchors.horizontalCenter: parent.horizontalCenter
+            color: "white"
             text: "Register"
         }
         TextField {
@@ -39,6 +40,7 @@ Rectangle {
         }
         Row {
             anchors.horizontalCenter: parent.horizontalCenter
+            spacing: 5
 
             Button {
                 id: registerUserButton
