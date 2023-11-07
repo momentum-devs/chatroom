@@ -1,4 +1,6 @@
-### Setup local development:
+## Setup local development:
+
+<br/>
 
 #### Download project
 
@@ -22,7 +24,7 @@
 
 ```cd externals && ./install_externals.sh```
 
-### Run database:
+### Run docker compose:
 
 ```chmod 777 start_dev.sh```
 
