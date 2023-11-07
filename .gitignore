@@ -44,3 +44,4 @@ cmake-build-*
 vcpkg_installed
 *.profraw
 .cache
+lib
