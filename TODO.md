@@ -24,6 +24,8 @@
 * reactions
 * encryption
 * avatars
-* s3 local setup
 * infrastructure setup
 * deploy
+* refactor env parser to lib
+* remove command calling other commands
+* add unique constraints to conversations

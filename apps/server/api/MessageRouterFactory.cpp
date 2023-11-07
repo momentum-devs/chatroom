@@ -54,6 +54,8 @@
 #include "server/infrastructure/repositories/channelInvitationRepository/ChannelInvitationRepositoryImpl.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
 #include "server/infrastructure/repositories/channelRepository/ChannelRepositoryImpl.h"
+#include "server/infrastructure/repositories/conversationRepository/conversationMapper/ConversationMapperImpl.h"
+#include "server/infrastructure/repositories/conversationRepository/ConversationRepositoryImpl.h"
 #include "server/infrastructure/repositories/friendInvitationRepository/friendInvitationMapper/FriendInvitationMapperImpl.h"
 #include "server/infrastructure/repositories/friendInvitationRepository/FriendInvitationRepositoryImpl.h"
 #include "server/infrastructure/repositories/friendshipRepository/friendshipMapper/FriendshipMapperImpl.h"
@@ -105,6 +107,11 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
     auto channelInvitationRepository = std::make_shared<server::infrastructure::ChannelInvitationRepositoryImpl>(
         db, channelInvitationMapper, userMapper, channelMapper);
 
+    auto conversationMapper = std::make_shared<server::infrastructure::ConversationMapperImpl>(userMapper, channelMapper);
+
+    auto conversationRepository =
+        std::make_shared<server::infrastructure::ConversationRepositoryImpl>(db, conversationMapper, userMapper, channelMapper);
+
     auto findChannelsToWhichUserBelongsQueryHandler =
         std::make_unique<server::application::FindChannelsToWhichUserBelongsQueryHandlerImpl>(userChannelRepository);
 
@@ -112,7 +119,7 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
         userChannelRepository, userRepository, channelRepository);
 
     auto createChannelCommandHandler = std::make_unique<server::application::CreateChannelCommandHandlerImpl>(
-        channelRepository, addUserToChannelCommandHandler, userRepository);
+        channelRepository, addUserToChannelCommandHandler, userRepository, conversationRepository);
 
     const std::shared_ptr<common::httpClient::HttpClient> httpClient =
         common::httpClient::HttpClientFactory::createHttpClient();
