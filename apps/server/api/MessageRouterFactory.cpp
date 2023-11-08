@@ -107,10 +107,11 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
     auto channelInvitationRepository = std::make_shared<server::infrastructure::ChannelInvitationRepositoryImpl>(
         db, channelInvitationMapper, userMapper, channelMapper);
 
-    auto conversationMapper = std::make_shared<server::infrastructure::ConversationMapperImpl>(userMapper, channelMapper);
+    auto conversationMapper =
+        std::make_shared<server::infrastructure::ConversationMapperImpl>(userMapper, channelMapper);
 
-    auto conversationRepository =
-        std::make_shared<server::infrastructure::ConversationRepositoryImpl>(db, conversationMapper, userMapper, channelMapper);
+    auto conversationRepository = std::make_shared<server::infrastructure::ConversationRepositoryImpl>(
+        db, conversationMapper, userMapper, channelMapper);
 
     auto findChannelsToWhichUserBelongsQueryHandler =
         std::make_unique<server::application::FindChannelsToWhichUserBelongsQueryHandlerImpl>(userChannelRepository);
@@ -232,8 +233,8 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
     auto getUserFriendRequestsMessageHandler = std::make_shared<GetUserFriendRequestsMessageHandler>(
         tokenService, std::move(findReceivedFriendInvitationsQueryHandler));
 
-    auto createFriendshipCommandHandler =
-        std::make_shared<application::CreateFriendshipCommandHandlerImpl>(friendshipRepository, userRepository);
+    auto createFriendshipCommandHandler = std::make_shared<application::CreateFriendshipCommandHandlerImpl>(
+        friendshipRepository, userRepository, conversationRepository);
 
     auto acceptFriendInvitationCommandHandler =
         std::make_unique<server::application::AcceptFriendInvitationCommandHandlerImpl>(

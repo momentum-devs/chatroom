@@ -2,6 +2,11 @@
 
 #include "AcceptFriendInvitationCommandHandlerImpl.h"
 #include "server/application/commandHandlers/friend/createFriendshipCommandHandler/CreateFriendshipCommandHandlerImpl.h"
+#include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapper.h"
+#include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
+#include "server/infrastructure/repositories/conversationRepository/conversationMapper/ConversationMapper.h"
+#include "server/infrastructure/repositories/conversationRepository/conversationMapper/ConversationMapperImpl.h"
+#include "server/infrastructure/repositories/conversationRepository/ConversationRepositoryImpl.h"
 #include "server/infrastructure/repositories/friendInvitationRepository/friendInvitationMapper/FriendInvitationMapperImpl.h"
 #include "server/infrastructure/repositories/friendInvitationRepository/FriendInvitationRepositoryImpl.h"
 #include "server/infrastructure/repositories/friendshipRepository/friendshipMapper/FriendshipMapper.h"
@@ -49,6 +54,7 @@ public:
     FriendInvitationTestUtils friendInvitationTestUtils{db};
 
     std::shared_ptr<UserMapper> userMapper = std::make_shared<UserMapperImpl>();
+    std::shared_ptr<ChannelMapper> channelMapper = std::make_shared<ChannelMapperImpl>(userMapper);
 
     std::shared_ptr<FriendInvitationMapper> friendInvitationMapperInit =
         std::make_shared<FriendInvitationMapperImpl>(userMapper);
@@ -63,8 +69,14 @@ public:
     std::shared_ptr<domain::FriendshipRepository> friendshipRepository =
         std::make_shared<FriendshipRepositoryImpl>(db, friendshipMapperInit, userMapper);
 
+    std::shared_ptr<ConversationMapper> conversationMapper =
+        std::make_shared<ConversationMapperImpl>(userMapper, channelMapper);
+
+    std::shared_ptr<domain::ConversationRepository> conversationRepository =
+        std::make_shared<ConversationRepositoryImpl>(db, conversationMapper, userMapper, channelMapper);
+
     std::shared_ptr<application::CreateFriendshipCommandHandler> createFriendshipCommandHandler =
-        std::make_shared<CreateFriendshipCommandHandlerImpl>(friendshipRepository, userRepository);
+        std::make_shared<CreateFriendshipCommandHandlerImpl>(friendshipRepository, userRepository, conversationRepository);
 
     AcceptFriendInvitationCommandHandlerImpl acceptFriendInvitationCommandHandler{
         friendInvitationRepository, userRepository, createFriendshipCommandHandler};

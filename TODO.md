@@ -29,3 +29,5 @@
 * refactor env parser to lib
 * remove command calling other commands
 * add unique constraints to conversations
+* conversation by friendshipId
+* refactor api directory

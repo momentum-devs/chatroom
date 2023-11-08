@@ -70,6 +70,22 @@ std::shared_ptr<infrastructure::Conversation> ConversationTestUtils::findById(co
     return foundConversation;
 }
 
+std::shared_ptr<infrastructure::Conversation> ConversationTestUtils::findByUsers(const std::string& userId,
+                                                                                 const std::string& recipientId)
+{
+    typedef odb::query<infrastructure::Conversation> query;
+
+    odb::transaction transaction(databaseClient->begin());
+
+    std::shared_ptr<infrastructure::Conversation> foundConversation(
+        databaseClient->query_one<infrastructure::Conversation>(query::user->id == userId &&
+                                                                query::recipient->id == recipientId));
+
+    transaction.commit();
+
+    return foundConversation;
+}
+
 std::shared_ptr<infrastructure::Conversation> ConversationTestUtils::findByChannelId(const std::string& channelId)
 {
     typedef odb::query<infrastructure::Conversation> query;

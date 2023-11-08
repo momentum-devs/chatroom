@@ -24,6 +24,8 @@ public:
     std::shared_ptr<infrastructure::Conversation>
     createAndPersist(const std::shared_ptr<infrastructure::Channel>& channel);
     std::shared_ptr<infrastructure::Conversation> findById(const std::string& id);
+    std::shared_ptr<infrastructure::Conversation> findByUsers(const std::string& userId,
+                                                              const std::string& recipientId);
     std::shared_ptr<infrastructure::Conversation> findByChannelId(const std::string& channelId);
     void truncateTable();
 

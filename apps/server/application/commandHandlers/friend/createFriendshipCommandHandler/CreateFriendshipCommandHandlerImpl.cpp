@@ -12,8 +12,11 @@ namespace server::application
 {
 CreateFriendshipCommandHandlerImpl::CreateFriendshipCommandHandlerImpl(
     std::shared_ptr<domain::FriendshipRepository> friendshipRepositoryInit,
-    std::shared_ptr<domain::UserRepository> userRepositoryInit)
-    : friendshipRepository{std::move(friendshipRepositoryInit)}, userRepository{std::move(userRepositoryInit)}
+    std::shared_ptr<domain::UserRepository> userRepositoryInit,
+    std::shared_ptr<domain::ConversationRepository> conversationRepositoryInit)
+    : friendshipRepository{std::move(friendshipRepositoryInit)},
+      userRepository{std::move(userRepositoryInit)},
+      conversationRepository{std::move(conversationRepositoryInit)}
 {
 }
 
@@ -54,5 +57,16 @@ void CreateFriendshipCommandHandlerImpl::execute(const CreateFriendshipCommandHa
     const auto friendship = friendshipRepository->createFriendship({friendshipId, *user, *userFriend});
 
     LOG_S(INFO) << std::format("Friendship created. {{friendshipId: {}}}", friendship.getId());
+
+    LOG_S(INFO) << "Creating friendship conversation...";
+
+    std::stringstream uuid2;
+    uuid2 << boost::uuids::random_generator()();
+
+    const auto conversationId = uuid2.str();
+
+    conversationRepository->createConversation({conversationId, user, userFriend, std::nullopt});
+
+    LOG_S(INFO) << std::format("Friendship conversation with id {} created.", conversationId);
 }
 }
