@@ -62,5 +62,4 @@ TEST_F(ChannelInvitationMapperTest, givenPersistenceChannelInvitation_shouldMapT
     ASSERT_EQ(domainChannelInvitation.getRecipient(), domainRecipient);
     ASSERT_EQ(domainChannelInvitation.getChannel(), domainChannel);
     ASSERT_EQ(domainChannelInvitation.getCreatedAt(), persistenceChannelInvitation->getCreatedAt());
-    ASSERT_EQ(domainChannelInvitation.getUpdatedAt(), persistenceChannelInvitation->getUpdatedAt());
 }

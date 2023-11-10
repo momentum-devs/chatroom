@@ -15,10 +15,9 @@ class ChannelInvitation
 {
 public:
     ChannelInvitation(std::string idInit, std::shared_ptr<User> senderInit, std::shared_ptr<User> recipientInit,
-                      std::shared_ptr<Channel> channelInit, std::string createdAtInit, std::string updatedAtInit)
+                      std::shared_ptr<Channel> channelInit, std::string createdAtInit)
         : id{std::move(idInit)},
           created_at{std::move(createdAtInit)},
-          updated_at{std::move(updatedAtInit)},
           sender{std::move(senderInit)},
           recipient{std::move(recipientInit)},
           channel{std::move(channelInit)}
@@ -50,11 +49,6 @@ public:
         return created_at;
     }
 
-    [[nodiscard]] std::string getUpdatedAt() const
-    {
-        return updated_at;
-    }
-
 private:
     ChannelInvitation() = default;
 
@@ -63,7 +57,6 @@ private:
 #pragma db id
     std::string id;
     std::string created_at;
-    std::string updated_at;
 
 #pragma db not_null
     std::shared_ptr<User> sender;

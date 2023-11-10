@@ -31,7 +31,7 @@ ChannelInvitationRepositoryImpl::createChannelInvitation(const domain::CreateCha
 
             const auto channel = channelMapper->mapToPersistenceChannel(payload.channel);
 
-            ChannelInvitation channelInvitation{payload.id, sender, recipient, channel, currentDate, currentDate};
+            ChannelInvitation channelInvitation{payload.id, sender, recipient, channel, currentDate};
 
             odb::transaction transaction(db->begin());
 

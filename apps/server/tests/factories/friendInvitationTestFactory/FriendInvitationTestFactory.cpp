@@ -11,9 +11,8 @@ FriendInvitationTestFactory::createDomainFriendInvitation(const std::shared_ptr<
 {
     const auto id = faker::String::uuid();
     const auto createdAt = faker::Date::pastDate();
-    const auto updatedAt = faker::Date::recentDate();
 
-    return std::make_shared<domain::FriendInvitation>(id, sender, recipient, createdAt, updatedAt);
+    return std::make_shared<domain::FriendInvitation>(id, sender, recipient, createdAt);
 }
 
 std::shared_ptr<infrastructure::FriendInvitation>
@@ -22,8 +21,7 @@ FriendInvitationTestFactory::createPersistentFriendInvitation(const std::shared_
 {
     const auto id = faker::String::uuid();
     const auto createdAt = faker::Date::pastDate();
-    const auto updatedAt = faker::Date::recentDate();
 
-    return std::make_shared<infrastructure::FriendInvitation>(id, sender, recipient, createdAt, updatedAt);
+    return std::make_shared<infrastructure::FriendInvitation>(id, sender, recipient, createdAt);
 }
 }

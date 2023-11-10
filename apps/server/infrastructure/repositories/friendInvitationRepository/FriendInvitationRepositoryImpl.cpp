@@ -28,7 +28,7 @@ FriendInvitationRepositoryImpl::createFriendInvitation(const domain::CreateFrien
 
             const auto recipient = userMapper->mapToPersistenceUser(payload.recipient);
 
-            FriendInvitation friendInvitation{payload.id, sender, recipient, currentDate, currentDate};
+            FriendInvitation friendInvitation{payload.id, sender, recipient, currentDate};
 
             odb::transaction transaction(db->begin());
 

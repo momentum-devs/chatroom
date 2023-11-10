@@ -11,13 +11,12 @@ class FriendInvitation
 {
 public:
     FriendInvitation(std::string id, std::shared_ptr<User> sender, std::shared_ptr<User> recipient,
-                     std::string createdAt, std::string updatedAt);
+                     std::string createdAt);
 
     std::string getId() const;
     std::shared_ptr<User> getSender() const;
     std::shared_ptr<User> getRecipient() const;
     std::string getCreatedAt() const;
-    std::string getUpdatedAt() const;
 
 private:
     std::string id;

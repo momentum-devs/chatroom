@@ -11,9 +11,8 @@ FriendshipTestFactory::createDomainFriendship(const std::shared_ptr<domain::User
 {
     const auto id = faker::String::uuid();
     const auto createdAt = faker::Date::pastDate();
-    const auto updatedAt = faker::Date::recentDate();
 
-    return std::make_shared<domain::Friendship>(id, user, userFriend, createdAt, updatedAt);
+    return std::make_shared<domain::Friendship>(id, user, userFriend, createdAt);
 }
 
 std::shared_ptr<infrastructure::Friendship>
@@ -22,8 +21,7 @@ FriendshipTestFactory::createPersistentFriendship(const std::shared_ptr<infrastr
 {
     const auto id = faker::String::uuid();
     const auto createdAt = faker::Date::pastDate();
-    const auto updatedAt = faker::Date::recentDate();
 
-    return std::make_shared<infrastructure::Friendship>(id, user, userFriend, createdAt, updatedAt);
+    return std::make_shared<infrastructure::Friendship>(id, user, userFriend, createdAt);
 }
 }

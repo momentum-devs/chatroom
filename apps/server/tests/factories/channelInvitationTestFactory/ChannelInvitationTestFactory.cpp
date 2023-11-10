@@ -12,9 +12,8 @@ ChannelInvitationTestFactory::createDomainChannelInvitation(const std::shared_pt
 {
     const auto id = faker::String::uuid();
     const auto createdAt = faker::Date::pastDate();
-    const auto updatedAt = faker::Date::recentDate();
 
-    return std::make_shared<domain::ChannelInvitation>(id, sender, recipient, channel, createdAt, updatedAt);
+    return std::make_shared<domain::ChannelInvitation>(id, sender, recipient, channel, createdAt);
 }
 
 std::shared_ptr<infrastructure::ChannelInvitation>
@@ -24,8 +23,7 @@ ChannelInvitationTestFactory::createPersistentChannelInvitation(const std::share
 {
     const auto id = faker::String::uuid();
     const auto createdAt = faker::Date::pastDate();
-    const auto updatedAt = faker::Date::recentDate();
 
-    return std::make_shared<infrastructure::ChannelInvitation>(id, sender, recipient, channel, createdAt, updatedAt);
+    return std::make_shared<infrastructure::ChannelInvitation>(id, sender, recipient, channel, createdAt);
 }
 }

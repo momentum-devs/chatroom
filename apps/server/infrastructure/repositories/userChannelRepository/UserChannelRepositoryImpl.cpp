@@ -30,7 +30,7 @@ domain::UserChannel UserChannelRepositoryImpl::createUserChannel(const domain::C
 
             const auto channel = channelMapper->mapToPersistenceChannel(payload.channel);
 
-            UserChannel userChannel{payload.id, user, channel, currentDate, currentDate};
+            UserChannel userChannel{payload.id, user, channel, currentDate};
 
             odb::transaction transaction(db->begin());
 

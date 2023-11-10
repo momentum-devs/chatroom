@@ -5,11 +5,9 @@
 namespace server::domain
 {
 FriendInvitation::FriendInvitation(std::string idInit, std::shared_ptr<User> senderInit,
-                                   std::shared_ptr<User> recipientInit, std::string createdAtInit,
-                                   std::string updatedAtInit)
+                                   std::shared_ptr<User> recipientInit, std::string createdAtInit)
     : id{std::move(idInit)},
       createdAt{std::move(createdAtInit)},
-      updatedAt{std::move(updatedAtInit)},
       sender{std::move(senderInit)},
       recipient{std::move(recipientInit)}
 {
@@ -33,11 +31,6 @@ std::shared_ptr<User> FriendInvitation::getRecipient() const
 std::string FriendInvitation::getCreatedAt() const
 {
     return createdAt;
-}
-
-std::string FriendInvitation::getUpdatedAt() const
-{
-    return updatedAt;
 }
 
 }

@@ -50,5 +50,4 @@ TEST_F(FriendshipMapperTest, givenPersistenceFriendship_shouldMapToDomainFriends
     ASSERT_EQ(domainFriendship.getUser(), domainUser);
     ASSERT_EQ(domainFriendship.getUserFriend(), domainUserFriend);
     ASSERT_EQ(domainFriendship.getCreatedAt(), friendship->getCreatedAt());
-    ASSERT_EQ(domainFriendship.getUpdatedAt(), friendship->getUpdatedAt());
 }

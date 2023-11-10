@@ -37,7 +37,6 @@ CREATE TABLE "users_channels"
 (
     "id"         TEXT NOT NULL PRIMARY KEY,
     "created_at" TEXT NOT NULL,
-    "updated_at" TEXT NOT NULL,
     "user"       TEXT NOT NULL,
     "channel"    TEXT NOT NULL
 );
@@ -58,7 +57,6 @@ CREATE TABLE "channels_invitations"
 (
     "id"         TEXT NOT NULL PRIMARY KEY,
     "created_at" TEXT NOT NULL,
-    "updated_at" TEXT NOT NULL,
     "sender"     TEXT NOT NULL,
     "recipient"  TEXT NOT NULL,
     "channel"    TEXT NOT NULL
@@ -84,7 +82,6 @@ CREATE TABLE "friends_invitations"
 (
     "id"         TEXT NOT NULL PRIMARY KEY,
     "created_at" TEXT NOT NULL,
-    "updated_at" TEXT NOT NULL,
     "sender"     TEXT NOT NULL,
     "recipient"  TEXT NOT NULL
 );
@@ -105,7 +102,6 @@ CREATE TABLE "friendships"
 (
     "id"          TEXT NOT NULL PRIMARY KEY,
     "created_at"  TEXT NOT NULL,
-    "updated_at"  TEXT NOT NULL,
     "user"        TEXT NOT NULL,
     "user_friend" TEXT NOT NULL
 );

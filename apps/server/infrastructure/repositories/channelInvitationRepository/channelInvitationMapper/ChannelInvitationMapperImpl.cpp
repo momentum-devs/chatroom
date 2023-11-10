@@ -18,8 +18,7 @@ ChannelInvitationMapperImpl::mapToDomainChannelInvitation(const ChannelInvitatio
     const auto recipient = userMapper->mapToDomainUser(channelInvitation.getRecipient());
     const auto channel = channelMapper->mapToDomainChannel(channelInvitation.getChannel());
     const auto createdAt = channelInvitation.getCreatedAt();
-    const auto updatedAt = channelInvitation.getUpdatedAt();
 
-    return domain::ChannelInvitation{id, sender, recipient, channel, createdAt, updatedAt};
+    return domain::ChannelInvitation{id, sender, recipient, channel, createdAt};
 }
 }

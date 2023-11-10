@@ -6,10 +6,9 @@ namespace server::domain
 {
 ChannelInvitation::ChannelInvitation(std::string idInit, std::shared_ptr<User> senderInit,
                                      std::shared_ptr<User> recipientInit, std::shared_ptr<Channel> channelInit,
-                                     std::string createdAtInit, std::string updatedAtInit)
+                                     std::string createdAtInit)
     : id{std::move(idInit)},
       createdAt{std::move(createdAtInit)},
-      updatedAt{std::move(updatedAtInit)},
       sender{std::move(senderInit)},
       recipient{std::move(recipientInit)},
       channel{std::move(channelInit)}
@@ -39,11 +38,6 @@ std::shared_ptr<Channel> ChannelInvitation::getChannel() const
 std::string ChannelInvitation::getCreatedAt() const
 {
     return createdAt;
-}
-
-std::string ChannelInvitation::getUpdatedAt() const
-{
-    return updatedAt;
 }
 
 }

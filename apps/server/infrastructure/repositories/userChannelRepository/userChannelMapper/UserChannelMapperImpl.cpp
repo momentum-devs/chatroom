@@ -16,8 +16,7 @@ domain::UserChannel UserChannelMapperImpl::mapToDomainUserChannel(const UserChan
     const auto user = userMapper->mapToDomainUser(userChannel.getUser());
     const auto channel = channelMapper->mapToDomainChannel(userChannel.getChannel());
     const auto createdAt = userChannel.getCreatedAt();
-    const auto updatedAt = userChannel.getUpdatedAt();
 
-    return domain::UserChannel{id, user, channel, createdAt, updatedAt};
+    return domain::UserChannel{id, user, channel, createdAt};
 }
 }

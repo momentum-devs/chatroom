@@ -25,7 +25,7 @@ domain::Friendship FriendshipRepositoryImpl::createFriendship(const domain::Crea
 
             const auto userFriend = userMapper->mapToPersistenceUser(payload.userFriend);
 
-            Friendship friendship{payload.id, user, userFriend, currentDate, currentDate};
+            Friendship friendship{payload.id, user, userFriend, currentDate};
 
             odb::transaction transaction(db->begin());
 

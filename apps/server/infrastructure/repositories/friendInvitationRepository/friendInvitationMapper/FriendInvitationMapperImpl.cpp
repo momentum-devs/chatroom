@@ -16,8 +16,7 @@ FriendInvitationMapperImpl::mapToDomainFriendInvitation(const FriendInvitation& 
     const auto sender = userMapper->mapToDomainUser(channelInvitation.getSender());
     const auto recipient = userMapper->mapToDomainUser(channelInvitation.getRecipient());
     const auto createdAt = channelInvitation.getCreatedAt();
-    const auto updatedAt = channelInvitation.getUpdatedAt();
 
-    return domain::FriendInvitation{id, sender, recipient, createdAt, updatedAt};
+    return domain::FriendInvitation{id, sender, recipient, createdAt};
 }
 }

@@ -52,5 +52,4 @@ TEST_F(UserChannelMapperTest, givenPersistenceUserChannel_shouldMapToDomainUserC
     ASSERT_EQ(domainUserChannel.getUser(), domainUser);
     ASSERT_EQ(domainUserChannel.getChannel(), domainChannel);
     ASSERT_EQ(domainUserChannel.getCreatedAt(), userChannel->getCreatedAt());
-    ASSERT_EQ(domainUserChannel.getUpdatedAt(), userChannel->getUpdatedAt());
 }

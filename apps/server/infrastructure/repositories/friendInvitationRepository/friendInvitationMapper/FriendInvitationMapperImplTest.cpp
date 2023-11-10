@@ -51,5 +51,4 @@ TEST_F(FriendInvitationMapperTest, givenPersistenceFriendInvitation_shouldMapToD
     ASSERT_EQ(domainFriendInvitation.getSender(), domainSender);
     ASSERT_EQ(domainFriendInvitation.getRecipient(), domainRecipient);
     ASSERT_EQ(domainFriendInvitation.getCreatedAt(), persistenceFriendInvitation->getCreatedAt());
-    ASSERT_EQ(domainFriendInvitation.getUpdatedAt(), persistenceFriendInvitation->getUpdatedAt());
 }
