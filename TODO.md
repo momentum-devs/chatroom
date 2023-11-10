@@ -15,6 +15,7 @@
 * push messages, invitations, online/offline instead of polling
 * encryption
 * avatars
+* message seen
 
 ### SERVER:
 
@@ -31,3 +32,4 @@
 * add unique constraints to conversations
 * conversation by friendshipId
 * refactor api directory
+* message seen
