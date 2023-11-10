@@ -24,7 +24,7 @@
 * user has history of direct messages and messages in channel
 * reactions
 * encryption
-* avatars
+* user avatars and channel avatars
 * infrastructure setup
 * deploy
 * refactor env parser to lib

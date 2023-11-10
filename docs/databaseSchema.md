@@ -2,4 +2,4 @@
 
 ## Schema:
 
-![Schema](resources/db_schema.png)
+![Schema](resources/db-schema.png)
