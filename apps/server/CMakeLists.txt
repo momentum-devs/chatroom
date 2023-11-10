@@ -53,7 +53,6 @@ set(SOURCES
         application/queryHandlers/channel/findChannelsToWhichUserBelongsQueryHandler/FindChannelsToWhichUserBelongsQueryHandlerImpl.cpp
         application/queryHandlers/channel/findChannelByIdQueryHandler/FindChannelByIdQueryHandlerImpl.cpp
         application/queryHandlers/channel/findReceivedChannelInvitationsQueryHandler/FindReceivedChannelInvitationsQueryHandlerImpl.cpp
-        application/queryHandlers/channel/findChannelConversationQueryHandler/FindChannelConversationQueryHandlerImpl.cpp
         application/commandHandlers/channel/createChannelInvitationCommandHandler/CreateChannelInvitationCommandHandlerImpl.cpp
         application/commandHandlers/channel/acceptChannelInvitationCommandHandler/AcceptChannelInvitationCommandHandlerImpl.cpp
         application/commandHandlers/channel/rejectChannelInvitationCommandHandler/RejectChannelInvitationCommandHandlerImpl.cpp
@@ -75,6 +74,7 @@ set(SOURCES
         domain/entities/conversation/Conversation.cpp
         infrastructure/repositories/conversationRepository/conversationMapper/ConversationMapperImpl.cpp
         infrastructure/repositories/conversationRepository/ConversationRepositoryImpl.cpp
+        application/queryHandlers/conversations/findChannelConversationQueryHandler/FindChannelConversationQueryHandlerImpl.cpp
 
         api/MessageHandlers/UpdateUserMessageHandler.cpp
         api/MessageHandlers/DeleteUserMessageHandler.cpp
@@ -173,7 +173,6 @@ set(IT_SOURCES
         application/queryHandlers/channel/findUsersBelongingToChannelQueryHandler/FindUsersBelongingToChannelQueryHandlerImplIntegrationTest.cpp
         application/queryHandlers/channel/findChannelsToWhichUserBelongsQueryHandler/FindChannelsToWhichUserBelongsQueryHandlerImplIntegrationTest.cpp
         application/queryHandlers/channel/findChannelByIdQueryHandler/FindChannelByIdQueryHandlerImplIntegrationTest.cpp
-        application/queryHandlers/channel/findChannelConversationQueryHandler/FindChannelConversationQueryHandlerImplIntegrationTest.cpp
         application/queryHandlers/channel/findReceivedChannelInvitationsQueryHandler/FindReceivedChannelInvitationsQueryHandlerImplIntegrationTest.cpp
         application/commandHandlers/channel/acceptChannelInvitationCommandHandler/AcceptChannelInvitationCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/channel/rejectChannelInvitationCommandHandler/RejectChannelInvitationCommandHandlerImplIntegrationTest.cpp
@@ -189,6 +188,7 @@ set(IT_SOURCES
         application/queryHandlers/friend/findUserFriendsQueryHandler/FindUserFriendsQueryHandlerImplIntegrationTest.cpp
 
         infrastructure/repositories/conversationRepository/ConversationRepositoryImplIntegrationTest.cpp
+        application/queryHandlers/conversations/findChannelConversationQueryHandler/FindChannelConversationQueryHandlerImplIntegrationTest.cpp
         )
 
 set(ODB_HEADERS
