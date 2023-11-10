@@ -58,8 +58,12 @@
 #include "server/infrastructure/repositories/friendInvitationRepository/FriendInvitationRepositoryImpl.h"
 #include "server/infrastructure/repositories/friendshipRepository/friendshipMapper/FriendshipMapperImpl.h"
 #include "server/infrastructure/repositories/friendshipRepository/FriendshipRepositoryImpl.h"
+#include "server/infrastructure/repositories/groupRepository/groupMapper/GroupMapperImpl.h"
+#include "server/infrastructure/repositories/groupRepository/GroupRepositoryImpl.h"
 #include "server/infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapperImpl.h"
 #include "server/infrastructure/repositories/userChannelRepository/UserChannelRepositoryImpl.h"
+#include "server/infrastructure/repositories/userGroupRepository/userGroupMapper/UserGroupMapperImpl.h"
+#include "server/infrastructure/repositories/userGroupRepository/UserGroupRepositoryImpl.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "server/infrastructure/repositories/userRepository/UserRepositoryImpl.h"
 #include "server/infrastructure/services/emailService/EmailServiceImpl.h"
@@ -82,6 +86,15 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
     auto userMapper = std::make_shared<server::infrastructure::UserMapperImpl>();
 
     auto userRepository = std::make_shared<server::infrastructure::UserRepositoryImpl>(db, userMapper);
+
+    auto groupMapper = std::make_shared<server::infrastructure::GroupMapperImpl>();
+
+    auto groupRepository = std::make_shared<server::infrastructure::GroupRepositoryImpl>(db, groupMapper);
+
+    auto userGroupMapper = std::make_shared<server::infrastructure::UserGroupMapperImpl>(userMapper, groupMapper);
+
+    auto userGroupRepository =
+        std::make_shared<server::infrastructure::UserGroupRepositoryImpl>(db, userGroupMapper, userMapper, groupMapper);
 
     auto registerUserCommandHandler =
         std::make_unique<server::application::RegisterUserCommandHandlerImpl>(userRepository, hashService);
@@ -145,7 +158,8 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
     auto updateUserMessageHandler =
         std::make_shared<UpdateUserMessageHandler>(tokenService, std::move(updateUserCommandHandler));
 
-    auto deleteUserCommandHandler = std::make_unique<server::application::DeleteUserCommandHandlerImpl>(userRepository);
+    auto deleteUserCommandHandler = std::make_unique<server::application::DeleteUserCommandHandlerImpl>(
+        userRepository, userGroupRepository, groupRepository);
 
     auto deleteUserMessageHandler =
         std::make_shared<DeleteUserMessageHandler>(tokenService, std::move(deleteUserCommandHandler));

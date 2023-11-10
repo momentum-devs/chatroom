@@ -46,6 +46,24 @@ std::shared_ptr<infrastructure::Group> GroupTestUtils::findById(const std::strin
     return foundGroup;
 }
 
+std::vector<infrastructure::Group> GroupTestUtils::findAll()
+{
+    typedef odb::result<infrastructure::Group> Result;
+
+    odb::transaction transaction(databaseClient->begin());
+
+    Result result = databaseClient->query<infrastructure::Group>();
+
+    std::vector<infrastructure::Group> allGroups;
+
+    for (const auto& group : result)
+    {
+        allGroups.push_back(group);
+    }
+
+    return allGroups;
+}
+
 void GroupTestUtils::truncateTable()
 {
     odb::transaction transaction(databaseClient->begin());
@@ -54,4 +72,5 @@ void GroupTestUtils::truncateTable()
 
     transaction.commit();
 }
+
 }

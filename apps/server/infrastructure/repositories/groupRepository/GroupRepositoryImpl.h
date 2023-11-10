@@ -16,6 +16,7 @@ public:
     std::shared_ptr<domain::Group> createGroup(const domain::CreateGroupPayload&) const override;
     std::optional<std::shared_ptr<domain::Group>> findGroupById(const domain::FindGroupByIdPayload&) const override;
     void deleteGroup(const domain::DeleteGroupPayload&) const override;
+    void deleteGroups(const domain::DeleteGroupsPayload&) const override;
 
 private:
     std::shared_ptr<odb::pgsql::database> db;

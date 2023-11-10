@@ -87,3 +87,20 @@ TEST_F(GroupRepositoryIntegrationTest, givenNonExistingGroup_shouldNotFindAnyGro
 
     ASSERT_FALSE(group);
 }
+
+TEST_F(GroupRepositoryIntegrationTest, shouldDeleteGroupsByIds)
+{
+    const auto group1 = groupTestUtils.createAndPersist();
+    const auto group2 = groupTestUtils.createAndPersist();
+    const auto group3 = groupTestUtils.createAndPersist();
+
+    std::vector<std::string> groupsIds{group1->getId(), group2->getId()};
+
+    groupRepository->deleteGroups({groupsIds});
+
+    const auto foundGroups = groupTestUtils.findAll();
+
+    ASSERT_EQ(foundGroups.size(), 1);
+    ASSERT_EQ(foundGroups[0].getId(), group3->getId());
+
+}

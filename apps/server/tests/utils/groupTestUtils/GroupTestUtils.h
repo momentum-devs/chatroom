@@ -18,6 +18,7 @@ public:
     void persist(const std::shared_ptr<infrastructure::Group>& group);
     std::shared_ptr<infrastructure::Group> createAndPersist();
     std::shared_ptr<infrastructure::Group> findById(const std::string& id);
+    std::vector<infrastructure::Group> findAll();
     void truncateTable();
 
 private:

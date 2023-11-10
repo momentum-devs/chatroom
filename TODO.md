@@ -29,8 +29,6 @@
 * deploy
 * refactor env parser to lib
 * remove command calling other commands
-* add unique constraints to conversations
-* conversation by friendshipId
 * refactor api directory
 * message seen
-* add deleting all user groups when user deleted and there is 2 ppl in group
+* add user to channel - check if user already in channel

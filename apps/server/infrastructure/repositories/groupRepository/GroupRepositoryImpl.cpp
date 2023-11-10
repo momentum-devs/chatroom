@@ -79,4 +79,22 @@ void GroupRepositoryImpl::deleteGroup(const domain::DeleteGroupPayload& payload)
         throw errors::GroupRepositoryError{error.what()};
     }
 }
+
+void GroupRepositoryImpl::deleteGroups(const domain::DeleteGroupsPayload& payload) const
+{
+    try
+    {
+        odb::transaction transaction(db->begin());
+
+        typedef odb::query<Group> Query;
+
+        db->erase_query<Group>(Query::id.in_range(payload.groupsIds.begin(), payload.groupsIds.end()));
+
+        transaction.commit();
+    }
+    catch (const std::exception& error)
+    {
+        throw errors::GroupRepositoryError{error.what()};
+    }
+}
 }

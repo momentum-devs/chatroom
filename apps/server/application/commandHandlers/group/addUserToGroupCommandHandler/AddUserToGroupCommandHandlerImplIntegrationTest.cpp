@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 
 #include "AddUserToGroupCommandHandlerImpl.h"
+#include "server/application/errors/OperationNotValidError.h"
 #include "server/infrastructure/repositories/groupRepository/groupMapper/GroupMapperImpl.h"
 #include "server/infrastructure/repositories/groupRepository/GroupRepositoryImpl.h"
 #include "server/infrastructure/repositories/userGroupRepository/userGroupMapper/UserGroupMapperImpl.h"
@@ -72,4 +73,15 @@ TEST_F(AddUserToGroupCommandImplIntegrationTest, addUserToGroup)
     const auto foundUserGroup = userGroupTestUtils.find(user->getId(), group->getId());
 
     ASSERT_TRUE(foundUserGroup);
+}
+
+TEST_F(AddUserToGroupCommandImplIntegrationTest, userAlreadyInGroup_shouldThrow)
+{
+    const auto user = userTestUtils.createAndPersist();
+
+    const auto group = groupTestUtils.createAndPersist();
+
+    userGroupTestUtils.createAndPersist(user, group);
+
+    ASSERT_THROW(addUserToGroupCommandHandler.execute({user->getId(), group->getId()}), errors::OperationNotValidError);
 }

@@ -10,7 +10,6 @@
 #include "server/tests/factories/databaseClientTestFactory/DatabaseClientTestFactory.h"
 #include "server/tests/utils/groupTestUtils/GroupTestUtils.h"
 #include "server/tests/utils/userGroupTestUtils/UserGroupTestUtils.h"
-#include "server/tests/utils/userTestUtils/UserTestUtils.h"
 #include "UserGroupRepositoryImpl.h"
 
 using namespace ::testing;
