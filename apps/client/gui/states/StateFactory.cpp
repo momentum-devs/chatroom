@@ -1,5 +1,7 @@
 #include "StateFactory.h"
 
+#include "channelMembers/ChannelMembersController.h"
+#include "channelMembers/ChannelMembersState.h"
 #include "createChannel/CreateChannelController.h"
 #include "createChannel/CreateChannelState.h"
 #include "inviteToChannel/InviteToChannelController.h"
@@ -87,5 +89,12 @@ std::shared_ptr<State> StateFactory::createInviteToChannelState(const std::strin
     auto controller = std::make_unique<InviteToChannelController>(session, *this, stateMachine, channelId);
 
     return std::make_shared<InviteToChannelState>(std::move(controller), loaderController);
+}
+
+std::shared_ptr<State> StateFactory::createChannelMembersListState(const std::string& channelId) const
+{
+    auto controller = std::make_unique<ChannelMembersController>(session, *this, stateMachine, channelId);
+
+    return std::make_shared<ChannelMembersState>(std::move(controller), loaderController);
 }
 }

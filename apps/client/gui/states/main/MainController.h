@@ -20,12 +20,12 @@ public:
 
     void activate();
     void deactivate();
-    Q_INVOKABLE void logout();
     Q_INVOKABLE void goToCreateChannel();
     Q_INVOKABLE void goToSendFriendRequest();
     Q_INVOKABLE void goToUserSettings();
     Q_INVOKABLE void setCurrentChannel(const QString& channelId);
     Q_INVOKABLE void addToChannel();
+    Q_INVOKABLE void goToChannelMembersList();
     Q_INVOKABLE void leftTheChannel();
     Q_INVOKABLE void deleteTheChannel();
     Q_INVOKABLE void acceptChannelInvitation(const QString& channelId);

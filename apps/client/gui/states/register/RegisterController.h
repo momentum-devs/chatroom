@@ -20,7 +20,7 @@ public:
 
     void activate();
     void deactivate();
-    Q_INVOKABLE void registerRequest(const QString& email, const QString& password);
+    Q_INVOKABLE void registerRequest(const QString& email, const QString& nickname, const QString& password);
     Q_INVOKABLE void goBack();
 
 signals:

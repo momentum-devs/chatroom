@@ -25,6 +25,7 @@ public:
     Q_INVOKABLE void changePassword(const QString& password);
     Q_INVOKABLE void deleteUser();
     Q_INVOKABLE void goBack();
+    Q_INVOKABLE void logout();
 signals:
     void updateUserFailure(const QString& error);
     void deleteUserFailure(const QString& error);

@@ -12,10 +12,11 @@ RegisterController::RegisterController(std::shared_ptr<api::Session> sessionInit
 {
 }
 
-void RegisterController::registerRequest(const QString& email, const QString& password)
+void RegisterController::registerRequest(const QString& email, const QString& nickname, const QString& password)
 {
     nlohmann::json payload{
         {"email", email.toStdString()},
+        {"nickname", nickname.toStdString()},
         {"password", password.toStdString()},
     };
 
@@ -23,7 +24,7 @@ void RegisterController::registerRequest(const QString& email, const QString& pa
 
     session->sendMessage(message);
 
-    LOG_S(INFO) << std::format("Sent register request for user {}", static_cast<std::string>(message.payload));
+    LOG_S(INFO) << std::format("Sent register request for user {}", nickname.toStdString());
 }
 
 void RegisterController::goBack()

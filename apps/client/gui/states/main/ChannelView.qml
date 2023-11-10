@@ -6,7 +6,7 @@ Item {
     property var isOwner: false
 
     function setChannel(channel) {
-        channelName.text = '<b>' + channel[0] + '</b>';
+        channelName.text = channel[0];
         channelName.color = "white";
         channelName.font.pointSize = 18;
         channelId = channel[1];
@@ -39,7 +39,7 @@ Item {
             Button {
                 id: addToChannelButton
                 anchors.horizontalCenter: parent.horizontalRight
-                text: qsTr('Add to channel')
+                text: qsTr('Invite')
 
                 onClicked: {
                     mainController.addToChannel();
@@ -50,7 +50,8 @@ Item {
 
                 contentItem: Text {
                     color: "#FF0000"
-                    text: qsTr('Left the channel')
+                    horizontalAlignment: Text.AlignHCenter
+                    text: qsTr('Leave')
                 }
 
                 onClicked: {
@@ -63,11 +64,21 @@ Item {
 
                 contentItem: Text {
                     color: "#FF0000"
-                    text: qsTr('Delete the channel')
+                    horizontalAlignment: Text.AlignHCenter
+                    text: qsTr('Delete')
                 }
 
                 onClicked: {
                     mainController.deleteTheChannel();
+                }
+            }
+            Button {
+                id: channelMembersButton
+                anchors.horizontalCenter: parent.horizontalRight
+                text: qsTr('Members')
+
+                onClicked: {
+                    mainController.goToChannelMembersList();
                 }
             }
         }

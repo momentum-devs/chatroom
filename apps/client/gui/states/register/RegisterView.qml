@@ -25,6 +25,12 @@ Rectangle {
             width: parent.width
         }
         TextField {
+            id: nicknameField
+            anchors.horizontalCenter: parent.horizontalCenter
+            placeholderText: qsTr('Nickname')
+            width: parent.width
+        }
+        TextField {
             id: passwordField
             anchors.horizontalCenter: parent.horizontalCenter
             echoMode: TextInput.Password
@@ -46,10 +52,11 @@ Rectangle {
                 id: registerUserButton
                 function activate() {
                     const email = emailField.text;
+                    const nickname = nicknameField.text;
                     const password = passwordField.text;
                     const passwordRepeat = passwordRepeatField.text;
-                    if (password === passwordRepeat && email.length !== 0 && password.length !== 0) {
-                        registerController.registerRequest(email, password);
+                    if (password === passwordRepeat && email.length !== 0 && password.length !== 0 && nicknam.length !== 0) {
+                        registerController.registerRequest(email, nickname, password);
                         successPopup.open();
                     } else {
                         errorPopup.contentItem.text = "Incorrect register data";

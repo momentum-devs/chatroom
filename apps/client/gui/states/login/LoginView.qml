@@ -56,7 +56,7 @@ Rectangle {
                 onClicked: activate()
             }
             Button {
-                text: qsTr('Go to register')
+                text: qsTr('Register')
 
                 onClicked: {
                     loginController.goToRegisterState();

@@ -89,15 +89,6 @@ void MainController::deactivate()
         {common::messages::MessageId::RemoveFromFriendsResponse, removeFromFriendsResponseHandlerName});
 }
 
-void MainController::logout()
-{
-    LOG_S(INFO) << "Handle logout";
-
-    session->logout();
-
-    stateMachine->returnToThePreviousState();
-}
-
 void MainController::goToCreateChannel()
 {
     LOG_S(INFO) << "Handle go to create channel";
@@ -469,12 +460,19 @@ void MainController::removeFromFriends()
     session->sendMessage(common::messages::MessageId::RemoveFromFriends, data);
 }
 
-void MainController::handleRemoveFromFriendsResponse(const common::messages::Message& message)
+void MainController::handleRemoveFromFriendsResponse(const common::messages::Message& /*message*/)
 {
     currentFriendId = "";
 
     session->sendMessage(common::messages::MessageId::GetUserFriends, {});
 
     emit returnToDefaultView();
+}
+
+void MainController::goToChannelMembersList()
+{
+    LOG_S(INFO) << std::format("Go to list of members of channel with id {}", currentChannelId);
+
+    stateMachine->addNextState(stateFactory.createChannelMembersListState(currentChannelId));
 }
 }
