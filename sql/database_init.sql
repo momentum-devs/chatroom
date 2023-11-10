@@ -127,3 +127,23 @@ CREATE TABLE "groups"
     "id"         TEXT NOT NULL PRIMARY KEY,
     "created_at" TEXT NOT NULL
 );
+
+DROP TABLE IF EXISTS "users_groups" CASCADE;
+
+CREATE TABLE "users_groups"
+(
+    "id"         TEXT NOT NULL PRIMARY KEY,
+    "created_at" TEXT NOT NULL,
+    "user"       TEXT NOT NULL,
+    "group"      TEXT NOT NULL
+);
+
+ALTER TABLE "users_groups"
+    ADD CONSTRAINT "user_fk"
+        FOREIGN KEY ("user")
+            REFERENCES "users" ("id") ON DELETE CASCADE
+            INITIALLY DEFERRED,
+    ADD CONSTRAINT "group_fk"
+        FOREIGN KEY ("group")
+            REFERENCES "groups" ("id") ON DELETE CASCADE
+            INITIALLY DEFERRED;

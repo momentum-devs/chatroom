@@ -72,9 +72,15 @@ set(SOURCES
         application/queryHandlers/friend/findUserFriendsQueryHandler/FindUserFriendsQueryHandlerImpl.cpp
 
         domain/entities/group/Group.cpp
+        domain/entities/userGroup/UserGroup.cpp
         infrastructure/repositories/groupRepository/GroupRepositoryImpl.cpp
         infrastructure/repositories/groupRepository/groupMapper/GroupMapperImpl.cpp
+        infrastructure/repositories/userGroupRepository/UserGroupRepositoryImpl.cpp
+        infrastructure/repositories/userGroupRepository/userGroupMapper/UserGroupMapperImpl.cpp
         application/commandHandlers/group/createGroupCommandHandler/CreateGroupCommandHandlerImpl.cpp
+        application/commandHandlers/group/addUserToGroupCommandHandler/AddUserToGroupCommandHandlerImpl.cpp
+        application/queryHandlers/group/findUsersBelongingToGroupQueryHandler/FindUsersBelongingToGroupQueryHandlerImpl.cpp
+        application/queryHandlers/group/findGroupsToWhichUserBelongsQueryHandler/FindGroupsToWhichUserBelongsQueryHandlerImpl.cpp
 
         api/MessageHandlers/UpdateUserMessageHandler.cpp
         api/MessageHandlers/DeleteUserMessageHandler.cpp
@@ -102,6 +108,7 @@ set(TEST_COMMON_SOURCES
         tests/factories/friendInvitationTestFactory/FriendInvitationTestFactory.cpp
         tests/factories/channelInvitationTestFactory/ChannelInvitationTestFactory.cpp
         tests/factories/groupTestFactory/GroupTestFactory.cpp
+        tests/factories/userGroupTestFactory/UserGroupTestFactory.cpp
         )
 
 set(UT_SOURCES
@@ -126,6 +133,7 @@ set(UT_SOURCES
         infrastructure/repositories/friendInvitationRepository/friendInvitationMapper/FriendInvitationMapperImplTest.cpp
         infrastructure/repositories/friendshipRepository/friendshipMapper/FriendshipMapperImplTest.cpp
         infrastructure/repositories/groupRepository/groupMapper/GroupMapperImplTest.cpp
+        infrastructure/repositories/userGroupRepository/userGroupMapper/UserGroupMapperImplTest.cpp
         api/MessageHandlers/SendChannelInvitationMessageHandlerTest.cpp
         api/MessageHandlers/FriendRequestMessageHandlerTest.cpp
         api/MessageHandlers/DeleteTheChannelMessageHandlerTest.cpp
@@ -149,6 +157,7 @@ set(IT_SOURCES
         tests/utils/friendInvitationTestUtils/FriendInvitationTestUtils.cpp
         tests/utils/friendshipTestUtils/FriendshipTestUtils.cpp
         tests/utils/groupTestUtils/GroupTestUtils.cpp
+        tests/utils/userGroupTestUtils/UserGroupTestUtils.cpp
 
         infrastructure/repositories/userRepository/UserRepositoryImplIntegrationTest.cpp
         application/services/tokenService/TokenServiceImplIntegrationTest.cpp
@@ -189,6 +198,10 @@ set(IT_SOURCES
 
         infrastructure/repositories/groupRepository/GroupRepositoryImplIntegrationTest.cpp
         application/commandHandlers/group/createGroupCommandHandler/CreateGroupCommandHandlerImplIntegrationTest.cpp
+        infrastructure/repositories/userGroupRepository/UserGroupRepositoryImplIntegrationTest.cpp
+        application/commandHandlers/group/addUserToGroupCommandHandler/AddUserToGroupCommandHandlerImplIntegrationTest.cpp
+        application/queryHandlers/group/findUsersBelongingToGroupQueryHandler/FindUsersBelongingToGroupQueryHandlerImplIntegrationTest.cpp
+        application/queryHandlers/group/findGroupsToWhichUserBelongsQueryHandler/FindGroupsToWhichUserBelongsQueryHandlerImplIntegrationTest.cpp
         )
 
 set(ODB_HEADERS
@@ -199,6 +212,7 @@ set(ODB_HEADERS
         infrastructure/database/entities/FriendInvitation.h
         infrastructure/database/entities/Friendship.h
         infrastructure/database/entities/Group.h
+        infrastructure/database/entities/UserGroup.h
         )
 
 odb_compile(
@@ -221,6 +235,7 @@ set(ODB_SOURCES
         infrastructure/database/entities/FriendInvitation.cpp
         infrastructure/database/entities/Friendship.cpp
         infrastructure/database/entities/Group.cpp
+        infrastructure/database/entities/UserGroup.cpp
         ${ODB_GENERATED_SOURCES}
         )
 

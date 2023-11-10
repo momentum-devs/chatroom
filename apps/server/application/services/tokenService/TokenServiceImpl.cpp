@@ -7,6 +7,8 @@
 #include "jwt/jwt.hpp"
 #include "server/application/errors/InvalidTokenError.h"
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-result"
 namespace server::application
 {
 TokenServiceImpl::TokenServiceImpl(std::string jwtSecretInit, unsigned jwtExpiresInInit)
@@ -57,3 +59,5 @@ void TokenServiceImpl::invalidateToken(const std::string& token) const
 }
 
 }
+
+#pragma clang diagnostic pop
