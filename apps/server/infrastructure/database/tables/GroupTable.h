@@ -4,5 +4,5 @@
 
 namespace server::infrastructure
 {
-const std::string conversationTableName = "conversations";
+const std::string groupTableName = "groups";
 }

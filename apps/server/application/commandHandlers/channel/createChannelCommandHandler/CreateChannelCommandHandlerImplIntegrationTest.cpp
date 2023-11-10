@@ -5,9 +5,6 @@
 #include "server/application/commandHandlers/channel/addUserToChannelCommandHandler/AddUserToChannelCommandHandlerImpl.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
 #include "server/infrastructure/repositories/channelRepository/ChannelRepositoryImpl.h"
-#include "server/infrastructure/repositories/conversationRepository/conversationMapper/ConversationMapper.h"
-#include "server/infrastructure/repositories/conversationRepository/conversationMapper/ConversationMapperImpl.h"
-#include "server/infrastructure/repositories/conversationRepository/ConversationRepositoryImpl.h"
 #include "server/infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapper.h"
 #include "server/infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapperImpl.h"
 #include "server/infrastructure/repositories/userChannelRepository/UserChannelRepositoryImpl.h"
@@ -15,7 +12,6 @@
 #include "server/infrastructure/repositories/userRepository/UserRepositoryImpl.h"
 #include "server/tests/factories/databaseClientTestFactory/DatabaseClientTestFactory.h"
 #include "server/tests/utils/channelTestUtils/ChannelTestUtils.h"
-#include "server/tests/utils/conversationTestUtils/ConversationTestUtils.h"
 #include "server/tests/utils/userChannelTestUtils/UserChannelTestUtils.h"
 #include "User.h"
 
@@ -35,8 +31,6 @@ public:
         channelTestUtils.truncateTable();
 
         userTestUtils.truncateTable();
-
-        conversationTestUtils.truncateTable();
     }
 
     void TearDown() override
@@ -46,8 +40,6 @@ public:
         channelTestUtils.truncateTable();
 
         userTestUtils.truncateTable();
-
-        conversationTestUtils.truncateTable();
     }
 
     std::shared_ptr<odb::pgsql::database> db = DatabaseClientTestFactory::create();
@@ -57,7 +49,6 @@ public:
     UserTestUtils userTestUtils{db};
     ChannelTestUtils channelTestUtils{db};
     UserChannelTestUtils userChannelTestUtils{db};
-    ConversationTestUtils conversationTestUtils{db};
 
     std::shared_ptr<UserMapper> userMapper = std::make_shared<UserMapperImpl>();
 
@@ -77,14 +68,8 @@ public:
     std::shared_ptr<AddUserToChannelCommandHandler> addUserToChannelCommandHandler =
         std::make_shared<AddUserToChannelCommandHandlerImpl>(userChannelRepository, userRepository, channelRepository);
 
-    std::shared_ptr<ConversationMapper> conversationMapper =
-        std::make_shared<ConversationMapperImpl>(userMapper, channelMapper);
-
-    std::shared_ptr<domain::ConversationRepository> conversationRepository =
-        std::make_shared<ConversationRepositoryImpl>(db, conversationMapper, userMapper, channelMapper);
-
     CreateChannelCommandHandlerImpl createChannelCommandHandler{channelRepository, addUserToChannelCommandHandler,
-                                                                userRepository, conversationRepository};
+                                                                userRepository};
 };
 
 TEST_F(CreateChannelCommandImplIntegrationTest, createChannel)
@@ -106,8 +91,4 @@ TEST_F(CreateChannelCommandImplIntegrationTest, createChannel)
     const auto foundUserChannel = userChannelTestUtils.find(user->getId(), createdChannel.getId());
 
     ASSERT_TRUE(foundUserChannel);
-
-    const auto foundConversation = conversationTestUtils.findByChannelId(createdChannel.getId());
-
-    ASSERT_TRUE(foundConversation);
 }

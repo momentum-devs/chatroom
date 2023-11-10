@@ -120,28 +120,10 @@ ALTER TABLE "friendships"
             REFERENCES "users" ("id") ON DELETE CASCADE
             INITIALLY DEFERRED;
 
-DROP TABLE IF EXISTS "conversations" CASCADE;
+DROP TABLE IF EXISTS "groups" CASCADE;
 
-CREATE TABLE "conversations"
+CREATE TABLE "groups"
 (
     "id"         TEXT NOT NULL PRIMARY KEY,
-    "created_at" TEXT NOT NULL,
-    "updated_at" TEXT NOT NULL,
-    "user"       TEXT NULL,
-    "recipient"  TEXT NULL,
-    "channel"    TEXT NULL
+    "created_at" TEXT NOT NULL
 );
-
-ALTER TABLE "conversations"
-    ADD CONSTRAINT "user_fk"
-        FOREIGN KEY ("user")
-            REFERENCES "users" ("id") ON DELETE CASCADE
-            INITIALLY DEFERRED,
-    ADD CONSTRAINT "recipient_fk"
-        FOREIGN KEY ("recipient")
-            REFERENCES "users" ("id") ON DELETE CASCADE
-            INITIALLY DEFERRED,
-    ADD CONSTRAINT "channel_fk"
-        FOREIGN KEY ("channel")
-            REFERENCES "channels" ("id") ON DELETE CASCADE
-            INITIALLY DEFERRED;

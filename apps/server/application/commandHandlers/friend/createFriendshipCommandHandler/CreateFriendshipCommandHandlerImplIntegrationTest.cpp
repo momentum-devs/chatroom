@@ -3,14 +3,11 @@
 #include "CreateFriendshipCommandHandlerImpl.h"
 #include "server/application/errors/OperationNotValidError.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
-#include "server/infrastructure/repositories/conversationRepository/conversationMapper/ConversationMapperImpl.h"
-#include "server/infrastructure/repositories/conversationRepository/ConversationRepositoryImpl.h"
 #include "server/infrastructure/repositories/friendshipRepository/friendshipMapper/FriendshipMapperImpl.h"
 #include "server/infrastructure/repositories/friendshipRepository/FriendshipRepositoryImpl.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "server/infrastructure/repositories/userRepository/UserRepositoryImpl.h"
 #include "server/tests/factories/databaseClientTestFactory/DatabaseClientTestFactory.h"
-#include "server/tests/utils/conversationTestUtils/ConversationTestUtils.h"
 #include "server/tests/utils/friendshipTestUtils/FriendshipTestUtils.h"
 #include "server/tests/utils/userTestUtils/UserTestUtils.h"
 #include "User.h"
@@ -29,8 +26,6 @@ public:
         friendshipTestUtils.truncateTable();
 
         userTestUtils.truncateTable();
-
-        conversationTestUtils.truncateTable();
     }
 
     void TearDown() override
@@ -38,15 +33,12 @@ public:
         friendshipTestUtils.truncateTable();
 
         userTestUtils.truncateTable();
-
-        conversationTestUtils.truncateTable();
     }
 
     std::shared_ptr<odb::pgsql::database> db = DatabaseClientTestFactory::create();
 
     UserTestUtils userTestUtils{db};
     FriendshipTestUtils friendshipTestUtils{db};
-    ConversationTestUtils conversationTestUtils{db};
 
     std::shared_ptr<UserMapper> userMapper = std::make_shared<UserMapperImpl>();
     std::shared_ptr<ChannelMapper> channelMapper = std::make_shared<ChannelMapperImpl>(userMapper);
@@ -58,14 +50,7 @@ public:
 
     std::shared_ptr<domain::UserRepository> userRepository = std::make_shared<UserRepositoryImpl>(db, userMapper);
 
-    std::shared_ptr<ConversationMapper> conversationMapper =
-        std::make_shared<ConversationMapperImpl>(userMapper, channelMapper);
-
-    std::shared_ptr<domain::ConversationRepository> conversationRepository =
-        std::make_shared<ConversationRepositoryImpl>(db, conversationMapper, userMapper, channelMapper);
-
-    CreateFriendshipCommandHandlerImpl createFriendshipCommandHandler{friendshipRepository, userRepository,
-                                                                      conversationRepository};
+    CreateFriendshipCommandHandlerImpl createFriendshipCommandHandler{friendshipRepository, userRepository};
 };
 
 TEST_F(CreateFriendshipCommandImplIntegrationTest, createFriendship)
@@ -79,10 +64,6 @@ TEST_F(CreateFriendshipCommandImplIntegrationTest, createFriendship)
     const auto foundFriendship = friendshipTestUtils.find(user->getId(), userFriend->getId());
 
     ASSERT_TRUE(foundFriendship);
-
-    const auto foundConversation = conversationTestUtils.findByUsers(user->getId(), userFriend->getId());
-
-    ASSERT_TRUE(foundConversation);
 }
 
 TEST_F(CreateFriendshipCommandImplIntegrationTest, throwsAnError_whenFriendshipAlreadyExists)

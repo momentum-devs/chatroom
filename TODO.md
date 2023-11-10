@@ -33,3 +33,5 @@
 * conversation by friendshipId
 * refactor api directory
 * message seen
+* remove updatedAt
+* add deleting all user groups when user deleted and there is 2 ppl in group

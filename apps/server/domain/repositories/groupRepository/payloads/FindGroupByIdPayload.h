@@ -1,11 +1,10 @@
 #pragma once
 
-#include <optional>
 #include <string>
 
 namespace server::domain
 {
-struct FindConversationByIdPayload
+struct FindGroupByIdPayload
 {
     std::string id;
 };
