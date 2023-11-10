@@ -4,12 +4,14 @@
 #include "channelMembers/ChannelMembersState.h"
 #include "createChannel/CreateChannelController.h"
 #include "createChannel/CreateChannelState.h"
+#include "gui/controllers/LeftColumnController.h"
 #include "inviteToChannel/InviteToChannelController.h"
 #include "inviteToChannel/InviteToChannelState.h"
 #include "login/LoginController.h"
 #include "login/LoginState.h"
 #include "main/MainController.h"
 #include "main/MainState.h"
+#include "privateMessages/PrivateMessagesState.h"
 #include "register/RegisterController.h"
 #include "register/RegisterState.h"
 #include "sendFriendRequest/SendFriendRequestController.h"
@@ -96,5 +98,12 @@ std::shared_ptr<State> StateFactory::createChannelMembersListState(const std::st
     auto controller = std::make_unique<ChannelMembersController>(session, *this, stateMachine, channelId);
 
     return std::make_shared<ChannelMembersState>(std::move(controller), loaderController);
+}
+
+std::shared_ptr<State> StateFactory::createPrivateMessagesState() const
+{
+    auto leftColumnController = std::make_unique<LeftColumnController>(session, *this, stateMachine);
+
+    return std::make_shared<PrivateMessagesState>(std::move(leftColumnController), loaderController);
 }
 }

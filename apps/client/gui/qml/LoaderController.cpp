@@ -13,7 +13,7 @@ LoaderController::LoaderController()
     view.setSource(qUrl);
 
     view.setResizeMode(QQuickView::SizeRootObjectToView);
-    
+
     view.setMinimumWidth(view.rootObject()->property("minWidth").toInt());
 
     view.setMinimumHeight(view.rootObject()->property("minHeight").toInt());
@@ -21,13 +21,25 @@ LoaderController::LoaderController()
     view.show();
 }
 
-void LoaderController::callLoadView(const QUrl& qUrl)
+void LoaderController::callLoadView(const QUrl& qUrl, std::function<void()> onFinished)
 {
+    callbackOnFinished = onFinished;
+    
     emit loadView(qUrl);
 }
 
 QQmlEngine* LoaderController::getEngine() const
 {
     return view.engine();
+}
+
+void LoaderController::loaded()
+{
+    if (callbackOnFinished)
+    {
+        callbackOnFinished();
+
+        callbackOnFinished = nullptr;
+    }
 }
 }

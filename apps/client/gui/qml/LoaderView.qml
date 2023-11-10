@@ -11,6 +11,10 @@ Item {
     Loader {
         id: loader
         anchors.fill: parent
+
+        onLoaded: {
+            loaderController.loaded();
+        }
     }
     Connections {
         function onLoadView(qUrl: url) {

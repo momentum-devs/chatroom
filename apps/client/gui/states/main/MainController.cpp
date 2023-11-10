@@ -20,8 +20,6 @@ void MainController::activate()
     session->addMessageHandler({common::messages::MessageId::GetUserDataResponse, getUserDataResponseHandlerName,
                                 [this](const auto& msg) { handleGetUserDataResponse(msg); }});
 
-    session->sendMessage(common::messages::MessageId::GetUserData, {});
-
     session->addMessageHandler({common::messages::MessageId::GetUserChannelsResponse,
                                 getUserChannelsResponseHandlerName,
                                 [this](const auto& msg) { handleGetUserChannelsResponse(msg); }});
@@ -55,6 +53,8 @@ void MainController::activate()
     session->addMessageHandler({common::messages::MessageId::RemoveFromFriendsResponse,
                                 removeFromFriendsResponseHandlerName,
                                 [this](const auto& msg) { handleRemoveFromFriendsResponse(msg); }});
+
+    session->sendMessage(common::messages::MessageId::GetUserData, {});
 }
 
 void MainController::deactivate()
@@ -98,10 +98,6 @@ void MainController::goToCreateChannel()
 
 void MainController::handleGetUserChannelsResponse(const common::messages::Message& message)
 {
-    using namespace std::chrono_literals;
-
-    std::this_thread::sleep_for(10ms);
-
     LOG_S(INFO) << "Handle get user's channel data response";
 
     auto responsePayload = static_cast<std::string>(message.payload);

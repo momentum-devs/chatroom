@@ -36,13 +36,13 @@ Rectangle {
                         width: parent.width
                     }
                     Button {
-                        id: inviteFriendButton
+                        id: privateMessagesButton
                         anchors.horizontalCenter: parent.horizontalCenter
-                        text: qsTr('Invite friend')
+                        text: qsTr('Private messages')
                         width: parent.width
 
                         onClicked: {
-                            mainController.goToSendFriendRequest();
+                            console.log("private messages");
                         }
                     }
                     Item {
@@ -62,7 +62,7 @@ Rectangle {
                 }
                 ScrollView {
                     clip: true
-                    height: (parent.height - menuColumn.height) * 0.4
+                    height: (parent.height - menuColumn.height) * 0.6
                     spacing: 5
                     width: parent.width
 
@@ -78,7 +78,7 @@ Rectangle {
 
                             delegate: Button {
                                 id: channelButton
-                                height: inviteFriendButton.height
+                                height: privateMessagesButton.height
                                 text: modelData[0]
                                 width: leftColumn.width
 
@@ -399,7 +399,7 @@ Rectangle {
         function onAddChannel(channelName: string, channelId: string, isOwner: bool) {
             channels.push([channelName, channelId, isOwner]);
             channelsView.model = channels;
-            channelsView.height = (inviteFriendButton.height + 5) * channels.length;
+            channelsView.height = (privateMessagesButton.height + 5) * channels.length;
         }
         function onAddChannelInvitation(channelName: string, channelId: string) {
             channelInvitations.push([channelName, channelId]);
@@ -408,7 +408,7 @@ Rectangle {
         function onAddFriend(friendName: string, friendId: string, isActive: bool) {
             friends.push([friendName, friendId, isActive]);
             friendsView.model = friends;
-            friendsView.height = (inviteFriendButton.height + 5) * friends.length;
+            friendsView.height = (privateMessagesButton.height + 5) * friends.length;
         }
         function onAddFriendRequest(friendName: string, requestId: string) {
             friendRequests.push([friendName, requestId]);

@@ -25,7 +25,8 @@ void LoginController::loginRequest(const QString& email, const QString& password
 
     LOG_S(INFO) << std::format("Sent login request for user {}", static_cast<std::string>(message.payload));
 
-    nextState = stateFactory.createMainState();
+    // nextState = stateFactory.createMainState();
+    nextState = stateFactory.createPrivateMessagesState();
 }
 
 void LoginController::goToRegisterState()

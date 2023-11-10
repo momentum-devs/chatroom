@@ -19,9 +19,7 @@ void MainState::activate()
 
     loaderController->getEngine()->rootContext()->setContextProperty(componentName, mainController.get());
 
-    loaderController->callLoadView(qUrl);
-
-    mainController->activate();
+    loaderController->callLoadView(qUrl, [this]() { mainController->activate(); });
 }
 
 void MainState::deactivate()

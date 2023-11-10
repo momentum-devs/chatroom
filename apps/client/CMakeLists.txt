@@ -30,7 +30,10 @@ set(SOURCES
         gui/states/inviteToChannel/InviteToChannelState.cpp
         gui/states/inviteToChannel/InviteToChannelController.cpp
         gui/states/channelMembers/ChannelMembersState.cpp
-        gui/states/channelMembers/ChannelMembersController.cpp)
+        gui/states/channelMembers/ChannelMembersController.cpp
+        gui/controllers/LeftColumnController.cpp
+        gui/states/privateMessages/PrivateMessagesState.cpp
+        )
 
 set(UT_SOURCES
         api/SessionImplTest.cpp
@@ -40,6 +43,12 @@ set(UT_SOURCES
 
 set(QML_SOURCES
         gui/qml/LoaderView.qml
+
+        gui/qml/components/LeftColumn.qml
+        gui/qml/components/ChannelList.qml
+        gui/qml/components/ChannelInvitationList.qml
+        gui/qml/components/SettingsBox.qml
+
         gui/states/register/RegisterView.qml
         gui/states/login/LoginView.qml
         gui/states/main/MainView.qml
@@ -51,6 +60,7 @@ set(QML_SOURCES
         gui/states/verifyUser/VerifyUserView.qml
         gui/states/inviteToChannel/InviteToChannelView.qml
         gui/states/channelMembers/ChannelMembersView.qml
+        gui/states/privateMessages/PrivateMessagesView.qml
         )
 
 qt_add_executable(${EXECUTABLE_NAME} Main.cpp ${SOURCES})

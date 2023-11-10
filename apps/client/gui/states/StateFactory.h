@@ -20,6 +20,7 @@ public:
     std::shared_ptr<State> createSendFriendRequestState() const;
     std::shared_ptr<State> createUserSettingsState() const;
     std::shared_ptr<State> createVerifyUserState() const;
+    std::shared_ptr<State> createPrivateMessagesState() const;
     std::shared_ptr<State> createInviteToChannelState(const std::string& channelId) const;
     std::shared_ptr<State> createChannelMembersListState(const std::string& channelId) const;
 
