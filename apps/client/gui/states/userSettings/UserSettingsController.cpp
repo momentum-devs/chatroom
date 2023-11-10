@@ -152,4 +152,13 @@ void UserSettingsController::handleGetUserDataResponse(const common::messages::M
         LOG_S(ERROR) << "Unknown error while getting user data";
     }
 }
+
+void UserSettingsController::logout()
+{
+    LOG_S(INFO) << "Handle logout";
+
+    session->logout();
+
+    stateMachine->clear(stateFactory.createLoginState());
+}
 }

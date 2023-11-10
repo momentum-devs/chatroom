@@ -105,6 +105,15 @@ Rectangle {
 
             onClicked: activate()
         }
+        Button {
+            anchors.horizontalCenter: parent.horizontalCenter
+            text: qsTr('Logout')
+            width: parent.width
+
+            onClicked: {
+                userSettingsController.logout();
+            }
+        }
     }
     Connections {
         function onDeleteUserFailure(message: string) {

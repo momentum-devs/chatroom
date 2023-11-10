@@ -36,39 +36,13 @@ Rectangle {
                         width: parent.width
                     }
                     Button {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        text: qsTr('Create channel')
-                        width: parent.width
-
-                        onClicked: {
-                            mainController.goToCreateChannel();
-                        }
-                    }
-                    Button {
+                        id: inviteFriendButton
                         anchors.horizontalCenter: parent.horizontalCenter
                         text: qsTr('Invite friend')
                         width: parent.width
 
                         onClicked: {
                             mainController.goToSendFriendRequest();
-                        }
-                    }
-                    Button {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        text: qsTr('Settings')
-                        width: parent.width
-
-                        onClicked: {
-                            mainController.goToUserSettings();
-                        }
-                    }
-                    Button {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        text: qsTr('Logout')
-                        width: parent.width
-
-                        onClicked: {
-                            mainController.logout();
                         }
                     }
                     Item {
@@ -88,25 +62,57 @@ Rectangle {
                 }
                 ScrollView {
                     clip: true
-                    height: (parent.height - menuColumn.height) / 2
+                    height: (parent.height - menuColumn.height) * 0.4
+                    spacing: 5
                     width: parent.width
 
-                    ListView {
-                        id: channelsView
-                        contentWidth: parent.width
-                        spacing: 5
+                    Column {
+                        id: channelsColumn
                         width: parent.width
 
-                        delegate: Button {
-                            text: modelData[0]
+                        ListView {
+                            id: channelsView
+                            contentWidth: parent.width
+                            spacing: 5
                             width: parent.width
 
-                            onClicked: {
-                                channelView.visible = true;
-                                defaultView.visible = false;
-                                friendView.visible = false;
-                                channelView.setChannel(modelData);
-                                mainController.setCurrentChannel(modelData[1]);
+                            delegate: Button {
+                                id: channelButton
+                                height: inviteFriendButton.height
+                                text: modelData[0]
+                                width: leftColumn.width
+
+                                onClicked: {
+                                    channelView.visible = true;
+                                    defaultView.visible = false;
+                                    friendView.visible = false;
+                                    channelView.setChannel(modelData);
+                                    mainController.setCurrentChannel(modelData[1]);
+                                }
+                            }
+                        }
+                        Item {
+                            height: createChannelButton.height
+                            width: parent.width
+
+                            RoundButton {
+                                id: createChannelButton
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                height: 35
+                                width: 35
+
+                                contentItem: Text {
+                                    color: "#00FF00"
+                                    font.bold: true
+                                    font.pointSize: 20
+                                    horizontalAlignment: Text.AlignHCenter
+                                    text: '+'
+                                    verticalAlignment: Text.AlignVCenter
+                                }
+
+                                onClicked: {
+                                    mainController.goToCreateChannel();
+                                }
                             }
                         }
                     }
@@ -123,7 +129,7 @@ Rectangle {
                 }
                 ScrollView {
                     clip: true
-                    height: (parent.height - menuColumn.height) / 2
+                    height: (parent.height - menuColumn.height) / 3
                     width: parent.width
 
                     ListView {
@@ -165,6 +171,42 @@ Rectangle {
                                 }
                             }
                         }
+                    }
+                }
+            }
+            Rectangle {
+                anchors.bottom: parent.bottom
+                anchors.left: parent.left
+                color: "#232428"
+                height: settingsButton.height + 16
+                width: parent.width
+
+                Text {
+                    anchors.left: parent.left
+                    anchors.leftMargin: 8
+                    anchors.verticalCenter: parent.verticalCenter
+                    color: "white"
+                    font.pointSize: 11
+                    text: "user nickname"
+                }
+                Button {
+                    id: settingsButton
+                    anchors.right: parent.right
+                    anchors.rightMargin: 8
+                    anchors.verticalCenter: parent.verticalCenter
+                    height: 28
+                    width: 28
+
+                    contentItem: Text {
+                        color: "white"
+                        font.pointSize: 17
+                        horizontalAlignment: Text.AlignHCenter
+                        text: '⛭'
+                        verticalAlignment: Text.AlignVCenter
+                    }
+
+                    onClicked: {
+                        mainController.goToUserSettings();
                     }
                 }
             }
@@ -221,43 +263,72 @@ Rectangle {
                     height: parent.height / 2 - firendsText.height
                     width: parent.width
 
-                    ListView {
-                        id: friendsView
-                        contentWidth: parent.width
-                        spacing: 5
+                    Column {
+                        id: friendsColumn
                         width: parent.width
 
-                        delegate: Row {
+                        ListView {
+                            id: friendsView
+                            contentWidth: parent.width
                             spacing: 5
                             width: parent.width
 
-                            Button {
-                                id: friendButton
-                                text: modelData[0]
-                                width: parent.width - firendActive.width - 5
+                            delegate: Row {
+                                spacing: 5
+                                width: parent.width
 
-                                onClicked: {
-                                    channelView.visible = false;
-                                    defaultView.visible = false;
-                                    friendView.visible = true;
-                                    friendView.setFriend(modelData);
-                                    mainController.setCurrentFriend(modelData[1]);
+                                Button {
+                                    id: friendButton
+                                    text: modelData[0]
+                                    width: parent.width - firendActive.width - 5
+
+                                    onClicked: {
+                                        channelView.visible = false;
+                                        defaultView.visible = false;
+                                        friendView.visible = true;
+                                        friendView.setFriend(modelData);
+                                        mainController.setCurrentFriend(modelData[1]);
+                                    }
+                                }
+                                Text {
+                                    id: firendActive
+                                    anchors.verticalCenter: friendButton.verticalCenter
+                                    color: "green"
+                                    font.pointSize: 12
+                                    text: "●"
+                                    visible: modelData[2]
+                                }
+                                Text {
+                                    anchors.verticalCenter: friendButton.verticalCenter
+                                    color: "grey"
+                                    font.pointSize: 12
+                                    text: "○"
+                                    visible: !modelData[2]
                                 }
                             }
-                            Text {
-                                id: firendActive
-                                anchors.verticalCenter: friendButton.verticalCenter
-                                color: "green"
-                                font.pointSize: 12
-                                text: "●"
-                                visible: modelData[2]
-                            }
-                            Text {
-                                anchors.verticalCenter: friendButton.verticalCenter
-                                color: "grey"
-                                font.pointSize: 12
-                                text: "○"
-                                visible: !modelData[2]
+                        }
+                        Item {
+                            height: addToFriend.height
+                            width: parent.width
+
+                            RoundButton {
+                                id: addToFriend
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                height: 35
+                                width: 35
+
+                                contentItem: Text {
+                                    color: "#00FF00"
+                                    font.bold: true
+                                    font.pointSize: 20
+                                    horizontalAlignment: Text.AlignHCenter
+                                    text: '+'
+                                    verticalAlignment: Text.AlignVCenter
+                                }
+
+                                onClicked: {
+                                    mainController.goToSendFriendRequest()();
+                                }
                             }
                         }
                     }
@@ -328,6 +399,7 @@ Rectangle {
         function onAddChannel(channelName: string, channelId: string, isOwner: bool) {
             channels.push([channelName, channelId, isOwner]);
             channelsView.model = channels;
+            channelsView.height = (inviteFriendButton.height + 5) * channels.length;
         }
         function onAddChannelInvitation(channelName: string, channelId: string) {
             channelInvitations.push([channelName, channelId]);
@@ -336,6 +408,7 @@ Rectangle {
         function onAddFriend(friendName: string, friendId: string, isActive: bool) {
             friends.push([friendName, friendId, isActive]);
             friendsView.model = friends;
+            friendsView.height = (inviteFriendButton.height + 5) * friends.length;
         }
         function onAddFriendRequest(friendName: string, requestId: string) {
             friendRequests.push([friendName, requestId]);

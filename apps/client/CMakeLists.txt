@@ -29,7 +29,8 @@ set(SOURCES
         gui/states/verifyUser/VerifyUserController.cpp
         gui/states/inviteToChannel/InviteToChannelState.cpp
         gui/states/inviteToChannel/InviteToChannelController.cpp
-        )
+        gui/states/channelMembers/ChannelMembersState.cpp
+        gui/states/channelMembers/ChannelMembersController.cpp)
 
 set(UT_SOURCES
         api/SessionImplTest.cpp
@@ -49,6 +50,7 @@ set(QML_SOURCES
         gui/states/userSettings/UserSettingsView.qml
         gui/states/verifyUser/VerifyUserView.qml
         gui/states/inviteToChannel/InviteToChannelView.qml
+        gui/states/channelMembers/ChannelMembersView.qml
         )
 
 qt_add_executable(${EXECUTABLE_NAME} Main.cpp ${SOURCES})
