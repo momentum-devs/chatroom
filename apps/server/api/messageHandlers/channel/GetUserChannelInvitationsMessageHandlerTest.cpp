@@ -109,7 +109,7 @@ TEST_F(GetUserChannelInvitationsMessageHandlerTest, handleValidGetUserChannelsMe
     EXPECT_CALL(*findReceivedChannelInvitationsQueryHandlerMock,
                 execute(server::application::FindReceivedChannelInvitationsQueryHandlerPayload{userId}))
         .WillOnce(Return(server::application::FindReceivedChannelInvitationsQueryHandlerResult{
-            {{requestId1, user, user, channel1, "", ""}, {channelId2, user, user, channel2, "", ""}}}));
+            {{requestId1, user, user, channel1, ""}, {channelId2, user, user, channel2, ""}}}));
 
     auto responseMessage = getUserChannelInvitationsMessageHandler.handleMessage(message);
 

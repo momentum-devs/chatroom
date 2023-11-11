@@ -43,6 +43,7 @@ public:
 TEST_F(LogoutMessageHandlerTest, handleValidLogout)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
+    EXPECT_CALL(*tokenServiceMock, invalidateToken(token));
     EXPECT_CALL(*logoutUserCommandHandlerMock, execute(server::application::LogoutUserCommandHandlerPayload{userId}));
 
     auto responseMessage = logoutMessageHandler.handleMessage(message);

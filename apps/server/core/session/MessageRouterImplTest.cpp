@@ -2,7 +2,7 @@
 
 #include <gtest/gtest.h>
 
-#include "MessageHandlerMock.h"
+#include "server/api/messageHandlers/MessageHandlerMock.h"
 
 using namespace ::testing;
 using namespace server::core;
@@ -18,8 +18,8 @@ auto invalidMessageResponse = common::messages::Message{common::messages::Messag
 class MessageRouterImplTest : public Test
 {
 public:
-    std::shared_ptr<server::core::MessageHandlerMock> messageHandlerMock =
-        std::make_shared<StrictMock<server::core::MessageHandlerMock>>();
+    std::shared_ptr<server::api::MessageHandlerMock> messageHandlerMock =
+        std::make_shared<StrictMock<server::api::MessageHandlerMock>>();
 
     MessageRouterImpl messageRouter{{{common::messages::MessageId::Login, messageHandlerMock}}};
 };

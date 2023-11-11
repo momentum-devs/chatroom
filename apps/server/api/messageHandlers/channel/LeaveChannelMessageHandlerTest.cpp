@@ -4,7 +4,7 @@
 #include <gtest/gtest.h>
 #include <regex>
 
-#include "server/application/commandHandlers/channel/removeUserFromChannelCommandHandler/RemoveUserFromChannelCommandHandlerMock.h"
+#include "server/application/commandHandlers/channel/leaveChannelCommandHandler/LeaveChannelCommandHandlerMock.h"
 #include "server/application/services/tokenService/TokenServiceMock.h"
 
 #include "nlohmann/json.hpp"
@@ -39,21 +39,21 @@ public:
     std::shared_ptr<server::application::TokenServiceMock> tokenServiceMock =
         std::make_shared<StrictMock<server::application::TokenServiceMock>>();
 
-    std::unique_ptr<server::application::RemoveUserFromChannelCommandHandlerMock>
-        removeUserFromChannelCommandHandlerMockInit =
-            std::make_unique<StrictMock<server::application::RemoveUserFromChannelCommandHandlerMock>>();
-    server::application::RemoveUserFromChannelCommandHandlerMock* removeUserFromChannelCommandHandlerMock =
-        removeUserFromChannelCommandHandlerMockInit.get();
+    std::unique_ptr<server::application::LeaveChannelCommandHandlerMock> leaveChannelCommandHandlerMockInit =
+        std::make_unique<StrictMock<server::application::LeaveChannelCommandHandlerMock>>();
+
+    server::application::LeaveChannelCommandHandlerMock* leaveChannelCommandHandlerMock =
+        leaveChannelCommandHandlerMockInit.get();
 
     LeaveChannelMessageHandler leaveChannelMessageHandler{tokenServiceMock,
-                                                          std::move(removeUserFromChannelCommandHandlerMockInit)};
+                                                          std::move(leaveChannelCommandHandlerMockInit)};
 };
 
 TEST_F(LeaveChannelMessageHandlerTest, handleValidFriendRequestMessage)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
-    EXPECT_CALL(*removeUserFromChannelCommandHandlerMock,
-                execute(server::application::RemoveUserFromChannelCommandHandlerPayload{userId, channelId}));
+    EXPECT_CALL(*leaveChannelCommandHandlerMock,
+                execute(server::application::LeaveChannelCommandHandlerPayload{userId, channelId}));
 
     auto responseMessage = leaveChannelMessageHandler.handleMessage(message);
 
@@ -72,8 +72,8 @@ TEST_F(LeaveChannelMessageHandlerTest, handleFriendRequestMessageWithInvalidToke
 TEST_F(LeaveChannelMessageHandlerTest, handleFriendRequestMessageWithErrorWhileHandling)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
-    EXPECT_CALL(*removeUserFromChannelCommandHandlerMock,
-                execute(server::application::RemoveUserFromChannelCommandHandlerPayload{userId, channelId}))
+    EXPECT_CALL(*leaveChannelCommandHandlerMock,
+                execute(server::application::LeaveChannelCommandHandlerPayload{userId, channelId}))
         .WillOnce(Throw(sendFriendRequestError));
 
     auto responseMessage = leaveChannelMessageHandler.handleMessage(message);

@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "MessageHandler.h"
+#include "../MessageHandler.h"
 #include "server/application/commandHandlers/channel/leaveChannelCommandHandler/LeaveChannelCommandHandler.h"
 #include "server/application/services/tokenService/TokenService.h"
 

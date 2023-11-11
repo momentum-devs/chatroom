@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "MessageHandler.h"
+#include "../MessageHandler.h"
 #include "server/application/commandHandlers/channel/rejectChannelInvitationCommandHandler/RejectChannelInvitationCommandHandler.h"
 #include "server/application/services/tokenService/TokenService.h"
 
@@ -11,9 +11,9 @@ namespace server::api
 class RejectChannelInvitationMessageHandler : public MessageHandler
 {
 public:
-    RejectChannelInvitationMessageHandler(std::shared_ptr<application::TokenService> tokenService,
-                                          std::unique_ptr<application::RejectChannelInvitationCommandHandler>
-                                              rejectChannelInvitationCommandHandler);
+    RejectChannelInvitationMessageHandler(
+        std::shared_ptr<application::TokenService> tokenService,
+        std::unique_ptr<application::RejectChannelInvitationCommandHandler> rejectChannelInvitationCommandHandler);
 
     common::messages::Message handleMessage(const common::messages::Message& message) const override;
 

@@ -99,9 +99,9 @@ TEST_F(GetUserFriendRequestsMessageHandlerTest, handleValidGetUserFriendRequests
     const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
 
     const auto friendRequest1 =
-        std::make_shared<server::domain::FriendInvitation>(requestId1, user1, user2, createdAt, updatedAt);
+        std::make_shared<server::domain::FriendInvitation>(requestId1, user1, user2, createdAt);
     const auto friendRequest2 =
-        std::make_shared<server::domain::FriendInvitation>(requestId2, user2, user2, createdAt, updatedAt);
+        std::make_shared<server::domain::FriendInvitation>(requestId2, user2, user2, createdAt);
 
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*findReceivedFriendInvitationsQueryHandlerMock,
@@ -128,7 +128,7 @@ TEST_F(GetUserFriendRequestsMessageHandlerTest, handleGetUserFriendRequestsMessa
     const auto userId = faker::String::uuid();
 
     const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
-    
+
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*findReceivedFriendInvitationsQueryHandlerMock,
                 execute(server::application::FindReceivedFriendInvitationsQueryHandlerPayload{userId}))
