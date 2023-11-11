@@ -12,7 +12,6 @@
 * push messages, invitations, online/offline instead of polling
 * encryption
 * avatars
-* message seen
 
 
 * friend requests -> friend invitation
@@ -28,7 +27,6 @@
 * user avatars and channel avatars
 * infrastructure setup
 * deploy
-* refactor env parser to lib
-* refactor api directory
-* message seen
-* add missing command handler tests
+* transactions
+* migrations
+* lastReadMessageId in usersGroups and usersChannels

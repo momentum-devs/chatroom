@@ -143,3 +143,30 @@ ALTER TABLE "users_groups"
         FOREIGN KEY ("group")
             REFERENCES "groups" ("id") ON DELETE CASCADE
             INITIALLY DEFERRED;
+
+DROP TABLE IF EXISTS "messages" CASCADE;
+
+CREATE TABLE "messages"
+(
+    "id"         TEXT NOT NULL PRIMARY KEY,
+    "created_at" TEXT NOT NULL,
+    "updated_at" TEXT NOT NULL,
+    "content"    TEXT NOT NULL,
+    "sender"     TEXT NOT NULL,
+    "channel"    TEXT,
+    "group"      TEXT
+);
+
+ALTER TABLE "messages"
+    ADD CONSTRAINT "sender_fk"
+        FOREIGN KEY ("sender")
+            REFERENCES "users" ("id") ON DELETE CASCADE
+            INITIALLY DEFERRED,
+    ADD CONSTRAINT "channel_fk"
+        FOREIGN KEY ("channel")
+            REFERENCES "channels" ("id") ON DELETE CASCADE
+            INITIALLY DEFERRED,
+    ADD CONSTRAINT "group_fk"
+        FOREIGN KEY ("group")
+            REFERENCES "groups" ("id") ON DELETE CASCADE
+            INITIALLY DEFERRED;
