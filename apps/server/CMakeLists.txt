@@ -82,6 +82,7 @@ set(SOURCES
         application/commandHandlers/message/createGroupMessageCommandHandler/CreateGroupMessageCommandHandlerImpl.cpp
         application/commandHandlers/message/createChannelMessageCommandHandler/CreateChannelMessageCommandHandlerImpl.cpp
         application/commandHandlers/message/deleteMessageCommandHandler/DeleteMessageCommandHandlerImpl.cpp
+        application/commandHandlers/message/updateMessageCommandHandler/UpdateMessageCommandHandlerImpl.cpp
 
         api/messageHandlers/channel/createChannelMessageHandler/CreateChannelMessageHandler.cpp
         api/messageHandlers/channel/getUserChannelsMessageHandler/GetUserChannelsMessageHandler.cpp
@@ -218,6 +219,7 @@ set(IT_SOURCES
         application/commandHandlers/message/createGroupMessageCommandHandler/CreateGroupMessageCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/message/createChannelMessageCommandHandler/CreateChannelMessageCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/message/deleteMessageCommandHandler/DeleteMessageCommandHandlerImplIntegrationTest.cpp
+        application/commandHandlers/message/updateMessageCommandHandler/UpdateMessageCommandHandlerImplIntegrationTest.cpp
         )
 
 set(ODB_HEADERS
