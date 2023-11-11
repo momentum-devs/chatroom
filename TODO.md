@@ -19,8 +19,6 @@
 
 ### SERVER:
 
-* direct messages between users
-* messages in channel
 * user has history of direct messages and messages in channel
 * reactions
 * encryption
