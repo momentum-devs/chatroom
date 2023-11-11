@@ -90,12 +90,12 @@ set(SOURCES
         api/messageHandlers/user/DeleteUserMessageHandler.cpp
         api/messageHandlers/user/VerifyUserMessageHandler.cpp
         api/messageHandlers/user/LogoutMessageHandler.cpp
-        api/messageHandlers/FriendRequestMessageHandler.cpp
-        api/messageHandlers/GetUserFriendRequestsMessageHandler.cpp
-        api/messageHandlers/AcceptFriendRequestMessageHandler.cpp
-        api/messageHandlers/RejectFriendRequestMessageHandler.cpp
-        api/messageHandlers/GetUserFriendsMessageHandler.cpp
-        api/messageHandlers/RemoveFromFriendsMessageHandler.cpp
+        api/messageHandlers/friend/FriendRequestMessageHandler.cpp
+        api/messageHandlers/friend/GetUserFriendRequestsMessageHandler.cpp
+        api/messageHandlers/friend/AcceptFriendRequestMessageHandler.cpp
+        api/messageHandlers/friend/RejectFriendRequestMessageHandler.cpp
+        api/messageHandlers/friend/GetUserFriendsMessageHandler.cpp
+        api/messageHandlers/friend/RemoveFromFriendsMessageHandler.cpp
         )
 
 set(TEST_COMMON_SOURCES
@@ -140,13 +140,12 @@ set(UT_SOURCES
         api/messageHandlers/user/UpdateUserMessageHandlerTest.cpp
         api/messageHandlers/user/LogoutMessageHandlerTest.cpp
         api/messageHandlers/user/VerifyUserMessageHandlerTest.cpp
-
-        api/messageHandlers/FriendRequestMessageHandlerTest.cpp
-        api/messageHandlers/GetUserFriendRequestsMessageHandlerTest.cpp
-        api/messageHandlers/AcceptFriendRequestMessageHandlerTest.cpp
-        api/messageHandlers/RejectFriendRequestMessageHandlerTest.cpp
-        api/messageHandlers/GetUserFriendsMessageHandlerTest.cpp
-        api/messageHandlers/RemoveFromFriendsMessageHandlerTest.cpp
+        api/messageHandlers/friend/FriendRequestMessageHandlerTest.cpp
+        api/messageHandlers/friend/GetUserFriendRequestsMessageHandlerTest.cpp
+        api/messageHandlers/friend/AcceptFriendRequestMessageHandlerTest.cpp
+        api/messageHandlers/friend/RejectFriendRequestMessageHandlerTest.cpp
+        api/messageHandlers/friend/GetUserFriendsMessageHandlerTest.cpp
+        api/messageHandlers/friend/RemoveFromFriendsMessageHandlerTest.cpp
         )
 
 set(IT_SOURCES
