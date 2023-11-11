@@ -12,7 +12,7 @@ Rectangle {
     function addFriend(friendName: string, friendId: string, isActive: bool) {
         friends.push([friendName, friendId, isActive]);
         friendsView.model = friends;
-        friendsView.height = 30 * friends.length;
+        friendsView.height = 36 * friends.length;
     }
     function addFriendRequest(friendName: string, requestId: string) {
         friendRequests.push([friendName, requestId]);
@@ -64,8 +64,8 @@ Rectangle {
                     spacing: 5
                     width: parent.width
 
-                    delegate: Row {
-                        spacing: 5
+                    delegate: Item {
+                        height: friendButton.height + firendActive.height * 0.5
                         width: parent.width
 
                         Button {
@@ -78,7 +78,9 @@ Rectangle {
                             }
                         }
                         ActivityIndicator {
-                            anchors.verticalCenter: friendButton.verticalCenter
+                            id: firendActive
+                            anchors.horizontalCenter: friendButton.right
+                            anchors.verticalCenter: friendButton.bottom
                             isActive: modelData[2]
                         }
                     }

@@ -22,21 +22,11 @@ Rectangle {
         font.pointSize: 11
         text: "user nickname"
     }
-    Button {
+    SettingsButton {
         id: settingsButton
         anchors.right: parent.right
         anchors.rightMargin: 8
         anchors.verticalCenter: parent.verticalCenter
-        height: 28
-        width: 28
-
-        contentItem: Text {
-            color: Settings.textColor
-            font.pointSize: 17
-            horizontalAlignment: Text.AlignHCenter
-            text: '⛭'
-            verticalAlignment: Text.AlignVCenter
-        }
 
         onClicked: {
             leftColumnController.goToUserSettings();

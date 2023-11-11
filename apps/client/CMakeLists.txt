@@ -53,6 +53,7 @@ set(QML_SOURCES
         gui/qml/components/RejectButton.ui.qml
         gui/qml/components/Separator.ui.qml
         gui/qml/components/ActivityIndicator.ui.qml
+        gui/qml/components/SettingsButton.ui.qml
 
         gui/states/register/RegisterView.qml
         gui/states/login/LoginView.qml
@@ -70,6 +71,14 @@ set(QML_SOURCES
         gui/states/channel/components/ChannelTopBar.qml
         )
 
+set(RESOURCES
+        resources/svg/gear.svg
+        resources/svg/plus.svg
+        resources/svg/online.svg
+        resources/svg/offline.svg
+        resources/svg/crown.svg
+        )
+
 qt_add_executable(${EXECUTABLE_NAME} Main.cpp ${SOURCES})
 
 qt_add_qml_module(${EXECUTABLE_NAME}
@@ -77,6 +86,8 @@ qt_add_qml_module(${EXECUTABLE_NAME}
         VERSION 6.2
         QML_FILES
         ${QML_SOURCES}
+        RESOURCES
+        ${RESOURCES}
         )
 
 target_link_libraries(${EXECUTABLE_NAME} PUBLIC
@@ -84,6 +95,7 @@ target_link_libraries(${EXECUTABLE_NAME} PUBLIC
         Qt::Gui
         Qt6::Quick
         Qt6::QuickControls2
+        Qt6::Svg
         loguru::loguru
         nlohmann_json::nlohmann_json
         messages
@@ -102,6 +114,7 @@ target_link_libraries(${EXECUTABLE_NAME}UT PUBLIC
         Qt::Gui
         Qt6::Quick
         Qt6::QuickControls2
+        Qt6::Svg
         loguru::loguru
         nlohmann_json::nlohmann_json
         messages
