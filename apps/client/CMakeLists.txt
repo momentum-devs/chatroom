@@ -59,10 +59,12 @@ set(QML_SOURCES
         gui/states/login/LoginView.qml
         gui/states/createChannel/CreateChannelView.qml
         gui/states/sendFriendRequest/SendFriendRequestView.qml
-        gui/states/userSettings/UserSettingsView.qml
-        gui/states/userSettings/components/Avatar.ui.qml
         gui/states/verifyUser/VerifyUserView.qml
         gui/states/inviteToChannel/InviteToChannelView.qml
+
+        gui/states/userSettings/UserSettingsView.qml
+        gui/states/userSettings/components/Avatar.ui.qml
+        gui/states/userSettings/components/EscapeButton.ui.qml
 
         gui/states/privateMessages/PrivateMessagesView.qml
         gui/states/privateMessages/components/FriendsColumn.qml
@@ -79,6 +81,7 @@ set(RESOURCES
         resources/svg/online.svg
         resources/svg/offline.svg
         resources/svg/crown.svg
+        resources/svg/close.svg
         )
 
 qt_add_executable(${EXECUTABLE_NAME} Main.cpp ${SOURCES})

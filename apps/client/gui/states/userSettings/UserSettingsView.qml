@@ -7,6 +7,15 @@ Rectangle {
     id: userSettingsRectangle
     color: Settings.backgroundColor
 
+    EscapeButton {
+        width: 35
+        x: parent.width * 0.75
+        y: parent.height * 0.1
+
+        onClicked: {
+            console.log("click");
+        }
+    }
     Column {
         anchors.centerIn: parent
         spacing: 10
@@ -32,8 +41,8 @@ Rectangle {
 
                 Avatar {
                     anchors.horizontalCenter: parent.horizontalCenter
-                    height: 100
-                    width: 100
+                    height: nicknameColumn.height - changeAvatar.height - 10
+                    width: nicknameColumn.height - changeAvatar.height - 10
                 }
                 Button {
                     id: changeAvatar
@@ -42,6 +51,7 @@ Rectangle {
                 }
             }
             Column {
+                id: nicknameColumn
                 spacing: 10
                 width: Math.round(parent.width / 3)
 
