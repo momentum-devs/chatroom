@@ -4,7 +4,7 @@
 
 #include "SessionFactory.h"
 
-namespace server::api
+namespace server::core
 {
 class SessionFactoryMock : public SessionFactory
 {

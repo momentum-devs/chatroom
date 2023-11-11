@@ -12,7 +12,7 @@
 #include "server/infrastructure/repositories/userRepository/UserRepositoryImpl.h"
 #include "SessionImpl.h"
 
-namespace server::api
+namespace server::core
 {
 SessionFactoryImpl::SessionFactoryImpl(boost::asio::io_context& context,
                                        const std::shared_ptr<odb::pgsql::database>& dbInit,

@@ -9,7 +9,7 @@
 #include "server/domain/repositories/userRepository/UserRepository.h"
 #include "SessionFactory.h"
 
-namespace server::api
+namespace server::core
 {
 class SessionFactoryImpl : public SessionFactory
 {

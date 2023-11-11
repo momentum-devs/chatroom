@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "server/api/MessageHandler.h"
+#include "MessageHandler.h"
 #include "server/application/commandHandlers/user/registerUserCommandHandler/RegisterUserCommandHandler.h"
 #include "server/application/commandHandlers/user/sendRegistrationVerificationEmailCommandHandler/SendRegistrationVerificationEmailCommandHandler.h"
 

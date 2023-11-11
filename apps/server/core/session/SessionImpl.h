@@ -7,7 +7,7 @@
 #include "server/application/services/tokenService/TokenService.h"
 #include "Session.h"
 
-namespace server::api
+namespace server::core
 {
 class SessionImpl final : public Session
 {

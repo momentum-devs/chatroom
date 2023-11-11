@@ -7,7 +7,7 @@
 #include "server/application/services/hashService/HashService.h"
 #include "server/application/services/tokenService/TokenService.h"
 
-namespace server::api
+namespace server::core
 {
 class MessageRouterFactory
 {

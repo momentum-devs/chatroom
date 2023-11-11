@@ -4,7 +4,7 @@
 
 #include "Session.h"
 
-namespace server::api
+namespace server::core
 {
 class SessionFactory
 {

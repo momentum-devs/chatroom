@@ -4,7 +4,7 @@
 
 #include "MessageRouter.h"
 
-namespace server::api
+namespace server::core
 {
 class MessageRouterMock : public MessageRouter
 {

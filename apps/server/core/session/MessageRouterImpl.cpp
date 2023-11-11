@@ -1,9 +1,9 @@
 #include "MessageRouterImpl.h"
 
-namespace server::api
+namespace server::core
 {
 MessageRouterImpl::MessageRouterImpl(
-    std::unordered_map<common::messages::MessageId, std::shared_ptr<MessageHandler>> messageHandlersInt)
+    std::unordered_map<common::messages::MessageId, std::shared_ptr<api::MessageHandler>> messageHandlersInt)
     : messageHandlers{std::move(messageHandlersInt)}
 {
 }

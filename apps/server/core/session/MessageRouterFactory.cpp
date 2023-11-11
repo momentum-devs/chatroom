@@ -1,28 +1,29 @@
 #include "MessageRouterFactory.h"
 
 #include "httpClient/HttpClientFactory.h"
-#include "MessageHandlers/AcceptChannelInvitationMessageHandler.h"
-#include "MessageHandlers/AcceptFriendRequestMessageHandler.h"
-#include "MessageHandlers/CreateChannelMessageHandler.h"
-#include "MessageHandlers/DeleteTheChannelMessageHandler.h"
-#include "MessageHandlers/DeleteUserMessageHandler.h"
-#include "MessageHandlers/FriendRequestMessageHandler.h"
-#include "MessageHandlers/GetUserChannelInvitationsMessageHandler.h"
-#include "MessageHandlers/GetUserChannelsMessageHandler.h"
-#include "MessageHandlers/GetUserDataMessageHandler.h"
-#include "MessageHandlers/GetUserFriendRequestsMessageHandler.h"
-#include "MessageHandlers/GetUserFriendsMessageHandler.h"
-#include "MessageHandlers/LeaveChannelMessageHandler.h"
-#include "MessageHandlers/LoginMessageHandler.h"
-#include "MessageHandlers/LogoutMessageHandler.h"
-#include "MessageHandlers/RegisterMessageHandler.h"
-#include "MessageHandlers/RejectChannelInvitationMessageHandler.h"
-#include "MessageHandlers/RejectFriendRequestMessageHandler.h"
-#include "MessageHandlers/RemoveFromFriendsMessageHandler.h"
-#include "MessageHandlers/SendChannelInvitationMessageHandler.h"
-#include "MessageHandlers/UpdateUserMessageHandler.h"
-#include "MessageHandlers/VerifyUserMessageHandler.h"
 #include "MessageRouterImpl.h"
+#include "server/api/messageHandlers/AcceptChannelInvitationMessageHandler.h"
+#include "server/api/messageHandlers/AcceptFriendRequestMessageHandler.h"
+#include "server/api/messageHandlers/CreateChannelMessageHandler.h"
+#include "server/api/messageHandlers/DeleteTheChannelMessageHandler.h"
+#include "server/api/messageHandlers/DeleteUserMessageHandler.h"
+#include "server/api/messageHandlers/FriendRequestMessageHandler.h"
+#include "server/api/messageHandlers/GetUserChannelInvitationsMessageHandler.h"
+#include "server/api/messageHandlers/GetUserChannelsMessageHandler.h"
+#include "server/api/messageHandlers/GetUserDataMessageHandler.h"
+#include "server/api/messageHandlers/GetUserFriendRequestsMessageHandler.h"
+#include "server/api/messageHandlers/GetUserFriendsMessageHandler.h"
+#include "server/api/messageHandlers/LeaveChannelMessageHandler.h"
+#include "server/api/messageHandlers/LoginMessageHandler.h"
+#include "server/api/messageHandlers/LogoutMessageHandler.h"
+#include "server/api/messageHandlers/MessageHandler.h"
+#include "server/api/messageHandlers/RegisterMessageHandler.h"
+#include "server/api/messageHandlers/RejectChannelInvitationMessageHandler.h"
+#include "server/api/messageHandlers/RejectFriendRequestMessageHandler.h"
+#include "server/api/messageHandlers/RemoveFromFriendsMessageHandler.h"
+#include "server/api/messageHandlers/SendChannelInvitationMessageHandler.h"
+#include "server/api/messageHandlers/UpdateUserMessageHandler.h"
+#include "server/api/messageHandlers/VerifyUserMessageHandler.h"
 #include "server/application/commandHandlers/channel/acceptChannelInvitationCommandHandler/AcceptChannelInvitationCommandHandlerImpl.h"
 #include "server/application/commandHandlers/channel/createChannelCommandHandler/CreateChannelCommandHandlerImpl.h"
 #include "server/application/commandHandlers/channel/createChannelInvitationCommandHandler/CreateChannelInvitationCommandHandlerImpl.h"
@@ -66,7 +67,7 @@
 #include "server/infrastructure/repositories/userRepository/UserRepositoryImpl.h"
 #include "server/infrastructure/services/emailService/EmailServiceImpl.h"
 
-namespace server::api
+namespace server::core
 {
 MessageRouterFactory::MessageRouterFactory(std::shared_ptr<odb::pgsql::database> dbInit, const std::string& jwtSecret,
                                            const int jwtExpireIn, std::string sendGridApiKeyInit,
@@ -133,41 +134,43 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
                                                                                                    emailService);
 
     auto createChannelMessageHandler =
-        std::make_shared<CreateChannelMessageHandler>(tokenService, std::move(createChannelCommandHandler));
+        std::make_shared<api::CreateChannelMessageHandler>(tokenService, std::move(createChannelCommandHandler));
 
-    auto getUserChannelsMessageHandler = std::make_shared<GetUserChannelsMessageHandler>(
+    auto getUserChannelsMessageHandler = std::make_shared<api::GetUserChannelsMessageHandler>(
         tokenService, std::move(findChannelsToWhichUserBelongsQueryHandler));
 
-    auto loginMessageHandler = std::make_shared<LoginMessageHandler>(std::move(loginUserCommandHandler));
+    auto loginMessageHandler = std::make_shared<api::LoginMessageHandler>(std::move(loginUserCommandHandler));
 
-    auto registerMessageHandler = std::make_shared<RegisterMessageHandler>(
+    auto registerMessageHandler = std::make_shared<api::RegisterMessageHandler>(
         std::move(registerUserCommandHandler), sendRegistrationVerificationEmailCommandHandler);
 
     auto findUserQueryHandler = std::make_shared<server::application::FindUserQueryHandlerImpl>(userRepository);
 
-    auto getUserDataMessageHandler = std::make_shared<GetUserDataMessageHandler>(tokenService, findUserQueryHandler);
+    auto getUserDataMessageHandler =
+        std::make_shared<api::GetUserDataMessageHandler>(tokenService, findUserQueryHandler);
 
     auto updateUserCommandHandler =
         std::make_unique<server::application::UpdateUserCommandHandlerImpl>(userRepository, hashService);
 
     auto updateUserMessageHandler =
-        std::make_shared<UpdateUserMessageHandler>(tokenService, std::move(updateUserCommandHandler));
+        std::make_shared<api::UpdateUserMessageHandler>(tokenService, std::move(updateUserCommandHandler));
 
     auto deleteUserCommandHandler = std::make_unique<server::application::DeleteUserCommandHandlerImpl>(
         userRepository, userGroupRepository, groupRepository);
 
     auto deleteUserMessageHandler =
-        std::make_shared<DeleteUserMessageHandler>(tokenService, std::move(deleteUserCommandHandler));
+        std::make_shared<api::DeleteUserMessageHandler>(tokenService, std::move(deleteUserCommandHandler));
 
     auto verifyUserEmailCommandHandler =
         std::make_unique<server::application::VerifyUserEmailCommandHandlerImpl>(userRepository);
 
-    auto verifyUserMessageHandler = std::make_shared<VerifyUserMessageHandler>(
+    auto verifyUserMessageHandler = std::make_shared<api::VerifyUserMessageHandler>(
         tokenService, std::move(verifyUserEmailCommandHandler), findUserQueryHandler);
 
     auto logoutCommandHandler = std::make_unique<server::application::LogoutUserCommandHandlerImpl>(userRepository);
 
-    auto logoutMessageHandler = std::make_shared<LogoutMessageHandler>(tokenService, std::move(logoutCommandHandler));
+    auto logoutMessageHandler =
+        std::make_shared<api::LogoutMessageHandler>(tokenService, std::move(logoutCommandHandler));
 
     auto findUserByEmailQueryHandler =
         std::make_shared<server::application::FindUserByEmailQueryHandlerImpl>(userRepository);
@@ -176,20 +179,20 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
         std::make_unique<server::application::CreateChannelInvitationCommandHandlerImpl>(
             channelInvitationRepository, userRepository, channelRepository, userChannelRepository);
 
-    auto sendChannelInvitationMessageHandler = std::make_shared<SendChannelInvitationMessageHandler>(
+    auto sendChannelInvitationMessageHandler = std::make_shared<api::SendChannelInvitationMessageHandler>(
         tokenService, findUserByEmailQueryHandler, std::move(createChannelInvitationCommandHandler));
 
     auto leaveChannelCommandHandler =
         std::make_unique<server::application::LeaveChannelCommandHandlerImpl>(userChannelRepository, channelRepository);
 
     auto leftTheChannelMessageHandler =
-        std::make_shared<LeaveChannelMessageHandler>(tokenService, std::move(leaveChannelCommandHandler));
+        std::make_shared<api::LeaveChannelMessageHandler>(tokenService, std::move(leaveChannelCommandHandler));
 
     auto deleteChannelCommandHandler =
         std::make_unique<server::application::DeleteChannelCommandHandlerImpl>(channelRepository);
 
     auto deleteTheChannelMessageHandler =
-        std::make_shared<DeleteTheChannelMessageHandler>(tokenService, std::move(deleteChannelCommandHandler));
+        std::make_shared<api::DeleteTheChannelMessageHandler>(tokenService, std::move(deleteChannelCommandHandler));
 
     auto friendInvitationMapper = std::make_shared<server::infrastructure::FriendInvitationMapperImpl>(userMapper);
 
@@ -204,62 +207,62 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
         std::make_unique<server::application::CreateFriendInvitationCommandHandlerImpl>(
             friendInvitationRepository, userRepository, friendshipRepository);
 
-    auto friendRequestMessageHandler = std::make_shared<FriendRequestMessageHandler>(
+    auto friendRequestMessageHandler = std::make_shared<api::FriendRequestMessageHandler>(
         tokenService, findUserByEmailQueryHandler, std::move(createFriendInvitationCommandHandler));
 
     auto findReceivedChannelInvitationsQueryHandler =
         std::make_unique<server::application::FindReceivedChannelInvitationsQueryHandlerImpl>(
             channelInvitationRepository);
-    auto getUserChannelInvitationsMessageHandler = std::make_shared<GetUserChannelInvitationsMessageHandler>(
+    auto getUserChannelInvitationsMessageHandler = std::make_shared<api::GetUserChannelInvitationsMessageHandler>(
         tokenService, std::move(findReceivedChannelInvitationsQueryHandler));
 
     auto acceptChannelInvitationCommandHandler =
         std::make_unique<server::application::AcceptChannelInvitationCommandHandlerImpl>(
             channelInvitationRepository, userRepository, userChannelRepository, channelRepository);
 
-    auto acceptChannelInvitationMessageHandler = std::make_shared<AcceptChannelInvitationMessageHandler>(
+    auto acceptChannelInvitationMessageHandler = std::make_shared<api::AcceptChannelInvitationMessageHandler>(
         tokenService, std::move(acceptChannelInvitationCommandHandler));
 
     auto rejectChannelInvitationCommandHandler =
         std::make_unique<server::application::RejectChannelInvitationCommandHandlerImpl>(channelInvitationRepository,
                                                                                          userRepository);
-    auto rejectChannelInvitationMessageHandler = std::make_shared<RejectChannelInvitationMessageHandler>(
+    auto rejectChannelInvitationMessageHandler = std::make_shared<api::RejectChannelInvitationMessageHandler>(
         tokenService, std::move(rejectChannelInvitationCommandHandler));
 
     auto findReceivedFriendInvitationsQueryHandler =
         std::make_unique<server::application::FindReceivedFriendInvitationsQueryHandlerImpl>(
             friendInvitationRepository);
 
-    auto getUserFriendRequestsMessageHandler = std::make_shared<GetUserFriendRequestsMessageHandler>(
+    auto getUserFriendRequestsMessageHandler = std::make_shared<api::GetUserFriendRequestsMessageHandler>(
         tokenService, std::move(findReceivedFriendInvitationsQueryHandler));
 
     auto acceptFriendInvitationCommandHandler =
         std::make_unique<server::application::AcceptFriendInvitationCommandHandlerImpl>(
             friendInvitationRepository, userRepository, friendshipRepository);
 
-    auto acceptFriendRequestMessageHandler = std::make_shared<AcceptFriendRequestMessageHandler>(
+    auto acceptFriendRequestMessageHandler = std::make_shared<api::AcceptFriendRequestMessageHandler>(
         tokenService, std::move(acceptFriendInvitationCommandHandler));
 
     auto rejectFriendInvitationCommandHandlerImpl =
         std::make_unique<server::application::RejectFriendInvitationCommandHandlerImpl>(friendInvitationRepository,
                                                                                         userRepository);
 
-    auto rejectFriendRequestMessageHandler = std::make_shared<RejectFriendRequestMessageHandler>(
+    auto rejectFriendRequestMessageHandler = std::make_shared<api::RejectFriendRequestMessageHandler>(
         tokenService, std::move(rejectFriendInvitationCommandHandlerImpl));
 
     auto findUserFriendsQueryHandler =
         std::make_unique<server::application::FindUserFriendsQueryHandlerImpl>(friendshipRepository);
 
     auto getUserFriendsMessageHandler =
-        std::make_shared<GetUserFriendsMessageHandler>(tokenService, std::move(findUserFriendsQueryHandler));
+        std::make_shared<api::GetUserFriendsMessageHandler>(tokenService, std::move(findUserFriendsQueryHandler));
 
     auto deleteFriendshipCommandHandler =
         std::make_unique<server::application::DeleteFriendshipCommandHandlerImpl>(friendshipRepository, userRepository);
 
     auto removeFromFriendsMessageHandler =
-        std::make_shared<RemoveFromFriendsMessageHandler>(tokenService, std::move(deleteFriendshipCommandHandler));
+        std::make_shared<api::RemoveFromFriendsMessageHandler>(tokenService, std::move(deleteFriendshipCommandHandler));
 
-    std::unordered_map<common::messages::MessageId, std::shared_ptr<MessageHandler>> messageHandlers{
+    std::unordered_map<common::messages::MessageId, std::shared_ptr<api::MessageHandler>> messageHandlers{
         {common::messages::MessageId::CreateChannel, createChannelMessageHandler},
         {common::messages::MessageId::GetUserChannels, getUserChannelsMessageHandler},
         {common::messages::MessageId::Login, loginMessageHandler},

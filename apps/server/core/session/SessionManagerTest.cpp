@@ -6,7 +6,7 @@
 #include "SessionMock.h"
 
 using namespace ::testing;
-using namespace server::api;
+using namespace server::core;
 
 class SessionManagerTest : public Test
 {

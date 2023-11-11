@@ -1,7 +1,7 @@
 #pragma once
 
 #include "messages/Message.h"
-namespace server::api
+namespace server::core
 {
 class MessageRouter
 {

@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "server/api/MessageHandler.h"
+#include "MessageHandler.h"
 #include "server/application/queryHandlers/channel/findChannelsToWhichUserBelongsQueryHandler/FindChannelsToWhichUserBelongsQueryHandler.h"
 #include "server/application/services/tokenService/TokenService.h"
 

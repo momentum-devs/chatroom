@@ -4,7 +4,7 @@
 
 #include "ConnectionAcceptor.h"
 
-namespace server::api
+namespace server::core
 {
 class ConnectionAcceptorMock : public ConnectionAcceptor
 {

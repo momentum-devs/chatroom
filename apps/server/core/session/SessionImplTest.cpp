@@ -11,7 +11,7 @@
 #include "server/application/services/tokenService/TokenServiceMock.h"
 
 using namespace ::testing;
-using namespace server::api;
+using namespace server::core;
 
 namespace
 {

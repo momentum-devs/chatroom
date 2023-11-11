@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "server/api/MessageHandler.h"
+#include "MessageHandler.h"
 #include "server/application/queryHandlers/friend/findUserFriendsQueryHandler/FindUserFriendsQueryHandler.h"
 #include "server/application/services/tokenService/TokenService.h"
 

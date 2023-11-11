@@ -2,14 +2,14 @@
 #include <odb/exception.hxx>
 #include <thread>
 
-#include "api/SessionManager.h"
 #include "common/filesystem/GetProjectPath.h"
 #include "laserpants/dotenv/dotenv.h"
 #include "loguru.hpp"
-#include "server/api/ConnectionAcceptorImpl.h"
-#include "server/api/SessionFactoryImpl.h"
 #include "server/config/ConfigProvider.h"
 #include "server/core/database/DatabaseConnectionFactory.h"
+#include "server/core/session/ConnectionAcceptorImpl.h"
+#include "server/core/session/SessionFactoryImpl.h"
+#include "server/core/session/SessionManager.h"
 
 // TODO: add application class
 int main(int argc, char* argv[])
@@ -42,14 +42,14 @@ int main(int argc, char* argv[])
 
     boost::asio::io_context context;
 
-    auto sessionFactory = std::make_unique<server::api::SessionFactoryImpl>(context, db, jwtSecret, jwtExpireIn,
-                                                                            sendGridApiKey, sendGridEmail);
+    auto sessionFactory = std::make_unique<server::core::SessionFactoryImpl>(context, db, jwtSecret, jwtExpireIn,
+                                                                             sendGridApiKey, sendGridEmail);
 
     auto connectionAcceptor =
-        std::make_unique<server::api::ConnectionAcceptorImpl>(context, serverPort, std::move(sessionFactory));
+        std::make_unique<server::core::ConnectionAcceptorImpl>(context, serverPort, std::move(sessionFactory));
 
-    std::unique_ptr<server::api::SessionManager> sessionManager =
-        std::make_unique<server::api::SessionManager>(std::move(connectionAcceptor));
+    std::unique_ptr<server::core::SessionManager> sessionManager =
+        std::make_unique<server::core::SessionManager>(std::move(connectionAcceptor));
 
     sessionManager->startAcceptingConnections();
 

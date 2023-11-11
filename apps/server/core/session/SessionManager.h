@@ -8,7 +8,7 @@
 #include "Session.h"
 #include "SessionFactory.h"
 
-namespace server::api
+namespace server::core
 {
 class SessionManager
 {
@@ -19,8 +19,6 @@ public:
     void removeInactiveSessions();
 
 private:
-    void handleConnection(const std::shared_ptr<Session>& newSession);
-
     std::vector<std::shared_ptr<Session>> sessions;
     std::unique_ptr<ConnectionAcceptor> connectionAcceptor;
 };

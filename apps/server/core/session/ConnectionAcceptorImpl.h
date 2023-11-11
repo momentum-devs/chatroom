@@ -3,7 +3,7 @@
 #include "ConnectionAcceptor.h"
 #include "SessionFactory.h"
 
-namespace server::api
+namespace server::core
 {
 class ConnectionAcceptorImpl : public ConnectionAcceptor
 {

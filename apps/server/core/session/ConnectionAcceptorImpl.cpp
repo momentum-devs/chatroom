@@ -2,7 +2,7 @@
 
 #include "loguru.hpp"
 
-namespace server::api
+namespace server::core
 {
 ConnectionAcceptorImpl::ConnectionAcceptorImpl(boost::asio::io_context& context, int port,
                                                std::unique_ptr<SessionFactory> sessionFactoryInit)

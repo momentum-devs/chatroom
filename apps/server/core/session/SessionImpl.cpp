@@ -4,7 +4,7 @@
 
 #include "loguru.hpp"
 
-namespace server::api
+namespace server::core
 {
 SessionImpl::SessionImpl(std::unique_ptr<common::messages::MessageReader> messageReaderInit,
                          std::unique_ptr<common::messages::MessageSender> messageSenderInit,

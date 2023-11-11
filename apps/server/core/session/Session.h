@@ -4,7 +4,7 @@
 
 #include "common/messages/Message.h"
 
-namespace server::api
+namespace server::core
 {
 class Session
 {
