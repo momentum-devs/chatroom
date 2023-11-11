@@ -43,7 +43,7 @@ private:
     void handleGetUserFriendsResponse(const common::messages::Message& message);
     void handleGetUserFriendRequestsResponse(const common::messages::Message& message);
     void handleChangeFriendRequestResponse(const common::messages::Message& message);
-    void handleRemoveFromFriendsResponse(const common::messages::Message& message);
+    void handleRemoveFromFriendsResponse();
 
     std::shared_ptr<api::Session> session;
     const StateFactory& stateFactory;

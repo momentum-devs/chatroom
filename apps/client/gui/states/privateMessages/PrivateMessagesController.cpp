@@ -26,7 +26,7 @@ void PrivateMessagesController::activate()
 
     session->addMessageHandler({common::messages::MessageId::RemoveFromFriendsResponse,
                                 removeFromFriendsResponseHandlerName,
-                                [this](const auto& msg) { handleRemoveFromFriendsResponse(msg); }});
+                                [this](const auto&) { handleRemoveFromFriendsResponse(); }});
 
     session->sendMessage(common::messages::MessageId::GetUserFriends, {});
     session->sendMessage(common::messages::MessageId::GetFriendRequests, {});
@@ -211,7 +211,7 @@ void PrivateMessagesController::handleChangeFriendRequestResponse(const common::
     }
 }
 
-void PrivateMessagesController::handleRemoveFromFriendsResponse(const common::messages::Message& message)
+void PrivateMessagesController::handleRemoveFromFriendsResponse()
 {
     currentFriendId = "";
 

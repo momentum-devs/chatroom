@@ -4,7 +4,7 @@
 
 #include "errors/MissingEnvironmentVariableError.h"
 
-namespace server::config
+namespace common::envParser
 {
 std::string EnvironmentParser::parseString(const std::string& envName)
 {
