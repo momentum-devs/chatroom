@@ -26,6 +26,8 @@ void VerifyUserController::deactivate()
 
 void VerifyUserController::verificationRequest(const QString& verificationCode)
 {
+    privateMessageState = stateFactory.createPrivateMessagesState();
+
     nlohmann::json data{
         {"verificationCode", verificationCode.toStdString()},
     };
@@ -38,7 +40,7 @@ void VerifyUserController::verificationRequest(const QString& verificationCode)
 void VerifyUserController::goToLoginState()
 {
     session->logout();
-    
+
     stateMachine->clear(stateFactory.createLoginState());
 }
 
@@ -62,7 +64,7 @@ void VerifyUserController::handleVerificationResponse(const common::messages::Me
     {
         LOG_S(INFO) << "Successfully verified email";
 
-        stateMachine->returnToThePreviousState();
+        stateMachine->replaceCurrentState(privateMessageState);
     }
 }
 }

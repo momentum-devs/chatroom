@@ -25,8 +25,8 @@ void LoginController::loginRequest(const QString& email, const QString& password
 
     LOG_S(INFO) << std::format("Sent login request for user {}", static_cast<std::string>(message.payload));
 
-    // nextState = stateFactory.createMainState();
-    nextState = stateFactory.createPrivateMessagesState();
+    privateMessageState = stateFactory.createPrivateMessagesState();
+    verificationState = stateFactory.createVerifyUserState();
 }
 
 void LoginController::goToRegisterState()
@@ -38,13 +38,16 @@ void LoginController::activate()
 {
     session->addMessageHandler({common::messages::MessageId::LoginResponse, loginResponseHandlerName,
                                 [this](const auto& msg) { handleLoginResponse(msg); }});
+
+    session->addMessageHandler({common::messages::MessageId::GetUserDataResponse, getUserDataHandlerName,
+                                [this](const auto& msg) { handleGetUSerDataResponse(msg); }});
 }
 
 void LoginController::deactivate()
 {
     session->removeMessageHandler({common::messages::MessageId::LoginResponse, loginResponseHandlerName});
 
-    nextState = std::nullopt;
+    session->removeMessageHandler({common::messages::MessageId::GetUserDataResponse, getUserDataHandlerName});
 }
 
 void LoginController::handleLoginResponse(const common::messages::Message& message)
@@ -70,7 +73,42 @@ void LoginController::handleLoginResponse(const common::messages::Message& messa
 
         session->storeToken(responseJson.at("token").get<std::string>());
 
-        stateMachine->addNextState(nextState.value());
+        session->sendMessage(common::messages::MessageId::GetUserData, {});
+    }
+}
+
+void LoginController::handleGetUSerDataResponse(const common::messages::Message& message)
+{
+    LOG_S(INFO) << "Handle get user data response";
+
+    auto responsePayload = static_cast<std::string>(message.payload);
+
+    auto responseJson = nlohmann::json::parse(responsePayload);
+
+    if (responseJson.contains("error"))
+    {
+        LOG_S(ERROR) << std::format("Error while getting user channels: {}",
+                                    responseJson.at("error").get<std::string>());
+    }
+
+    if (responseJson.contains("data") and responseJson.at("data").contains("verified"))
+    {
+        if (responseJson.at("data").at("verified").get<bool>())
+        {
+            LOG_S(INFO) << "User verified, go to private message state";
+
+            stateMachine->addNextState(privateMessageState);
+        }
+        else
+        {
+            LOG_S(INFO) << "User not verified, go to verification state";
+
+            stateMachine->addNextState(verificationState);
+        }
+    }
+    else
+    {
+        LOG_S(ERROR) << "Wrong user data format";
     }
 }
 }

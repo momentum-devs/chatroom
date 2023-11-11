@@ -28,11 +28,15 @@ signals:
 
 private:
     void handleLoginResponse(const common::messages::Message& message);
+    void handleGetUSerDataResponse(const common::messages::Message& message);
 
     std::shared_ptr<api::Session> session;
     const StateFactory& stateFactory;
     std::shared_ptr<StateMachine> stateMachine;
-    std::optional<std::shared_ptr<State>> nextState = std::nullopt;
+    std::shared_ptr<State> privateMessageState;
+    std::shared_ptr<State> verificationState;
+
     inline const static std::string loginResponseHandlerName{"loginResponseHandlerName"};
+    inline const static std::string getUserDataHandlerName{"getUserDataHandlerName"};
 };
 }

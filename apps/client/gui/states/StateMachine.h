@@ -12,6 +12,7 @@ class StateMachine
 {
 public:
     void addNextState(std::shared_ptr<State> state);
+    void replaceCurrentState(std::shared_ptr<State> state);
     void returnToThePreviousState();
     void clear(std::optional<std::shared_ptr<State>> state = std::nullopt);
 
