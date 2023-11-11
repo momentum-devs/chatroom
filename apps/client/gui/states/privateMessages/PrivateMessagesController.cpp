@@ -51,7 +51,7 @@ void PrivateMessagesController::goToChannel(const QString& channelId)
 {
     LOG_S(INFO) << std::format("PrivateMessagesController: Go to chanel with id {}", channelId.toStdString());
 
-    // TODO: implement
+    stateMachine->addNextState(stateFactory.createChannelState(channelId.toStdString()));
 }
 
 const QString& PrivateMessagesController::getName() const
@@ -213,6 +213,8 @@ void PrivateMessagesController::handleChangeFriendRequestResponse(const common::
 
 void PrivateMessagesController::handleRemoveFromFriendsResponse(const common::messages::Message& message)
 {
+    LOG_S(INFO) << "Handle remove friend response";
+
     currentFriendId = "";
 
     session->sendMessage(common::messages::MessageId::GetUserFriends, {});

@@ -33,7 +33,7 @@ set(SOURCES
         gui/states/channelMembers/ChannelMembersController.cpp
         gui/controllers/LeftColumnController.cpp
         gui/states/privateMessages/PrivateMessagesState.cpp
-        gui/states/privateMessages/PrivateMessagesController.h gui/states/privateMessages/PrivateMessagesController.cpp)
+        gui/states/privateMessages/PrivateMessagesController.h gui/states/privateMessages/PrivateMessagesController.cpp gui/states/channel/ChannelState.cpp gui/states/channel/ChannelController.cpp)
 
 set(UT_SOURCES
         api/SessionImplTest.cpp
@@ -66,6 +66,8 @@ set(QML_SOURCES
         gui/states/privateMessages/PrivateMessagesView.qml
         gui/states/privateMessages/components/FriendsColumn.qml
         gui/states/privateMessages/components/FriendTopBar.qml
+
+        gui/states/channel/ChannelView.qml
         )
 
 qt_add_executable(${EXECUTABLE_NAME} Main.cpp ${SOURCES})

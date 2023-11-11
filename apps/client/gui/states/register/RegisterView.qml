@@ -56,7 +56,7 @@ Rectangle {
                     const nickname = nicknameField.text;
                     const password = passwordField.text;
                     const passwordRepeat = passwordRepeatField.text;
-                    if (password === passwordRepeat && email.length !== 0 && password.length !== 0 && nicknam.length !== 0) {
+                    if (password === passwordRepeat && email.length !== 0 && password.length !== 0 && nickname.length !== 0) {
                         registerController.registerRequest(email, nickname, password);
                         successPopup.open();
                     } else {

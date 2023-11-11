@@ -29,6 +29,7 @@ signals:
     void addChannelInvitation(const QString& channelName, const QString& channelId);
     void clearChannelList();
     void clearChannelInvitationList();
+    void goToPrivateMessagesSignal();
     void goToChannelSignal(const QString& channelId);
     void setUserName(const QString& userName);
 

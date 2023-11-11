@@ -56,7 +56,7 @@ const QString& LeftColumnController::getName() const
 
 void LeftColumnController::goToPrivateMessages()
 {
-    // TODO: implement
+    emit goToPrivateMessagesSignal();
 }
 
 void LeftColumnController::goToCreateChannel()

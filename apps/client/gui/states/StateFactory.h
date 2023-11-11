@@ -16,6 +16,7 @@ public:
     std::shared_ptr<State> createRegisterState() const;
     std::shared_ptr<State> createLoginState() const;
     std::shared_ptr<State> createMainState() const;
+    std::shared_ptr<State> createChannelState(const std::string& channelId) const;
     std::shared_ptr<State> createCreateChannelState() const;
     std::shared_ptr<State> createSendFriendRequestState() const;
     std::shared_ptr<State> createUserSettingsState() const;
