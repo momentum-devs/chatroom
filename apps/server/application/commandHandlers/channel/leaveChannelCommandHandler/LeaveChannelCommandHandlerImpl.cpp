@@ -1,24 +1,23 @@
-#include "RemoveUserFromChannelCommandHandlerImpl.h"
+#include "LeaveChannelCommandHandlerImpl.h"
 
 #include <format>
 
 #include "loguru.hpp"
-#include "server/application/errors/OperationNotValidError.h"
 #include "server/application/errors/ResourceNotFoundError.h"
 
 namespace server::application
 {
-RemoveUserFromChannelCommandHandlerImpl::RemoveUserFromChannelCommandHandlerImpl(
+LeaveChannelCommandHandlerImpl::LeaveChannelCommandHandlerImpl(
     std::shared_ptr<domain::UserChannelRepository> userChannelRepositoryInit,
     std::shared_ptr<domain::ChannelRepository> channelRepositoryInit)
     : userChannelRepository{std::move(userChannelRepositoryInit)}, channelRepository{std::move(channelRepositoryInit)}
 {
 }
 
-void RemoveUserFromChannelCommandHandlerImpl::execute(const RemoveUserFromChannelCommandHandlerPayload& payload)
+void LeaveChannelCommandHandlerImpl::execute(const LeaveChannelCommandHandlerPayload& payload)
 {
-    LOG_S(INFO) << std::format("Removing user from channel... {{userId: {}, channelId: {}, requesterUserId: {}}}",
-                               payload.userId, payload.channelId, payload.requesterUserId);
+    LOG_S(INFO) << std::format("Removing user from channel... {{userId: {}, channelId: {}}}", payload.userId,
+                               payload.channelId);
 
     const auto channel = channelRepository->findChannelById({payload.channelId});
 
@@ -35,14 +34,16 @@ void RemoveUserFromChannelCommandHandlerImpl::execute(const RemoveUserFromChanne
             std::format("UserChannel not found. {{userId: {}, channelId: {}}}", payload.userId, payload.channelId)};
     }
 
-    if (channel->get()->getCreator()->getId() != payload.requesterUserId)
-    {
-        throw errors::OperationNotValidError{
-            std::format("User with id {} cannot remove users because he is not creator of the channel with id {}.",
-                        payload.requesterUserId, payload.channelId)};
-    }
-
     userChannelRepository->deleteUserChannel({*existingUserChannel});
+
+    const auto channelCreatorId = channel->get()->getCreator()->getId();
+
+    if (channelCreatorId == payload.userId)
+    {
+        channelRepository->deleteChannel({**channel});
+
+        LOG_S(INFO) << std::format("Channel deleted. {{channelId: {}}}", payload.channelId);
+    }
 
     LOG_S(INFO) << std::format("User removed from channel. {{userId: {}, channelId: {}}}", payload.userId,
                                payload.channelId);

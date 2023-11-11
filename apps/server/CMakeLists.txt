@@ -48,6 +48,7 @@ set(SOURCES
         application/commandHandlers/channel/createChannelCommandHandler/CreateChannelCommandHandlerImpl.cpp
         application/commandHandlers/channel/deleteChannelCommandHandler/DeleteChannelCommandHandlerImpl.cpp
         application/commandHandlers/channel/removeUserFromChannelCommandHandler/RemoveUserFromChannelCommandHandlerImpl.cpp
+        application/commandHandlers/channel/leaveChannelCommandHandler/LeaveChannelCommandHandlerImpl.cpp
         application/queryHandlers/channel/findUsersBelongingToChannelQueryHandler/FindUsersBelongingToChannelQueryHandlerImpl.cpp
         application/queryHandlers/channel/findChannelsToWhichUserBelongsQueryHandler/FindChannelsToWhichUserBelongsQueryHandlerImpl.cpp
         application/queryHandlers/channel/findChannelByIdQueryHandler/FindChannelByIdQueryHandlerImpl.cpp
@@ -85,7 +86,7 @@ set(SOURCES
         api/MessageHandlers/VerifyUserMessageHandler.cpp
         api/MessageHandlers/LogoutMessageHandler.cpp
         api/MessageHandlers/SendChannelInvitationMessageHandler.cpp
-        api/MessageHandlers/LeftTheChannelMessageHandler.cpp
+        api/MessageHandlers/LeaveChannelMessageHandler.cpp
         api/MessageHandlers/DeleteTheChannelMessageHandler.cpp
         api/MessageHandlers/FriendRequestMessageHandler.cpp
         api/MessageHandlers/GetUserChannelInvitationsMessageHandler.cpp
@@ -135,7 +136,7 @@ set(UT_SOURCES
         api/MessageHandlers/SendChannelInvitationMessageHandlerTest.cpp
         api/MessageHandlers/FriendRequestMessageHandlerTest.cpp
         api/MessageHandlers/DeleteTheChannelMessageHandlerTest.cpp
-        api/MessageHandlers/LeftTheChannelMessageHandlerTest.cpp
+        api/MessageHandlers/LeaveChannelMessageHandlerTest.cpp
         api/MessageHandlers/GetUserChannelInvitationsMessageHandlerTest.cpp
         api/MessageHandlers/AcceptChannelInvitationMessageHandlerTest.cpp
         api/MessageHandlers/RejectChannelInvitationMessageHandlerTest.cpp
@@ -175,6 +176,7 @@ set(IT_SOURCES
         application/commandHandlers/channel/createChannelCommandHandler/CreateChannelCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/channel/deleteChannelCommandHandler/DeleteChannelCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/channel/removeUserFromChannelCommandHandler/RemoveUserFromChannelCommandHandlerImplIntegrationTest.cpp
+        application/commandHandlers/channel/leaveChannelCommandHandler/LeaveChannelCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/channel/createChannelInvitationCommandHandler/CreateChannelInvitationCommandHandlerImplIntegrationTest.cpp
         application/queryHandlers/channel/findUsersBelongingToChannelQueryHandler/FindUsersBelongingToChannelQueryHandlerImplIntegrationTest.cpp
         application/queryHandlers/channel/findChannelsToWhichUserBelongsQueryHandler/FindChannelsToWhichUserBelongsQueryHandlerImplIntegrationTest.cpp

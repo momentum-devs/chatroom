@@ -1,4 +1,4 @@
-#include "LeftTheChannelMessageHandler.h"
+#include "LeaveChannelMessageHandler.h"
 
 #include <format>
 #include <loguru.hpp>
@@ -7,15 +7,14 @@
 
 namespace server::api
 {
-LeftTheChannelMessageHandler::LeftTheChannelMessageHandler(
-    std::shared_ptr<server::application::TokenService> tokenServiceInit,
-    std::unique_ptr<server::application::RemoveUserFromChannelCommandHandler> removeUserFromChannelCommandHandlerInit)
-    : tokenService{std::move(tokenServiceInit)},
-      removeUserFromChannelCommandHandler{std::move(removeUserFromChannelCommandHandlerInit)}
+LeaveChannelMessageHandler::LeaveChannelMessageHandler(
+    std::shared_ptr<application::TokenService> tokenServiceInit,
+    std::unique_ptr<application::LeaveChannelCommandHandler> leaveChannelCommandHandlerInit)
+    : tokenService{std::move(tokenServiceInit)}, leaveChannelCommandHandler{std::move(leaveChannelCommandHandlerInit)}
 {
 }
 
-common::messages::Message LeftTheChannelMessageHandler::handleMessage(const common::messages::Message& message) const
+common::messages::Message LeaveChannelMessageHandler::handleMessage(const common::messages::Message& message) const
 {
     try
     {
@@ -27,9 +26,9 @@ common::messages::Message LeftTheChannelMessageHandler::handleMessage(const comm
 
         auto [userId] = tokenService->verifyToken(token);
 
-        removeUserFromChannelCommandHandler->execute({userId, channelId});
+        leaveChannelCommandHandler->execute({userId, channelId});
 
-        LOG_S(INFO) << std::format("Removed user with id: {} from channel with id {}", userId, channelId);
+        LOG_S(INFO) << std::format("User with id: {} left the channel with id {}", userId, channelId);
 
         common::messages::Message responseMessage{common::messages::MessageId::LeftTheChannelResponse,
                                                   common::bytes::Bytes{R"(["ok"])"}};

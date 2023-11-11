@@ -1,8 +1,7 @@
 #include "gtest/gtest.h"
 
 #include "faker-cxx/String.h"
-#include "RemoveUserFromChannelCommandHandlerImpl.h"
-#include "server/application/errors/OperationNotValidError.h"
+#include "LeaveChannelCommandHandlerImpl.h"
 #include "server/application/errors/ResourceNotFoundError.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
 #include "server/infrastructure/repositories/channelRepository/ChannelRepositoryImpl.h"
@@ -20,7 +19,7 @@ using namespace server::infrastructure;
 using namespace server::application;
 using namespace server::tests;
 
-class RemoveUserFromChannelCommandImplIntegrationTest : public Test
+class LeaveChannelCommandImplIntegrationTest : public Test
 {
 public:
     void SetUp() override
@@ -60,61 +59,57 @@ public:
     std::shared_ptr<domain::UserChannelRepository> userChannelRepository =
         std::make_shared<UserChannelRepositoryImpl>(db, userChannelMapper, userMapper, channelMapper);
 
-    RemoveUserFromChannelCommandHandlerImpl removeUserFromChannelCommandHandler{userChannelRepository,
-                                                                                channelRepository};
+    LeaveChannelCommandHandlerImpl leaveChannelCommandHandler{userChannelRepository, channelRepository};
 };
 
-TEST_F(RemoveUserFromChannelCommandImplIntegrationTest, givenExistingUserChannelWithoutCreator_shouldDeleteUserChannel)
+TEST_F(LeaveChannelCommandImplIntegrationTest, givenUserWhoIsNotChannelCreator_shouldDeleteUserChannel)
 {
-    const auto channelCreator = userTestUtils.createAndPersist();
-
-    const auto user = userTestUtils.createAndPersist();
-
-    const auto channel = channelTestUtils.createAndPersist(channelCreator);
-
-    const auto userChannel = userChannelTestUtils.createAndPersist(user, channel);
-
-    removeUserFromChannelCommandHandler.execute({user->getId(), channel->getId(), channelCreator->getId()});
-
-    const auto foundUserChannel = userChannelTestUtils.find(user->getId(), channel->getId());
-
-    ASSERT_FALSE(foundUserChannel);
-}
-
-TEST_F(RemoveUserFromChannelCommandImplIntegrationTest, givenRequesterNotChannelCreator_shouldThrow)
-{
-    const auto channelCreator = userTestUtils.createAndPersist();
-
     const auto user = userTestUtils.createAndPersist();
 
     const auto channel = channelTestUtils.createAndPersist();
 
     const auto userChannel = userChannelTestUtils.createAndPersist(user, channel);
 
-    ASSERT_THROW(
-        removeUserFromChannelCommandHandler.execute({user->getId(), channel->getId(), channelCreator->getId()}),
-        errors::OperationNotValidError);
+    leaveChannelCommandHandler.execute({user->getId(), channel->getId()});
+
+    const auto foundUserChannel = userChannelTestUtils.find(user->getId(), channel->getId());
+
+    ASSERT_FALSE(foundUserChannel);
 }
 
-TEST_F(RemoveUserFromChannelCommandImplIntegrationTest, givenNonExistingChannel_shouldThrow)
+TEST_F(LeaveChannelCommandImplIntegrationTest, givenUserWhoIsChannelCreator_shouldDeleteUserChannelAndChannel)
+{
+    const auto user = userTestUtils.createAndPersist();
+
+    const auto channel = channelTestUtils.createAndPersist(user);
+
+    const auto userChannel = userChannelTestUtils.createAndPersist(user, channel);
+
+    leaveChannelCommandHandler.execute({user->getId(), channel->getId()});
+
+    const auto foundUserChannel = userChannelTestUtils.find(user->getId(), channel->getId());
+
+    ASSERT_FALSE(foundUserChannel);
+
+    const auto foundChannel = channelTestUtils.findById(channel->getId());
+
+    ASSERT_FALSE(foundChannel);
+}
+
+TEST_F(LeaveChannelCommandImplIntegrationTest, givenNonExistingChannel_shouldThrow)
 {
     const auto userId = faker::String::uuid();
 
     const auto channelId = faker::String::uuid();
 
-    ASSERT_THROW(removeUserFromChannelCommandHandler.execute({userId, channelId, userId}),
-                 errors::ResourceNotFoundError);
+    ASSERT_THROW(leaveChannelCommandHandler.execute({userId, channelId}), errors::ResourceNotFoundError);
 }
 
-TEST_F(RemoveUserFromChannelCommandImplIntegrationTest, givenUserNotMemberOfChannel_shouldThrow)
+TEST_F(LeaveChannelCommandImplIntegrationTest, givenUserNotMemberOfChannel_shouldThrow)
 {
-    const auto channelCreator = userTestUtils.createAndPersist();
-
     const auto user = userTestUtils.createAndPersist();
 
-    const auto channel = channelTestUtils.createAndPersist(channelCreator);
+    const auto channel = channelTestUtils.createAndPersist();
 
-    ASSERT_THROW(
-        removeUserFromChannelCommandHandler.execute({user->getId(), channel->getId(), channelCreator->getId()}),
-        errors::ResourceNotFoundError);
+    ASSERT_THROW(leaveChannelCommandHandler.execute({user->getId(), channel->getId()}), errors::ResourceNotFoundError);
 }
