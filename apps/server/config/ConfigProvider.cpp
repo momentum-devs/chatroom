@@ -1,57 +1,57 @@
 #include "ConfigProvider.h"
 
-#include "EnvironmentParser.h"
+#include "envParser/EnvironmentParser.h"
 
 namespace server::config
 {
 std::string ConfigProvider::getDatabaseHost() const
 {
-    return EnvironmentParser::parseString("DATABASE_HOST");
+    return common::envParser::EnvironmentParser::parseString("DATABASE_HOST");
 }
 
 std::string ConfigProvider::getDatabaseName() const
 {
-    return EnvironmentParser::parseString("DATABASE_NAME");
+    return common::envParser::EnvironmentParser::parseString("DATABASE_NAME");
 }
 
 std::string ConfigProvider::getDatabaseUsername() const
 {
-    return EnvironmentParser::parseString("DATABASE_USERNAME");
+    return common::envParser::EnvironmentParser::parseString("DATABASE_USERNAME");
 }
 
 std::string ConfigProvider::getDatabasePassword() const
 {
-    return EnvironmentParser::parseString("DATABASE_PASSWORD");
+    return common::envParser::EnvironmentParser::parseString("DATABASE_PASSWORD");
 }
 
 int ConfigProvider::getServerPort() const
 {
-    return EnvironmentParser::parseInt("SERVER_PORT");
+    return common::envParser::EnvironmentParser::parseInt("SERVER_PORT");
 }
 
 std::string ConfigProvider::getJwtSecret() const
 {
-    return EnvironmentParser::parseString("JWT_SECRET");
+    return common::envParser::EnvironmentParser::parseString("JWT_SECRET");
 }
 
 int ConfigProvider::getJwtExpireIn() const
 {
-    return EnvironmentParser::parseInt("JWT_EXPIRES_IN");
+    return common::envParser::EnvironmentParser::parseInt("JWT_EXPIRES_IN");
 }
 
 std::string ConfigProvider::getSendGridApiKey() const
 {
-    return EnvironmentParser::parseString("SENDGRID_API_KEY");
+    return common::envParser::EnvironmentParser::parseString("SENDGRID_API_KEY");
 }
 
 std::string ConfigProvider::getSendGridEmail() const
 {
-    return EnvironmentParser::parseString("SENDGRID_EMAIL");
+    return common::envParser::EnvironmentParser::parseString("SENDGRID_EMAIL");
 }
 
 int ConfigProvider::getRefreshSessionsInterval() const
 {
-    return EnvironmentParser::parseInt("REFRESH_SESSION_INTERVAL");
+    return common::envParser::EnvironmentParser::parseInt("REFRESH_SESSION_INTERVAL");
 }
 
 }

@@ -5,7 +5,6 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 set(SOURCES
-        config/EnvironmentParser.cpp
         config/ConfigProvider.cpp
         api/SessionImpl.cpp
         api/SocketConnectorImpl.cpp
@@ -87,6 +86,7 @@ target_link_libraries(${EXECUTABLE_NAME} PUBLIC
         messages
         filesystem
         collection
+        envParser
         )
 
 target_include_directories(${EXECUTABLE_NAME} PUBLIC ${GMOCK_INCLUDE_DIR} ${DOTENV_INCLUDE_DIR})
@@ -104,6 +104,7 @@ target_link_libraries(${EXECUTABLE_NAME}UT PUBLIC
         messages
         filesystem
         collection
+        envParser
         )
 
 target_include_directories(${EXECUTABLE_NAME}UT PUBLIC ${GMOCK_INCLUDE_DIR})

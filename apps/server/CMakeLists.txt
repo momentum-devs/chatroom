@@ -16,7 +16,6 @@ set(SOURCES
         api/MessageHandlers/CreateChannelMessageHandler.cpp
         api/MessageHandlers/GetUserChannelsMessageHandler.cpp
         api/MessageHandlers/GetUserDataMessageHandler.cpp
-        config/EnvironmentParser.cpp
         config/ConfigProvider.cpp
         core/database/DatabaseConnectionFactory.cpp
 
@@ -262,6 +261,7 @@ target_link_libraries(${EXECUTABLE_NAME} PRIVATE
         random
         redis-cpp
         ${ODB_LIBRARIES}
+        envParser
         )
 
 target_include_directories(${EXECUTABLE_NAME} PRIVATE
@@ -289,6 +289,7 @@ target_link_libraries(${EXECUTABLE_NAME}UT PRIVATE
         redis-cpp
         ${ODB_LIBRARIES}
         faker-cxx
+        envParser
         )
 
 target_include_directories(${EXECUTABLE_NAME}UT PUBLIC ${GMOCK_INCLUDE_DIR})
@@ -318,6 +319,7 @@ target_link_libraries(${EXECUTABLE_NAME}IT PRIVATE
         redis-cpp
         ${ODB_LIBRARIES}
         faker-cxx
+        envParser
         )
 
 target_include_directories(${EXECUTABLE_NAME}IT PUBLIC ${GMOCK_INCLUDE_DIR})
