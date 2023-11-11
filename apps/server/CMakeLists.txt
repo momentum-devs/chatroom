@@ -75,6 +75,7 @@ set(SOURCES
         application/commandHandlers/group/addUserToGroupCommandHandler/AddUserToGroupCommandHandlerImpl.cpp
         application/queryHandlers/group/findUsersBelongingToGroupQueryHandler/FindUsersBelongingToGroupQueryHandlerImpl.cpp
         application/queryHandlers/group/findGroupsToWhichUserBelongsQueryHandler/FindGroupsToWhichUserBelongsQueryHandlerImpl.cpp
+        application/commandHandlers/group/createGroupMessageCommandHandler/CreateGroupMessageCommandHandlerImpl.cpp
 
         domain/entities/message/Message.cpp
         infrastructure/repositories/messageRepository/MessageRepositoryImpl.cpp
@@ -210,6 +211,7 @@ set(IT_SOURCES
         application/commandHandlers/group/addUserToGroupCommandHandler/AddUserToGroupCommandHandlerImplIntegrationTest.cpp
         application/queryHandlers/group/findUsersBelongingToGroupQueryHandler/FindUsersBelongingToGroupQueryHandlerImplIntegrationTest.cpp
         application/queryHandlers/group/findGroupsToWhichUserBelongsQueryHandler/FindGroupsToWhichUserBelongsQueryHandlerImplIntegrationTest.cpp
+        application/commandHandlers/group/createGroupMessageCommandHandler/CreateGroupMessageCommandHandlerImplIntegrationTest.cpp
 
         infrastructure/repositories/messageRepository/MessageRepositoryImplIntegrationTest.cpp
         )
