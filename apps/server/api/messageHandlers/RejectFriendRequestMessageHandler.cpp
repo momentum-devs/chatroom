@@ -8,8 +8,8 @@
 namespace server::api
 {
 RejectFriendRequestMessageHandler::RejectFriendRequestMessageHandler(
-    std::shared_ptr<server::application::TokenService> tokenServiceInit,
-    std::unique_ptr<server::application::RejectFriendInvitationCommandHandler> rejectFriendInvitationCommandHandlerInit)
+    std::shared_ptr<application::TokenService> tokenServiceInit,
+    std::unique_ptr<application::RejectFriendInvitationCommandHandler> rejectFriendInvitationCommandHandlerInit)
     : tokenService{std::move(tokenServiceInit)},
       rejectFriendInvitationCommandHandler{std::move(rejectFriendInvitationCommandHandlerInit)}
 {

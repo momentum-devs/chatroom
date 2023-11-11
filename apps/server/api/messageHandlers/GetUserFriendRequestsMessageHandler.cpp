@@ -8,8 +8,8 @@
 namespace server::api
 {
 GetUserFriendRequestsMessageHandler::GetUserFriendRequestsMessageHandler(
-    std::shared_ptr<server::application::TokenService> tokenServiceInit,
-    std::unique_ptr<server::application::FindReceivedFriendInvitationsQueryHandler>
+    std::shared_ptr<application::TokenService> tokenServiceInit,
+    std::unique_ptr<application::FindReceivedFriendInvitationsQueryHandler>
         findReceivedFriendInvitationsQueryHandlerInit)
     : tokenService{std::move(tokenServiceInit)},
       findReceivedFriendInvitationsQueryHandler{std::move(findReceivedFriendInvitationsQueryHandlerInit)}

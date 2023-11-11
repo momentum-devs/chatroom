@@ -8,8 +8,8 @@
 namespace server::api
 {
 UpdateUserMessageHandler::UpdateUserMessageHandler(
-    std::shared_ptr<server::application::TokenService> tokenServiceInit,
-    std::unique_ptr<server::application::UpdateUserCommandHandler> updateUserCommandHandlerInit)
+    std::shared_ptr<application::TokenService> tokenServiceInit,
+    std::unique_ptr<application::UpdateUserCommandHandler> updateUserCommandHandlerInit)
     : tokenService{std::move(tokenServiceInit)}, updateUserCommandHandler{std::move(updateUserCommandHandlerInit)}
 {
 }

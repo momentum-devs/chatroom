@@ -11,11 +11,11 @@ namespace server::api
 class LoginMessageHandler : public MessageHandler
 {
 public:
-    LoginMessageHandler(std::unique_ptr<server::application::LoginUserCommandHandler> loginUserCommandHandler);
+    explicit LoginMessageHandler(std::unique_ptr<application::LoginUserCommandHandler> loginUserCommandHandler);
 
     common::messages::Message handleMessage(const common::messages::Message& message) const override;
 
 private:
-    std::unique_ptr<server::application::LoginUserCommandHandler> loginUserCommandHandler;
+    std::unique_ptr<application::LoginUserCommandHandler> loginUserCommandHandler;
 };
 }

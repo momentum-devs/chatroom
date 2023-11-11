@@ -8,8 +8,8 @@
 namespace server::api
 {
 RegisterMessageHandler::RegisterMessageHandler(
-    std::unique_ptr<server::application::RegisterUserCommandHandler> registerUserCommandHandlerInit,
-    std::shared_ptr<server::application::SendRegistrationVerificationEmailCommandHandler>
+    std::unique_ptr<application::RegisterUserCommandHandler> registerUserCommandHandlerInit,
+    std::shared_ptr<application::SendRegistrationVerificationEmailCommandHandler>
         sendRegistrationVerificationEmailCommandHandlerInit)
     : registerUserCommandHandler{std::move(registerUserCommandHandlerInit)},
       sendRegistrationVerificationEmailCommandHandler{std::move(sendRegistrationVerificationEmailCommandHandlerInit)}

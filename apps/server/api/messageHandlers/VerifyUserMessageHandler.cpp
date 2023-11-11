@@ -1,16 +1,16 @@
+#include "VerifyUserMessageHandler.h"
+
 #include <format>
 #include <loguru.hpp>
 #include <nlohmann/json.hpp>
 #include <regex>
 
-#include "VerifyUserMessageHandler.h"
-
 namespace server::api
 {
 VerifyUserMessageHandler::VerifyUserMessageHandler(
-    std::shared_ptr<server::application::TokenService> tokenServiceInit,
-    std::unique_ptr<server::application::VerifyUserEmailCommandHandler> verifyUserEmailCommandHandlerInit,
-    std::shared_ptr<server::application::FindUserQueryHandler> findUserQueryHandlerInit)
+    std::shared_ptr<application::TokenService> tokenServiceInit,
+    std::unique_ptr<application::VerifyUserEmailCommandHandler> verifyUserEmailCommandHandlerInit,
+    std::shared_ptr<application::FindUserQueryHandler> findUserQueryHandlerInit)
     : tokenService{std::move(tokenServiceInit)},
       verifyUserEmailCommandHandler{std::move(verifyUserEmailCommandHandlerInit)},
       findUserQueryHandler{std::move(findUserQueryHandlerInit)}

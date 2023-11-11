@@ -11,12 +11,13 @@ namespace server::api
 class DeleteUserMessageHandler : public MessageHandler
 {
 public:
-    DeleteUserMessageHandler(std::shared_ptr<server::application::TokenService> tokenService,
-                             std::unique_ptr<server::application::DeleteUserCommandHandler> deleteUserCommandHandler);
+    DeleteUserMessageHandler(std::shared_ptr<application::TokenService> tokenService,
+                             std::unique_ptr<application::DeleteUserCommandHandler> deleteUserCommandHandler);
+
     common::messages::Message handleMessage(const common::messages::Message& message) const override;
 
 private:
-    std::shared_ptr<server::application::TokenService> tokenService;
-    std::unique_ptr<server::application::DeleteUserCommandHandler> deleteUserCommandHandler;
+    std::shared_ptr<application::TokenService> tokenService;
+    std::unique_ptr<application::DeleteUserCommandHandler> deleteUserCommandHandler;
 };
 }

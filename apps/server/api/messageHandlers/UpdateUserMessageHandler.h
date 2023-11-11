@@ -11,12 +11,13 @@ namespace server::api
 class UpdateUserMessageHandler : public MessageHandler
 {
 public:
-    UpdateUserMessageHandler(std::shared_ptr<server::application::TokenService> tokenService,
-                             std::unique_ptr<server::application::UpdateUserCommandHandler> updateUserCommandHandler);
+    UpdateUserMessageHandler(std::shared_ptr<application::TokenService> tokenService,
+                             std::unique_ptr<application::UpdateUserCommandHandler> updateUserCommandHandler);
+    
     common::messages::Message handleMessage(const common::messages::Message& message) const override;
 
 private:
-    std::shared_ptr<server::application::TokenService> tokenService;
-    std::unique_ptr<server::application::UpdateUserCommandHandler> updateUserCommandHandler;
+    std::shared_ptr<application::TokenService> tokenService;
+    std::unique_ptr<application::UpdateUserCommandHandler> updateUserCommandHandler;
 };
 }

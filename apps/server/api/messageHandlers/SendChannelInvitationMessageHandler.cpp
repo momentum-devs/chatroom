@@ -8,10 +8,9 @@
 namespace server::api
 {
 SendChannelInvitationMessageHandler::SendChannelInvitationMessageHandler(
-    std::shared_ptr<server::application::TokenService> tokenServiceInit,
-    std::shared_ptr<server::application::FindUserByEmailQueryHandler> findUserByEmailQueryHandlerInit,
-    std::unique_ptr<server::application::CreateChannelInvitationCommandHandler>
-        createChannelInvitationCommandHandlerInit)
+    std::shared_ptr<application::TokenService> tokenServiceInit,
+    std::shared_ptr<application::FindUserByEmailQueryHandler> findUserByEmailQueryHandlerInit,
+    std::unique_ptr<application::CreateChannelInvitationCommandHandler> createChannelInvitationCommandHandlerInit)
     : tokenService{std::move(tokenServiceInit)},
       findUserByEmailQueryHandler{std::move(findUserByEmailQueryHandlerInit)},
       createChannelInvitationCommandHandler{std::move(createChannelInvitationCommandHandlerInit)}

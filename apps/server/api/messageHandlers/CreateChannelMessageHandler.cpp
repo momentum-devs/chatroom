@@ -8,8 +8,8 @@
 namespace server::api
 {
 CreateChannelMessageHandler::CreateChannelMessageHandler(
-    std::shared_ptr<server::application::TokenService> tokenServiceInit,
-    std::unique_ptr<server::application::CreateChannelCommandHandler> createChannelCommandHandlerInit)
+    std::shared_ptr<application::TokenService> tokenServiceInit,
+    std::unique_ptr<application::CreateChannelCommandHandler> createChannelCommandHandlerInit)
     : tokenService{std::move(tokenServiceInit)}, createChannelCommandHandler{std::move(createChannelCommandHandlerInit)}
 {
 }
@@ -30,10 +30,7 @@ common::messages::Message CreateChannelMessageHandler::handleMessage(const commo
 
         LOG_S(INFO) << std::format("Created channel {} by user with id {}", channelName, creatorId);
 
-        common::messages::Message message{common::messages::MessageId::CreateChannelResponse,
-                                          common::bytes::Bytes{R"(["ok"])"}};
-
-        return message;
+        return {common::messages::MessageId::CreateChannelResponse, common::bytes::Bytes{R"(["ok"])"}};
     }
     catch (const std::exception& e)
     {

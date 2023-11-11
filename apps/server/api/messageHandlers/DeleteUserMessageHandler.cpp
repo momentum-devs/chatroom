@@ -8,8 +8,8 @@
 namespace server::api
 {
 DeleteUserMessageHandler::DeleteUserMessageHandler(
-    std::shared_ptr<server::application::TokenService> tokenServiceInit,
-    std::unique_ptr<server::application::DeleteUserCommandHandler> deleteUserCommandHandlerInit)
+    std::shared_ptr<application::TokenService> tokenServiceInit,
+    std::unique_ptr<application::DeleteUserCommandHandler> deleteUserCommandHandlerInit)
     : tokenService{std::move(tokenServiceInit)}, deleteUserCommandHandler{std::move(deleteUserCommandHandlerInit)}
 {
 }

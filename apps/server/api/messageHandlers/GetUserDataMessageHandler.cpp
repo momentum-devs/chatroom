@@ -8,8 +8,8 @@
 namespace server::api
 {
 GetUserDataMessageHandler::GetUserDataMessageHandler(
-    std::shared_ptr<server::application::TokenService> tokenService,
-    std::shared_ptr<server::application::FindUserQueryHandler> findUserQueryHandler)
+    std::shared_ptr<application::TokenService> tokenService,
+    std::shared_ptr<application::FindUserQueryHandler> findUserQueryHandler)
     : tokenService{std::move(tokenService)}, findUserQueryHandler{std::move(findUserQueryHandler)}
 {
 }

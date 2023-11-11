@@ -8,8 +8,8 @@
 namespace server::api
 {
 LogoutMessageHandler::LogoutMessageHandler(
-    std::shared_ptr<server::application::TokenService> tokenServiceInit,
-    std::unique_ptr<server::application::LogoutUserCommandHandler> logoutUserCommandHandlerInit)
+    std::shared_ptr<application::TokenService> tokenServiceInit,
+    std::unique_ptr<application::LogoutUserCommandHandler> logoutUserCommandHandlerInit)
     : tokenService{std::move(tokenServiceInit)}, logoutUserCommandHandler{std::move(logoutUserCommandHandlerInit)}
 {
 }
@@ -26,7 +26,7 @@ common::messages::Message LogoutMessageHandler::handleMessage(const common::mess
         logoutUserCommandHandler->execute({userId});
 
         tokenService->invalidateToken(token);
-        
+
         return {};
     }
     catch (const std::exception& e)

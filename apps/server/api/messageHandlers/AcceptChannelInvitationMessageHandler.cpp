@@ -8,9 +8,8 @@
 namespace server::api
 {
 AcceptChannelInvitationMessageHandler::AcceptChannelInvitationMessageHandler(
-    std::shared_ptr<server::application::TokenService> tokenServiceInit,
-    std::unique_ptr<server::application::AcceptChannelInvitationCommandHandler>
-        acceptChannelInvitationCommandHandlerInit)
+    std::shared_ptr<application::TokenService> tokenServiceInit,
+    std::unique_ptr<application::AcceptChannelInvitationCommandHandler> acceptChannelInvitationCommandHandlerInit)
     : tokenService{std::move(tokenServiceInit)},
       acceptChannelInvitationCommandHandler{std::move(acceptChannelInvitationCommandHandlerInit)}
 {

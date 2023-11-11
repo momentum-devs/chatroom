@@ -8,8 +8,8 @@
 namespace server::api
 {
 RemoveFromFriendsMessageHandler::RemoveFromFriendsMessageHandler(
-    std::shared_ptr<server::application::TokenService> tokenServiceInit,
-    std::unique_ptr<server::application::DeleteFriendshipCommandHandler> deleteFriendshipCommandHandlerInit)
+    std::shared_ptr<application::TokenService> tokenServiceInit,
+    std::unique_ptr<application::DeleteFriendshipCommandHandler> deleteFriendshipCommandHandlerInit)
     : tokenService{std::move(tokenServiceInit)},
       deleteFriendshipCommandHandler{std::move(deleteFriendshipCommandHandlerInit)}
 {

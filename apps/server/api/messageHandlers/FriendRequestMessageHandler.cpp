@@ -8,9 +8,9 @@
 namespace server::api
 {
 FriendRequestMessageHandler::FriendRequestMessageHandler(
-    std::shared_ptr<server::application::TokenService> tokenServiceInit,
-    std::shared_ptr<server::application::FindUserByEmailQueryHandler> findUserByEmailQueryHandlerInit,
-    std::unique_ptr<server::application::CreateFriendInvitationCommandHandler> createFriendInvitationCommandHandlerInit)
+    std::shared_ptr<application::TokenService> tokenServiceInit,
+    std::shared_ptr<application::FindUserByEmailQueryHandler> findUserByEmailQueryHandlerInit,
+    std::unique_ptr<application::CreateFriendInvitationCommandHandler> createFriendInvitationCommandHandlerInit)
     : tokenService{std::move(tokenServiceInit)},
       findUserByEmailQueryHandler{std::move(findUserByEmailQueryHandlerInit)},
       createFriendInvitationCommandHandler{std::move(createFriendInvitationCommandHandlerInit)}

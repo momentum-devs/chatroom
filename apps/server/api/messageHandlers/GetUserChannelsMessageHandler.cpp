@@ -8,8 +8,8 @@
 namespace server::api
 {
 GetUserChannelsMessageHandler::GetUserChannelsMessageHandler(
-    std::shared_ptr<server::application::TokenService> tokenServiceInit,
-    std::unique_ptr<server::application::FindChannelsToWhichUserBelongsQueryHandler>
+    std::shared_ptr<application::TokenService> tokenServiceInit,
+    std::unique_ptr<application::FindChannelsToWhichUserBelongsQueryHandler>
         findChannelsToWhichUserBelongsQueryHandlerInit)
     : tokenService{std::move(tokenServiceInit)},
       findChannelsToWhichUserBelongsQueryHandler{std::move(findChannelsToWhichUserBelongsQueryHandlerInit)}

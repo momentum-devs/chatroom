@@ -8,7 +8,7 @@
 namespace server::api
 {
 LoginMessageHandler::LoginMessageHandler(
-    std::unique_ptr<server::application::LoginUserCommandHandler> loginUserCommandHandlerInit)
+    std::unique_ptr<application::LoginUserCommandHandler> loginUserCommandHandlerInit)
     : loginUserCommandHandler{std::move(loginUserCommandHandlerInit)}
 {
 }

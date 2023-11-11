@@ -11,13 +11,14 @@ namespace server::api
 class RejectChannelInvitationMessageHandler : public MessageHandler
 {
 public:
-    RejectChannelInvitationMessageHandler(std::shared_ptr<server::application::TokenService> tokenService,
-                                          std::unique_ptr<server::application::RejectChannelInvitationCommandHandler>
+    RejectChannelInvitationMessageHandler(std::shared_ptr<application::TokenService> tokenService,
+                                          std::unique_ptr<application::RejectChannelInvitationCommandHandler>
                                               rejectChannelInvitationCommandHandler);
+
     common::messages::Message handleMessage(const common::messages::Message& message) const override;
 
 private:
-    std::shared_ptr<server::application::TokenService> tokenService;
-    std::unique_ptr<server::application::RejectChannelInvitationCommandHandler> rejectChannelInvitationCommandHandler;
+    std::shared_ptr<application::TokenService> tokenService;
+    std::unique_ptr<application::RejectChannelInvitationCommandHandler> rejectChannelInvitationCommandHandler;
 };
 }

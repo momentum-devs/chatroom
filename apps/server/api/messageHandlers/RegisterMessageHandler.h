@@ -11,14 +11,15 @@ namespace server::api
 class RegisterMessageHandler : public MessageHandler
 {
 public:
-    RegisterMessageHandler(std::unique_ptr<server::application::RegisterUserCommandHandler> registerUserCommandHandler,
-                           std::shared_ptr<server::application::SendRegistrationVerificationEmailCommandHandler>
+    RegisterMessageHandler(std::unique_ptr<application::RegisterUserCommandHandler> registerUserCommandHandler,
+                           std::shared_ptr<application::SendRegistrationVerificationEmailCommandHandler>
                                sendRegistrationVerificationEmailCommandHandler);
+    
     common::messages::Message handleMessage(const common::messages::Message& message) const override;
 
 private:
-    std::unique_ptr<server::application::RegisterUserCommandHandler> registerUserCommandHandler;
-    std::shared_ptr<server::application::SendRegistrationVerificationEmailCommandHandler>
+    std::unique_ptr<application::RegisterUserCommandHandler> registerUserCommandHandler;
+    std::shared_ptr<application::SendRegistrationVerificationEmailCommandHandler>
         sendRegistrationVerificationEmailCommandHandler;
 };
 }
