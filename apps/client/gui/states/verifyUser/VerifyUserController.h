@@ -33,6 +33,8 @@ private:
     std::shared_ptr<api::Session> session;
     const StateFactory& stateFactory;
     std::shared_ptr<StateMachine> stateMachine;
+    std::shared_ptr<State> privateMessageState;
+    
     inline const static std::string verificationResponseHandlerName{"verificationResponseHandlerName"};
 };
 }

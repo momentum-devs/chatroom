@@ -49,4 +49,17 @@ void StateMachine::clear(std::optional<std::shared_ptr<State>> state)
         addNextState(state.value());
     }
 }
+void StateMachine::replaceCurrentState(std::shared_ptr<State> state)
+{
+    if (not states.empty())
+    {
+        states.top()->deactivate();
+    }
+
+    states.pop();
+
+    states.push(std::move(state));
+
+    states.top()->activate();
+}
 }
