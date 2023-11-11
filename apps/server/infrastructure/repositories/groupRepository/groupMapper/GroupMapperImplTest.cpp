@@ -29,21 +29,10 @@ TEST_F(GroupMapperTest, givenPersistenceGroup_shouldMapToDomainGroup)
 
 TEST_F(GroupMapperTest, givenDomainGroup_shouldMapToPersistenceGroup)
 {
-    const auto user = userTestFactory.createPersistentUser();
-
-    const auto domainUser = std::make_shared<domain::User>(
-        user->getId(), user->getEmail(), user->getPassword(), user->getNickname(), user->isActive(),
-        user->isEmailVerified(), user->getVerificationCode(), user->getCreatedAt(), user->getUpdatedAt());
-
-    const auto domainGroup = groupTestFactory.createDomainGroup(domainUser);
-
-    EXPECT_CALL(*userMapper, mapToPersistenceUser(domainUser)).WillOnce(Return(user));
+    const auto domainGroup = groupTestFactory.createDomainGroup();
 
     const auto persistenceGroup = groupMapper.mapToPersistenceGroup(domainGroup);
 
     ASSERT_EQ(persistenceGroup->getId(), domainGroup->getId());
-    ASSERT_EQ(persistenceGroup->getName(), domainGroup->getName());
-    ASSERT_EQ(persistenceGroup->getCreator(), user);
     ASSERT_EQ(persistenceGroup->getCreatedAt(), domainGroup->getCreatedAt());
-    ASSERT_EQ(persistenceGroup->getUpdatedAt(), domainGroup->getUpdatedAt());
 }

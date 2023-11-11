@@ -5,18 +5,13 @@ include(ODB)
 set(EXECUTABLE_NAME server)
 
 set(SOURCES
-        api/SessionManager.cpp
-        api/SessionImpl.cpp
-        api/SessionFactoryImpl.cpp
-        api/ConnectionAcceptorImpl.cpp
-        api/MessageRouterImpl.cpp
-        api/MessageRouterFactory.cpp
-        api/MessageHandlers/RegisterMessageHandler.cpp
-        api/MessageHandlers/LoginMessageHandler.cpp
-        api/MessageHandlers/CreateChannelMessageHandler.cpp
-        api/MessageHandlers/GetUserChannelsMessageHandler.cpp
-        api/MessageHandlers/GetUserDataMessageHandler.cpp
         config/ConfigProvider.cpp
+        core/session/SessionManager.cpp
+        core/session/SessionImpl.cpp
+        core/session/SessionFactoryImpl.cpp
+        core/session/ConnectionAcceptorImpl.cpp
+        core/session/MessageRouterImpl.cpp
+        core/session/MessageRouterFactory.cpp
         core/database/DatabaseConnectionFactory.cpp
 
         domain/entities/user/User.cpp
@@ -80,22 +75,27 @@ set(SOURCES
         application/queryHandlers/group/findUsersBelongingToGroupQueryHandler/FindUsersBelongingToGroupQueryHandlerImpl.cpp
         application/queryHandlers/group/findGroupsToWhichUserBelongsQueryHandler/FindGroupsToWhichUserBelongsQueryHandlerImpl.cpp
 
-        api/MessageHandlers/UpdateUserMessageHandler.cpp
-        api/MessageHandlers/DeleteUserMessageHandler.cpp
-        api/MessageHandlers/VerifyUserMessageHandler.cpp
-        api/MessageHandlers/LogoutMessageHandler.cpp
-        api/MessageHandlers/SendChannelInvitationMessageHandler.cpp
-        api/MessageHandlers/LeaveChannelMessageHandler.cpp
-        api/MessageHandlers/DeleteTheChannelMessageHandler.cpp
-        api/MessageHandlers/FriendRequestMessageHandler.cpp
-        api/MessageHandlers/GetUserChannelInvitationsMessageHandler.cpp
-        api/MessageHandlers/AcceptChannelInvitationMessageHandler.cpp
-        api/MessageHandlers/RejectChannelInvitationMessageHandler.cpp
-        api/MessageHandlers/GetUserFriendRequestsMessageHandler.cpp
-        api/MessageHandlers/AcceptFriendRequestMessageHandler.cpp
-        api/MessageHandlers/RejectFriendRequestMessageHandler.cpp
-        api/MessageHandlers/GetUserFriendsMessageHandler.cpp
-        api/MessageHandlers/RemoveFromFriendsMessageHandler.cpp
+        api/messageHandlers/channel/createChannelMessageHandler/CreateChannelMessageHandler.cpp
+        api/messageHandlers/channel/getUserChannelsMessageHandler/GetUserChannelsMessageHandler.cpp
+        api/messageHandlers/channel/sendChannelInvitationMessageHandler/SendChannelInvitationMessageHandler.cpp
+        api/messageHandlers/channel/deleteChannelMessageHandler/DeleteChannelMessageHandler.cpp
+        api/messageHandlers/channel/acceptChannelInvitationMessageHandler/AcceptChannelInvitationMessageHandler.cpp
+        api/messageHandlers/channel/rejectChannelInvitationMessageHandler/RejectChannelInvitationMessageHandler.cpp
+        api/messageHandlers/channel/leaveChannelMessageHandler/LeaveChannelMessageHandler.cpp
+        api/messageHandlers/channel/getUserChannelInvitationsMessageHandler/GetUserChannelInvitationsMessageHandler.cpp
+        api/messageHandlers/user/registerMessageHandler/RegisterMessageHandler.cpp
+        api/messageHandlers/user/loginMessageHandler/LoginMessageHandler.cpp
+        api/messageHandlers/user/getUserDataMessageHandler/GetUserDataMessageHandler.cpp
+        api/messageHandlers/user/updateUserMessageHandler/UpdateUserMessageHandler.cpp
+        api/messageHandlers/user/deleteUserMessageHandler/DeleteUserMessageHandler.cpp
+        api/messageHandlers/user/verifyUserMessageHandler/VerifyUserMessageHandler.cpp
+        api/messageHandlers/user/logoutMessageHandler/LogoutMessageHandler.cpp
+        api/messageHandlers/friend/friendRequestMessageHandler/FriendRequestMessageHandler.cpp
+        api/messageHandlers/friend/getUserFriendRequestsMessageHandler/GetUserFriendRequestsMessageHandler.cpp
+        api/messageHandlers/friend/acceptFriendRequestMessageHandler/AcceptFriendRequestMessageHandler.cpp
+        api/messageHandlers/friend/rejectFriendRequestMessageHandler/RejectFriendRequestMessageHandler.cpp
+        api/messageHandlers/friend/getUserFriendsMessageHandler/GetUserFriendsMessageHandler.cpp
+        api/messageHandlers/friend/removeFromFriendsMessageHandler/RemoveFromFriendsMessageHandler.cpp
         )
 
 set(TEST_COMMON_SOURCES
@@ -110,18 +110,10 @@ set(TEST_COMMON_SOURCES
         )
 
 set(UT_SOURCES
-        api/SessionImplTest.cpp
-        api/SessionManagerTest.cpp
-        api/MessageRouterImplTest.cpp
-        api/MessageHandlers/CreateChannelMessageHandlerTest.cpp
-        api/MessageHandlers/DeleteUserMessageHandlerTest.cpp
-        api/MessageHandlers/GetUserChannelsMessageHandlerTest.cpp
-        api/MessageHandlers/GetUserDataMessageHandlerTest.cpp
-        api/MessageHandlers/LoginMessageHandlerTest.cpp
-        api/MessageHandlers/RegisterMessageHandlerTest.cpp
-        api/MessageHandlers/UpdateUserMessageHandlerTest.cpp
-        api/MessageHandlers/LogoutMessageHandlerTest.cpp
-        api/MessageHandlers/VerifyUserMessageHandlerTest.cpp
+        core/session/SessionImplTest.cpp
+        core/session/SessionManagerTest.cpp
+        core/session/MessageRouterImplTest.cpp
+
         infrastructure/services/emailService/EmailServiceImplTest.cpp
         infrastructure/repositories/userRepository/userMapper/UserMapperImplTest.cpp
         infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImplTest.cpp
@@ -132,18 +124,28 @@ set(UT_SOURCES
         infrastructure/repositories/friendshipRepository/friendshipMapper/FriendshipMapperImplTest.cpp
         infrastructure/repositories/groupRepository/groupMapper/GroupMapperImplTest.cpp
         infrastructure/repositories/userGroupRepository/userGroupMapper/UserGroupMapperImplTest.cpp
-        api/MessageHandlers/SendChannelInvitationMessageHandlerTest.cpp
-        api/MessageHandlers/FriendRequestMessageHandlerTest.cpp
-        api/MessageHandlers/DeleteTheChannelMessageHandlerTest.cpp
-        api/MessageHandlers/LeaveChannelMessageHandlerTest.cpp
-        api/MessageHandlers/GetUserChannelInvitationsMessageHandlerTest.cpp
-        api/MessageHandlers/AcceptChannelInvitationMessageHandlerTest.cpp
-        api/MessageHandlers/RejectChannelInvitationMessageHandlerTest.cpp
-        api/MessageHandlers/GetUserFriendRequestsMessageHandlerTest.cpp
-        api/MessageHandlers/AcceptFriendRequestMessageHandlerTest.cpp
-        api/MessageHandlers/RejectFriendRequestMessageHandlerTest.cpp
-        api/MessageHandlers/GetUserFriendsMessageHandlerTest.cpp
-        api/MessageHandlers/RemoveFromFriendsMessageHandlerTest.cpp
+
+        api/messageHandlers/channel/createChannelMessageHandler/CreateChannelMessageHandlerTest.cpp
+        api/messageHandlers/channel/getUserChannelsMessageHandler/GetUserChannelsMessageHandlerTest.cpp
+        api/messageHandlers/channel/sendChannelInvitationMessageHandler/SendChannelInvitationMessageHandlerTest.cpp
+        api/messageHandlers/channel/deleteChannelMessageHandler/DeleteChannelMessageHandlerTest.cpp
+        api/messageHandlers/channel/leaveChannelMessageHandler/LeaveChannelMessageHandlerTest.cpp
+        api/messageHandlers/channel/getUserChannelInvitationsMessageHandler/GetUserChannelInvitationsMessageHandlerTest.cpp
+        api/messageHandlers/channel/acceptChannelInvitationMessageHandler/AcceptChannelInvitationMessageHandlerTest.cpp
+        api/messageHandlers/channel/rejectChannelInvitationMessageHandler/RejectChannelInvitationMessageHandlerTest.cpp
+        api/messageHandlers/user/deleteUserMessageHandler/DeleteUserMessageHandlerTest.cpp
+        api/messageHandlers/user/getUserDataMessageHandler/GetUserDataMessageHandlerTest.cpp
+        api/messageHandlers/user/loginMessageHandler/LoginMessageHandlerTest.cpp
+        api/messageHandlers/user/registerMessageHandler/RegisterMessageHandlerTest.cpp
+        api/messageHandlers/user/updateUserMessageHandler/UpdateUserMessageHandlerTest.cpp
+        api/messageHandlers/user/logoutMessageHandler/LogoutMessageHandlerTest.cpp
+        api/messageHandlers/user/verifyUserMessageHandler/VerifyUserMessageHandlerTest.cpp
+        api/messageHandlers/friend/friendRequestMessageHandler/FriendRequestMessageHandlerTest.cpp
+        api/messageHandlers/friend/getUserFriendRequestsMessageHandler/GetUserFriendRequestsMessageHandlerTest.cpp
+        api/messageHandlers/friend/acceptFriendRequestMessageHandler/AcceptFriendRequestMessageHandlerTest.cpp
+        api/messageHandlers/friend/rejectFriendRequestMessageHandler/RejectFriendRequestMessageHandlerTest.cpp
+        api/messageHandlers/friend/getUserFriendsMessageHandler/GetUserFriendsMessageHandlerTest.cpp
+        api/messageHandlers/friend/removeFromFriendsMessageHandler/RemoveFromFriendsMessageHandlerTest.cpp
         )
 
 set(IT_SOURCES
