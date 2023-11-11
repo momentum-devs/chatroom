@@ -50,7 +50,6 @@ set(SOURCES
         application/commandHandlers/channel/createChannelInvitationCommandHandler/CreateChannelInvitationCommandHandlerImpl.cpp
         application/commandHandlers/channel/acceptChannelInvitationCommandHandler/AcceptChannelInvitationCommandHandlerImpl.cpp
         application/commandHandlers/channel/rejectChannelInvitationCommandHandler/RejectChannelInvitationCommandHandlerImpl.cpp
-        application/commandHandlers/channel/createChannelMessageCommandHandler/CreateChannelMessageCommandHandlerImpl.cpp
 
         domain/entities/friendInvitation/FriendInvitation.cpp
         domain/entities/friendship/Friendship.cpp
@@ -75,11 +74,12 @@ set(SOURCES
         application/commandHandlers/group/addUserToGroupCommandHandler/AddUserToGroupCommandHandlerImpl.cpp
         application/queryHandlers/group/findUsersBelongingToGroupQueryHandler/FindUsersBelongingToGroupQueryHandlerImpl.cpp
         application/queryHandlers/group/findGroupsToWhichUserBelongsQueryHandler/FindGroupsToWhichUserBelongsQueryHandlerImpl.cpp
-        application/commandHandlers/group/createGroupMessageCommandHandler/CreateGroupMessageCommandHandlerImpl.cpp
 
         domain/entities/message/Message.cpp
         infrastructure/repositories/messageRepository/MessageRepositoryImpl.cpp
         infrastructure/repositories/messageRepository/messageMapper/MessageMapperImpl.cpp
+        application/commandHandlers/message/createGroupMessageCommandHandler/CreateGroupMessageCommandHandlerImpl.cpp
+        application/commandHandlers/message/createChannelMessageCommandHandler/CreateChannelMessageCommandHandlerImpl.cpp
 
         api/messageHandlers/channel/createChannelMessageHandler/CreateChannelMessageHandler.cpp
         api/messageHandlers/channel/getUserChannelsMessageHandler/GetUserChannelsMessageHandler.cpp
@@ -194,7 +194,6 @@ set(IT_SOURCES
         application/queryHandlers/channel/findReceivedChannelInvitationsQueryHandler/FindReceivedChannelInvitationsQueryHandlerImplIntegrationTest.cpp
         application/commandHandlers/channel/acceptChannelInvitationCommandHandler/AcceptChannelInvitationCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/channel/rejectChannelInvitationCommandHandler/RejectChannelInvitationCommandHandlerImplIntegrationTest.cpp
-        application/commandHandlers/channel/createChannelMessageCommandHandler/CreateChannelMessageCommandHandlerImplIntegrationTest.cpp
 
         infrastructure/repositories/friendInvitationRepository/FriendInvitationRepositoryImplIntegrationTest.cpp
         infrastructure/repositories/friendshipRepository/FriendshipRepositoryImplIntegrationTest.cpp
@@ -211,9 +210,10 @@ set(IT_SOURCES
         application/commandHandlers/group/addUserToGroupCommandHandler/AddUserToGroupCommandHandlerImplIntegrationTest.cpp
         application/queryHandlers/group/findUsersBelongingToGroupQueryHandler/FindUsersBelongingToGroupQueryHandlerImplIntegrationTest.cpp
         application/queryHandlers/group/findGroupsToWhichUserBelongsQueryHandler/FindGroupsToWhichUserBelongsQueryHandlerImplIntegrationTest.cpp
-        application/commandHandlers/group/createGroupMessageCommandHandler/CreateGroupMessageCommandHandlerImplIntegrationTest.cpp
 
         infrastructure/repositories/messageRepository/MessageRepositoryImplIntegrationTest.cpp
+        application/commandHandlers/message/createGroupMessageCommandHandler/CreateGroupMessageCommandHandlerImplIntegrationTest.cpp
+        application/commandHandlers/message/createChannelMessageCommandHandler/CreateChannelMessageCommandHandlerImplIntegrationTest.cpp
         )
 
 set(ODB_HEADERS
