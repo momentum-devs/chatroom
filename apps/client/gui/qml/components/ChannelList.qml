@@ -35,7 +35,7 @@ ScrollView {
                 width: leftColumn.width
 
                 onClicked: {
-                    leftColumnController.goToChannel(modelData[1]);
+                    leftColumnController.goToChannel(modelData[0], modelData[1], modelData[2]);
                 }
             }
         }

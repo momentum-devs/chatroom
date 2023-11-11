@@ -2,6 +2,7 @@ import QtQuick 6.2
 import QtQuick.Controls 6.2
 import "../../qml/components"
 import "../../qml/common/settings.js" as Settings
+import "components"
 
 Rectangle {
     color: Settings.backgroundColor
@@ -15,11 +16,15 @@ Rectangle {
         }
         Column {
             height: parent.height
-            width: parent.width - leftColumn.width - friendsColumn.width
+            width: parent.width - leftColumn.width
 
+            ChannelTopBar {
+                id: channelTopBar
+                width: parent.width
+            }
             Item {
                 id: defaultView
-                height: parent.height
+                height: parent.height - channelTopBar.height
                 visible: true
                 width: parent.width
             }
@@ -31,5 +36,10 @@ Rectangle {
         }
     }
     Connections {
+        function onSetChannel(channelName: string, channelId: string, isOwner: bool) {
+            channelTopBar.setChannel([channelName, channelId, isOwner]);
+        }
+
+        target: channelController
     }
 }

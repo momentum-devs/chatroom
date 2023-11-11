@@ -68,6 +68,7 @@ set(QML_SOURCES
         gui/states/privateMessages/components/FriendTopBar.qml
 
         gui/states/channel/ChannelView.qml
+        gui/states/channel/components/ChannelTopBar.qml
         )
 
 qt_add_executable(${EXECUTABLE_NAME} Main.cpp ${SOURCES})

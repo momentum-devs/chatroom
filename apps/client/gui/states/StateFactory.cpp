@@ -111,9 +111,11 @@ std::shared_ptr<State> StateFactory::createPrivateMessagesState() const
                                                   loaderController);
 }
 
-std::shared_ptr<State> StateFactory::createChannelState(const std::string& channelId) const
+std::shared_ptr<State> StateFactory::createChannelState(const std::string& channelId, const std::string& channelName,
+                                                        bool isOwner) const
 {
-    auto channelController = std::make_unique<ChannelController>(session, *this, stateMachine, channelId);
+    auto channelController =
+        std::make_unique<ChannelController>(session, *this, stateMachine, channelId, channelName, isOwner);
 
     auto leftColumnController = std::make_unique<LeftColumnController>(session, *this, stateMachine);
 

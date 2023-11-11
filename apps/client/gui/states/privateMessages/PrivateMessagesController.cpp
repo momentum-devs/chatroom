@@ -30,6 +30,11 @@ void PrivateMessagesController::activate()
 
     session->sendMessage(common::messages::MessageId::GetUserFriends, {});
     session->sendMessage(common::messages::MessageId::GetFriendRequests, {});
+
+    if (not currentFriendId.empty())
+    {
+        emit setCurrentFriendName(currentFriendName.c_str());
+    }
 }
 
 void PrivateMessagesController::deactivate()
@@ -47,11 +52,13 @@ void PrivateMessagesController::deactivate()
         {common::messages::MessageId::RemoveFromFriendsResponse, removeFromFriendsResponseHandlerName});
 }
 
-void PrivateMessagesController::goToChannel(const QString& channelId)
+void PrivateMessagesController::goToChannel(const QString& channelName, const QString& channelId, bool isOwner)
 {
-    LOG_S(INFO) << std::format("PrivateMessagesController: Go to chanel with id {}", channelId.toStdString());
+    LOG_S(INFO) << std::format("PrivateMessagesController: Go to channel {} with id {}", channelName.toStdString(),
+                               channelId.toStdString());
 
-    stateMachine->addNextState(stateFactory.createChannelState(channelId.toStdString()));
+    stateMachine->addNextState(
+        stateFactory.createChannelState(channelId.toStdString(), channelName.toStdString(), isOwner));
 }
 
 const QString& PrivateMessagesController::getName() const
@@ -93,6 +100,7 @@ void PrivateMessagesController::setCurrentFriend(const QString& friendId, const 
     LOG_S(INFO) << std::format("Set current friend to {} with id {}", friendName.toStdString(), friendId.toStdString());
 
     currentFriendId = friendId.toStdString();
+    currentFriendName = friendName.toStdString();
 
     emit setCurrentFriendName(friendName);
 }
@@ -216,6 +224,7 @@ void PrivateMessagesController::handleRemoveFromFriendsResponse(const common::me
     LOG_S(INFO) << "Handle remove friend response";
 
     currentFriendId = "";
+    currentFriendName = "";
 
     session->sendMessage(common::messages::MessageId::GetUserFriends, {});
 
