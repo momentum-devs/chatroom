@@ -24,7 +24,6 @@
 #include "MessageHandlers/VerifyUserMessageHandler.h"
 #include "MessageRouterImpl.h"
 #include "server/application/commandHandlers/channel/acceptChannelInvitationCommandHandler/AcceptChannelInvitationCommandHandlerImpl.h"
-#include "server/application/commandHandlers/channel/addUserToChannelCommandHandler/AddUserToChannelCommandHandlerImpl.h"
 #include "server/application/commandHandlers/channel/createChannelCommandHandler/CreateChannelCommandHandlerImpl.h"
 #include "server/application/commandHandlers/channel/createChannelInvitationCommandHandler/CreateChannelInvitationCommandHandlerImpl.h"
 #include "server/application/commandHandlers/channel/deleteChannelCommandHandler/DeleteChannelCommandHandlerImpl.h"
@@ -121,11 +120,8 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
     auto findChannelsToWhichUserBelongsQueryHandler =
         std::make_unique<server::application::FindChannelsToWhichUserBelongsQueryHandlerImpl>(userChannelRepository);
 
-    auto addUserToChannelCommandHandler = std::make_shared<server::application::AddUserToChannelCommandHandlerImpl>(
-        userChannelRepository, userRepository, channelRepository);
-
     auto createChannelCommandHandler = std::make_unique<server::application::CreateChannelCommandHandlerImpl>(
-        channelRepository, addUserToChannelCommandHandler, userRepository);
+        channelRepository, userRepository, userChannelRepository);
 
     const std::shared_ptr<common::httpClient::HttpClient> httpClient =
         common::httpClient::HttpClientFactory::createHttpClient();
@@ -221,7 +217,7 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
 
     auto acceptChannelInvitationCommandHandler =
         std::make_unique<server::application::AcceptChannelInvitationCommandHandlerImpl>(
-            channelInvitationRepository, userRepository, addUserToChannelCommandHandler);
+            channelInvitationRepository, userRepository, userChannelRepository, channelRepository);
 
     auto acceptChannelInvitationMessageHandler = std::make_shared<AcceptChannelInvitationMessageHandler>(
         tokenService, std::move(acceptChannelInvitationCommandHandler));

@@ -2,7 +2,6 @@
 
 #include "CreateChannelCommandHandlerImpl.h"
 #include "faker-cxx/Word.h"
-#include "server/application/commandHandlers/channel/addUserToChannelCommandHandler/AddUserToChannelCommandHandlerImpl.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
 #include "server/infrastructure/repositories/channelRepository/ChannelRepositoryImpl.h"
 #include "server/infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapper.h"
@@ -65,11 +64,8 @@ public:
 
     std::shared_ptr<domain::UserRepository> userRepository = std::make_shared<UserRepositoryImpl>(db, userMapper);
 
-    std::shared_ptr<AddUserToChannelCommandHandler> addUserToChannelCommandHandler =
-        std::make_shared<AddUserToChannelCommandHandlerImpl>(userChannelRepository, userRepository, channelRepository);
-
-    CreateChannelCommandHandlerImpl createChannelCommandHandler{channelRepository, addUserToChannelCommandHandler,
-                                                                userRepository};
+    CreateChannelCommandHandlerImpl createChannelCommandHandler{channelRepository, userRepository,
+                                                                userChannelRepository};
 };
 
 TEST_F(CreateChannelCommandImplIntegrationTest, createChannel)

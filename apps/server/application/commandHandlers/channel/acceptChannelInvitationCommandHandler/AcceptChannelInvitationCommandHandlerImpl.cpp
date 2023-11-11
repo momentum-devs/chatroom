@@ -1,5 +1,6 @@
 #include "AcceptChannelInvitationCommandHandlerImpl.h"
 
+#include <boost/uuid/random_generator.hpp>
 #include <boost/uuid/uuid_io.hpp>
 #include <format>
 
@@ -12,10 +13,12 @@ namespace server::application
 AcceptChannelInvitationCommandHandlerImpl::AcceptChannelInvitationCommandHandlerImpl(
     std::shared_ptr<domain::ChannelInvitationRepository> channelInvitationRepositoryInit,
     std::shared_ptr<domain::UserRepository> userRepositoryInit,
-    std::shared_ptr<application::AddUserToChannelCommandHandler> addUserToChannelCommandHandlerInit)
+    std::shared_ptr<domain::UserChannelRepository> userChannelRepositoryInit,
+    std::shared_ptr<domain::ChannelRepository> channelRepositoryInit)
     : channelInvitationRepository{std::move(channelInvitationRepositoryInit)},
       userRepository{std::move(userRepositoryInit)},
-      addUserToChannelCommandHandler{std::move(addUserToChannelCommandHandlerInit)}
+      userChannelRepository{std::move(userChannelRepositoryInit)},
+      channelRepository{std::move(channelRepositoryInit)}
 {
 }
 
@@ -44,11 +47,43 @@ void AcceptChannelInvitationCommandHandlerImpl::execute(
     const auto recipientId = channelInvitation->getRecipient()->getId();
     const auto channelId = channelInvitation->getChannel()->getId();
 
-    addUserToChannelCommandHandler->execute({recipientId, channelId});
-
     // TODO: consider adding transactions
+    
+    addUserToChannel(recipientId, channelId);
+
     channelInvitationRepository->deleteChannelInvitation({*channelInvitation});
 
     LOG_S(INFO) << std::format("Channel invitation accepted. {{channelInvitationId: {}}}", channelInvitation->getId());
 }
+
+void AcceptChannelInvitationCommandHandlerImpl::addUserToChannel(const std::string& userId,
+                                                                 const std::string& channelId) const
+{
+    LOG_S(INFO) << std::format("Adding user to channel... {{userId: {}, channelId: {}}}", userId, channelId);
+
+    const auto user = userRepository->findUserById({userId});
+
+    if (!user)
+    {
+        throw errors::ResourceNotFoundError{std::format("User with id {} not found.", userId)};
+    }
+
+    const auto channel = channelRepository->findChannelById({channelId});
+
+    if (!channel)
+    {
+        throw errors::ResourceNotFoundError{std::format("Channel with id {} not found.", channelId)};
+    }
+
+    std::stringstream uuid;
+    uuid << boost::uuids::random_generator()();
+
+    const auto userChannelId = uuid.str();
+
+    const auto userChannel = userChannelRepository->createUserChannel({userChannelId, *user, *channel});
+
+    LOG_S(INFO) << std::format("User added to channel. {{userId: {}, channelId: {}}}", userChannel.getUser()->getId(),
+                               userChannel.getChannel()->getId());
+}
+
 }

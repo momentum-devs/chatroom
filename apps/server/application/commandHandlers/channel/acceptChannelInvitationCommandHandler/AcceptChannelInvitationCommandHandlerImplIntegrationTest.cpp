@@ -1,7 +1,6 @@
 #include "gtest/gtest.h"
 
 #include "AcceptChannelInvitationCommandHandlerImpl.h"
-#include "server/application/commandHandlers/channel/addUserToChannelCommandHandler/AddUserToChannelCommandHandlerImpl.h"
 #include "server/infrastructure/repositories/channelInvitationRepository/channelInvitationMapper/ChannelInvitationMapperImpl.h"
 #include "server/infrastructure/repositories/channelInvitationRepository/ChannelInvitationRepositoryImpl.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
@@ -15,8 +14,6 @@
 #include "server/tests/utils/channelInvitationTestUtils/ChannelInvitationTestUtils.h"
 #include "server/tests/utils/channelTestUtils/ChannelTestUtils.h"
 #include "server/tests/utils/userChannelTestUtils/UserChannelTestUtils.h"
-#include "server/tests/utils/userTestUtils/UserTestUtils.h"
-#include "User.h"
 
 using namespace ::testing;
 using namespace server;
@@ -77,11 +74,8 @@ public:
     std::shared_ptr<domain::UserChannelRepository> userChannelRepository =
         std::make_shared<UserChannelRepositoryImpl>(db, userChannelMapper, userMapper, channelMapper);
 
-    std::shared_ptr<application::AddUserToChannelCommandHandler> addUserToChannelCommandHandler =
-        std::make_shared<AddUserToChannelCommandHandlerImpl>(userChannelRepository, userRepository, channelRepository);
-
     AcceptChannelInvitationCommandHandlerImpl acceptChannelInvitationCommandHandler{
-        channelInvitationRepository, userRepository, addUserToChannelCommandHandler};
+        channelInvitationRepository, userRepository, userChannelRepository, channelRepository};
 };
 
 TEST_F(AcceptChannelInvitationCommandImplIntegrationTest, acceptChannelInvitation)

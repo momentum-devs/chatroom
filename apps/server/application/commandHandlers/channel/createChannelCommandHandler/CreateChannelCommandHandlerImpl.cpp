@@ -11,11 +11,11 @@ namespace server::application
 {
 CreateChannelCommandHandlerImpl::CreateChannelCommandHandlerImpl(
     std::shared_ptr<domain::ChannelRepository> channelRepositoryInit,
-    std::shared_ptr<AddUserToChannelCommandHandler> addUserToChannelCommandHandlerInit,
-    std::shared_ptr<domain::UserRepository> userRepositoryInit)
+    std::shared_ptr<domain::UserRepository> userRepositoryInit,
+    std::shared_ptr<domain::UserChannelRepository> userChannelRepositoryInit)
     : channelRepository{std::move(channelRepositoryInit)},
-      addUserToChannelCommandHandler{std::move(addUserToChannelCommandHandlerInit)},
-      userRepository{std::move(userRepositoryInit)}
+      userRepository{std::move(userRepositoryInit)},
+      userChannelRepository{std::move(userChannelRepositoryInit)}
 {
 }
 
@@ -42,10 +42,40 @@ CreateChannelCommandHandlerImpl::execute(const CreateChannelCommandHandlerPayloa
 
     LOG_S(INFO) << std::format(R"(Adding "{}" user to "{}" channel...)", creator->get()->getEmail(), payload.name);
 
-    addUserToChannelCommandHandler->execute({payload.creatorId, channelId});
+    addUserToChannel(creator->get()->getId(), channelId);
 
     LOG_S(INFO) << std::format(R"(User "{}" added to "{}" channel.)", creator->get()->getEmail(), payload.name);
 
     return {*channel};
 }
+
+void CreateChannelCommandHandlerImpl::addUserToChannel(const std::string& userId, const std::string& channelId) const
+{
+    LOG_S(INFO) << std::format("Adding user to channel... {{userId: {}, channelId: {}}}", userId, channelId);
+
+    const auto user = userRepository->findUserById({userId});
+
+    if (!user)
+    {
+        throw errors::ResourceNotFoundError{std::format("User with id {} not found.", userId)};
+    }
+
+    const auto channel = channelRepository->findChannelById({channelId});
+
+    if (!channel)
+    {
+        throw errors::ResourceNotFoundError{std::format("Channel with id {} not found.", channelId)};
+    }
+
+    std::stringstream uuid;
+    uuid << boost::uuids::random_generator()();
+
+    const auto userChannelId = uuid.str();
+
+    const auto userChannel = userChannelRepository->createUserChannel({userChannelId, *user, *channel});
+
+    LOG_S(INFO) << std::format("User added to channel. {{userId: {}, channelId: {}}}", userChannel.getUser()->getId(),
+                               userChannel.getChannel()->getId());
+}
+
 }

@@ -47,7 +47,6 @@ set(SOURCES
         infrastructure/repositories/channelInvitationRepository/channelInvitationMapper/ChannelInvitationMapperImpl.cpp
         application/commandHandlers/channel/createChannelCommandHandler/CreateChannelCommandHandlerImpl.cpp
         application/commandHandlers/channel/deleteChannelCommandHandler/DeleteChannelCommandHandlerImpl.cpp
-        application/commandHandlers/channel/addUserToChannelCommandHandler/AddUserToChannelCommandHandlerImpl.cpp
         application/commandHandlers/channel/removeUserFromChannelCommandHandler/RemoveUserFromChannelCommandHandlerImpl.cpp
         application/queryHandlers/channel/findUsersBelongingToChannelQueryHandler/FindUsersBelongingToChannelQueryHandlerImpl.cpp
         application/queryHandlers/channel/findChannelsToWhichUserBelongsQueryHandler/FindChannelsToWhichUserBelongsQueryHandlerImpl.cpp
@@ -176,7 +175,6 @@ set(IT_SOURCES
         infrastructure/repositories/channelInvitationRepository/ChannelInvitationRepositoryImplIntegrationTest.cpp
         application/commandHandlers/channel/createChannelCommandHandler/CreateChannelCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/channel/deleteChannelCommandHandler/DeleteChannelCommandHandlerImplIntegrationTest.cpp
-        application/commandHandlers/channel/addUserToChannelCommandHandler/AddUserToChannelCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/channel/removeUserFromChannelCommandHandler/RemoveUserFromChannelCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/channel/createChannelInvitationCommandHandler/CreateChannelInvitationCommandHandlerImplIntegrationTest.cpp
         application/queryHandlers/channel/findUsersBelongingToChannelQueryHandler/FindUsersBelongingToChannelQueryHandlerImplIntegrationTest.cpp
