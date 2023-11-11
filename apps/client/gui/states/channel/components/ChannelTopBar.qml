@@ -1,5 +1,6 @@
 import QtQuick 6.4
 import QtQuick.Controls 6.4
+import "../../../qml/common/settings.js" as Settings
 
 Item {
     property var channelId: ""
@@ -7,7 +8,7 @@ Item {
 
     function setChannel(channel) {
         channelName.text = channel[0];
-        channelName.color = "white";
+        channelName.color = Settings.textColor;
         channelName.font.pointSize = 18;
         channelId = channel[1];
         isOwner = channel[2];
@@ -42,20 +43,20 @@ Item {
                 text: qsTr('Invite')
 
                 onClicked: {
-                    mainController.addToChannel();
+                    channelController.addToChannel();
                 }
             }
             Button {
                 anchors.horizontalCenter: parent.horizontalRight
 
                 contentItem: Text {
-                    color: "#FF0000"
+                    color: Settings.leaveColor
                     horizontalAlignment: Text.AlignHCenter
                     text: qsTr('Leave')
                 }
 
                 onClicked: {
-                    mainController.leftTheChannel();
+                    channelController.leaveChannel();
                 }
             }
             Button {
@@ -63,27 +64,18 @@ Item {
                 anchors.horizontalCenter: parent.horizontalRight
 
                 contentItem: Text {
-                    color: "#FF0000"
+                    color: Settings.deleteColor
                     horizontalAlignment: Text.AlignHCenter
                     text: qsTr('Delete')
                 }
 
                 onClicked: {
-                    mainController.deleteTheChannel();
-                }
-            }
-            Button {
-                id: channelMembersButton
-                anchors.horizontalCenter: parent.horizontalRight
-                text: qsTr('Members')
-
-                onClicked: {
-                    mainController.goToChannelMembersList();
+                    channelController.deleteChannel();
                 }
             }
         }
         Rectangle {
-            color: '#3f4147'
+            color: Settings.separatorColor
             height: 1
             width: parent.width
         }

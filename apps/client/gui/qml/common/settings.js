@@ -12,6 +12,8 @@ var removeColor = "#FF0000"
 
 var deleteColor = "#FF0000"
 
+var leaveColor = "#FF0000"
+
 var textColor = "#FFFFFF"
 
 var activeColor = "#00FF00"

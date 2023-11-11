@@ -56,7 +56,7 @@ const QString& LeftColumnController::getName() const
 
 void LeftColumnController::goToPrivateMessages()
 {
-    // TODO: implement
+    emit goToPrivateMessagesSignal();
 }
 
 void LeftColumnController::goToCreateChannel()
@@ -73,9 +73,9 @@ void LeftColumnController::goToUserSettings()
     stateMachine->addNextState(stateFactory.createUserSettingsState());
 }
 
-void LeftColumnController::goToChannel(const QString& channelId)
+void LeftColumnController::goToChannel(const QString& channelName, const QString& channelId, bool isOwner)
 {
-    emit goToChannelSignal(channelId);
+    emit goToChannelSignal(channelName, channelId, isOwner);
 }
 
 void LeftColumnController::handleGetUserChannelsResponse(const common::messages::Message& message)
@@ -204,5 +204,27 @@ void LeftColumnController::handleChangeChannelInvitationResponse(const common::m
         session->sendMessage(common::messages::MessageId::GetUserChannels, {});
         session->sendMessage(common::messages::MessageId::GetUserChannelInvitations, {});
     }
+}
+
+void LeftColumnController::acceptChannelInvitation(const QString& channelId)
+{
+    LOG_S(INFO) << std::format("Accept invitation to channel id {}", channelId.toStdString());
+
+    nlohmann::json data{
+        {"channelId", channelId.toStdString()},
+    };
+
+    session->sendMessage(common::messages::MessageId::AcceptChannelInvitation, data);
+}
+
+void LeftColumnController::rejectChannelInvitation(const QString& channelId)
+{
+    LOG_S(INFO) << std::format("Reject invitation to channel id {}", channelId.toStdString());
+
+    nlohmann::json data{
+        {"channelId", channelId.toStdString()},
+    };
+
+    session->sendMessage(common::messages::MessageId::RejectChannelInvitation, data);
 }
 }

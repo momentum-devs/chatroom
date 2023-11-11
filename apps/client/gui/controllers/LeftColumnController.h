@@ -22,14 +22,17 @@ public:
     Q_INVOKABLE void goToPrivateMessages();
     Q_INVOKABLE void goToCreateChannel();
     Q_INVOKABLE void goToUserSettings();
-    Q_INVOKABLE void goToChannel(const QString& channelId);
+    Q_INVOKABLE void goToChannel(const QString& channelName, const QString& channelId, bool isOwner);
+    Q_INVOKABLE void acceptChannelInvitation(const QString& channelId);
+    Q_INVOKABLE void rejectChannelInvitation(const QString& channelId);
 
 signals:
     void addChannel(const QString& channelName, const QString& channelId, bool isOwner);
     void addChannelInvitation(const QString& channelName, const QString& channelId);
     void clearChannelList();
     void clearChannelInvitationList();
-    void goToChannelSignal(const QString& channelId);
+    void goToPrivateMessagesSignal();
+    void goToChannelSignal(const QString& channelName, const QString& channelId, bool isOwner);
     void setUserName(const QString& userName);
 
 private:

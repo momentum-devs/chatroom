@@ -1,16 +1,13 @@
 #include "StateFactory.h"
 
-#include "channelMembers/ChannelMembersController.h"
-#include "channelMembers/ChannelMembersState.h"
 #include "createChannel/CreateChannelController.h"
 #include "createChannel/CreateChannelState.h"
 #include "gui/controllers/LeftColumnController.h"
+#include "gui/states/channel/ChannelState.h"
 #include "inviteToChannel/InviteToChannelController.h"
 #include "inviteToChannel/InviteToChannelState.h"
 #include "login/LoginController.h"
 #include "login/LoginState.h"
-#include "main/MainController.h"
-#include "main/MainState.h"
 #include "privateMessages/PrivateMessagesState.h"
 #include "register/RegisterController.h"
 #include "register/RegisterState.h"
@@ -51,13 +48,6 @@ std::shared_ptr<State> StateFactory::createLoginState() const
     return std::make_shared<LoginState>(std::move(controller), loaderController);
 }
 
-std::shared_ptr<State> StateFactory::createMainState() const
-{
-    auto controller = std::make_unique<MainController>(session, *this, stateMachine);
-
-    return std::make_shared<MainState>(std::move(controller), loaderController);
-}
-
 std::shared_ptr<State> StateFactory::createCreateChannelState() const
 {
     auto controller = std::make_unique<CreateChannelController>(session, *this, stateMachine);
@@ -93,13 +83,6 @@ std::shared_ptr<State> StateFactory::createInviteToChannelState(const std::strin
     return std::make_shared<InviteToChannelState>(std::move(controller), loaderController);
 }
 
-std::shared_ptr<State> StateFactory::createChannelMembersListState(const std::string& channelId) const
-{
-    auto controller = std::make_unique<ChannelMembersController>(session, *this, stateMachine, channelId);
-
-    return std::make_shared<ChannelMembersState>(std::move(controller), loaderController);
-}
-
 std::shared_ptr<State> StateFactory::createPrivateMessagesState() const
 {
     auto privateMessagesController = std::make_unique<PrivateMessagesController>(session, *this, stateMachine);
@@ -108,5 +91,17 @@ std::shared_ptr<State> StateFactory::createPrivateMessagesState() const
 
     return std::make_shared<PrivateMessagesState>(std::move(privateMessagesController), std::move(leftColumnController),
                                                   loaderController);
+}
+
+std::shared_ptr<State> StateFactory::createChannelState(const std::string& channelId, const std::string& channelName,
+                                                        bool isOwner) const
+{
+    auto channelController =
+        std::make_unique<ChannelController>(session, *this, stateMachine, channelId, channelName, isOwner);
+
+    auto leftColumnController = std::make_unique<LeftColumnController>(session, *this, stateMachine);
+
+    return std::make_shared<ChannelState>(std::move(channelController), std::move(leftColumnController),
+                                          loaderController);
 }
 }

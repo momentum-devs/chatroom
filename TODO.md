@@ -5,6 +5,7 @@
 * refactor frontend code
 * adjust to new layout design
 
+
 * direct messages between users
 * messages in channel
 * user has history of direct messages and messages in channel
@@ -12,6 +13,10 @@
 * encryption
 * avatars
 * message seen
+
+
+* friend requests -> friend invitation
+* add caching information (e.g. channel list, avatars, etc.)
 
 ### SERVER:
 

@@ -16,8 +16,6 @@ set(SOURCES
         gui/states/login/LoginState.cpp
         gui/states/login/LoginController.cpp
         gui/qml/LoaderController.cpp
-        gui/states/main/MainState.cpp
-        gui/states/main/MainController.cpp
         gui/states/createChannel/CreateChannelState.cpp
         gui/states/createChannel/CreateChannelController.cpp
         gui/states/sendFriendRequest/SendFriendRequestController.cpp
@@ -28,11 +26,12 @@ set(SOURCES
         gui/states/verifyUser/VerifyUserController.cpp
         gui/states/inviteToChannel/InviteToChannelState.cpp
         gui/states/inviteToChannel/InviteToChannelController.cpp
-        gui/states/channelMembers/ChannelMembersState.cpp
-        gui/states/channelMembers/ChannelMembersController.cpp
         gui/controllers/LeftColumnController.cpp
         gui/states/privateMessages/PrivateMessagesState.cpp
-        gui/states/privateMessages/PrivateMessagesController.h gui/states/privateMessages/PrivateMessagesController.cpp)
+        gui/states/privateMessages/PrivateMessagesController.h
+        gui/states/privateMessages/PrivateMessagesController.cpp
+        gui/states/channel/ChannelState.cpp
+        gui/states/channel/ChannelController.cpp)
 
 set(UT_SOURCES
         api/SessionImplTest.cpp
@@ -52,19 +51,18 @@ set(QML_SOURCES
 
         gui/states/register/RegisterView.qml
         gui/states/login/LoginView.qml
-        gui/states/main/MainView.qml
-        gui/states/main/ChannelView.qml
-        gui/states/main/FriendView.qml
         gui/states/createChannel/CreateChannelView.qml
         gui/states/sendFriendRequest/SendFriendRequestView.qml
         gui/states/userSettings/UserSettingsView.qml
         gui/states/verifyUser/VerifyUserView.qml
         gui/states/inviteToChannel/InviteToChannelView.qml
-        gui/states/channelMembers/ChannelMembersView.qml
 
         gui/states/privateMessages/PrivateMessagesView.qml
         gui/states/privateMessages/components/FriendsColumn.qml
         gui/states/privateMessages/components/FriendTopBar.qml
+
+        gui/states/channel/ChannelView.qml
+        gui/states/channel/components/ChannelTopBar.qml
         )
 
 qt_add_executable(${EXECUTABLE_NAME} Main.cpp ${SOURCES})

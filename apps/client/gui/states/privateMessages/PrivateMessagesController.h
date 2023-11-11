@@ -33,11 +33,11 @@ signals:
     void addFriendRequest(const QString& friendName, const QString& requestId);
     void clearFriendList();
     void clearFriendRequestList();
-    void setCurrentFriendName(const QString& friendNam);
+    void setCurrentFriendName(const QString& friendName);
     void removedFromFriends();
 
 public slots:
-    void goToChannel(const QString& channelId);
+    void goToChannel(const QString& channelName, const QString& channelId, bool isOwner);
 
 private:
     void handleGetUserFriendsResponse(const common::messages::Message& message);
@@ -49,6 +49,7 @@ private:
     const StateFactory& stateFactory;
     std::shared_ptr<StateMachine> stateMachine;
     std::string currentFriendId;
+    std::string currentFriendName;
 
     inline static const QString name{"privateMessagesController"};
 
