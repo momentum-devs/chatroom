@@ -46,4 +46,9 @@ bool Channel::operator==(const Channel& channel) const
 
     return tieStruct(*this) == tieStruct(channel);
 }
+
+void Channel::setName(const std::string& newName)
+{
+    name = newName;
+}
 }

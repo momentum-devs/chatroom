@@ -9,7 +9,6 @@
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "server/tests/factories/databaseClientTestFactory/DatabaseClientTestFactory.h"
 #include "server/tests/utils/channelTestUtils/ChannelTestUtils.h"
-#include "server/tests/utils/userTestUtils/UserTestUtils.h"
 #include "User.h"
 
 using namespace ::testing;
@@ -109,4 +108,31 @@ TEST_F(ChannelRepositoryIntegrationTest, givenNonExistingChannel_shouldNotFindAn
     const auto channel = channelRepository->findChannelById({channelId});
 
     ASSERT_FALSE(channel);
+}
+
+TEST_F(ChannelRepositoryIntegrationTest, shouldUpdateExistingChannel)
+{
+    const auto updatedName = faker::Word::noun();
+
+    const auto channel = channelTestUtils.createAndPersist();
+
+    const auto domainChannel = channelMapper->mapToDomainChannel(channel);
+
+    domainChannel->setName(updatedName);
+
+    channelRepository->updateChannel({*domainChannel});
+
+    const auto updatedUser = channelTestUtils.findById({channel->getId()});
+
+    ASSERT_TRUE(updatedUser);
+    ASSERT_EQ((*updatedUser).getName(), updatedName);
+}
+
+TEST_F(ChannelRepositoryIntegrationTest, update_givenNonExistingUser_shouldThrowError)
+{
+    const auto domainUser = userTestFactory.createDomainUser();
+
+    const auto domainChannel = channelTestFactory.createDomainChannel(domainUser);
+
+    ASSERT_ANY_THROW(channelRepository->updateChannel({*domainChannel}));
 }

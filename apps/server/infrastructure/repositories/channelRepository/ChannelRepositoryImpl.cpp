@@ -5,6 +5,7 @@
 
 #include "Channel.odb.h"
 #include "server/infrastructure/errors/ChannelRepositoryError.h"
+#include "server/infrastructure/errors/ResourceNotFoundError.h"
 
 namespace server::infrastructure
 {
@@ -67,6 +68,38 @@ ChannelRepositoryImpl::findChannelById(const domain::FindChannelByIdPayload& pay
     }
 }
 
+std::shared_ptr<domain::Channel> ChannelRepositoryImpl::updateChannel(const domain::UpdateChannelPayload& payload) const
+{
+    try
+    {
+        {
+            odb::transaction transaction(db->begin());
+
+            typedef odb::query<Channel> query;
+
+            std::shared_ptr<Channel> channel(db->query_one<Channel>(query::id == payload.channel.getId()));
+
+            if (!channel)
+            {
+                throw errors::ResourceNotFoundError{
+                    std::format("Channel with id \"{}\" not found.", payload.channel.getId())};
+            }
+
+            channel->setName(payload.channel.getName());
+
+            db->update(*channel);
+
+            transaction.commit();
+        }
+
+        return *findChannelById({payload.channel.getId()});
+    }
+    catch (const std::exception& error)
+    {
+        throw errors::ChannelRepositoryError{error.what()};
+    }
+}
+
 void ChannelRepositoryImpl::deleteChannel(const domain::DeleteChannelPayload& payload) const
 {
     try
@@ -82,4 +115,5 @@ void ChannelRepositoryImpl::deleteChannel(const domain::DeleteChannelPayload& pa
         throw errors::ChannelRepositoryError{error.what()};
     }
 }
+
 }

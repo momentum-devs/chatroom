@@ -18,6 +18,7 @@ public:
     std::shared_ptr<User> getCreator() const;
     std::string getCreatedAt() const;
     std::string getUpdatedAt() const;
+    void setName(const std::string&);
     bool operator==(const Channel&) const;
 
 private:

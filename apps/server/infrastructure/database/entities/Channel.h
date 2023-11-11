@@ -48,6 +48,12 @@ public:
         return updated_at;
     }
 
+    void setName(const std::string& newName)
+    {
+        name = newName;
+    }
+
+
     bool operator==(const Channel& channel) const
     {
         auto tieStruct = [](const Channel& channel)

@@ -19,6 +19,7 @@ public:
     std::shared_ptr<domain::Channel> createChannel(const domain::CreateChannelPayload&) const override;
     std::optional<std::shared_ptr<domain::Channel>>
     findChannelById(const domain::FindChannelByIdPayload&) const override;
+    std::shared_ptr<domain::Channel> updateChannel(const domain::UpdateChannelPayload&) const override;
     void deleteChannel(const domain::DeleteChannelPayload&) const override;
 
 private:
