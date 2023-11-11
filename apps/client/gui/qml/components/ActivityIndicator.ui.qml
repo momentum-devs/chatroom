@@ -8,20 +8,34 @@ Item {
     height: active.height
     width: active.width
 
-    Text {
-        id: active
+    Rectangle {
+        anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
-        color: Settings.activeColor
-        font.pointSize: 12
-        text: "●"
-        visible: isActive
+        color: Settings.backgroundColor
+        height: 15
+        radius: 15
+        width: 15
     }
-    Text {
-        id: inactive
+    Image {
+        id: active
+        anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
-        color: Settings.inactiveColor
-        font.pointSize: 12
-        text: "○"
+        height: 12
+        source: "../../../resources/svg/online.svg"
+        sourceSize.height: height
+        sourceSize.width: width
+        visible: isActive
+        width: 12
+    }
+    Image {
+        id: inactive
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
+        height: active.height
+        source: "../../../resources/svg/offline.svg"
+        sourceSize.height: height
+        sourceSize.width: width
         visible: !isActive
+        width: active.width
     }
 }
