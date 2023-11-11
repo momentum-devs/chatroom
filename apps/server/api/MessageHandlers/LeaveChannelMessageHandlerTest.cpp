@@ -1,4 +1,4 @@
-#include "LeftTheChannelMessageHandler.h"
+#include "LeaveChannelMessageHandler.h"
 
 #include <format>
 #include <gtest/gtest.h>
@@ -33,7 +33,7 @@ auto sendFriendRequestErrorMessageResponse = common::messages::Message{
     common::messages::MessageId::LeftTheChannelResponse, common::bytes::Bytes{R"({"error":"sendFriendRequestError"})"}};
 }
 
-class LeftTheChannelMessageHandlerTest : public Test
+class LeaveChannelMessageHandlerTest : public Test
 {
 public:
     std::shared_ptr<server::application::TokenServiceMock> tokenServiceMock =
@@ -45,38 +45,38 @@ public:
     server::application::RemoveUserFromChannelCommandHandlerMock* removeUserFromChannelCommandHandlerMock =
         removeUserFromChannelCommandHandlerMockInit.get();
 
-    LeftTheChannelMessageHandler leftTheChannelMessageHandler{tokenServiceMock,
-                                                              std::move(removeUserFromChannelCommandHandlerMockInit)};
+    LeaveChannelMessageHandler leaveChannelMessageHandler{tokenServiceMock,
+                                                          std::move(removeUserFromChannelCommandHandlerMockInit)};
 };
 
-TEST_F(LeftTheChannelMessageHandlerTest, handleValidFriendRequestMessage)
+TEST_F(LeaveChannelMessageHandlerTest, handleValidFriendRequestMessage)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*removeUserFromChannelCommandHandlerMock,
                 execute(server::application::RemoveUserFromChannelCommandHandlerPayload{userId, channelId}));
 
-    auto responseMessage = leftTheChannelMessageHandler.handleMessage(message);
+    auto responseMessage = leaveChannelMessageHandler.handleMessage(message);
 
     EXPECT_EQ(responseMessage, validMessageResponse);
 }
 
-TEST_F(LeftTheChannelMessageHandlerTest, handleFriendRequestMessageWithInvalidToken)
+TEST_F(LeaveChannelMessageHandlerTest, handleFriendRequestMessageWithInvalidToken)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Throw(invalidToken));
 
-    auto responseMessage = leftTheChannelMessageHandler.handleMessage(message);
+    auto responseMessage = leaveChannelMessageHandler.handleMessage(message);
 
     EXPECT_EQ(responseMessage, invalidTokenMessageResponse);
 }
 
-TEST_F(LeftTheChannelMessageHandlerTest, handleFriendRequestMessageWithErrorWhileHandling)
+TEST_F(LeaveChannelMessageHandlerTest, handleFriendRequestMessageWithErrorWhileHandling)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*removeUserFromChannelCommandHandlerMock,
                 execute(server::application::RemoveUserFromChannelCommandHandlerPayload{userId, channelId}))
         .WillOnce(Throw(sendFriendRequestError));
 
-    auto responseMessage = leftTheChannelMessageHandler.handleMessage(message);
+    auto responseMessage = leaveChannelMessageHandler.handleMessage(message);
 
     EXPECT_EQ(responseMessage, sendFriendRequestErrorMessageResponse);
 }

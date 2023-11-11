@@ -12,7 +12,7 @@
 #include "MessageHandlers/GetUserDataMessageHandler.h"
 #include "MessageHandlers/GetUserFriendRequestsMessageHandler.h"
 #include "MessageHandlers/GetUserFriendsMessageHandler.h"
-#include "MessageHandlers/LeftTheChannelMessageHandler.h"
+#include "MessageHandlers/LeaveChannelMessageHandler.h"
 #include "MessageHandlers/LoginMessageHandler.h"
 #include "MessageHandlers/LogoutMessageHandler.h"
 #include "MessageHandlers/RegisterMessageHandler.h"
@@ -27,8 +27,8 @@
 #include "server/application/commandHandlers/channel/createChannelCommandHandler/CreateChannelCommandHandlerImpl.h"
 #include "server/application/commandHandlers/channel/createChannelInvitationCommandHandler/CreateChannelInvitationCommandHandlerImpl.h"
 #include "server/application/commandHandlers/channel/deleteChannelCommandHandler/DeleteChannelCommandHandlerImpl.h"
+#include "server/application/commandHandlers/channel/leaveChannelCommandHandler/LeaveChannelCommandHandlerImpl.h"
 #include "server/application/commandHandlers/channel/rejectChannelInvitationCommandHandler/RejectChannelInvitationCommandHandlerImpl.h"
-#include "server/application/commandHandlers/channel/removeUserFromChannelCommandHandler/RemoveUserFromChannelCommandHandlerImpl.h"
 #include "server/application/commandHandlers/friend/acceptFriendInvitationCommandHandler/AcceptFriendInvitationCommandHandlerImpl.h"
 #include "server/application/commandHandlers/friend/createFriendInvitationCommandHandler/CreateFriendInvitationCommandHandlerImpl.h"
 #include "server/application/commandHandlers/friend/deleteFriendshipCommandHandler/DeleteFriendshipCommandHandlerImpl.h"
@@ -179,12 +179,11 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
     auto sendChannelInvitationMessageHandler = std::make_shared<SendChannelInvitationMessageHandler>(
         tokenService, findUserByEmailQueryHandler, std::move(createChannelInvitationCommandHandler));
 
-    auto removeUserFromChannelCommandHandler =
-        std::make_unique<server::application::RemoveUserFromChannelCommandHandlerImpl>(userChannelRepository,
-                                                                                       channelRepository);
+    auto leaveChannelCommandHandler =
+        std::make_unique<server::application::LeaveChannelCommandHandlerImpl>(userChannelRepository, channelRepository);
 
     auto leftTheChannelMessageHandler =
-        std::make_shared<LeftTheChannelMessageHandler>(tokenService, std::move(removeUserFromChannelCommandHandler));
+        std::make_shared<LeaveChannelMessageHandler>(tokenService, std::move(leaveChannelCommandHandler));
 
     auto deleteChannelCommandHandler =
         std::make_unique<server::application::DeleteChannelCommandHandlerImpl>(channelRepository);
