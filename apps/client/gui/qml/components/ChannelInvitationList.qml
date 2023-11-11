@@ -1,5 +1,6 @@
 import QtQuick 6.4
 import QtQuick.Controls 6.4
+import "../common/settings.js" as Settings
 
 ScrollView {
     property var channelInvitations: []
@@ -25,7 +26,7 @@ ScrollView {
             width: parent.width
 
             Text {
-                color: "white"
+                color: Settings.textColor
                 text: modelData[0]
             }
             Button {
@@ -33,7 +34,7 @@ ScrollView {
                 width: 30
 
                 contentItem: Text {
-                    color: "#00FF00"
+                    color: Settings.acceptColor
                     text: qsTr('✓')
                 }
 
@@ -45,7 +46,7 @@ ScrollView {
                 width: 30
 
                 contentItem: Text {
-                    color: "#FF0000"
+                    color: Settings.rejectColor
                     text: qsTr('✕')
                 }
 

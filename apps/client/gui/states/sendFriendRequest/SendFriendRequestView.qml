@@ -1,8 +1,9 @@
 import QtQuick 6.4
 import QtQuick.Controls 6.4
+import "../../qml/common/settings.js" as Settings
 
 Rectangle {
-    color: "#313338"
+    color: Settings.backgroundColor
 
     Keys.onEnterPressed: sendFriendRequestButton.activate()
     Keys.onEscapePressed: goBackButton.activate()

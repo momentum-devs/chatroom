@@ -1,5 +1,6 @@
 import QtQuick 6.4
 import QtQuick.Controls 6.4
+import "../../qml/common/settings.js" as Settings
 
 Rectangle {
     property var channelInvitations: []
@@ -7,7 +8,7 @@ Rectangle {
     property var friendRequests: []
     property var friends: []
 
-    color: "#313338"
+    color: Settings.backgroundColor
     focus: true
 
     Row {

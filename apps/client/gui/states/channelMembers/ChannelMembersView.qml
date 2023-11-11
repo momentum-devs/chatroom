@@ -1,10 +1,11 @@
 import QtQuick 6.4
 import QtQuick.Controls 6.4
+import "../../qml/common/settings.js" as Settings
 
 Rectangle {
     id: channelMembersView
     anchors.fill: parent
-    color: "#313338"
+    color: Settings.backgroundColor
 
     Column {
         anchors.centerIn: parent

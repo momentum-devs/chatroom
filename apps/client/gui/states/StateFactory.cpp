@@ -102,8 +102,11 @@ std::shared_ptr<State> StateFactory::createChannelMembersListState(const std::st
 
 std::shared_ptr<State> StateFactory::createPrivateMessagesState() const
 {
+    auto privateMessagesController = std::make_unique<PrivateMessagesController>(session, *this, stateMachine);
+
     auto leftColumnController = std::make_unique<LeftColumnController>(session, *this, stateMachine);
 
-    return std::make_shared<PrivateMessagesState>(std::move(leftColumnController), loaderController);
+    return std::make_shared<PrivateMessagesState>(std::move(privateMessagesController), std::move(leftColumnController),
+                                                  loaderController);
 }
 }

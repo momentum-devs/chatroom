@@ -1,5 +1,6 @@
 import QtQuick 6.4
 import QtQuick.Controls 6.4
+import "../common/settings.js" as Settings
 
 ScrollView {
     property var channels: []
@@ -7,7 +8,7 @@ ScrollView {
     function addChannel(channelName: string, channelId: string, isOwner: bool) {
         channels.push([channelName, channelId, isOwner]);
         channelsView.model = channels;
-        channelsView.height = (privateMessagesButton.height + 5) * channels.length;
+        channelsView.height = 30 * channels.length;
     }
     function clearChannelList() {
         channels = [];
@@ -34,7 +35,7 @@ ScrollView {
                 width: leftColumn.width
 
                 onClicked: {
-                    leftColumnController.setCurrentChannel(modelData[1]);
+                    leftColumnController.goToChannel(modelData[1]);
                 }
             }
         }
@@ -49,8 +50,8 @@ ScrollView {
                 width: 35
 
                 contentItem: Text {
-                    color: "#00FF00"
-                    font.bold: true
+                    color: Settings.addColor
+                    // font.bold: true
                     font.pointSize: 20
                     horizontalAlignment: Text.AlignHCenter
                     text: '+'

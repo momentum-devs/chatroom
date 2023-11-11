@@ -49,7 +49,7 @@ void LeftColumnController::deactivate()
         {common::messages::MessageId::ChangeChannelInvitationResponse, changeChannelInvitationResponseHandlerName});
 }
 
-const QString& LeftColumnController::getName()
+const QString& LeftColumnController::getName() const
 {
     return name;
 }
@@ -73,9 +73,9 @@ void LeftColumnController::goToUserSettings()
     stateMachine->addNextState(stateFactory.createUserSettingsState());
 }
 
-void LeftColumnController::setCurrentChannel(const QString& channelId)
+void LeftColumnController::goToChannel(const QString& channelId)
 {
-    // TODO: implement
+    emit goToChannelSignal(channelId);
 }
 
 void LeftColumnController::handleGetUserChannelsResponse(const common::messages::Message& message)
@@ -132,7 +132,18 @@ void LeftColumnController::handleGetUserDataResponse(const common::messages::Mes
                                     responseJson.at("error").get<std::string>());
     }
 
-    // TODO: implement handling user data
+    if (responseJson.contains("data") and responseJson.at("data").contains("nickname"))
+    {
+        auto nickname = responseJson.at("data").at("nickname").get<std::string>();
+
+        LOG_S(INFO) << std::format("Get user data for user {}", nickname);
+
+        emit setUserName(nickname.c_str());
+    }
+    else
+    {
+        LOG_S(ERROR) << "Wrong user data format";
+    }
 }
 
 void LeftColumnController::handleGetUserChannelInvitationsResponse(const common::messages::Message& message)

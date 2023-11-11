@@ -1,8 +1,9 @@
 import QtQuick 6.2
 import QtQuick.Controls 6.2
+import "../../qml/common/settings.js" as Settings
 
 Rectangle {
-    color: "#313338"
+    color: Settings.backgroundColor
 
     Keys.onEnterPressed: loginButton.activate()
     Keys.onReturnPressed: loginButton.activate()

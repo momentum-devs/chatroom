@@ -1,5 +1,6 @@
 import QtQuick 6.4
 import QtQuick.Controls 6.4
+import "../common/settings.js" as Settings
 
 Rectangle {
     id: leftRectangle
@@ -38,14 +39,14 @@ Rectangle {
                 width: parent.width
             }
             Rectangle {
-                color: '#3f4147'
+                color: Settings.separatorColor
                 height: 1
                 width: parent.width
             }
         }
         Text {
             anchors.horizontalCenter: parent.horizontalCenter
-            color: "white"
+            color: Settings.textColor
             text: 'Channels: '
         }
         ChannelList {
@@ -54,13 +55,13 @@ Rectangle {
             width: parent.width
         }
         Rectangle {
-            color: '#3f4147'
+            color: Settings.separatorColor
             height: 1
             width: parent.width
         }
         Text {
             anchors.horizontalCenter: parent.horizontalCenter
-            color: "white"
+            color: Settings.textColor
             text: 'Channel Invitations:'
         }
         ChannelInvitationList {
@@ -70,6 +71,7 @@ Rectangle {
         }
     }
     SettingsBox {
+        id: settingsBox
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         width: parent.width
@@ -86,6 +88,9 @@ Rectangle {
         }
         function onClearChannelList() {
             channelList.clearChannelList();
+        }
+        function onSetUserName(nickname: string) {
+            settingsBox.setUserName(nickname);
         }
 
         target: leftColumnController

@@ -17,18 +17,20 @@ public:
 
     void activate();
     void deactivate();
-    const QString& getName();
+    const QString& getName() const;
 
     Q_INVOKABLE void goToPrivateMessages();
     Q_INVOKABLE void goToCreateChannel();
     Q_INVOKABLE void goToUserSettings();
-    Q_INVOKABLE void setCurrentChannel(const QString& channelId);
+    Q_INVOKABLE void goToChannel(const QString& channelId);
 
 signals:
     void addChannel(const QString& channelName, const QString& channelId, bool isOwner);
     void addChannelInvitation(const QString& channelName, const QString& channelId);
     void clearChannelList();
     void clearChannelInvitationList();
+    void goToChannelSignal(const QString& channelId);
+    void setUserName(const QString& userName);
 
 private:
     void handleGetUserChannelsResponse(const common::messages::Message& message);
