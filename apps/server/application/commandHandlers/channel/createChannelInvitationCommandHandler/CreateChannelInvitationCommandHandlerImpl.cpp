@@ -40,8 +40,8 @@ void CreateChannelInvitationCommandHandlerImpl::execute(
 
     if (existingInvitation)
     {
-        throw errors::OperationNotValidError{std::format("Recipient {} is already invited to channel {}.",
-                                                         payload.recipientId, payload.channelId)};
+        throw errors::OperationNotValidError{
+            std::format("Recipient {} is already invited to channel {}.", payload.recipientId, payload.channelId)};
     }
 
     const auto sender = userRepository->findUserById({payload.senderId});
@@ -63,6 +63,13 @@ void CreateChannelInvitationCommandHandlerImpl::execute(
     if (!channel)
     {
         throw errors::ResourceNotFoundError{std::format("Channel with id {} not found.", payload.channelId)};
+    }
+
+    if (channel->get()->getCreator()->getId() != sender->get()->getId())
+    {
+        throw errors::OperationNotValidError{
+            std::format("Sender with id {} cannot send invitation because he is not the creator of channel {}.",
+                        payload.recipientId, payload.channelId)};
     }
 
     const auto userChannelWithRecipient =

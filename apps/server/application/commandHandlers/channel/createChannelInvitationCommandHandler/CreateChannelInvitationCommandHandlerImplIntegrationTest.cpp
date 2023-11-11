@@ -58,7 +58,8 @@ public:
 
     std::shared_ptr<ChannelMapper> channelMapper = std::make_shared<ChannelMapperImpl>(userMapper);
 
-    std::shared_ptr<UserChannelMapper> userChannelMapper = std::make_shared<UserChannelMapperImpl>(userMapper, channelMapper);
+    std::shared_ptr<UserChannelMapper> userChannelMapper =
+        std::make_shared<UserChannelMapperImpl>(userMapper, channelMapper);
 
     std::shared_ptr<ChannelInvitationMapper> channelInvitationMapper =
         std::make_shared<ChannelInvitationMapperImpl>(userMapper, channelMapper);
@@ -74,8 +75,8 @@ public:
     std::shared_ptr<domain::UserChannelRepository> userChannelRepository =
         std::make_shared<UserChannelRepositoryImpl>(db, userChannelMapper, userMapper, channelMapper);
 
-    CreateChannelInvitationCommandHandlerImpl createChannelInvitationCommandHandler{channelInvitationRepository,
-                                                                                    userRepository, channelRepository, userChannelRepository};
+    CreateChannelInvitationCommandHandlerImpl createChannelInvitationCommandHandler{
+        channelInvitationRepository, userRepository, channelRepository, userChannelRepository};
 };
 
 TEST_F(CreateChannelInvitationCommandImplIntegrationTest, createChannelInvitation)
@@ -88,7 +89,8 @@ TEST_F(CreateChannelInvitationCommandImplIntegrationTest, createChannelInvitatio
 
     createChannelInvitationCommandHandler.execute({sender->getId(), recipient->getId(), channel->getId()});
 
-    const auto foundChannelInvitation = channelInvitationTestUtils.find(sender->getId(), recipient->getId(), channel->getId());
+    const auto foundChannelInvitation =
+        channelInvitationTestUtils.find(sender->getId(), recipient->getId(), channel->getId());
 
     ASSERT_TRUE(foundChannelInvitation);
 }
@@ -115,7 +117,8 @@ TEST_F(CreateChannelInvitationCommandImplIntegrationTest, throwsError_whenRecipi
 
     channelInvitationTestUtils.createAndPersist(sender, recipient, channel);
 
-    ASSERT_THROW(createChannelInvitationCommandHandler.execute({sender->getId(), recipient->getId(), channel->getId()}), errors::OperationNotValidError);
+    ASSERT_THROW(createChannelInvitationCommandHandler.execute({sender->getId(), recipient->getId(), channel->getId()}),
+                 errors::OperationNotValidError);
 }
 
 TEST_F(CreateChannelInvitationCommandImplIntegrationTest, throwsError_whenRecipientIsAlreadyMemberOfChannel)
@@ -128,5 +131,18 @@ TEST_F(CreateChannelInvitationCommandImplIntegrationTest, throwsError_whenRecipi
 
     userChannelTestUtils.createAndPersist(recipient, channel);
 
-    ASSERT_THROW(createChannelInvitationCommandHandler.execute({sender->getId(), recipient->getId(), channel->getId()}), errors::OperationNotValidError);
+    ASSERT_THROW(createChannelInvitationCommandHandler.execute({sender->getId(), recipient->getId(), channel->getId()}),
+                 errors::OperationNotValidError);
+}
+
+TEST_F(CreateChannelInvitationCommandImplIntegrationTest, throwsError_whenSenderIsNotChannelCreator)
+{
+    const auto sender = userTestUtils.createAndPersist();
+
+    const auto recipient = userTestUtils.createAndPersist();
+
+    const auto channel = channelTestUtils.createAndPersist(recipient);
+
+    ASSERT_THROW(createChannelInvitationCommandHandler.execute({sender->getId(), recipient->getId(), channel->getId()}),
+                 errors::OperationNotValidError);
 }
