@@ -31,7 +31,6 @@
 #include "server/application/commandHandlers/channel/removeUserFromChannelCommandHandler/RemoveUserFromChannelCommandHandlerImpl.h"
 #include "server/application/commandHandlers/friend/acceptFriendInvitationCommandHandler/AcceptFriendInvitationCommandHandlerImpl.h"
 #include "server/application/commandHandlers/friend/createFriendInvitationCommandHandler/CreateFriendInvitationCommandHandlerImpl.h"
-#include "server/application/commandHandlers/friend/createFriendshipCommandHandler/CreateFriendshipCommandHandlerImpl.h"
 #include "server/application/commandHandlers/friend/deleteFriendshipCommandHandler/DeleteFriendshipCommandHandlerImpl.h"
 #include "server/application/commandHandlers/friend/rejectFriendInvitationCommandHandler/RejectFriendInvitationCommandHandlerImpl.h"
 #include "server/application/commandHandlers/user/deleteUserCommandHandler/DeleteUserCommandHandlerImpl.h"
@@ -235,12 +234,9 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
     auto getUserFriendRequestsMessageHandler = std::make_shared<GetUserFriendRequestsMessageHandler>(
         tokenService, std::move(findReceivedFriendInvitationsQueryHandler));
 
-    auto createFriendshipCommandHandler =
-        std::make_shared<application::CreateFriendshipCommandHandlerImpl>(friendshipRepository, userRepository);
-
     auto acceptFriendInvitationCommandHandler =
         std::make_unique<server::application::AcceptFriendInvitationCommandHandlerImpl>(
-            friendInvitationRepository, userRepository, createFriendshipCommandHandler);
+            friendInvitationRepository, userRepository, friendshipRepository);
 
     auto acceptFriendRequestMessageHandler = std::make_shared<AcceptFriendRequestMessageHandler>(
         tokenService, std::move(acceptFriendInvitationCommandHandler));

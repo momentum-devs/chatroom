@@ -1,7 +1,6 @@
 #include "gtest/gtest.h"
 
 #include "AcceptFriendInvitationCommandHandlerImpl.h"
-#include "server/application/commandHandlers/friend/createFriendshipCommandHandler/CreateFriendshipCommandHandlerImpl.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapper.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
 #include "server/infrastructure/repositories/friendInvitationRepository/friendInvitationMapper/FriendInvitationMapperImpl.h"
@@ -66,11 +65,8 @@ public:
     std::shared_ptr<domain::FriendshipRepository> friendshipRepository =
         std::make_shared<FriendshipRepositoryImpl>(db, friendshipMapperInit, userMapper);
 
-    std::shared_ptr<application::CreateFriendshipCommandHandler> createFriendshipCommandHandler =
-        std::make_shared<CreateFriendshipCommandHandlerImpl>(friendshipRepository, userRepository);
-
-    AcceptFriendInvitationCommandHandlerImpl acceptFriendInvitationCommandHandler{
-        friendInvitationRepository, userRepository, createFriendshipCommandHandler};
+    AcceptFriendInvitationCommandHandlerImpl acceptFriendInvitationCommandHandler{friendInvitationRepository,
+                                                                                  userRepository, friendshipRepository};
 };
 
 TEST_F(AcceptFriendInvitationCommandImplIntegrationTest, acceptFriendInvitation)

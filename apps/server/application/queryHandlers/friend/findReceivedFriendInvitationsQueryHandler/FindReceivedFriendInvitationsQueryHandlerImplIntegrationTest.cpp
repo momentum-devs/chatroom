@@ -1,7 +1,6 @@
 #include "gtest/gtest.h"
 
 #include "FindReceivedFriendInvitationsQueryHandlerImpl.h"
-#include "server/application/commandHandlers/friend/createFriendshipCommandHandler/CreateFriendshipCommandHandlerImpl.h"
 #include "server/infrastructure/repositories/friendInvitationRepository/friendInvitationMapper/FriendInvitationMapperImpl.h"
 #include "server/infrastructure/repositories/friendInvitationRepository/FriendInvitationRepositoryImpl.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
