@@ -1,81 +1,125 @@
 import QtQuick 6.4
 import QtQuick.Controls 6.4
 import "../../qml/common/settings.js" as Settings
+import "components"
 
 Rectangle {
+    id: userSettingsRectangle
     color: Settings.backgroundColor
 
     Column {
         anchors.centerIn: parent
         spacing: 10
-        width: Math.round(parent.width / 3)
+        width: Math.round(parent.width * 0.75)
 
         Text {
             anchors.horizontalCenter: parent.horizontalCenter
-            color: "white"
+            color: Settings.textColor
             text: "User Settings"
         }
-        TextField {
-            id: emailField
-            readOnly: true
-            text: "example@email.com"
-            width: parent.width
+        Item {
+            height: userSettingsRectangle.height * 0.05
+            width: 1
         }
-        TextField {
-            id: nicknameField
-            focus: true
-            placeholderText: qsTr('Nickname')
+        Row {
+            anchors.horizontalCenter: parent.horizontalCenter
             width: parent.width
-        }
-        Button {
-            id: changeNickname
-            function activate() {
-                const nickname = nicknameField.text;
-                if (nickname.length !== 0) {
-                    userSettingsController.changeNickname(nickname);
-                    successPopup.open();
-                } else {
-                    errorPopup.contentItem.text = "Empty nickname field";
-                    errorPopup.open();
+
+            Column {
+                height: parent.height
+                spacing: 10
+                width: Math.round(parent.width / 3)
+
+                Avatar {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    height: 100
+                    width: 100
+                }
+                Button {
+                    id: changeAvatar
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: qsTr('Change avatar')
                 }
             }
+            Column {
+                spacing: 10
+                width: Math.round(parent.width / 3)
 
-            anchors.horizontalCenter: nicknameField.horizontalCenter
-            text: qsTr('Change nickname')
-            width: changePassword.width
+                TextField {
+                    id: emailField
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    readOnly: true
+                    text: "example@email.com"
+                    width: Math.round(parent.width * 0.8)
+                }
+                TextField {
+                    id: nicknameField
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    focus: true
+                    placeholderText: qsTr('Nickname')
+                    width: Math.round(parent.width * 0.8)
+                }
+                Button {
+                    function activate() {
+                        const nickname = nicknameField.text;
+                        if (nickname.length !== 0) {
+                            userSettingsController.changeNickname(nickname);
+                            successPopup.open();
+                        } else {
+                            errorPopup.contentItem.text = "Empty nickname field";
+                            errorPopup.open();
+                        }
+                    }
 
-            onClicked: activate()
-        }
-        TextField {
-            id: passwordField
-            echoMode: TextInput.Password
-            placeholderText: qsTr('Password')
-            width: parent.width
-        }
-        TextField {
-            id: passwordRepeatField
-            echoMode: TextInput.Password
-            placeholderText: qsTr('Repeat password')
-            width: parent.width
-        }
-        Button {
-            id: changePassword
-            function activate() {
-                const password = passwordField.text;
-                const passwordRepeat = passwordRepeatField.text;
-                if (password === passwordRepeat && password.length !== 0) {
-                    userSettingsController.changePassword(password);
-                    successPopup.open();
-                } else {
-                    errorPopup.contentItem.text = "Passwords mismatch";
-                    errorPopup.open();
+                    anchors.horizontalCenter: nicknameField.horizontalCenter
+                    text: qsTr('Change nickname')
+
+                    // width: changePassword.width
+                    onClicked: activate()
                 }
             }
+            Column {
+                spacing: 10
+                width: Math.round(parent.width / 3)
 
-            anchors.horizontalCenter: passwordRepeatField.horizontalCenter
-            text: qsTr('Change password')
+                TextField {
+                    id: passwordField
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    echoMode: TextInput.Password
+                    placeholderText: qsTr('Password')
+                    width: Math.round(parent.width * 0.8)
+                }
+                TextField {
+                    id: passwordRepeatField
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    echoMode: TextInput.Password
+                    placeholderText: qsTr('Repeat password')
+                    width: Math.round(parent.width * 0.8)
+                }
+                Button {
+                    id: changePassword
+                    function activate() {
+                        const password = passwordField.text;
+                        const passwordRepeat = passwordRepeatField.text;
+                        if (password === passwordRepeat && password.length !== 0) {
+                            userSettingsController.changePassword(password);
+                            successPopup.open();
+                        } else {
+                            errorPopup.contentItem.text = "Passwords mismatch";
+                            errorPopup.open();
+                        }
+                    }
 
-            onClicked: activate()
+                    anchors.horizontalCenter: passwordRepeatField.horizontalCenter
+                    text: qsTr('Change password')
+
+                    onClicked: activate()
+                }
+            }
+        }
+        Item {
+            height: userSettingsRectangle.height * 0.05
+            width: 1
         }
         Button {
             id: deleteUser
@@ -83,11 +127,11 @@ Rectangle {
                 userSettingsController.deleteUser();
             }
 
-            anchors.horizontalCenter: passwordRepeatField.horizontalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
             width: changePassword.width
 
             contentItem: Text {
-                color: "#FF0000"
+                color: Settings.deleteColor
                 horizontalAlignment: Text.AlignHCenter
                 text: qsTr('Delete user')
             }
@@ -100,7 +144,7 @@ Rectangle {
                 userSettingsController.goBack();
             }
 
-            anchors.horizontalCenter: passwordRepeatField.horizontalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
             text: qsTr('Go back')
             width: changePassword.width
 
@@ -109,7 +153,7 @@ Rectangle {
         Button {
             anchors.horizontalCenter: parent.horizontalCenter
             text: qsTr('Logout')
-            width: parent.width
+            width: changePassword.width
 
             onClicked: {
                 userSettingsController.logout();
