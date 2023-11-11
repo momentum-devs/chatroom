@@ -1,5 +1,6 @@
 import QtQuick 6.4
 import QtQuick.Controls 6.4
+import "../../../qml/components"
 import "../../../qml/common/settings.js" as Settings
 
 Rectangle {
@@ -76,20 +77,9 @@ Rectangle {
                                 privateMessagesController.setCurrentFriend(modelData[1], modelData[0]);
                             }
                         }
-                        Text {
-                            id: firendActive
+                        ActivityIndicator {
                             anchors.verticalCenter: friendButton.verticalCenter
-                            color: Settings.activeColor
-                            font.pointSize: 12
-                            text: "●"
-                            visible: modelData[2]
-                        }
-                        Text {
-                            anchors.verticalCenter: friendButton.verticalCenter
-                            color: Settings.inactiveColor
-                            font.pointSize: 12
-                            text: "○"
-                            visible: !modelData[2]
+                            isActive: modelData[2]
                         }
                     }
                 }
@@ -97,20 +87,9 @@ Rectangle {
                     height: addToFriend.height
                     width: rightColumn.width
 
-                    RoundButton {
+                    AddToListButton {
                         id: addToFriend
                         anchors.horizontalCenter: parent.horizontalCenter
-                        height: 35
-                        width: 35
-
-                        contentItem: Text {
-                            color: Settings.addColor
-                            // font.bold: true
-                            font.pointSize: 20
-                            horizontalAlignment: Text.AlignHCenter
-                            text: '+'
-                            verticalAlignment: Text.AlignVCenter
-                        }
 
                         onClicked: {
                             privateMessagesController.goToSendFriendRequest()();
@@ -119,9 +98,7 @@ Rectangle {
                 }
             }
         }
-        Rectangle {
-            color: Settings.separatorColor
-            height: 1
+        Separator {
             width: parent.width
         }
         Text {
@@ -149,27 +126,13 @@ Rectangle {
                     Row {
                         width: parent.width
 
-                        Button {
+                        AcceptButton {
                             id: acceptFriendRequest
-                            width: 30
-
-                            contentItem: Text {
-                                color: Settings.acceptColor
-                                text: qsTr('✓')
-                            }
-
                             onClicked: {
                                 privateMessagesController.acceptFriendRequest(modelData[1]);
                             }
                         }
-                        Button {
-                            width: 30
-
-                            contentItem: Text {
-                                color: Settings.rejectColor
-                                text: qsTr('✕')
-                            }
-
+                        RejectButton {
                             onClicked: {
                                 privateMessagesController.rejectFriendRequest(modelData[1]);
                             }

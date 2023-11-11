@@ -48,6 +48,11 @@ set(QML_SOURCES
         gui/qml/components/ChannelList.qml
         gui/qml/components/ChannelInvitationList.qml
         gui/qml/components/SettingsBox.qml
+        gui/qml/components/AddToListButton.ui.qml
+        gui/qml/components/AcceptButton.ui.qml
+        gui/qml/components/RejectButton.ui.qml
+        gui/qml/components/Separator.ui.qml
+        gui/qml/components/ActivityIndicator.ui.qml
 
         gui/states/register/RegisterView.qml
         gui/states/login/LoginView.qml

@@ -1,5 +1,6 @@
 import QtQuick 6.4
 import QtQuick.Controls 6.4
+import "../../../qml/components"
 import "../../../qml/common/settings.js" as Settings
 
 Item {
@@ -47,9 +48,7 @@ Item {
                 }
             }
         }
-        Rectangle {
-            color: Settings.separatorColor
-            height: 1
+        Separator {
             width: parent.width
         }
     }

@@ -29,27 +29,13 @@ ScrollView {
                 color: Settings.textColor
                 text: modelData[0]
             }
-            Button {
+            AcceptButton {
                 id: acceptChannelInvitation
-                width: 30
-
-                contentItem: Text {
-                    color: Settings.acceptColor
-                    text: qsTr('✓')
-                }
-
                 onClicked: {
                     leftColumnController.acceptChannelInvitation(modelData[1]);
                 }
             }
-            Button {
-                width: 30
-
-                contentItem: Text {
-                    color: Settings.rejectColor
-                    text: qsTr('✕')
-                }
-
+            RejectButton {
                 onClicked: {
                     leftColumnController.rejectChannelInvitation(modelData[1]);
                 }
