@@ -60,6 +60,7 @@ set(QML_SOURCES
         gui/states/createChannel/CreateChannelView.qml
         gui/states/sendFriendRequest/SendFriendRequestView.qml
         gui/states/userSettings/UserSettingsView.qml
+        gui/states/userSettings/components/Avatar.ui.qml
         gui/states/verifyUser/VerifyUserView.qml
         gui/states/inviteToChannel/InviteToChannelView.qml
 
@@ -72,6 +73,7 @@ set(QML_SOURCES
         )
 
 set(RESOURCES
+        resources/example_avatar.jpg
         resources/svg/gear.svg
         resources/svg/plus.svg
         resources/svg/online.svg
