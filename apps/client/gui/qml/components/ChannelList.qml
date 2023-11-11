@@ -43,20 +43,9 @@ ScrollView {
             height: createChannelButton.height
             width: parent.width
 
-            RoundButton {
+            AddToListButton {
                 id: createChannelButton
                 anchors.horizontalCenter: parent.horizontalCenter
-                height: 35
-                width: 35
-
-                contentItem: Text {
-                    color: Settings.addColor
-                    // font.bold: true
-                    font.pointSize: 20
-                    horizontalAlignment: Text.AlignHCenter
-                    text: '+'
-                    verticalAlignment: Text.AlignVCenter
-                }
 
                 onClicked: {
                     leftColumnController.goToCreateChannel();

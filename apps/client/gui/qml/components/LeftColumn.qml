@@ -38,9 +38,7 @@ Rectangle {
                 height: 1
                 width: parent.width
             }
-            Rectangle {
-                color: Settings.separatorColor
-                height: 1
+            Separator {
                 width: parent.width
             }
         }
@@ -54,9 +52,7 @@ Rectangle {
             height: (parent.height - menuColumn.height) * 0.6
             width: parent.width
         }
-        Rectangle {
-            color: Settings.separatorColor
-            height: 1
+        Separator {
             width: parent.width
         }
         Text {

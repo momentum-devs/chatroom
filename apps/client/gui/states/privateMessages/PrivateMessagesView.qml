@@ -30,10 +30,8 @@ Rectangle {
                 width: parent.width
             }
         }
-        Rectangle {
-            color: Settings.separatorColor
+        Separator {
             height: parent.height
-            width: 1
         }
         FriendsColumn {
             id: friendsColumn
