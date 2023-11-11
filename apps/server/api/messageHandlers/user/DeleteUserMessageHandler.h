@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "MessageHandler.h"
+#include "../MessageHandler.h"
 #include "server/application/commandHandlers/user/deleteUserCommandHandler/DeleteUserCommandHandler.h"
 #include "server/application/services/tokenService/TokenService.h"
 

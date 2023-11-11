@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "MessageHandler.h"
+#include "../MessageHandler.h"
 #include "server/application/commandHandlers/user/updateUserCommandHandler/UpdateUserCommandHandler.h"
 #include "server/application/services/tokenService/TokenService.h"
 
@@ -13,7 +13,7 @@ class UpdateUserMessageHandler : public MessageHandler
 public:
     UpdateUserMessageHandler(std::shared_ptr<application::TokenService> tokenService,
                              std::unique_ptr<application::UpdateUserCommandHandler> updateUserCommandHandler);
-    
+
     common::messages::Message handleMessage(const common::messages::Message& message) const override;
 
 private:
