@@ -2,27 +2,27 @@
 
 #include "httpClient/HttpClientFactory.h"
 #include "MessageRouterImpl.h"
-#include "server/api/messageHandlers/channel/AcceptChannelInvitationMessageHandler.h"
-#include "server/api/messageHandlers/channel/CreateChannelMessageHandler.h"
-#include "server/api/messageHandlers/channel/DeleteTheChannelMessageHandler.h"
-#include "server/api/messageHandlers/channel/GetUserChannelInvitationsMessageHandler.h"
-#include "server/api/messageHandlers/channel/GetUserChannelsMessageHandler.h"
-#include "server/api/messageHandlers/channel/LeaveChannelMessageHandler.h"
-#include "server/api/messageHandlers/channel/RejectChannelInvitationMessageHandler.h"
-#include "server/api/messageHandlers/channel/SendChannelInvitationMessageHandler.h"
-#include "server/api/messageHandlers/friend/AcceptFriendRequestMessageHandler.h"
-#include "server/api/messageHandlers/friend/FriendRequestMessageHandler.h"
-#include "server/api/messageHandlers/friend/GetUserFriendRequestsMessageHandler.h"
-#include "server/api/messageHandlers/friend/GetUserFriendsMessageHandler.h"
-#include "server/api/messageHandlers/friend/RejectFriendRequestMessageHandler.h"
-#include "server/api/messageHandlers/friend/RemoveFromFriendsMessageHandler.h"
-#include "server/api/messageHandlers/user/DeleteUserMessageHandler.h"
-#include "server/api/messageHandlers/user/GetUserDataMessageHandler.h"
-#include "server/api/messageHandlers/user/LoginMessageHandler.h"
-#include "server/api/messageHandlers/user/LogoutMessageHandler.h"
-#include "server/api/messageHandlers/user/RegisterMessageHandler.h"
-#include "server/api/messageHandlers/user/UpdateUserMessageHandler.h"
-#include "server/api/messageHandlers/user/VerifyUserMessageHandler.h"
+#include "server/api/messageHandlers/channel/acceptChannelInvitationMessageHandler/AcceptChannelInvitationMessageHandler.h"
+#include "server/api/messageHandlers/channel/createChannelMessageHandler/CreateChannelMessageHandler.h"
+#include "server/api/messageHandlers/channel/deleteChannelMessageHandler/DeleteChannelMessageHandler.h"
+#include "server/api/messageHandlers/channel/getUserChannelInvitationsMessageHandler/GetUserChannelInvitationsMessageHandler.h"
+#include "server/api/messageHandlers/channel/getUserChannelsMessageHandler/GetUserChannelsMessageHandler.h"
+#include "server/api/messageHandlers/channel/leaveChannelMessageHandler/LeaveChannelMessageHandler.h"
+#include "server/api/messageHandlers/channel/rejectChannelInvitationMessageHandler/RejectChannelInvitationMessageHandler.h"
+#include "server/api/messageHandlers/channel/sendChannelInvitationMessageHandler/SendChannelInvitationMessageHandler.h"
+#include "server/api/messageHandlers/friend/acceptFriendRequestMessageHandler/AcceptFriendRequestMessageHandler.h"
+#include "server/api/messageHandlers/friend/friendRequestMessageHandler/FriendRequestMessageHandler.h"
+#include "server/api/messageHandlers/friend/getUserFriendRequestsMessageHandler/GetUserFriendRequestsMessageHandler.h"
+#include "server/api/messageHandlers/friend/getUserFriendsMessageHandler/GetUserFriendsMessageHandler.h"
+#include "server/api/messageHandlers/friend/rejectFriendRequestMessageHandler/RejectFriendRequestMessageHandler.h"
+#include "server/api/messageHandlers/friend/removeFromFriendsMessageHandler/RemoveFromFriendsMessageHandler.h"
+#include "server/api/messageHandlers/user/deleteUserMessageHandler/DeleteUserMessageHandler.h"
+#include "server/api/messageHandlers/user/getUserDataMessageHandler/GetUserDataMessageHandler.h"
+#include "server/api/messageHandlers/user/loginMessageHandler/LoginMessageHandler.h"
+#include "server/api/messageHandlers/user/logoutMessageHandler/LogoutMessageHandler.h"
+#include "server/api/messageHandlers/user/registerMessageHandler/RegisterMessageHandler.h"
+#include "server/api/messageHandlers/user/updateUserMessageHandler/UpdateUserMessageHandler.h"
+#include "server/api/messageHandlers/user/verifyUserMessageHandler/VerifyUserMessageHandler.h"
 #include "server/application/commandHandlers/channel/acceptChannelInvitationCommandHandler/AcceptChannelInvitationCommandHandlerImpl.h"
 #include "server/application/commandHandlers/channel/createChannelCommandHandler/CreateChannelCommandHandlerImpl.h"
 #include "server/application/commandHandlers/channel/createChannelInvitationCommandHandler/CreateChannelInvitationCommandHandlerImpl.h"
@@ -191,7 +191,7 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
         std::make_unique<server::application::DeleteChannelCommandHandlerImpl>(channelRepository);
 
     auto deleteTheChannelMessageHandler =
-        std::make_shared<api::DeleteTheChannelMessageHandler>(tokenService, std::move(deleteChannelCommandHandler));
+        std::make_shared<api::DeleteChannelMessageHandler>(tokenService, std::move(deleteChannelCommandHandler));
 
     auto friendInvitationMapper = std::make_shared<server::infrastructure::FriendInvitationMapperImpl>(userMapper);
 
