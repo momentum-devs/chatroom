@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 
 #include "AcceptChannelInvitationCommandHandlerImpl.h"
+#include "server/application/errors/OperationNotValidError.h"
 #include "server/infrastructure/repositories/channelInvitationRepository/channelInvitationMapper/ChannelInvitationMapperImpl.h"
 #include "server/infrastructure/repositories/channelInvitationRepository/ChannelInvitationRepositoryImpl.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
@@ -97,4 +98,20 @@ TEST_F(AcceptChannelInvitationCommandImplIntegrationTest, acceptChannelInvitatio
     const auto foundUserChannel = userChannelTestUtils.find(recipient->getId(), channel->getId());
 
     ASSERT_TRUE(foundUserChannel);
+}
+
+TEST_F(AcceptChannelInvitationCommandImplIntegrationTest, userAlreadyInChannel_shouldThrow)
+{
+    const auto sender = userTestUtils.createAndPersist();
+
+    const auto recipient = userTestUtils.createAndPersist();
+
+    const auto channel = channelTestUtils.createAndPersist(sender);
+
+    userChannelTestUtils.createAndPersist(recipient, channel);
+
+    const auto channelInvitation = channelInvitationTestUtils.createAndPersist(sender, recipient, channel);
+
+    ASSERT_THROW(acceptChannelInvitationCommandHandler.execute({recipient->getId(), channelInvitation->getId()}),
+                 errors::OperationNotValidError);
 }

@@ -48,7 +48,7 @@ void AcceptChannelInvitationCommandHandlerImpl::execute(
     const auto channelId = channelInvitation->getChannel()->getId();
 
     // TODO: consider adding transactions
-    
+
     addUserToChannel(recipientId, channelId);
 
     channelInvitationRepository->deleteChannelInvitation({*channelInvitation});
@@ -59,6 +59,18 @@ void AcceptChannelInvitationCommandHandlerImpl::execute(
 void AcceptChannelInvitationCommandHandlerImpl::addUserToChannel(const std::string& userId,
                                                                  const std::string& channelId) const
 {
+    const auto userChannels = userChannelRepository->findUsersChannelsByUserId({userId});
+
+    const auto userAlreadyInChannel = std::any_of(userChannels.begin(), userChannels.end(),
+                                                  [=](const domain::UserChannel& userChannel)
+                                                  { return userChannel.getChannel()->getId() == channelId; });
+
+    if (userAlreadyInChannel)
+    {
+        throw errors::OperationNotValidError(
+            std::format("User already is a member of channel. {{userId: {}, channelId: {}}}", userId, channelId));
+    }
+
     LOG_S(INFO) << std::format("Adding user to channel... {{userId: {}, channelId: {}}}", userId, channelId);
 
     const auto user = userRepository->findUserById({userId});

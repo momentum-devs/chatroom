@@ -24,7 +24,6 @@
 * infrastructure setup
 * deploy
 * refactor env parser to lib
-* remove command calling other commands
 * refactor api directory
 * message seen
-* add user to channel - check if user already in channel
+* add missing command handler tests
