@@ -76,14 +76,6 @@ set(SOURCES
         application/queryHandlers/group/findUsersBelongingToGroupQueryHandler/FindUsersBelongingToGroupQueryHandlerImpl.cpp
         application/queryHandlers/group/findGroupsToWhichUserBelongsQueryHandler/FindGroupsToWhichUserBelongsQueryHandlerImpl.cpp
 
-        domain/entities/message/Message.cpp
-        infrastructure/repositories/messageRepository/MessageRepositoryImpl.cpp
-        infrastructure/repositories/messageRepository/messageMapper/MessageMapperImpl.cpp
-        application/commandHandlers/message/createGroupMessageCommandHandler/CreateGroupMessageCommandHandlerImpl.cpp
-        application/commandHandlers/message/createChannelMessageCommandHandler/CreateChannelMessageCommandHandlerImpl.cpp
-        application/commandHandlers/message/deleteMessageCommandHandler/DeleteMessageCommandHandlerImpl.cpp
-        application/commandHandlers/message/updateMessageCommandHandler/UpdateMessageCommandHandlerImpl.cpp
-
         api/messageHandlers/channel/createChannelMessageHandler/CreateChannelMessageHandler.cpp
         api/messageHandlers/channel/getUserChannelsMessageHandler/GetUserChannelsMessageHandler.cpp
         api/messageHandlers/channel/sendChannelInvitationMessageHandler/SendChannelInvitationMessageHandler.cpp
@@ -105,7 +97,17 @@ set(SOURCES
         api/messageHandlers/friend/rejectFriendRequestMessageHandler/RejectFriendRequestMessageHandler.cpp
         api/messageHandlers/friend/getUserFriendsMessageHandler/GetUserFriendsMessageHandler.cpp
         api/messageHandlers/friend/removeFromFriendsMessageHandler/RemoveFromFriendsMessageHandler.cpp
-        )
+
+        domain/entities/message/Message.cpp
+        infrastructure/repositories/messageRepository/MessageRepositoryImpl.cpp
+        infrastructure/repositories/messageRepository/messageMapper/MessageMapperImpl.cpp
+        application/commandHandlers/message/createGroupMessageCommandHandler/CreateGroupMessageCommandHandlerImpl.cpp
+        application/commandHandlers/message/createChannelMessageCommandHandler/CreateChannelMessageCommandHandlerImpl.cpp
+        application/commandHandlers/message/deleteMessageCommandHandler/DeleteMessageCommandHandlerImpl.cpp
+        application/commandHandlers/message/updateMessageCommandHandler/UpdateMessageCommandHandlerImpl.cpp
+        application/queryHandlers/message/findChannelMessagesQueryHandler/FindChannelMessagesQueryHandlerImpl.cpp
+        application/queryHandlers/message/findGroupMessagesQueryHandler/FindGroupMessagesQueryHandlerImpl.cpp
+)
 
 set(TEST_COMMON_SOURCES
         tests/factories/userTestFactory/UserTestFactory.cpp
@@ -117,7 +119,7 @@ set(TEST_COMMON_SOURCES
         tests/factories/groupTestFactory/GroupTestFactory.cpp
         tests/factories/userGroupTestFactory/UserGroupTestFactory.cpp
         tests/factories/messageTestFactory/MessageTestFactory.cpp
-        )
+)
 
 set(UT_SOURCES
         core/session/SessionImplTest.cpp
@@ -157,7 +159,7 @@ set(UT_SOURCES
         api/messageHandlers/friend/rejectFriendRequestMessageHandler/RejectFriendRequestMessageHandlerTest.cpp
         api/messageHandlers/friend/getUserFriendsMessageHandler/GetUserFriendsMessageHandlerTest.cpp
         api/messageHandlers/friend/removeFromFriendsMessageHandler/RemoveFromFriendsMessageHandlerTest.cpp
-        )
+)
 
 set(IT_SOURCES
         tests/factories/databaseClientTestFactory/DatabaseClientTestFactory.cpp
@@ -220,7 +222,9 @@ set(IT_SOURCES
         application/commandHandlers/message/createChannelMessageCommandHandler/CreateChannelMessageCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/message/deleteMessageCommandHandler/DeleteMessageCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/message/updateMessageCommandHandler/UpdateMessageCommandHandlerImplIntegrationTest.cpp
-        )
+        application/queryHandlers/message/findChannelMessagesQueryHandler/FindChannelMessagesQueryHandlerImplIntegrationTest.cpp
+        application/queryHandlers/message/findGroupMessagesQueryHandler/FindGroupMessagesQueryHandlerImplIntegrationTest.cpp
+)
 
 set(ODB_HEADERS
         infrastructure/database/entities/User.h
@@ -232,7 +236,7 @@ set(ODB_HEADERS
         infrastructure/database/entities/Group.h
         infrastructure/database/entities/UserGroup.h
         infrastructure/database/entities/Message.h
-        )
+)
 
 odb_compile(
         HEADERS ${ODB_HEADERS}
@@ -257,12 +261,12 @@ set(ODB_SOURCES
         infrastructure/database/entities/UserGroup.cpp
         infrastructure/database/entities/Message.cpp
         ${ODB_GENERATED_SOURCES}
-        )
+)
 
 set(ODB_LIBRARIES
         odb
         odb-pgsql
-        )
+)
 
 include_directories(infrastructure/database/entities)
 
@@ -270,7 +274,7 @@ add_executable(${EXECUTABLE_NAME}
         Main.cpp
         ${SOURCES}
         ${ODB_SOURCES}
-        )
+)
 
 target_link_libraries(${EXECUTABLE_NAME} PRIVATE
         Qt6::Core
@@ -285,18 +289,18 @@ target_link_libraries(${EXECUTABLE_NAME} PRIVATE
         redis-cpp
         ${ODB_LIBRARIES}
         envParser
-        )
+)
 
 target_include_directories(${EXECUTABLE_NAME} PRIVATE
         ${DOTENV_INCLUDE_DIR}
-        )
+)
 
 add_executable(${EXECUTABLE_NAME}UT
         ${UT_SOURCES}
         ${SOURCES}
         ${TEST_COMMON_SOURCES}
         ${ODB_SOURCES}
-        )
+)
 
 target_link_libraries(${EXECUTABLE_NAME}UT PRIVATE
         GTest::gmock_main
@@ -313,7 +317,7 @@ target_link_libraries(${EXECUTABLE_NAME}UT PRIVATE
         ${ODB_LIBRARIES}
         faker-cxx
         envParser
-        )
+)
 
 target_include_directories(${EXECUTABLE_NAME}UT PUBLIC ${GMOCK_INCLUDE_DIR})
 
@@ -326,7 +330,7 @@ add_executable(${EXECUTABLE_NAME}IT
         ${SOURCES}
         ${TEST_COMMON_SOURCES}
         ${ODB_SOURCES}
-        )
+)
 
 target_link_libraries(${EXECUTABLE_NAME}IT PRIVATE
         GTest::gtest_main
@@ -343,7 +347,7 @@ target_link_libraries(${EXECUTABLE_NAME}IT PRIVATE
         ${ODB_LIBRARIES}
         faker-cxx
         envParser
-        )
+)
 
 target_include_directories(${EXECUTABLE_NAME}IT PUBLIC ${GMOCK_INCLUDE_DIR})
 
