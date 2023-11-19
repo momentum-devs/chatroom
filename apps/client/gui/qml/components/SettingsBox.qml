@@ -27,6 +27,7 @@ Rectangle {
         anchors.right: parent.right
         anchors.rightMargin: 8
         anchors.verticalCenter: parent.verticalCenter
+        size: 28
 
         onClicked: {
             leftColumnController.goToUserSettings();
