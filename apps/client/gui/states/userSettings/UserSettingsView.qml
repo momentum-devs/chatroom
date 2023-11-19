@@ -8,13 +8,11 @@ Rectangle {
     color: Settings.backgroundColor
 
     EscapeButton {
-        width: 35
+        size: 45
         x: parent.width * 0.75
         y: parent.height * 0.1
 
-        onClicked: {
-            console.log("click");
-        }
+        onClicked: userSettingsController.goBack()
     }
     Column {
         anchors.centerIn: parent
@@ -145,18 +143,6 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 text: qsTr('Delete user')
             }
-
-            onClicked: activate()
-        }
-        Button {
-            id: goBackButton
-            function activate() {
-                userSettingsController.goBack();
-            }
-
-            anchors.horizontalCenter: parent.horizontalCenter
-            text: qsTr('Go back')
-            width: changePassword.width
 
             onClicked: activate()
         }
