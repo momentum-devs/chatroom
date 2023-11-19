@@ -7,7 +7,10 @@ Rectangle {
     id: userSettingsRectangle
     color: Settings.backgroundColor
 
+    Keys.onEscapePressed: escapeButton.clicked()
+
     EscapeButton {
+        id: escapeButton
         size: 45
         x: parent.width * 0.75
         y: parent.height * 0.1
