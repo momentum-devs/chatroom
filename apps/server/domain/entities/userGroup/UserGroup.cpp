@@ -39,4 +39,9 @@ std::string UserGroup::getCreatedAt() const
     return createdAt;
 }
 
+void UserGroup::setLastReadMessageId(const std::string& lastReadMessageIdInit)
+{
+    lastReadMessageId = lastReadMessageIdInit;
+}
+
 }

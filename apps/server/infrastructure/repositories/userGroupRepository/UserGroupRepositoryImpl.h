@@ -15,14 +15,14 @@ class UserGroupRepositoryImpl : public domain::UserGroupRepository
 {
 public:
     UserGroupRepositoryImpl(std::shared_ptr<odb::pgsql::database>, std::shared_ptr<UserGroupMapper>,
-                              std::shared_ptr<UserMapper>, std::shared_ptr<GroupMapper>);
+                            std::shared_ptr<UserMapper>, std::shared_ptr<GroupMapper>);
 
     domain::UserGroup createUserGroup(const domain::CreateUserGroupPayload&) const;
     std::optional<domain::UserGroup> findUserGroup(const domain::FindUserGroupPayload&) const;
     std::optional<domain::UserGroup> findUserGroupById(const domain::FindUserGroupByIdPayload&) const;
     std::vector<domain::UserGroup> findUsersGroupsByUserId(const domain::FindUsersGroupsByUserIdPayload&) const;
-    std::vector<domain::UserGroup>
-    findUsersGroupsByGroupId(const domain::FindUsersGroupsByGroupIdPayload&) const;
+    std::vector<domain::UserGroup> findUsersGroupsByGroupId(const domain::FindUsersGroupsByGroupIdPayload&) const;
+    domain::UserGroup updateUserGroup(const domain::UpdateUserGroupPayload&) const;
     void deleteUserGroup(const domain::DeleteUserGroupPayload&) const;
 
 private:

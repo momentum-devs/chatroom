@@ -9,6 +9,7 @@
 #include "payloads/FindUserGroupByIdPayload.h"
 #include "payloads/FindUsersGroupsByGroupIdPayload.h"
 #include "payloads/FindUsersGroupsByUserIdPayload.h"
+#include "payloads/UpdateUserGroupPayload.h"
 #include "server/domain/repositories/userGroupRepository/payloads/FindUserGroupPayload.h"
 
 namespace server::domain
@@ -23,6 +24,7 @@ public:
     virtual std::optional<UserGroup> findUserGroupById(const FindUserGroupByIdPayload&) const = 0;
     virtual std::vector<UserGroup> findUsersGroupsByUserId(const FindUsersGroupsByUserIdPayload&) const = 0;
     virtual std::vector<UserGroup> findUsersGroupsByGroupId(const FindUsersGroupsByGroupIdPayload&) const = 0;
+    virtual UserGroup updateUserGroup(const UpdateUserGroupPayload&) const = 0;
     virtual void deleteUserGroup(const DeleteUserGroupPayload&) const = 0;
 };
 }

@@ -15,6 +15,7 @@ public:
                 (const override));
     MOCK_METHOD(std::vector<UserGroup>, findUsersGroupsByGroupId, (const FindUsersGroupsByGroupIdPayload&),
                 (const override));
+    MOCK_METHOD(UserGroup, updateUserGroup, (const UpdateUserGroupPayload&), (const override));
     MOCK_METHOD(void, deleteUserGroup, (const DeleteUserGroupPayload&), (const override));
 };
 }

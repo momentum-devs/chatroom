@@ -45,6 +45,7 @@ public:
     UserGroupTestUtils userGroupTestUtils{db};
 
     UserTestFactory userTestFactory;
+    GroupTestFactory groupTestFactory;
 
     UserGroupTestFactory userGroupTestFactory;
 
@@ -133,4 +134,37 @@ TEST_F(UserGroupRepositoryIntegrationTest, shouldFindUsersGroupsByGroupId)
 
     ASSERT_TRUE(foundUsersGroups.size());
     ASSERT_EQ(foundUsersGroups[0].getId(), userGroup->getId());
+}
+
+TEST_F(UserGroupRepositoryIntegrationTest, shouldUpdateExistingUserGroup)
+{
+    const auto updatedMessageId = faker::String::uuid();
+
+    const auto user = userTestUtils.createAndPersist();
+
+    const auto group = groupTestUtils.createAndPersist();
+
+    const auto userGroup = userGroupTestUtils.createAndPersist(user, group);
+
+    auto domainUserGroup = userGroupMapper->mapToDomainUserGroup(*userGroup);
+
+    domainUserGroup.setLastReadMessageId(updatedMessageId);
+
+    userGroupRepository->updateUserGroup({domainUserGroup});
+
+    const auto updatedUserGroup = userGroupTestUtils.findById({userGroup->getId()});
+
+    ASSERT_TRUE(updatedUserGroup);
+    ASSERT_EQ((*updatedUserGroup).getLastReadMessageId().get(), updatedMessageId);
+}
+
+TEST_F(UserGroupRepositoryIntegrationTest, update_givenNonExistingUserGroup_shouldThrowError)
+{
+    const auto user = userTestFactory.createDomainUser();
+
+    const auto group = groupTestFactory.createDomainGroup();
+
+    const auto domainMessage = userGroupTestFactory.createDomainUserGroup(user, group);
+
+    ASSERT_ANY_THROW(userGroupRepository->updateUserGroup({*domainMessage}));
 }

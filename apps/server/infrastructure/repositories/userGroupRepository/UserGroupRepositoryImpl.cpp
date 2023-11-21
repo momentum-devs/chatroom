@@ -1,6 +1,7 @@
 #include "UserGroupRepositoryImpl.h"
 
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <format>
 
 #include "server/infrastructure/errors/ResourceNotFoundError.h"
 #include "server/infrastructure/errors/UserGroupRepositoryError.h"
@@ -151,6 +152,43 @@ UserGroupRepositoryImpl::findUsersGroupsByGroupId(const domain::FindUsersGroupsB
         transaction.commit();
 
         return domainUserGroups;
+    }
+    catch (const std::exception& error)
+    {
+        throw errors::UserGroupRepositoryError{error.what()};
+    }
+}
+
+domain::UserGroup UserGroupRepositoryImpl::updateUserGroup(const domain::UpdateUserGroupPayload& payload) const
+{
+    try
+    {
+        {
+            odb::transaction transaction(db->begin());
+
+            typedef odb::query<UserGroup> query;
+
+            std::shared_ptr<UserGroup> userGroup(db->query_one<UserGroup>(query::id == payload.userGroup.getId()));
+
+            if (!userGroup)
+            {
+                throw errors::ResourceNotFoundError{
+                    std::format("UserGroup with id \"{}\" not found.", payload.userGroup.getId())};
+            }
+
+            const auto lastReadMessageId = payload.userGroup.getLastReadMessageId();
+
+            if (lastReadMessageId)
+            {
+                userGroup->setLastReadMessageId(*lastReadMessageId);
+
+                db->update(*userGroup);
+            }
+
+            transaction.commit();
+        }
+
+        return *findUserGroupById({payload.userGroup.getId()});
     }
     catch (const std::exception& error)
     {

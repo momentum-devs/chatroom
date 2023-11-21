@@ -15,7 +15,7 @@ public:
                 (const override));
     MOCK_METHOD(std::vector<UserChannel>, findUsersChannelsByChannelId, (const FindUsersChannelsByChannelIdPayload&),
                 (const override));
-    virtual UserChannel updateUserChannel(const UpdateUserChannelPayload&) const = 0;
+    MOCK_METHOD(UserChannel, updateUserChannel, (const UpdateUserChannelPayload&), (const override));
     MOCK_METHOD(void, deleteUserChannel, (const DeleteUserChannelPayload&), (const override));
 };
 }
