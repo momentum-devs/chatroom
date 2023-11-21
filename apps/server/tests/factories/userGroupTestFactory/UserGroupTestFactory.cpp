@@ -11,8 +11,9 @@ UserGroupTestFactory::createDomainUserGroup(const std::shared_ptr<domain::User>&
 {
     const auto id = faker::String::uuid();
     const auto createdAt = faker::Date::pastDate();
+    const auto lastReadMessageId = faker::String::uuid();
 
-    return std::make_shared<domain::UserGroup>(id, user, group, createdAt);
+    return std::make_shared<domain::UserGroup>(id, lastReadMessageId, user, group, createdAt);
 }
 
 std::shared_ptr<infrastructure::UserGroup>
@@ -21,7 +22,8 @@ UserGroupTestFactory::createPersistentUserGroup(const std::shared_ptr<infrastruc
 {
     const auto id = faker::String::uuid();
     const auto createdAt = faker::Date::pastDate();
+    const auto lastReadMessageId = faker::String::uuid();
 
-    return std::make_shared<infrastructure::UserGroup>(id, user, group, createdAt);
+    return std::make_shared<infrastructure::UserGroup>(id, lastReadMessageId, user, group, createdAt);
 }
 }

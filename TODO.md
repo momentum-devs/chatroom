@@ -19,7 +19,6 @@
 
 ### SERVER:
 
-* user has history of direct messages and messages in channel
 * reactions
 * encryption
 * user avatars and channel avatars
@@ -28,3 +27,4 @@
 * transactions
 * migrations
 * lastReadMessageId in usersGroups and usersChannels
+* add pagination in fetching messages

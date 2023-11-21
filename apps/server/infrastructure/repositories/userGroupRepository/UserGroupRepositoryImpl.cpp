@@ -30,7 +30,7 @@ domain::UserGroup UserGroupRepositoryImpl::createUserGroup(const domain::CreateU
 
             const auto group = groupMapper->mapToPersistenceGroup(payload.group);
 
-            UserGroup userGroup{payload.id, user, group, currentDate};
+            UserGroup userGroup{payload.id, odb::nullable<std::string>(), user, group, currentDate};
 
             odb::transaction transaction(db->begin());
 

@@ -128,10 +128,11 @@ DROP TABLE IF EXISTS "users_groups" CASCADE;
 
 CREATE TABLE "users_groups"
 (
-    "id"         TEXT NOT NULL PRIMARY KEY,
-    "created_at" TEXT NOT NULL,
-    "user"       TEXT NOT NULL,
-    "group"      TEXT NOT NULL
+    "id"                   TEXT NOT NULL PRIMARY KEY,
+    "created_at"           TEXT NOT NULL,
+    "last_read_message_id" TEXT NULL,
+    "user"                 TEXT NOT NULL,
+    "group"                TEXT NOT NULL
 );
 
 ALTER TABLE "users_groups"
