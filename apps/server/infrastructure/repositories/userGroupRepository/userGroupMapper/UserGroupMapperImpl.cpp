@@ -13,8 +13,8 @@ UserGroupMapperImpl::UserGroupMapperImpl(std::shared_ptr<UserMapper> userMapperI
 domain::UserGroup UserGroupMapperImpl::mapToDomainUserGroup(const UserGroup& userGroup) const
 {
     const auto id = userGroup.getId();
-    const auto lastReadMessageId = userGroup.getLastReadMessageId().null() ? userGroup.getLastReadMessageId().get() :
-                                                                             std::optional<std::string>(std::nullopt);
+    const auto lastReadMessageId = userGroup.getLastReadMessageId().null() ? std::optional<std::string>(std::nullopt) :
+                                                                             userGroup.getLastReadMessageId().get();
     const auto user = userMapper->mapToDomainUser(userGroup.getUser());
     const auto group = groupMapper->mapToDomainGroup(userGroup.getGroup());
     const auto createdAt = userGroup.getCreatedAt();

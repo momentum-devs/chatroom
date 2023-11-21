@@ -13,10 +13,13 @@ UserChannelMapperImpl::UserChannelMapperImpl(std::shared_ptr<UserMapper> userMap
 domain::UserChannel UserChannelMapperImpl::mapToDomainUserChannel(const UserChannel& userChannel) const
 {
     const auto id = userChannel.getId();
+    const auto lastReadMessageId = userChannel.getLastReadMessageId().null() ?
+                                       std::optional<std::string>(std::nullopt) :
+                                       userChannel.getLastReadMessageId().get();
     const auto user = userMapper->mapToDomainUser(userChannel.getUser());
     const auto channel = channelMapper->mapToDomainChannel(userChannel.getChannel());
     const auto createdAt = userChannel.getCreatedAt();
 
-    return domain::UserChannel{id, user, channel, createdAt};
+    return domain::UserChannel{id, lastReadMessageId, user, channel, createdAt};
 }
 }

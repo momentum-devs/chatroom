@@ -48,6 +48,7 @@ TEST_F(UserGroupMapperTest, givenPersistenceUserGroup_shouldMapToDomainUserGroup
     const auto domainUserGroup = userGroupMapper.mapToDomainUserGroup(*userGroup);
 
     ASSERT_EQ(domainUserGroup.getId(), userGroup->getId());
+    ASSERT_EQ(domainUserGroup.getLastReadMessageId(), userGroup->getLastReadMessageId().get());
     ASSERT_EQ(domainUserGroup.getUser(), domainUser);
     ASSERT_EQ(domainUserGroup.getGroup(), domainGroup);
     ASSERT_EQ(domainUserGroup.getCreatedAt(), userGroup->getCreatedAt());

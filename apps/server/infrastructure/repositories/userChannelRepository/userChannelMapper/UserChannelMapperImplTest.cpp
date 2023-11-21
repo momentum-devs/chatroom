@@ -49,6 +49,7 @@ TEST_F(UserChannelMapperTest, givenPersistenceUserChannel_shouldMapToDomainUserC
     const auto domainUserChannel = userChannelMapper.mapToDomainUserChannel(*userChannel);
 
     ASSERT_EQ(domainUserChannel.getId(), userChannel->getId());
+    ASSERT_EQ(domainUserChannel.getLastReadMessageId(), userChannel->getLastReadMessageId().get());
     ASSERT_EQ(domainUserChannel.getUser(), domainUser);
     ASSERT_EQ(domainUserChannel.getChannel(), domainChannel);
     ASSERT_EQ(domainUserChannel.getCreatedAt(), userChannel->getCreatedAt());

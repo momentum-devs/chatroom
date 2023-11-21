@@ -35,10 +35,11 @@ DROP TABLE IF EXISTS "users_channels" CASCADE;
 
 CREATE TABLE "users_channels"
 (
-    "id"         TEXT NOT NULL PRIMARY KEY,
-    "created_at" TEXT NOT NULL,
-    "user"       TEXT NOT NULL,
-    "channel"    TEXT NOT NULL
+    "id"                   TEXT NOT NULL PRIMARY KEY,
+    "created_at"           TEXT NOT NULL,
+    "last_read_message_id" TEXT NULL,
+    "user"                 TEXT NOT NULL,
+    "channel"              TEXT NOT NULL
 );
 
 ALTER TABLE "users_channels"

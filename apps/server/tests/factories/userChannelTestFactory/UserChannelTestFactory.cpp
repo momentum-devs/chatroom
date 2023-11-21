@@ -11,8 +11,9 @@ UserChannelTestFactory::createDomainUserChannel(const std::shared_ptr<domain::Us
 {
     const auto id = faker::String::uuid();
     const auto createdAt = faker::Date::pastDate();
+    const auto lastReadMessageId = faker::String::uuid();
 
-    return std::make_shared<domain::UserChannel>(id, user, channel, createdAt);
+    return std::make_shared<domain::UserChannel>(id, lastReadMessageId, user, channel, createdAt);
 }
 
 std::shared_ptr<infrastructure::UserChannel>
@@ -21,7 +22,8 @@ UserChannelTestFactory::createPersistentUserChannel(const std::shared_ptr<infras
 {
     const auto id = faker::String::uuid();
     const auto createdAt = faker::Date::pastDate();
+    const auto lastReadMessageId = faker::String::uuid();
 
-    return std::make_shared<infrastructure::UserChannel>(id, user, channel, createdAt);
+    return std::make_shared<infrastructure::UserChannel>(id, lastReadMessageId, user, channel, createdAt);
 }
 }

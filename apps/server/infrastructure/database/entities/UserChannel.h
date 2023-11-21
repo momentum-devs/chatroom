@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <odb/core.hxx>
+#include <odb/nullable.hxx>
 #include <string>
 #include <utility>
 
@@ -14,10 +15,11 @@ namespace server::infrastructure
 class UserChannel
 {
 public:
-    UserChannel(std::string idInit, std::shared_ptr<User> userInit, std::shared_ptr<Channel> channelInit,
-                std::string createdAtInit)
+    UserChannel(std::string idInit, const odb::nullable<std::string>& lastReadMessageIdInit,
+                std::shared_ptr<User> userInit, std::shared_ptr<Channel> channelInit, std::string createdAtInit)
         : id{std::move(idInit)},
           created_at{std::move(createdAtInit)},
+          last_read_message_id{lastReadMessageIdInit},
           user{std::move(userInit)},
           channel{std::move(channelInit)}
     {
@@ -26,6 +28,11 @@ public:
     [[nodiscard]] std::string getId() const
     {
         return id;
+    }
+
+    [[nodiscard]] odb::nullable<std::string> getLastReadMessageId() const
+    {
+        return last_read_message_id;
     }
 
     [[nodiscard]] std::shared_ptr<User> getUser() const
@@ -51,6 +58,7 @@ private:
 #pragma db id
     std::string id;
     std::string created_at;
+    odb::nullable<std::string> last_read_message_id;
 
 #pragma db not_null
     std::shared_ptr<User> user;
