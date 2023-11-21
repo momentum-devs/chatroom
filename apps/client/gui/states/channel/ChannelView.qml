@@ -16,7 +16,7 @@ Rectangle {
         }
         Column {
             height: parent.height
-            width: parent.width - leftColumn.width
+            width: parent.width - leftColumn.width - membersColumn.width
 
             ChannelTopBar {
                 id: channelTopBar
@@ -32,8 +32,19 @@ Rectangle {
         Separator {
             height: parent.height
         }
+        MembersColumn {
+            id: membersColumn
+            height: parent.height
+            width: leftColumn.width
+        }
     }
     Connections {
+        function onAddMember(memberName: string, memberId: string, isActive: bool) {
+            membersColumn.addMember(memberName, memberId, isActive);
+        }
+        function onClearMembersList() {
+            membersColumn.clearMembersList();
+        }
         function onSetChannel(channelName: string, channelId: string, isOwner: bool) {
             channelTopBar.setChannel([channelName, channelId, isOwner]);
         }

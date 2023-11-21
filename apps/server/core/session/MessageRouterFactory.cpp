@@ -5,6 +5,7 @@
 #include "server/api/messageHandlers/channel/acceptChannelInvitationMessageHandler/AcceptChannelInvitationMessageHandler.h"
 #include "server/api/messageHandlers/channel/createChannelMessageHandler/CreateChannelMessageHandler.h"
 #include "server/api/messageHandlers/channel/deleteChannelMessageHandler/DeleteChannelMessageHandler.h"
+#include "server/api/messageHandlers/channel/getChannelMembersMessageHandler/GetChannelMembersMessageHandler.h"
 #include "server/api/messageHandlers/channel/getUserChannelInvitationsMessageHandler/GetUserChannelInvitationsMessageHandler.h"
 #include "server/api/messageHandlers/channel/getUserChannelsMessageHandler/GetUserChannelsMessageHandler.h"
 #include "server/api/messageHandlers/channel/leaveChannelMessageHandler/LeaveChannelMessageHandler.h"
@@ -42,6 +43,7 @@
 #include "server/application/commandHandlers/user/verifyUserEmailCommandHandler/VerifyUserEmailCommandHandlerImpl.h"
 #include "server/application/queryHandlers/channel/findChannelsToWhichUserBelongsQueryHandler/FindChannelsToWhichUserBelongsQueryHandlerImpl.h"
 #include "server/application/queryHandlers/channel/findReceivedChannelInvitationsQueryHandler/FindReceivedChannelInvitationsQueryHandlerImpl.h"
+#include "server/application/queryHandlers/channel/findUsersBelongingToChannelQueryHandler/FindUsersBelongingToChannelQueryHandlerImpl.h"
 #include "server/application/queryHandlers/friend/findReceivedFriendInvitationsQueryHandler/FindReceivedFriendInvitationsQueryHandlerImpl.h"
 #include "server/application/queryHandlers/friend/findUserFriendsQueryHandler/FindUserFriendsQueryHandlerImpl.h"
 #include "server/application/queryHandlers/user/findUserByEmailQueryHandler/FindUserByEmailQueryHandlerImpl.h"
@@ -261,6 +263,12 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
     auto removeFromFriendsMessageHandler =
         std::make_shared<api::RemoveFromFriendsMessageHandler>(tokenService, std::move(deleteFriendshipCommandHandler));
 
+    auto findUsersBelongingToChannelQueryHandler =
+        std::make_unique<application::FindUsersBelongingToChannelQueryHandlerImpl>(userChannelRepository);
+
+    auto getChannelMembersMessageHandler = std::make_shared<api::GetChannelMembersMessageHandler>(
+        tokenService, std::move(findUsersBelongingToChannelQueryHandler));
+
     std::unordered_map<common::messages::MessageId, std::shared_ptr<api::MessageHandler>> messageHandlers{
         {common::messages::MessageId::CreateChannel, createChannelMessageHandler},
         {common::messages::MessageId::GetUserChannels, getUserChannelsMessageHandler},
@@ -283,6 +291,7 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
         {common::messages::MessageId::RejectFriendRequests, rejectFriendRequestMessageHandler},
         {common::messages::MessageId::GetUserFriends, getUserFriendsMessageHandler},
         {common::messages::MessageId::RemoveFromFriends, removeFromFriendsMessageHandler},
+        {common::messages::MessageId::GetChannelMembers, getChannelMembersMessageHandler},
     };
 
     return std::make_unique<MessageRouterImpl>(std::move(messageHandlers));

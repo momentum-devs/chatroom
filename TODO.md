@@ -2,10 +2,6 @@
 
 ### CLIENT
 
-* refactor frontend code
-* adjust to new layout design
-
-
 * direct messages between users
 * messages in channel
 * user has history of direct messages and messages in channel

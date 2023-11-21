@@ -73,6 +73,7 @@ set(QML_SOURCES
 
         gui/states/channel/ChannelView.qml
         gui/states/channel/components/ChannelTopBar.qml
+        gui/states/channel/components/MembersColumn.qml
         )
 
 set(RESOURCES

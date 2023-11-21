@@ -25,7 +25,11 @@ void ChannelController::activate()
     session->addMessageHandler({common::messages::MessageId::DeleteTheChannelResponse, deleteChannelResponseHandlerName,
                                 [this](const auto& msg) { handleLeftChannelResponse(msg); }});
 
-    emit setChannel(currentChannelName.c_str(), currentChannelId.c_str(), isOwnerOfCurrentChannel);
+    session->addMessageHandler({common::messages::MessageId::GetChannelMembersResponse,
+                                getChannelMembersResponseHandlerName,
+                                [this](const auto& msg) { handleGetChannelMembersResponse(msg); }});
+
+    goToChannel(currentChannelName.c_str(), currentChannelId.c_str(), isOwnerOfCurrentChannel);
 }
 
 void ChannelController::deactivate()
@@ -35,6 +39,9 @@ void ChannelController::deactivate()
 
     session->removeMessageHandler(
         {common::messages::MessageId::DeleteTheChannelResponse, deleteChannelResponseHandlerName});
+
+    session->removeMessageHandler(
+        {common::messages::MessageId::GetChannelMembersResponse, getChannelMembersResponseHandlerName});
 }
 
 const QString& ChannelController::getName() const
@@ -52,6 +59,12 @@ void ChannelController::goToChannel(const QString& channelName, const QString& c
     currentChannelName = channelName.toStdString();
 
     emit setChannel(channelName, channelId, isOwner);
+
+    nlohmann::json data{
+        {"channelId", currentChannelId},
+    };
+
+    session->sendMessage(common::messages::MessageId::GetChannelMembers, data);
 }
 
 void ChannelController::goToPrivateMessages()
@@ -70,7 +83,6 @@ void ChannelController::addToChannel()
 
 void ChannelController::leaveChannel()
 {
-
     LOG_S(INFO) << "Left the channel";
 
     nlohmann::json data{
@@ -82,7 +94,6 @@ void ChannelController::leaveChannel()
 
 void ChannelController::deleteChannel()
 {
-
     LOG_S(INFO) << "Delete the channel";
 
     nlohmann::json data{
@@ -94,6 +105,49 @@ void ChannelController::deleteChannel()
 
 void ChannelController::handleLeftChannelResponse(const common::messages::Message& /*message*/)
 {
+    LOG_S(INFO) << "Handle leave channel message";
+
     stateMachine->returnToThePreviousState();
+}
+
+void ChannelController::handleGetChannelMembersResponse(const common::messages::Message& message)
+{
+    LOG_S(INFO) << "Received channel members list";
+
+    emit clearMembersList();
+
+    auto responsePayload = static_cast<std::string>(message.payload);
+
+    auto responseJson = nlohmann::json::parse(responsePayload);
+
+    if (responseJson.contains("error"))
+    {
+        LOG_S(ERROR) << "Error while getting channel members: " << responseJson.at("error").get<std::string>();
+    }
+
+    if (responseJson.contains("data"))
+    {
+        for (const auto& channelMember : responseJson.at("data"))
+        {
+            if (channelMember.contains("id") and channelMember.contains("name") and channelMember.contains("isActive"))
+            {
+                LOG_S(INFO) << std::format("Adding member {} with id {} to list",
+                                           channelMember.at("name").get<std::string>(),
+                                           channelMember.at("id").get<std::string>());
+
+                emit addMember(QString::fromStdString(channelMember.at("name").get<std::string>()),
+                               QString::fromStdString(channelMember.at("id").get<std::string>()),
+                               channelMember.at("isActive").get<bool>());
+            }
+            else
+            {
+                LOG_S(ERROR) << "Wrong friend request format";
+            }
+        }
+    }
+    else
+    {
+        LOG_S(ERROR) << "Response without data";
+    }
 }
 }
