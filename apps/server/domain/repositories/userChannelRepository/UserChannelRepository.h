@@ -10,6 +10,7 @@
 #include "payloads/FindUsersChannelsByChannelIdPayload.h"
 #include "payloads/FindUsersChannelsByUserIdPayload.h"
 #include "server/domain/repositories/userChannelRepository/payloads/FindUserChannelPayload.h"
+#include "server/domain/repositories/userChannelRepository/payloads/UpdateUserChannelPayload.h"
 
 namespace server::domain
 {
@@ -23,6 +24,7 @@ public:
     virtual std::optional<UserChannel> findUserChannelById(const FindUserChannelByIdPayload&) const = 0;
     virtual std::vector<UserChannel> findUsersChannelsByUserId(const FindUsersChannelsByUserIdPayload&) const = 0;
     virtual std::vector<UserChannel> findUsersChannelsByChannelId(const FindUsersChannelsByChannelIdPayload&) const = 0;
+    virtual UserChannel updateUserChannel(const UpdateUserChannelPayload&) const = 0;
     virtual void deleteUserChannel(const DeleteUserChannelPayload&) const = 0;
 };
 }

@@ -50,6 +50,11 @@ public:
         return created_at;
     }
 
+    void setLastReadMessageId(const std::string& lastReadMessageId)
+    {
+        last_read_message_id = lastReadMessageId;
+    }
+
 private:
     UserChannel() = default;
 

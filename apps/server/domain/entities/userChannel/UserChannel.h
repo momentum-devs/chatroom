@@ -20,6 +20,7 @@ public:
     std::shared_ptr<User> getUser() const;
     std::shared_ptr<Channel> getChannel() const;
     std::string getCreatedAt() const;
+    void setLastReadMessageId(const std::string& lastReadMessageId);
 
 private:
     std::string id;

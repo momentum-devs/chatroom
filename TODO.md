@@ -28,3 +28,4 @@
 * migrations
 * lastReadMessageId in usersGroups and usersChannels
 * add pagination in fetching messages
+* add logs contexts

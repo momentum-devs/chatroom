@@ -23,6 +23,7 @@ public:
     std::vector<domain::UserChannel> findUsersChannelsByUserId(const domain::FindUsersChannelsByUserIdPayload&) const;
     std::vector<domain::UserChannel>
     findUsersChannelsByChannelId(const domain::FindUsersChannelsByChannelIdPayload&) const;
+    domain::UserChannel updateUserChannel(const domain::UpdateUserChannelPayload&) const;
     void deleteUserChannel(const domain::DeleteUserChannelPayload&) const;
 
 private:

@@ -1,6 +1,7 @@
 #include "UserChannelRepositoryImpl.h"
 
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <format>
 
 #include "server/infrastructure/errors/ResourceNotFoundError.h"
 #include "server/infrastructure/errors/UserChannelRepositoryError.h"
@@ -151,6 +152,44 @@ std::vector<domain::UserChannel> UserChannelRepositoryImpl::findUsersChannelsByC
         transaction.commit();
 
         return domainUserChannels;
+    }
+    catch (const std::exception& error)
+    {
+        throw errors::UserChannelRepositoryError{error.what()};
+    }
+}
+
+domain::UserChannel UserChannelRepositoryImpl::updateUserChannel(const domain::UpdateUserChannelPayload& payload) const
+{
+    try
+    {
+        {
+            odb::transaction transaction(db->begin());
+
+            typedef odb::query<UserChannel> query;
+
+            std::shared_ptr<UserChannel> userChannel(
+                db->query_one<UserChannel>(query::id == payload.userChannel.getId()));
+
+            if (!userChannel)
+            {
+                throw errors::ResourceNotFoundError{
+                    std::format("UserChannel with id \"{}\" not found.", payload.userChannel.getId())};
+            }
+
+            const auto lastReadMessageId = payload.userChannel.getLastReadMessageId();
+
+            if (lastReadMessageId)
+            {
+                userChannel->setLastReadMessageId(*lastReadMessageId);
+
+                db->update(*userChannel);
+            }
+
+            transaction.commit();
+        }
+
+        return *findUserChannelById({payload.userChannel.getId()});
     }
     catch (const std::exception& error)
     {

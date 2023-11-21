@@ -40,4 +40,9 @@ std::string UserChannel::getCreatedAt() const
     return createdAt;
 }
 
+void UserChannel::setLastReadMessageId(const std::string& lastReadMessageIdInit)
+{
+    lastReadMessageId = lastReadMessageIdInit;
+}
+
 }

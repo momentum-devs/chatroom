@@ -45,6 +45,7 @@ public:
     UserChannelTestUtils userChannelTestUtils{db};
 
     UserTestFactory userTestFactory;
+    ChannelTestFactory channelTestFactory;
 
     UserChannelTestFactory userChannelTestFactory;
 
@@ -135,4 +136,37 @@ TEST_F(UserChannelRepositoryIntegrationTest, shouldFindUsersChannelsByChannelId)
 
     ASSERT_TRUE(foundUsersChannels.size());
     ASSERT_EQ(foundUsersChannels[0].getId(), userChannel->getId());
+}
+
+TEST_F(UserChannelRepositoryIntegrationTest, shouldUpdateExistingUserChannel)
+{
+    const auto updatedMessageId = faker::String::uuid();
+
+    const auto user = userTestUtils.createAndPersist();
+
+    const auto channel = channelTestUtils.createAndPersist(user);
+
+    const auto userChannel = userChannelTestUtils.createAndPersist(user, channel);
+
+    auto domainUserChannel = userChannelMapper->mapToDomainUserChannel(*userChannel);
+
+    domainUserChannel.setLastReadMessageId(updatedMessageId);
+
+    userChannelRepository->updateUserChannel({domainUserChannel});
+
+    const auto updatedUserChannel = userChannelTestUtils.findById({userChannel->getId()});
+
+    ASSERT_TRUE(updatedUserChannel);
+    ASSERT_EQ((*updatedUserChannel).getLastReadMessageId().get(), updatedMessageId);
+}
+
+TEST_F(UserChannelRepositoryIntegrationTest, update_givenNonExistingUserChannel_shouldThrowError)
+{
+    const auto user = userTestFactory.createDomainUser();
+
+    const auto channel = channelTestFactory.createDomainChannel(user);
+
+    const auto domainMessage = userChannelTestFactory.createDomainUserChannel(user, channel);
+
+    ASSERT_ANY_THROW(userChannelRepository->updateUserChannel({*domainMessage}));
 }

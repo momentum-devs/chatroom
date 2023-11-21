@@ -105,6 +105,7 @@ set(SOURCES
         application/commandHandlers/message/createChannelMessageCommandHandler/CreateChannelMessageCommandHandlerImpl.cpp
         application/commandHandlers/message/deleteMessageCommandHandler/DeleteMessageCommandHandlerImpl.cpp
         application/commandHandlers/message/updateMessageCommandHandler/UpdateMessageCommandHandlerImpl.cpp
+        application/commandHandlers/message/setLastChannelMessageReadByUserCommandHandler/SetLastChannelMessageReadByUserCommandHandlerImpl.cpp
         application/queryHandlers/message/findChannelMessagesQueryHandler/FindChannelMessagesQueryHandlerImpl.cpp
         application/queryHandlers/message/findGroupMessagesQueryHandler/FindGroupMessagesQueryHandlerImpl.cpp
 )
@@ -222,6 +223,7 @@ set(IT_SOURCES
         application/commandHandlers/message/createChannelMessageCommandHandler/CreateChannelMessageCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/message/deleteMessageCommandHandler/DeleteMessageCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/message/updateMessageCommandHandler/UpdateMessageCommandHandlerImplIntegrationTest.cpp
+        application/commandHandlers/message/setLastChannelMessageReadByUserCommandHandler/SetLastChannelMessageReadByUserCommandHandlerImplIntegrationTest.cpp
         application/queryHandlers/message/findChannelMessagesQueryHandler/FindChannelMessagesQueryHandlerImplIntegrationTest.cpp
         application/queryHandlers/message/findGroupMessagesQueryHandler/FindGroupMessagesQueryHandlerImplIntegrationTest.cpp
 )
