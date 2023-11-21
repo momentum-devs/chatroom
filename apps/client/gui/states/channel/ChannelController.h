@@ -29,6 +29,8 @@ public:
 
 signals:
     void setChannel(const QString& channelName, const QString& channelId, bool isOwner);
+    void addMember(const QString& memberName, const QString& memberId, bool isActive);
+    void clearMembersList();
 
 public slots:
     void goToChannel(const QString& channelName, const QString& channelId, bool isOwner);
@@ -36,6 +38,7 @@ public slots:
 
 private:
     void handleLeftChannelResponse(const common::messages::Message& message);
+    void handleGetChannelMembersResponse(const common::messages::Message& message);
 
     std::shared_ptr<api::Session> session;
     const StateFactory& stateFactory;
@@ -48,5 +51,6 @@ private:
 
     inline static const std::string leftChannelResponseHandlerName{"leftChannelResponseHandlerName"};
     inline static const std::string deleteChannelResponseHandlerName{"deleteChannelResponseHandlerName"};
+    inline static const std::string getChannelMembersResponseHandlerName{"getChannelMembersResponseHandlerName"};
 };
 }

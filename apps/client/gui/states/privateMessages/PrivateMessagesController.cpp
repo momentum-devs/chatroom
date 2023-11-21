@@ -160,7 +160,7 @@ void PrivateMessagesController::handleGetUserFriendsResponse(const common::messa
 
 void PrivateMessagesController::handleGetUserFriendRequestsResponse(const common::messages::Message& message)
 {
-    LOG_S(INFO) << std::format("Received friend requests list");
+    LOG_S(INFO) << "Received friend requests list";
 
     emit clearFriendRequestList();
 
