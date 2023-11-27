@@ -55,6 +55,7 @@ set(QML_SOURCES
         gui/qml/components/ActivityIndicator.ui.qml
         gui/qml/components/SettingsButton.ui.qml
         gui/qml/components/CustomButton.ui.qml
+        gui/qml/components/messages/MessageView.qml
 
         gui/states/register/RegisterView.qml
         gui/states/login/LoginView.qml

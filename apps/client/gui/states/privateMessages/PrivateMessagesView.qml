@@ -3,6 +3,7 @@ import QtQuick.Controls 6.2
 import "../../qml/components"
 import "../../qml/common/settings.js" as Settings
 import "components"
+import "../../qml/components/messages"
 
 Rectangle {
     color: Settings.backgroundColor

@@ -52,7 +52,6 @@ Rectangle {
                         errorPopup.contentItem.text = "Email or password field is empty";
                         errorPopup.open();
                     }
-                    ab;
                 }
             }
             Button {
