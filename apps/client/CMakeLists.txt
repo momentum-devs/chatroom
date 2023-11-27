@@ -55,6 +55,7 @@ set(QML_SOURCES
         gui/qml/components/ActivityIndicator.ui.qml
         gui/qml/components/SettingsButton.qml
         gui/qml/components/CustomButton.qml
+        gui/qml/components/Invitation.qml
         gui/qml/components/messages/MessageView.qml
 
         gui/states/register/RegisterView.qml
@@ -71,7 +72,6 @@ set(QML_SOURCES
         gui/states/privateMessages/PrivateMessagesView.qml
         gui/states/privateMessages/components/FriendsColumn.qml
         gui/states/privateMessages/components/FriendTopBar.qml
-        gui/states/privateMessages/components/FriendListElement.qml
 
         gui/states/channel/ChannelView.qml
         gui/states/channel/components/ChannelTopBar.qml
@@ -86,6 +86,8 @@ set(RESOURCES
         resources/svg/offline.svg
         resources/svg/crown.svg
         resources/svg/close.svg
+        resources/svg/check.svg
+        resources/svg/cross.svg
         )
 
 qt_add_executable(${EXECUTABLE_NAME} Main.cpp ${SOURCES})

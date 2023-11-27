@@ -9,7 +9,7 @@ Rectangle {
 
     anchors.bottom: parent.bottom
     anchors.left: parent.left
-    color: "#232428"
+    color: Settings.boxColor
     height: settingsButton.height + 16
     width: parent.width
 

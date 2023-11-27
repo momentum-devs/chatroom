@@ -25,6 +25,7 @@ Rectangle {
     function clearFriendList() {
         friends = [];
         friendsView.model = friends;
+        friendsView.height = 0;
     }
 
     color: Settings.backgroundColor
