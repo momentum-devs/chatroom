@@ -3,8 +3,8 @@ import QtQuick.Controls 6.4
 import "../../../qml/common/settings.js" as Settings
 
 Item {
-    property var channelId: ""
-    property var isOwner: false
+    property string channelId: ""
+    property bool isOwner: false
 
     function setChannel(channel) {
         channelName.text = channel[0];

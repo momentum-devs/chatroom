@@ -53,8 +53,8 @@ set(QML_SOURCES
         gui/qml/components/RejectButton.ui.qml
         gui/qml/components/Separator.ui.qml
         gui/qml/components/ActivityIndicator.ui.qml
-        gui/qml/components/SettingsButton.ui.qml
-        gui/qml/components/CustomButton.ui.qml
+        gui/qml/components/SettingsButton.qml
+        gui/qml/components/CustomButton.qml
         gui/qml/components/messages/MessageView.qml
 
         gui/states/register/RegisterView.qml
@@ -71,6 +71,7 @@ set(QML_SOURCES
         gui/states/privateMessages/PrivateMessagesView.qml
         gui/states/privateMessages/components/FriendsColumn.qml
         gui/states/privateMessages/components/FriendTopBar.qml
+        gui/states/privateMessages/components/FriendListElement.qml
 
         gui/states/channel/ChannelView.qml
         gui/states/channel/components/ChannelTopBar.qml

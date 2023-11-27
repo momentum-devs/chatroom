@@ -4,7 +4,7 @@ import "../../../qml/components"
 import "../../../qml/common/settings.js" as Settings
 
 Item {
-    property var friendId: ""
+    property string friendId: ""
 
     function setFriendName(friend) {
         friendNickname.text = '<b>' + friend + '</b>';
@@ -12,10 +12,10 @@ Item {
         friendNickname.font.pointSize = 18;
         friendId = friend[1];
     }
+    height: friendTopBar.height
 
     Column {
         id: friendTopBar
-        height: parent.height
         spacing: 5
         width: parent.width
 

@@ -3,7 +3,7 @@ import QtQuick.Controls 6.4
 import "../common/settings.js" as Settings
 
 Item {
-    property var isActive: false
+    property bool isActive: false
 
     height: active.height
     width: active.width
