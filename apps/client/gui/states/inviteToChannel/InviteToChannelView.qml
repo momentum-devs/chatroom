@@ -7,6 +7,7 @@ Rectangle {
 
     Keys.onEnterPressed: sendFriendInvitationButton.activate()
     Keys.onEscapePressed: goBackButton.activate()
+    Keys.onReturnPressed: sendFriendInvitationButton.clicked()
 
     Column {
         anchors.centerIn: parent
@@ -30,7 +31,9 @@ Rectangle {
 
             Button {
                 id: sendFriendInvitationButton
-                function activate() {
+                text: qsTr('Send invitation to channel')
+
+                onClicked: {
                     const email = emailField.text;
                     if (email.length !== 0) {
                         inviteToChannelController.sendChannelInvitation(email);
@@ -40,22 +43,14 @@ Rectangle {
                         errorPopup.open();
                     }
                 }
-
-                text: qsTr('Send invitation to channel')
-
-                Keys.onEnterPressed: activate()
-                Keys.onReturnPressed: activate()
-                onClicked: activate()
             }
             Button {
                 id: goBackButton
-                function activate() {
-                    inviteToChannelController.goBack();
-                }
-
                 text: qsTr('Go back')
 
-                onClicked: activate()
+                onClicked: {
+                    inviteToChannelController.goBack();
+                }
             }
         }
     }

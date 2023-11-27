@@ -5,8 +5,8 @@ import "../../qml/common/settings.js" as Settings
 Rectangle {
     color: Settings.backgroundColor
 
-    Keys.onEnterPressed: loginButton.activate()
-    Keys.onReturnPressed: loginButton.activate()
+    Keys.onEnterPressed: loginButton.clicked()
+    Keys.onReturnPressed: loginButton.clicked()
 
     Column {
         id: column
@@ -40,7 +40,9 @@ Rectangle {
 
             Button {
                 id: loginButton
-                function activate() {
+                text: qsTr('Login')
+
+                onClicked: {
                     const email = usernameField.text;
                     const password = passwordField.text;
                     if (email.length !== 0 && password.length !== 0) {
@@ -50,11 +52,8 @@ Rectangle {
                         errorPopup.contentItem.text = "Email or password field is empty";
                         errorPopup.open();
                     }
+                    ab;
                 }
-
-                text: qsTr('Login')
-
-                onClicked: activate()
             }
             Button {
                 text: qsTr('Register')

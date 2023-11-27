@@ -5,8 +5,9 @@ import "../../qml/common/settings.js" as Settings
 Rectangle {
     color: Settings.backgroundColor
 
-    Keys.onEnterPressed: createChannelButton.activate()
-    Keys.onEscapePressed: goBackButton.activate()
+    Keys.onEnterPressed: createChannelButton.clicked()
+    Keys.onEscapePressed: goBackButton.clicked()
+    Keys.onReturnPressed: createChannelButton.clicked()
 
     Column {
         anchors.centerIn: parent
@@ -30,7 +31,9 @@ Rectangle {
 
             Button {
                 id: createChannelButton
-                function activate() {
+                text: qsTr('Create channel')
+
+                onClicked: {
                     const channelName = channelNameField.text;
                     if (channelName.length !== 0) {
                         createChannelController.createChannel(channelName);
@@ -40,20 +43,14 @@ Rectangle {
                         errorPopup.open();
                     }
                 }
-
-                text: qsTr('Create channel')
-
-                onClicked: activate()
             }
             Button {
                 id: goBackButton
-                function activate() {
-                    createChannelController.goBack();
-                }
-
                 text: qsTr('Go back')
 
-                onClicked: activate()
+                onClicked: {
+                    createChannelController.goBack();
+                }
             }
         }
     }

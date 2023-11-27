@@ -5,8 +5,9 @@ import "../../qml/common/settings.js" as Settings
 Rectangle {
     color: Settings.backgroundColor
 
-    Keys.onEnterPressed: sendFriendInvitationButton.activate()
-    Keys.onEscapePressed: goBackButton.activate()
+    Keys.onEnterPressed: sendFriendInvitationButton.clicked()
+    Keys.onEscapePressed: goBackButton.clicked()
+    Keys.onReturnPressed: sendFriendInvitationButton.clicked()
 
     Column {
         anchors.centerIn: parent
@@ -30,7 +31,9 @@ Rectangle {
 
             Button {
                 id: sendFriendInvitationButton
-                function activate() {
+                text: qsTr('Invite')
+
+                onClicked: {
                     const friendEmail = friendEmailField.text;
                     if (friendEmail.length !== 0) {
                         sendFriendInvitationController.sendFriendInvitation(friendEmail);
@@ -40,22 +43,14 @@ Rectangle {
                         errorPopup.open();
                     }
                 }
-
-                text: qsTr('Invite')
-
-                Keys.onEnterPressed: activate()
-                Keys.onReturnPressed: activate()
-                onClicked: activate()
             }
             Button {
                 id: goBackButton
-                function activate() {
-                    sendFriendInvitationController.goBack();
-                }
-
                 text: qsTr('Go back')
 
-                onClicked: activate()
+                onClicked: {
+                    sendFriendInvitationController.goBack();
+                }
             }
         }
     }

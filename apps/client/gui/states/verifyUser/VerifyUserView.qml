@@ -5,8 +5,8 @@ import "../../qml/common/settings.js" as Settings
 Rectangle {
     color: Settings.backgroundColor
 
-    Keys.onEnterPressed: verifyButton.activate()
-    Keys.onReturnPressed: verifyButton.activate()
+    Keys.onEnterPressed: verifyButton.clicked()
+    Keys.onReturnPressed: verifyButton.clicked()
 
     Column {
         anchors.centerIn: parent
@@ -30,26 +30,20 @@ Rectangle {
 
             Button {
                 id: verifyButton
-                function activate() {
+                text: qsTr('Verify')
+
+                onClicked: {
                     const verificationCode = verificationCodeField.text;
                     verifyUserController.verificationRequest(verificationCode);
                 }
-
-                text: qsTr('Verify')
-
-                Keys.onEnterPressed: activate()
-                Keys.onReturnPressed: activate()
-                onClicked: activate()
             }
             Button {
                 id: goToLoginButton
-                function activate() {
-                    verifyUserController.goToLoginState();
-                }
-
                 text: qsTr('Go to login')
 
-                onClicked: activate()
+                onClicked: {
+                    verifyUserController.goToLoginState();
+                }
             }
         }
     }
