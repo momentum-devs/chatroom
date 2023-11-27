@@ -13,7 +13,8 @@ FindChannelMessagesQueryHandlerImpl::FindChannelMessagesQueryHandlerImpl(
 FindChannelMessagesQueryHandlerResult
 FindChannelMessagesQueryHandlerImpl::execute(const FindChannelMessagesQueryHandlerPayload& payload) const
 {
-    const auto channelMessages = messageRepository->findMessagesByChannelId({payload.channelId});
+    const auto channelMessages =
+        messageRepository->findMessagesByChannelId({payload.channelId, payload.offset, payload.limit});
 
     std::vector<domain::Message> result;
 
@@ -24,6 +25,8 @@ FindChannelMessagesQueryHandlerImpl::execute(const FindChannelMessagesQueryHandl
         result.push_back(*channelMessage);
     }
 
-    return {result};
+    const auto messageCount = messageRepository->countMessagesByChannelId({payload.channelId});
+
+    return {result, messageCount};
 }
 }

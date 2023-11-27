@@ -5,10 +5,8 @@
 
 namespace server::domain
 {
-struct FindMessagesByChannelIdPayload
+struct CountMessagesByChannelIdPayload
 {
     std::string channelId;
-    unsigned offset = 0;
-    unsigned limit = 50;
 };
 }

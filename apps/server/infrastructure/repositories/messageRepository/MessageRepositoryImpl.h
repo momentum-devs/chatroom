@@ -26,6 +26,8 @@ public:
     findMessagesByGroupId(const domain::FindMessagesByGroupIdPayload&) const;
     std::shared_ptr<domain::Message> updateMessage(const domain::UpdateMessagePayload&) const;
     void deleteMessage(const domain::DeleteMessagePayload&) const;
+    unsigned countMessagesByChannelId(const domain::CountMessagesByChannelIdPayload&) const;
+    unsigned countMessagesByGroupId(const domain::CountMessagesByGroupIdPayload&) const;
 
 private:
     std::shared_ptr<odb::pgsql::database> db;

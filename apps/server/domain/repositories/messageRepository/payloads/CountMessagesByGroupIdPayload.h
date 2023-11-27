@@ -5,10 +5,8 @@
 
 namespace server::domain
 {
-struct FindMessagesByGroupIdPayload
+struct CountMessagesByGroupIdPayload
 {
     std::string groupId;
-    unsigned offset = 0;
-    unsigned limit = 50;
 };
 }

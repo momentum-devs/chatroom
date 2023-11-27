@@ -10,6 +10,8 @@
 #include "payloads/FindMessagesByChannelIdPayload.h"
 #include "payloads/FindMessagesByGroupIdPayload.h"
 #include "payloads/UpdateMessagePayload.h"
+#include "server/domain/repositories/messageRepository/payloads/CountMessagesByChannelIdPayload.h"
+#include "server/domain/repositories/messageRepository/payloads/CountMessagesByGroupIdPayload.h"
 
 namespace server::domain
 {
@@ -25,5 +27,7 @@ public:
     virtual std::vector<std::shared_ptr<Message>> findMessagesByGroupId(const FindMessagesByGroupIdPayload&) const = 0;
     virtual std::shared_ptr<Message> updateMessage(const UpdateMessagePayload&) const = 0;
     virtual void deleteMessage(const DeleteMessagePayload&) const = 0;
+    virtual unsigned countMessagesByChannelId(const CountMessagesByChannelIdPayload&) const = 0;
+    virtual unsigned countMessagesByGroupId(const CountMessagesByGroupIdPayload&) const = 0;
 };
 }

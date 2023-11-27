@@ -88,7 +88,9 @@ MessageRepositoryImpl::findMessagesByChannelId(const domain::FindMessagesByChann
 
         typedef odb::query<Message> Query;
 
-        auto result = db->query<Message>(Query::channel->id == payload.channelId);
+        auto result = db->query<Message>(
+            Query(std::format(R"(WHERE "channel"='{}' ORDER BY "created_at" DESC OFFSET {} LIMIT {})",
+                              payload.channelId, payload.offset, payload.limit)));
 
         std::vector<std::shared_ptr<domain::Message>> domainMessages;
 
@@ -116,7 +118,9 @@ MessageRepositoryImpl::findMessagesByGroupId(const domain::FindMessagesByGroupId
 
         typedef odb::query<Message> Query;
 
-        auto result = db->query<Message>(Query::group->id == payload.groupId);
+        auto result =
+            db->query<Message>(Query(std::format(R"(WHERE "group"='{}' ORDER BY "created_at" DESC OFFSET {} LIMIT {})",
+                                                 payload.groupId, payload.offset, payload.limit)));
 
         std::vector<std::shared_ptr<domain::Message>> domainMessages;
 
@@ -176,6 +180,38 @@ void MessageRepositoryImpl::deleteMessage(const domain::DeleteMessagePayload& pa
         db->erase<Message>(payload.message.getId());
 
         transaction.commit();
+    }
+    catch (const std::exception& error)
+    {
+        throw errors::MessageRepositoryError{error.what()};
+    }
+}
+
+unsigned MessageRepositoryImpl::countMessagesByChannelId(const domain::CountMessagesByChannelIdPayload& payload) const
+{
+    try
+    {
+        odb::transaction transaction(db->begin());
+
+        typedef odb::query<Message> Query;
+
+        return db->query<Message>(Query::channel->id == payload.channelId).size();
+    }
+    catch (const std::exception& error)
+    {
+        throw errors::MessageRepositoryError{error.what()};
+    }
+}
+
+unsigned MessageRepositoryImpl::countMessagesByGroupId(const domain::CountMessagesByGroupIdPayload& payload) const
+{
+    try
+    {
+        odb::transaction transaction(db->begin());
+
+        typedef odb::query<Message> Query;
+
+        return db->query<Message>(Query::group->id == payload.groupId).size();
     }
     catch (const std::exception& error)
     {

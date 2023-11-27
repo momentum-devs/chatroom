@@ -11,7 +11,8 @@ FindGroupMessagesQueryHandlerImpl::FindGroupMessagesQueryHandlerImpl(
 FindGroupMessagesQueryHandlerResult
 FindGroupMessagesQueryHandlerImpl::execute(const FindGroupMessagesQueryHandlerPayload& payload) const
 {
-    const auto groupMessages = messageRepository->findMessagesByGroupId({payload.groupId});
+    const auto groupMessages =
+        messageRepository->findMessagesByGroupId({payload.groupId, payload.offset, payload.limit});
 
     std::vector<domain::Message> result;
 
@@ -22,6 +23,8 @@ FindGroupMessagesQueryHandlerImpl::execute(const FindGroupMessagesQueryHandlerPa
         result.push_back(*groupMessage);
     }
 
-    return {result};
+    const auto messageCount = messageRepository->countMessagesByGroupId({payload.groupId});
+
+    return {result, messageCount};
 }
 }

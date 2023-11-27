@@ -9,5 +9,6 @@ namespace server::application
 struct FindGroupMessagesQueryHandlerResult
 {
     std::vector<domain::Message> messages;
+    unsigned totalCount;
 };
 }

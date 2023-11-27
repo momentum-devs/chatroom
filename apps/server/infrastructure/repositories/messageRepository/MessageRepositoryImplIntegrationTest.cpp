@@ -172,6 +172,42 @@ TEST_F(MessageRepositoryIntegrationTest, shouldFindMessagesByChannelId)
     ASSERT_EQ(foundMessages[0]->getChannel()->getId(), channel->getId());
 }
 
+TEST_F(MessageRepositoryIntegrationTest, shouldFindMessagesByChannelIdWithPagination)
+{
+    const auto sender = userTestUtils.createAndPersist();
+
+    const auto channel = channelTestUtils.createAndPersist(sender);
+
+    messageTestUtils.createAndPersist(sender, channel);
+    messageTestUtils.createAndPersist(sender, channel);
+    messageTestUtils.createAndPersist(sender, channel);
+    messageTestUtils.createAndPersist(sender, channel);
+    messageTestUtils.createAndPersist(sender, channel);
+    messageTestUtils.createAndPersist(sender, channel);
+
+    const auto foundMessages = messageRepository->findMessagesByChannelId({channel->getId(), 0, 4});
+
+    ASSERT_EQ(foundMessages.size(), 4);
+}
+
+TEST_F(MessageRepositoryIntegrationTest, shouldCountMessagesByChannelId)
+{
+    const auto sender = userTestUtils.createAndPersist();
+
+    const auto channel = channelTestUtils.createAndPersist(sender);
+
+    messageTestUtils.createAndPersist(sender, channel);
+    messageTestUtils.createAndPersist(sender, channel);
+    messageTestUtils.createAndPersist(sender, channel);
+    messageTestUtils.createAndPersist(sender, channel);
+    messageTestUtils.createAndPersist(sender, channel);
+    messageTestUtils.createAndPersist(sender, channel);
+
+    const auto count = messageRepository->countMessagesByChannelId({channel->getId()});
+
+    ASSERT_EQ(count, 6);
+}
+
 TEST_F(MessageRepositoryIntegrationTest, shouldFindMessagesByGroupId)
 {
     const auto sender = userTestUtils.createAndPersist();
@@ -185,6 +221,39 @@ TEST_F(MessageRepositoryIntegrationTest, shouldFindMessagesByGroupId)
     ASSERT_EQ(foundMessages.size(), 1);
     ASSERT_EQ(foundMessages[0]->getId(), message->getId());
     ASSERT_EQ(foundMessages[0]->getGroup()->getId(), group->getId());
+}
+
+TEST_F(MessageRepositoryIntegrationTest, shouldFindMessagesByGroupIdWithPagination)
+{
+    const auto sender = userTestUtils.createAndPersist();
+
+    const auto group = groupTestUtils.createAndPersist();
+
+    messageTestUtils.createAndPersist(sender, group);
+    messageTestUtils.createAndPersist(sender, group);
+    messageTestUtils.createAndPersist(sender, group);
+    messageTestUtils.createAndPersist(sender, group);
+    messageTestUtils.createAndPersist(sender, group);
+
+    const auto foundMessages = messageRepository->findMessagesByGroupId({group->getId(), 0, 3});
+
+    ASSERT_EQ(foundMessages.size(), 3);
+}
+
+TEST_F(MessageRepositoryIntegrationTest, shouldCountMessagesByGroupId)
+{
+    const auto sender = userTestUtils.createAndPersist();
+
+    const auto group = groupTestUtils.createAndPersist();
+
+    messageTestUtils.createAndPersist(sender, group);
+    messageTestUtils.createAndPersist(sender, group);
+    messageTestUtils.createAndPersist(sender, group);
+    messageTestUtils.createAndPersist(sender, group);
+
+    const auto count = messageRepository->countMessagesByGroupId({group->getId()});
+
+    ASSERT_EQ(count, 4);
 }
 
 TEST_F(MessageRepositoryIntegrationTest, shouldUpdateExistingMessage)

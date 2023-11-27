@@ -6,11 +6,13 @@ namespace server::application
 {
 struct FindGroupMessagesQueryHandlerPayload
 {
-    const std::string groupId;
+    std::string groupId;
+    unsigned offset = 0;
+    unsigned limit = 50;
 };
 
 inline bool operator==(const FindGroupMessagesQueryHandlerPayload& lhs, const FindGroupMessagesQueryHandlerPayload& rhs)
 {
-    return lhs.groupId == rhs.groupId;
+    return lhs.groupId == rhs.groupId && lhs.offset == rhs.offset && lhs.limit == rhs.limit;
 }
 }

@@ -67,8 +67,9 @@ TEST_F(FindChannelMessagesQueryHandlerImplIntegrationTest, findMessagesByChannel
 
     const auto message = messageTestUtils.createAndPersist(user, channel);
 
-    const auto [messages] = findChannelMessagesQueryHandler.execute({channel->getId()});
+    const auto [messages, count] = findChannelMessagesQueryHandler.execute({channel->getId()});
 
     ASSERT_EQ(messages.size(), 1);
     ASSERT_EQ(messages[0].getId(), message->getId());
+    ASSERT_EQ(count, 1);
 }

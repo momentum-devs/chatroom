@@ -71,8 +71,9 @@ TEST_F(FindGroupMessagesQueryHandlerImplIntegrationTest, findMessagesByChannel)
 
     const auto message = messageTestUtils.createAndPersist(user, group);
 
-    const auto [messages] = findGroupMessagesQueryHandler.execute({group->getId()});
+    const auto [messages, count] = findGroupMessagesQueryHandler.execute({group->getId()});
 
     ASSERT_EQ(messages.size(), 1);
     ASSERT_EQ(messages[0].getId(), message->getId());
+    ASSERT_EQ(count, 1);
 }

@@ -18,5 +18,7 @@ public:
                 (const override));
     MOCK_METHOD(std::shared_ptr<Message>, updateMessage, (const UpdateMessagePayload&), (const override));
     MOCK_METHOD(void, deleteMessage, (const DeleteMessagePayload&), (const override));
+    MOCK_METHOD(unsigned, countMessagesByChannelId, (const CountMessagesByChannelIdPayload&), (const override));
+    MOCK_METHOD(unsigned, countMessagesByGroupId, (const CountMessagesByGroupIdPayload&), (const override));
 };
 }
