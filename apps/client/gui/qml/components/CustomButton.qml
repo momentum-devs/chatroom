@@ -5,10 +5,10 @@ import "../common/settings.js" as Settings
 Button {
     id: button
 
-    property var baseColor: "#8e9297"
-    property var color: baseColor
-    property var hoverColor: "#d8d9da"
-    property var size: 45
+    property string baseColor: "#8e9297"
+    property string color: baseColor
+    property string hoverColor: "#d8d9da"
+    property int size: 45
 
     signal mouseEnteredArea
     signal mouseExitedArea
@@ -26,12 +26,12 @@ Button {
         propagateComposedEvents: true
 
         onEntered: {
-            button.color = button.hoverColor;
-            button.mouseEnteredArea();
+            button.color = button.hoverColor
+            button.mouseEnteredArea()
         }
         onExited: {
-            button.color = button.baseColor;
-            button.mouseExitedArea();
+            button.color = button.baseColor
+            button.mouseExitedArea()
         }
         onPressed: mouse.accepted = false
     }

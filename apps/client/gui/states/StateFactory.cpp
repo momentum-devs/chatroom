@@ -1,9 +1,9 @@
 #include "StateFactory.h"
 
+#include "client/gui/controllers/LeftColumnController.h"
+#include "client/gui/states/channel/ChannelState.h"
 #include "createChannel/CreateChannelController.h"
 #include "createChannel/CreateChannelState.h"
-#include "gui/controllers/LeftColumnController.h"
-#include "gui/states/channel/ChannelState.h"
 #include "inviteToChannel/InviteToChannelController.h"
 #include "inviteToChannel/InviteToChannelState.h"
 #include "login/LoginController.h"
