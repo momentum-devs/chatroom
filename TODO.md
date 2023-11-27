@@ -16,11 +16,10 @@
 ### SERVER:
 
 * reactions
-* encryption
+* add logs contexts
 * user avatars and channel avatars
-* infrastructure setup
-* deploy
 * transactions
 * migrations
-* add pagination in fetching messages
-* add logs contexts
+* encryption
+* infrastructure setup
+* deploy
