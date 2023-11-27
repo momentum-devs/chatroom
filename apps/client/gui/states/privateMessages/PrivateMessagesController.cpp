@@ -16,20 +16,20 @@ void PrivateMessagesController::activate()
     session->addMessageHandler({common::messages::MessageId::GetUserFriendsResponse, getUserFriendsResponseHandlerName,
                                 [this](const auto& msg) { handleGetUserFriendsResponse(msg); }});
 
-    session->addMessageHandler({common::messages::MessageId::GetFriendRequestsResponse,
-                                getUserFriendRequestsResponseHandlerName,
-                                [this](const auto& msg) { handleGetUserFriendRequestsResponse(msg); }});
+    session->addMessageHandler({common::messages::MessageId::GetFriendInvitationsResponse,
+                                getUserFriendInvitationsResponseHandlerName,
+                                [this](const auto& msg) { handleGetUserFriendInvitationsResponse(msg); }});
 
-    session->addMessageHandler({common::messages::MessageId::ChangeFriendRequestsResponse,
-                                changeFriendRequestResponseHandlerName,
-                                [this](const auto& msg) { handleChangeFriendRequestResponse(msg); }});
+    session->addMessageHandler({common::messages::MessageId::ChangeFriendInvitationsResponse,
+                                changeFriendInvitationResponseHandlerName,
+                                [this](const auto& msg) { handleChangeFriendInvitationResponse(msg); }});
 
     session->addMessageHandler({common::messages::MessageId::RemoveFromFriendsResponse,
                                 removeFromFriendsResponseHandlerName,
                                 [this](const auto&) { handleRemoveFromFriendsResponse(); }});
 
     session->sendMessage(common::messages::MessageId::GetUserFriends, {});
-    session->sendMessage(common::messages::MessageId::GetFriendRequests, {});
+    session->sendMessage(common::messages::MessageId::GetFriendInvitations, {});
 
     if (not currentFriendId.empty())
     {
@@ -43,10 +43,10 @@ void PrivateMessagesController::deactivate()
         {common::messages::MessageId::GetUserFriendsResponse, getUserFriendsResponseHandlerName});
 
     session->removeMessageHandler(
-        {common::messages::MessageId::GetFriendRequestsResponse, getUserFriendRequestsResponseHandlerName});
+        {common::messages::MessageId::GetFriendInvitationsResponse, getUserFriendInvitationsResponseHandlerName});
 
     session->removeMessageHandler(
-        {common::messages::MessageId::ChangeFriendRequestsResponse, changeFriendRequestResponseHandlerName});
+        {common::messages::MessageId::ChangeFriendInvitationsResponse, changeFriendInvitationResponseHandlerName});
 
     session->removeMessageHandler(
         {common::messages::MessageId::RemoveFromFriendsResponse, removeFromFriendsResponseHandlerName});
@@ -66,14 +66,14 @@ const QString& PrivateMessagesController::getName() const
     return name;
 }
 
-void PrivateMessagesController::goToSendFriendRequest()
+void PrivateMessagesController::goToSendFriendInvitation()
 {
     LOG_S(INFO) << "Handle go to send friend request";
 
-    stateMachine->addNextState(stateFactory.createSendFriendRequestState());
+    stateMachine->addNextState(stateFactory.createSendFriendInvitationState());
 }
 
-void PrivateMessagesController::acceptFriendRequest(const QString& requestId)
+void PrivateMessagesController::acceptFriendInvitation(const QString& requestId)
 {
     LOG_S(INFO) << std::format("Accept friend request with id {}", requestId.toStdString());
 
@@ -81,10 +81,10 @@ void PrivateMessagesController::acceptFriendRequest(const QString& requestId)
         {"requestId", requestId.toStdString()},
     };
 
-    session->sendMessage(common::messages::MessageId::AcceptFriendRequests, data);
+    session->sendMessage(common::messages::MessageId::AcceptFriendInvitations, data);
 }
 
-void PrivateMessagesController::rejectFriendRequest(const QString& requestId)
+void PrivateMessagesController::rejectFriendInvitation(const QString& requestId)
 {
     LOG_S(INFO) << std::format("Reject friend request with id {}", requestId.toStdString());
 
@@ -92,7 +92,7 @@ void PrivateMessagesController::rejectFriendRequest(const QString& requestId)
         {"requestId", requestId.toStdString()},
     };
 
-    session->sendMessage(common::messages::MessageId::RejectFriendRequests, data);
+    session->sendMessage(common::messages::MessageId::RejectFriendInvitations, data);
 }
 
 void PrivateMessagesController::setCurrentFriend(const QString& friendId, const QString& friendName)
@@ -158,11 +158,11 @@ void PrivateMessagesController::handleGetUserFriendsResponse(const common::messa
     }
 }
 
-void PrivateMessagesController::handleGetUserFriendRequestsResponse(const common::messages::Message& message)
+void PrivateMessagesController::handleGetUserFriendInvitationsResponse(const common::messages::Message& message)
 {
     LOG_S(INFO) << "Received friend requests list";
 
-    emit clearFriendRequestList();
+    emit clearFriendInvitationList();
 
     auto responsePayload = static_cast<std::string>(message.payload);
 
@@ -176,16 +176,16 @@ void PrivateMessagesController::handleGetUserFriendRequestsResponse(const common
 
     if (responseJson.contains("data"))
     {
-        for (const auto& friendRequest : responseJson.at("data"))
+        for (const auto& friendInvitation : responseJson.at("data"))
         {
-            if (friendRequest.contains("id") and friendRequest.contains("name"))
+            if (friendInvitation.contains("id") and friendInvitation.contains("name"))
             {
                 LOG_S(INFO) << std::format("Adding friend request {} with id {} to list",
-                                           friendRequest.at("name").get<std::string>(),
-                                           friendRequest.at("id").get<std::string>());
+                                           friendInvitation.at("name").get<std::string>(),
+                                           friendInvitation.at("id").get<std::string>());
 
-                emit addFriendRequest(QString::fromStdString(friendRequest.at("name").get<std::string>()),
-                                      QString::fromStdString(friendRequest.at("id").get<std::string>()));
+                emit addFriendInvitation(QString::fromStdString(friendInvitation.at("name").get<std::string>()),
+                                         QString::fromStdString(friendInvitation.at("id").get<std::string>()));
             }
             else
             {
@@ -199,7 +199,7 @@ void PrivateMessagesController::handleGetUserFriendRequestsResponse(const common
     }
 }
 
-void PrivateMessagesController::handleChangeFriendRequestResponse(const common::messages::Message& message)
+void PrivateMessagesController::handleChangeFriendInvitationResponse(const common::messages::Message& message)
 {
     LOG_S(INFO) << "Handle change friend request response";
 
@@ -215,7 +215,7 @@ void PrivateMessagesController::handleChangeFriendRequestResponse(const common::
     else
     {
         session->sendMessage(common::messages::MessageId::GetUserFriends, {});
-        session->sendMessage(common::messages::MessageId::GetFriendRequests, {});
+        session->sendMessage(common::messages::MessageId::GetFriendInvitations, {});
     }
 }
 

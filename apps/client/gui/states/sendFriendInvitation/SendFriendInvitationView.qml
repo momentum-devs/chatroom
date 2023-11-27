@@ -5,7 +5,7 @@ import "../../qml/common/settings.js" as Settings
 Rectangle {
     color: Settings.backgroundColor
 
-    Keys.onEnterPressed: sendFriendRequestButton.activate()
+    Keys.onEnterPressed: sendFriendInvitationButton.activate()
     Keys.onEscapePressed: goBackButton.activate()
 
     Column {
@@ -29,11 +29,11 @@ Rectangle {
             spacing: 5
 
             Button {
-                id: sendFriendRequestButton
+                id: sendFriendInvitationButton
                 function activate() {
                     const friendEmail = friendEmailField.text;
                     if (friendEmail.length !== 0) {
-                        sendFriendRequestController.sendFriendRequest(friendEmail);
+                        sendFriendInvitationController.sendFriendInvitation(friendEmail);
                         successPopup.open();
                     } else {
                         errorPopup.contentItem.text = "Friend email field is empty";
@@ -50,7 +50,7 @@ Rectangle {
             Button {
                 id: goBackButton
                 function activate() {
-                    sendFriendRequestController.goBack();
+                    sendFriendInvitationController.goBack();
                 }
 
                 text: qsTr('Go back')
@@ -60,12 +60,12 @@ Rectangle {
         }
     }
     Connections {
-        function onSendFriendRequestFailure(message: string) {
+        function onSendFriendInvitationFailure(message: string) {
             errorPopup.contentItem.text = message;
             errorPopup.open();
         }
 
-        target: sendFriendRequestController
+        target: sendFriendInvitationController
     }
     Popup {
         id: successPopup

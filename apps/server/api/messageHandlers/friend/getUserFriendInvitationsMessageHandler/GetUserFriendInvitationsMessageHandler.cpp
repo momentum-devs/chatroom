@@ -1,13 +1,13 @@
-#include "GetUserFriendRequestsMessageHandler.h"
-
 #include <format>
 #include <loguru.hpp>
 #include <nlohmann/json.hpp>
 #include <regex>
 
+#include "GetUserFriendInvitationsMessageHandler.h"
+
 namespace server::api
 {
-GetUserFriendRequestsMessageHandler::GetUserFriendRequestsMessageHandler(
+GetUserFriendInvitationsMessageHandler::GetUserFriendInvitationsMessageHandler(
     std::shared_ptr<application::TokenService> tokenServiceInit,
     std::unique_ptr<application::FindReceivedFriendInvitationsQueryHandler>
         findReceivedFriendInvitationsQueryHandlerInit)
@@ -17,7 +17,7 @@ GetUserFriendRequestsMessageHandler::GetUserFriendRequestsMessageHandler(
 }
 
 common::messages::Message
-GetUserFriendRequestsMessageHandler::handleMessage(const common::messages::Message& message) const
+GetUserFriendInvitationsMessageHandler::handleMessage(const common::messages::Message& message) const
 {
     try
     {
@@ -29,26 +29,27 @@ GetUserFriendRequestsMessageHandler::handleMessage(const common::messages::Messa
 
         const auto& [friendInvitations] = findReceivedFriendInvitationsQueryHandler->execute({userId});
 
-        nlohmann::json friendRequestsJsonArray = nlohmann::json::array();
+        nlohmann::json friendInvitationsJsonArray = nlohmann::json::array();
 
         for (const auto& friendInvitation : friendInvitations)
         {
-            nlohmann::json friendRequestJson{{"id", friendInvitation.getId()},
-                                             {"name", friendInvitation.getSender()->getNickname()}};
+            nlohmann::json friendInvitationJson{{"id", friendInvitation.getId()},
+                                                {"name", friendInvitation.getSender()->getNickname()}};
 
-            friendRequestsJsonArray.push_back(friendRequestJson);
+            friendInvitationsJsonArray.push_back(friendInvitationJson);
         }
 
-        nlohmann::json responsePayload{{"data", friendRequestsJsonArray}};
+        nlohmann::json responsePayload{{"data", friendInvitationsJsonArray}};
 
-        return common::messages::Message{common::messages::MessageId::GetFriendRequestsResponse,
+        return common::messages::Message{common::messages::MessageId::GetFriendInvitationsResponse,
                                          common::bytes::Bytes{responsePayload.dump()}};
     }
     catch (const std::exception& e)
     {
         nlohmann::json responsePayload{{"error", e.what()}};
 
-        return {common::messages::MessageId::GetFriendRequestsResponse, common::bytes::Bytes{responsePayload.dump()}};
+        return {common::messages::MessageId::GetFriendInvitationsResponse,
+                common::bytes::Bytes{responsePayload.dump()}};
     }
 }
 }

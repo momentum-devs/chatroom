@@ -21,22 +21,22 @@ auto validPayloadJson = nlohmann::json{{"token", token}};
 auto validPayload = common::bytes::Bytes{validPayloadJson.dump()};
 auto message = common::messages::Message{common::messages::MessageId::GetUserFriends, validPayload};
 
-auto noFriendRequestResponsePayloadJson = nlohmann::json{{"data", nlohmann::json::array()}};
-auto noFriendRequestMessageResponse =
+auto noFriendInvitationResponsePayloadJson = nlohmann::json{{"data", nlohmann::json::array()}};
+auto noFriendInvitationMessageResponse =
     common::messages::Message{common::messages::MessageId::GetUserFriendsResponse,
-                              common::bytes::Bytes{noFriendRequestResponsePayloadJson.dump()}};
+                              common::bytes::Bytes{noFriendInvitationResponsePayloadJson.dump()}};
 
 auto friendId1 = "id1";
 auto friendName1 = "friendName1";
 auto friendId2 = "id2";
 auto friendName2 = "friendName2";
-auto fewFriendRequestsResponsePayloadJson =
+auto fewFriendInvitationsResponsePayloadJson =
     nlohmann::json{{"data", nlohmann::json::array({{{"id", friendId1}, {"name", friendName1}, {"isActive", false}},
                                                    {{"id", friendId2}, {"name", friendName2}, {"isActive", true}}})}};
 
-auto fewFriendRequestsMessageResponse =
+auto fewFriendInvitationsMessageResponse =
     common::messages::Message{common::messages::MessageId::GetUserFriendsResponse,
-                              common::bytes::Bytes{fewFriendRequestsResponsePayloadJson.dump()}};
+                              common::bytes::Bytes{fewFriendInvitationsResponsePayloadJson.dump()}};
 
 std::runtime_error invalidToken("invalidToken");
 auto invalidTokenMessageResponse = common::messages::Message{common::messages::MessageId::GetUserFriendsResponse,
@@ -75,7 +75,7 @@ TEST_F(GetUserFriendsMessageHandlerTest, handleValidGetUserFriendsMessageWithNoF
 
     auto responseMessage = getUserFriendsMessageHandler.handleMessage(message);
 
-    EXPECT_EQ(responseMessage, noFriendRequestMessageResponse);
+    EXPECT_EQ(responseMessage, noFriendInvitationMessageResponse);
 }
 
 TEST_F(GetUserFriendsMessageHandlerTest, handleValidGetUserFriendsMessageWithFewFriends)
@@ -102,7 +102,7 @@ TEST_F(GetUserFriendsMessageHandlerTest, handleValidGetUserFriendsMessageWithFew
 
     auto responseMessage = getUserFriendsMessageHandler.handleMessage(message);
 
-    EXPECT_EQ(responseMessage, fewFriendRequestsMessageResponse);
+    EXPECT_EQ(responseMessage, fewFriendInvitationsMessageResponse);
 }
 
 TEST_F(GetUserFriendsMessageHandlerTest, handleGetUserFriendsMessageWithInvalidToken)

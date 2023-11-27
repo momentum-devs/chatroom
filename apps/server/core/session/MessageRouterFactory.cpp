@@ -11,11 +11,11 @@
 #include "server/api/messageHandlers/channel/leaveChannelMessageHandler/LeaveChannelMessageHandler.h"
 #include "server/api/messageHandlers/channel/rejectChannelInvitationMessageHandler/RejectChannelInvitationMessageHandler.h"
 #include "server/api/messageHandlers/channel/sendChannelInvitationMessageHandler/SendChannelInvitationMessageHandler.h"
-#include "server/api/messageHandlers/friend/acceptFriendRequestMessageHandler/AcceptFriendRequestMessageHandler.h"
-#include "server/api/messageHandlers/friend/friendRequestMessageHandler/FriendRequestMessageHandler.h"
-#include "server/api/messageHandlers/friend/getUserFriendRequestsMessageHandler/GetUserFriendRequestsMessageHandler.h"
+#include "server/api/messageHandlers/friend/acceptFriendInvitationMessageHandler/AcceptFriendInvitationMessageHandler.h"
+#include "server/api/messageHandlers/friend/friendInvitationMessageHandler/FriendInvitationMessageHandler.h"
+#include "server/api/messageHandlers/friend/getUserFriendInvitationsMessageHandler/GetUserFriendInvitationsMessageHandler.h"
 #include "server/api/messageHandlers/friend/getUserFriendsMessageHandler/GetUserFriendsMessageHandler.h"
-#include "server/api/messageHandlers/friend/rejectFriendRequestMessageHandler/RejectFriendRequestMessageHandler.h"
+#include "server/api/messageHandlers/friend/rejectFriendInvitationMessageHandler/RejectFriendInvitationMessageHandler.h"
 #include "server/api/messageHandlers/friend/removeFromFriendsMessageHandler/RemoveFromFriendsMessageHandler.h"
 #include "server/api/messageHandlers/user/deleteUserMessageHandler/DeleteUserMessageHandler.h"
 #include "server/api/messageHandlers/user/getUserDataMessageHandler/GetUserDataMessageHandler.h"
@@ -208,7 +208,7 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
         std::make_unique<server::application::CreateFriendInvitationCommandHandlerImpl>(
             friendInvitationRepository, userRepository, friendshipRepository);
 
-    auto friendRequestMessageHandler = std::make_shared<api::FriendRequestMessageHandler>(
+    auto friendInvitationMessageHandler = std::make_shared<api::FriendInvitationMessageHandler>(
         tokenService, findUserByEmailQueryHandler, std::move(createFriendInvitationCommandHandler));
 
     auto findReceivedChannelInvitationsQueryHandler =
@@ -234,21 +234,21 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
         std::make_unique<server::application::FindReceivedFriendInvitationsQueryHandlerImpl>(
             friendInvitationRepository);
 
-    auto getUserFriendRequestsMessageHandler = std::make_shared<api::GetUserFriendRequestsMessageHandler>(
+    auto getUserFriendInvitationsMessageHandler = std::make_shared<api::GetUserFriendInvitationsMessageHandler>(
         tokenService, std::move(findReceivedFriendInvitationsQueryHandler));
 
     auto acceptFriendInvitationCommandHandler =
         std::make_unique<server::application::AcceptFriendInvitationCommandHandlerImpl>(
             friendInvitationRepository, userRepository, friendshipRepository);
 
-    auto acceptFriendRequestMessageHandler = std::make_shared<api::AcceptFriendRequestMessageHandler>(
+    auto acceptFriendInvitationMessageHandler = std::make_shared<api::AcceptFriendInvitationMessageHandler>(
         tokenService, std::move(acceptFriendInvitationCommandHandler));
 
     auto rejectFriendInvitationCommandHandlerImpl =
         std::make_unique<server::application::RejectFriendInvitationCommandHandlerImpl>(friendInvitationRepository,
                                                                                         userRepository);
 
-    auto rejectFriendRequestMessageHandler = std::make_shared<api::RejectFriendRequestMessageHandler>(
+    auto rejectFriendInvitationMessageHandler = std::make_shared<api::RejectFriendInvitationMessageHandler>(
         tokenService, std::move(rejectFriendInvitationCommandHandlerImpl));
 
     auto findUserFriendsQueryHandler =
@@ -282,13 +282,13 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
         {common::messages::MessageId::SendChannelInvitation, sendChannelInvitationMessageHandler},
         {common::messages::MessageId::LeftTheChannel, leftTheChannelMessageHandler},
         {common::messages::MessageId::DeleteTheChannel, deleteTheChannelMessageHandler},
-        {common::messages::MessageId::SendFriendRequest, friendRequestMessageHandler},
+        {common::messages::MessageId::SendFriendInvitation, friendInvitationMessageHandler},
         {common::messages::MessageId::GetUserChannelInvitations, getUserChannelInvitationsMessageHandler},
         {common::messages::MessageId::AcceptChannelInvitation, acceptChannelInvitationMessageHandler},
         {common::messages::MessageId::RejectChannelInvitation, rejectChannelInvitationMessageHandler},
-        {common::messages::MessageId::GetFriendRequests, getUserFriendRequestsMessageHandler},
-        {common::messages::MessageId::AcceptFriendRequests, acceptFriendRequestMessageHandler},
-        {common::messages::MessageId::RejectFriendRequests, rejectFriendRequestMessageHandler},
+        {common::messages::MessageId::GetFriendInvitations, getUserFriendInvitationsMessageHandler},
+        {common::messages::MessageId::AcceptFriendInvitations, acceptFriendInvitationMessageHandler},
+        {common::messages::MessageId::RejectFriendInvitations, rejectFriendInvitationMessageHandler},
         {common::messages::MessageId::GetUserFriends, getUserFriendsMessageHandler},
         {common::messages::MessageId::RemoveFromFriends, removeFromFriendsMessageHandler},
         {common::messages::MessageId::GetChannelMembers, getChannelMembersMessageHandler},

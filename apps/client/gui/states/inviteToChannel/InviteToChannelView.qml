@@ -5,7 +5,7 @@ import "../../qml/common/settings.js" as Settings
 Rectangle {
     color: Settings.backgroundColor
 
-    Keys.onEnterPressed: sendFriendRequestButton.activate()
+    Keys.onEnterPressed: sendFriendInvitationButton.activate()
     Keys.onEscapePressed: goBackButton.activate()
 
     Column {
@@ -29,7 +29,7 @@ Rectangle {
             spacing: 5
 
             Button {
-                id: sendFriendRequestButton
+                id: sendFriendInvitationButton
                 function activate() {
                     const email = emailField.text;
                     if (email.length !== 0) {

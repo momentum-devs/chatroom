@@ -10,7 +10,6 @@
 * avatars
 
 
-* friend requests -> friend invitation
 * add caching information (e.g. channel list, avatars, etc.)
 
 ### SERVER:

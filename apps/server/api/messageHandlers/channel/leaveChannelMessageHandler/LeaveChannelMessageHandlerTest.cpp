@@ -20,7 +20,7 @@ const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
 auto channelId = "channelId";
 auto validPayloadJson = nlohmann::json{{"data", {{"channelId", channelId}}}, {"token", token}};
 auto validPayload = common::bytes::Bytes{validPayloadJson.dump()};
-auto message = common::messages::Message{common::messages::MessageId::SendFriendRequest, validPayload};
+auto message = common::messages::Message{common::messages::MessageId::SendFriendInvitation, validPayload};
 auto validMessageResponse =
     common::messages::Message{common::messages::MessageId::LeftTheChannelResponse, common::bytes::Bytes{R"(["ok"])"}};
 
@@ -28,9 +28,10 @@ std::runtime_error invalidToken("invalidToken");
 auto invalidTokenMessageResponse = common::messages::Message{common::messages::MessageId::LeftTheChannelResponse,
                                                              common::bytes::Bytes{R"({"error":"invalidToken"})"}};
 
-std::runtime_error sendFriendRequestError("sendFriendRequestError");
-auto sendFriendRequestErrorMessageResponse = common::messages::Message{
-    common::messages::MessageId::LeftTheChannelResponse, common::bytes::Bytes{R"({"error":"sendFriendRequestError"})"}};
+std::runtime_error sendFriendInvitationError("sendFriendInvitationError");
+auto sendFriendInvitationErrorMessageResponse =
+    common::messages::Message{common::messages::MessageId::LeftTheChannelResponse,
+                              common::bytes::Bytes{R"({"error":"sendFriendInvitationError"})"}};
 }
 
 class LeaveChannelMessageHandlerTest : public Test
@@ -49,7 +50,7 @@ public:
                                                           std::move(leaveChannelCommandHandlerMockInit)};
 };
 
-TEST_F(LeaveChannelMessageHandlerTest, handleValidFriendRequestMessage)
+TEST_F(LeaveChannelMessageHandlerTest, handleValidFriendInvitationMessage)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*leaveChannelCommandHandlerMock,
@@ -60,7 +61,7 @@ TEST_F(LeaveChannelMessageHandlerTest, handleValidFriendRequestMessage)
     EXPECT_EQ(responseMessage, validMessageResponse);
 }
 
-TEST_F(LeaveChannelMessageHandlerTest, handleFriendRequestMessageWithInvalidToken)
+TEST_F(LeaveChannelMessageHandlerTest, handleFriendInvitationMessageWithInvalidToken)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Throw(invalidToken));
 
@@ -69,14 +70,14 @@ TEST_F(LeaveChannelMessageHandlerTest, handleFriendRequestMessageWithInvalidToke
     EXPECT_EQ(responseMessage, invalidTokenMessageResponse);
 }
 
-TEST_F(LeaveChannelMessageHandlerTest, handleFriendRequestMessageWithErrorWhileHandling)
+TEST_F(LeaveChannelMessageHandlerTest, handleFriendInvitationMessageWithErrorWhileHandling)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*leaveChannelCommandHandlerMock,
                 execute(server::application::LeaveChannelCommandHandlerPayload{userId, channelId}))
-        .WillOnce(Throw(sendFriendRequestError));
+        .WillOnce(Throw(sendFriendInvitationError));
 
     auto responseMessage = leaveChannelMessageHandler.handleMessage(message);
 
-    EXPECT_EQ(responseMessage, sendFriendRequestErrorMessageResponse);
+    EXPECT_EQ(responseMessage, sendFriendInvitationErrorMessageResponse);
 }

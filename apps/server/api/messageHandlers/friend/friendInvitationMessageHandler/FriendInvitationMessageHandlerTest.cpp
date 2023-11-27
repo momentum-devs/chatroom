@@ -1,5 +1,3 @@
-#include "FriendRequestMessageHandler.h"
-
 #include <format>
 #include <gtest/gtest.h>
 #include <regex>
@@ -8,6 +6,7 @@
 #include "server/application/queryHandlers/user/findUserByEmailQueryHandler/FindUserByEmailQueryHandlerMock.h"
 #include "server/application/services/tokenService/TokenServiceMock.h"
 
+#include "FriendInvitationMessageHandler.h"
 #include "nlohmann/json.hpp"
 
 using namespace ::testing;
@@ -23,26 +22,26 @@ auto friendEmail = "friend_email";
 auto friendUser = server::domain::User{friendId, friendEmail, "", "", true, true, "123", "", ""};
 auto validPayloadJson = nlohmann::json{{"data", {{"friend_email", friendEmail}}}, {"token", token}};
 auto validPayload = common::bytes::Bytes{validPayloadJson.dump()};
-auto message = common::messages::Message{common::messages::MessageId::SendFriendRequest, validPayload};
-auto validMessageResponse = common::messages::Message{common::messages::MessageId::SendFriendRequestResponse,
+auto message = common::messages::Message{common::messages::MessageId::SendFriendInvitation, validPayload};
+auto validMessageResponse = common::messages::Message{common::messages::MessageId::SendFriendInvitationResponse,
                                                       common::bytes::Bytes{R"(["ok"])"}};
 
 std::runtime_error invalidToken("invalidToken");
-auto invalidTokenMessageResponse = common::messages::Message{common::messages::MessageId::SendFriendRequestResponse,
+auto invalidTokenMessageResponse = common::messages::Message{common::messages::MessageId::SendFriendInvitationResponse,
                                                              common::bytes::Bytes{R"({"error":"invalidToken"})"}};
 
 std::runtime_error findFriendEmailError("findFriendEmailError");
 auto findFriendEmailErrorMessageResponse =
-    common::messages::Message{common::messages::MessageId::SendFriendRequestResponse,
+    common::messages::Message{common::messages::MessageId::SendFriendInvitationResponse,
                               common::bytes::Bytes{R"({"error":"findFriendEmailError"})"}};
 
-std::runtime_error sendFriendRequestError("sendFriendRequestError");
-auto sendFriendRequestErrorMessageResponse =
-    common::messages::Message{common::messages::MessageId::SendFriendRequestResponse,
-                              common::bytes::Bytes{R"({"error":"sendFriendRequestError"})"}};
+std::runtime_error sendFriendInvitationError("sendFriendInvitationError");
+auto sendFriendInvitationErrorMessageResponse =
+    common::messages::Message{common::messages::MessageId::SendFriendInvitationResponse,
+                              common::bytes::Bytes{R"({"error":"sendFriendInvitationError"})"}};
 }
 
-class FriendRequestMessageHandlerTest : public Test
+class FriendInvitationMessageHandlerTest : public Test
 {
 public:
     std::shared_ptr<server::application::TokenServiceMock> tokenServiceMock =
@@ -57,11 +56,11 @@ public:
     server::application::CreateFriendInvitationCommandHandlerMock* createFriendInvitationCommandHandlerMock =
         createFriendInvitationCommandHandlerMockInit.get();
 
-    FriendRequestMessageHandler friendRequestMessageHandler{tokenServiceMock, findUserByEmailQueryHandler,
-                                                            std::move(createFriendInvitationCommandHandlerMockInit)};
+    FriendInvitationMessageHandler friendInvitationMessageHandler{
+        tokenServiceMock, findUserByEmailQueryHandler, std::move(createFriendInvitationCommandHandlerMockInit)};
 };
 
-TEST_F(FriendRequestMessageHandlerTest, handleValidFriendRequestMessage)
+TEST_F(FriendInvitationMessageHandlerTest, handleValidFriendInvitationMessage)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*findUserByEmailQueryHandler,
@@ -70,33 +69,33 @@ TEST_F(FriendRequestMessageHandlerTest, handleValidFriendRequestMessage)
     EXPECT_CALL(*createFriendInvitationCommandHandlerMock,
                 execute(server::application::CreateFriendInvitationCommandHandlerPayload{userId, friendId}));
 
-    auto responseMessage = friendRequestMessageHandler.handleMessage(message);
+    auto responseMessage = friendInvitationMessageHandler.handleMessage(message);
 
     EXPECT_EQ(responseMessage, validMessageResponse);
 }
 
-TEST_F(FriendRequestMessageHandlerTest, handleFriendRequestMessageWithInvalidToken)
+TEST_F(FriendInvitationMessageHandlerTest, handleFriendInvitationMessageWithInvalidToken)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Throw(invalidToken));
 
-    auto responseMessage = friendRequestMessageHandler.handleMessage(message);
+    auto responseMessage = friendInvitationMessageHandler.handleMessage(message);
 
     EXPECT_EQ(responseMessage, invalidTokenMessageResponse);
 }
 
-TEST_F(FriendRequestMessageHandlerTest, handleFriendRequestMessageWithErrorWhileFindingFriendEmail)
+TEST_F(FriendInvitationMessageHandlerTest, handleFriendInvitationMessageWithErrorWhileFindingFriendEmail)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*findUserByEmailQueryHandler,
                 execute(server::application::FindUserByEmailQueryHandlerPayload{friendEmail}))
         .WillOnce(Throw(findFriendEmailError));
 
-    auto responseMessage = friendRequestMessageHandler.handleMessage(message);
+    auto responseMessage = friendInvitationMessageHandler.handleMessage(message);
 
     EXPECT_EQ(responseMessage, findFriendEmailErrorMessageResponse);
 }
 
-TEST_F(FriendRequestMessageHandlerTest, handleFriendRequestMessageWithErrorWhileHandling)
+TEST_F(FriendInvitationMessageHandlerTest, handleFriendInvitationMessageWithErrorWhileHandling)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*findUserByEmailQueryHandler,
@@ -104,9 +103,9 @@ TEST_F(FriendRequestMessageHandlerTest, handleFriendRequestMessageWithErrorWhile
         .WillOnce(Return(server::application::FindUserByEmailQueryHandlerResult{friendUser}));
     EXPECT_CALL(*createFriendInvitationCommandHandlerMock,
                 execute(server::application::CreateFriendInvitationCommandHandlerPayload{userId, friendId}))
-        .WillOnce(Throw(sendFriendRequestError));
+        .WillOnce(Throw(sendFriendInvitationError));
 
-    auto responseMessage = friendRequestMessageHandler.handleMessage(message);
+    auto responseMessage = friendInvitationMessageHandler.handleMessage(message);
 
-    EXPECT_EQ(responseMessage, sendFriendRequestErrorMessageResponse);
+    EXPECT_EQ(responseMessage, sendFriendInvitationErrorMessageResponse);
 }

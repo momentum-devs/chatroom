@@ -43,14 +43,14 @@ Rectangle {
         function onAddFriend(friendName: string, friendId: string, isActive: bool) {
             friendsColumn.addFriend(friendName, friendId, isActive);
         }
-        function onAddFriendRequest(friendName: string, requestId: string) {
-            friendsColumn.addFriendRequest(friendName, requestId);
+        function onAddFriendInvitation(friendName: string, requestId: string) {
+            friendsColumn.addFriendInvitation(friendName, requestId);
+        }
+        function onClearFriendInvitationList() {
+            friendsColumn.clearFriendInvitationList();
         }
         function onClearFriendList() {
             friendsColumn.clearFriendList();
-        }
-        function onClearFriendRequestList() {
-            friendsColumn.clearFriendRequestList();
         }
         function onRemovedFromFriends() {
             friendTopBar.visible = false;

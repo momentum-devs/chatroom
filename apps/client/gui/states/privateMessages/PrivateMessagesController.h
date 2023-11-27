@@ -22,17 +22,17 @@ public:
     void deactivate();
     const QString& getName() const;
 
-    Q_INVOKABLE void goToSendFriendRequest();
-    Q_INVOKABLE void acceptFriendRequest(const QString& requestId);
-    Q_INVOKABLE void rejectFriendRequest(const QString& requestId);
+    Q_INVOKABLE void goToSendFriendInvitation();
+    Q_INVOKABLE void acceptFriendInvitation(const QString& requestId);
+    Q_INVOKABLE void rejectFriendInvitation(const QString& requestId);
     Q_INVOKABLE void setCurrentFriend(const QString& friendId, const QString& friendName);
     Q_INVOKABLE void removeFromFriends();
 
 signals:
     void addFriend(const QString& friendName, const QString& friendId, bool isActive);
-    void addFriendRequest(const QString& friendName, const QString& requestId);
+    void addFriendInvitation(const QString& friendName, const QString& requestId);
     void clearFriendList();
-    void clearFriendRequestList();
+    void clearFriendInvitationList();
     void setCurrentFriendName(const QString& friendName);
     void removedFromFriends();
 
@@ -41,8 +41,8 @@ public slots:
 
 private:
     void handleGetUserFriendsResponse(const common::messages::Message& message);
-    void handleGetUserFriendRequestsResponse(const common::messages::Message& message);
-    void handleChangeFriendRequestResponse(const common::messages::Message& message);
+    void handleGetUserFriendInvitationsResponse(const common::messages::Message& message);
+    void handleChangeFriendInvitationResponse(const common::messages::Message& message);
     void handleRemoveFromFriendsResponse();
 
     std::shared_ptr<api::Session> session;
@@ -55,10 +55,10 @@ private:
 
     inline static const std::string getUserFriendsResponseHandlerName{
         "getUserFriendsResponseHandlerName_privateMessagesController"};
-    inline static const std::string getUserFriendRequestsResponseHandlerName{
-        "getUserFriendRequestsResponseHandlerName_privateMessagesController"};
-    inline static const std::string changeFriendRequestResponseHandlerName{
-        "changeFriendRequestResponseHandlerName_privateMessagesController"};
+    inline static const std::string getUserFriendInvitationsResponseHandlerName{
+        "getUserFriendInvitationsResponseHandlerName_privateMessagesController"};
+    inline static const std::string changeFriendInvitationResponseHandlerName{
+        "changeFriendInvitationResponseHandlerName_privateMessagesController"};
     inline static const std::string removeFromFriendsResponseHandlerName{
         "removeFromFriendsResponseHandlerName_privateMessagesController"};
 };
