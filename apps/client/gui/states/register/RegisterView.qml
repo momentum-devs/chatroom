@@ -5,8 +5,9 @@ import "../../qml/common/settings.js" as Settings
 Rectangle {
     color: Settings.backgroundColor
 
-    Keys.onEnterPressed: registerUserButton.activate()
-    Keys.onEscapePressed: goBackButton.activate()
+    Keys.onEnterPressed: registerUserButton.clicked()
+    Keys.onEscapePressed: goBackButton.clicked()
+    Keys.onReturnPressed: registerUserButton.clicked()
 
     Column {
         anchors.centerIn: parent
@@ -51,7 +52,9 @@ Rectangle {
 
             Button {
                 id: registerUserButton
-                function activate() {
+                text: qsTr('Register')
+
+                onClicked: {
                     const email = emailField.text;
                     const nickname = nicknameField.text;
                     const password = passwordField.text;
@@ -64,20 +67,14 @@ Rectangle {
                         errorPopup.open();
                     }
                 }
-
-                text: qsTr('Register')
-
-                onClicked: activate()
             }
             Button {
                 id: goBackButton
-                function activate() {
-                    registerController.goBack();
-                }
-
                 text: qsTr('Go back')
 
-                onClicked: activate()
+                onClicked: {
+                    registerController.goBack();
+                }
             }
         }
     }

@@ -23,10 +23,10 @@ auto validPayloadJson = nlohmann::json{{"token", token}};
 auto validPayload = common::bytes::Bytes{validPayloadJson.dump()};
 auto message = common::messages::Message{common::messages::MessageId::GetUserChannels, validPayload};
 
-auto noFriendRequestResponsePayloadJson = nlohmann::json{{"data", nlohmann::json::array()}};
-auto noFriendRequestMessageResponse =
+auto noFriendInvitationResponsePayloadJson = nlohmann::json{{"data", nlohmann::json::array()}};
+auto noFriendInvitationMessageResponse =
     common::messages::Message{common::messages::MessageId::GetUserChannelsResponse,
-                              common::bytes::Bytes{noFriendRequestResponsePayloadJson.dump()}};
+                              common::bytes::Bytes{noFriendInvitationResponsePayloadJson.dump()}};
 
 auto requestId1 = "id1";
 auto friendName1 = "id1";
@@ -88,7 +88,7 @@ TEST_F(GetUserChannelsMessageHandlerTest, handleValidGetUserChannelsMessageWithN
 
     auto responseMessage = getUserChannelsMessageHandler.handleMessage(message);
 
-    EXPECT_EQ(responseMessage, noFriendRequestMessageResponse);
+    EXPECT_EQ(responseMessage, noFriendInvitationMessageResponse);
 }
 
 TEST_F(GetUserChannelsMessageHandlerTest, handleValidGetUserChannelsMessageWithFewChannels)

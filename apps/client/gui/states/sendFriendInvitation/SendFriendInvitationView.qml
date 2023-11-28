@@ -5,8 +5,9 @@ import "../../qml/common/settings.js" as Settings
 Rectangle {
     color: Settings.backgroundColor
 
-    Keys.onEnterPressed: sendFriendRequestButton.activate()
-    Keys.onEscapePressed: goBackButton.activate()
+    Keys.onEnterPressed: sendFriendInvitationButton.clicked()
+    Keys.onEscapePressed: goBackButton.clicked()
+    Keys.onReturnPressed: sendFriendInvitationButton.clicked()
 
     Column {
         anchors.centerIn: parent
@@ -29,43 +30,37 @@ Rectangle {
             spacing: 5
 
             Button {
-                id: sendFriendRequestButton
-                function activate() {
+                id: sendFriendInvitationButton
+                text: qsTr('Invite')
+
+                onClicked: {
                     const friendEmail = friendEmailField.text;
                     if (friendEmail.length !== 0) {
-                        sendFriendRequestController.sendFriendRequest(friendEmail);
+                        sendFriendInvitationController.sendFriendInvitation(friendEmail);
                         successPopup.open();
                     } else {
                         errorPopup.contentItem.text = "Friend email field is empty";
                         errorPopup.open();
                     }
                 }
-
-                text: qsTr('Invite')
-
-                Keys.onEnterPressed: activate()
-                Keys.onReturnPressed: activate()
-                onClicked: activate()
             }
             Button {
                 id: goBackButton
-                function activate() {
-                    sendFriendRequestController.goBack();
-                }
-
                 text: qsTr('Go back')
 
-                onClicked: activate()
+                onClicked: {
+                    sendFriendInvitationController.goBack();
+                }
             }
         }
     }
     Connections {
-        function onSendFriendRequestFailure(message: string) {
+        function onSendFriendInvitationFailure(message: string) {
             errorPopup.contentItem.text = message;
             errorPopup.open();
         }
 
-        target: sendFriendRequestController
+        target: sendFriendInvitationController
     }
     Popup {
         id: successPopup

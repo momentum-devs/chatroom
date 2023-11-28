@@ -1,25 +1,27 @@
-var backgroundColor = "#313338";
+const backgroundColor = "#313338";
 
-var separatorColor = "#3f4147";
+const separatorColor = "#3f4147";
 
-var acceptColor = "#00FF00"
+const acceptColor = "#00FF00"
 
-var rejectColor = "#FF0000"
+const rejectColor = "#FF0000"
 
-var addColor = "#23a559"
+const addColor = "#23a559"
 
-var removeColor = "#FF0000"
+const removeColor = "#FF0000"
 
-var deleteColor = "#FF0000"
+const deleteColor = "#FF0000"
 
-var leaveColor = "#FF0000"
+const leaveColor = "#FF0000"
 
-var textColor = "#FFFFFF"
+const textColor = "#FFFFFF"
 
-var activeColor = "#00FF00"
+const activeColor = "#00FF00"
 
-var inactiveColor = "#777777"
+const inactiveColor = "#777777"
 
-var buttonColor = "#313338"
+const buttonColor = "#313338"
 
-var settingsButtonColor = "#b5bac1"
+const settingsButtonColor = "#b5bac1"
+
+const boxColor = "#232428"

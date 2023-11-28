@@ -6,7 +6,7 @@ import "../../../qml/common/settings.js" as Settings
 Rectangle {
     id: rightRectangle
 
-    property var friendRequests: []
+    property var friendInvitations: []
     property var friends: []
 
     function addFriend(friendName: string, friendId: string, isActive: bool) {
@@ -14,17 +14,18 @@ Rectangle {
         friendsView.model = friends;
         friendsView.height = 36 * friends.length;
     }
-    function addFriendRequest(friendName: string, requestId: string) {
-        friendRequests.push([friendName, requestId]);
-        friendRequestsView.model = friendRequests;
+    function addFriendInvitation(friendName: string, requestId: string) {
+        friendInvitations.push([friendName, requestId]);
+        friendInvitationsView.model = friendInvitations;
+    }
+    function clearFriendInvitationList() {
+        friendInvitations = [];
+        friendInvitationsView.model = friendInvitations;
     }
     function clearFriendList() {
         friends = [];
         friendsView.model = friends;
-    }
-    function clearFriendRequestList() {
-        friendRequests = [];
-        friendRequestsView.model = friendRequests;
+        friendsView.height = 0;
     }
 
     color: Settings.backgroundColor
@@ -94,7 +95,7 @@ Rectangle {
                         anchors.horizontalCenter: parent.horizontalCenter
 
                         onClicked: {
-                            privateMessagesController.goToSendFriendRequest()();
+                            privateMessagesController.goToSendFriendInvitation()();
                         }
                     }
                 }
@@ -114,7 +115,7 @@ Rectangle {
             width: parent.width
 
             ListView {
-                id: friendRequestsView
+                id: friendInvitationsView
                 contentWidth: parent.width
                 spacing: 5
 
@@ -129,14 +130,14 @@ Rectangle {
                         width: parent.width
 
                         AcceptButton {
-                            id: acceptFriendRequest
+                            id: acceptFriendInvitation
                             onClicked: {
-                                privateMessagesController.acceptFriendRequest(modelData[1]);
+                                privateMessagesController.acceptFriendInvitation(modelData[1]);
                             }
                         }
                         RejectButton {
                             onClicked: {
-                                privateMessagesController.rejectFriendRequest(modelData[1]);
+                                privateMessagesController.rejectFriendInvitation(modelData[1]);
                             }
                         }
                     }

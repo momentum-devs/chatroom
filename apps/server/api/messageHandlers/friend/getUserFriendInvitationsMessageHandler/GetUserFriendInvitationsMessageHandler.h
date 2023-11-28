@@ -8,12 +8,12 @@
 
 namespace server::api
 {
-class GetUserFriendRequestsMessageHandler : public MessageHandler
+class GetUserFriendInvitationsMessageHandler : public MessageHandler
 {
 public:
-    GetUserFriendRequestsMessageHandler(std::shared_ptr<application::TokenService> tokenService,
-                                        std::unique_ptr<application::FindReceivedFriendInvitationsQueryHandler>
-                                            findReceivedFriendInvitationsQueryHandler);
+    GetUserFriendInvitationsMessageHandler(std::shared_ptr<application::TokenService> tokenService,
+                                           std::unique_ptr<application::FindReceivedFriendInvitationsQueryHandler>
+                                               findReceivedFriendInvitationsQueryHandler);
 
     common::messages::Message handleMessage(const common::messages::Message& message) const override;
 

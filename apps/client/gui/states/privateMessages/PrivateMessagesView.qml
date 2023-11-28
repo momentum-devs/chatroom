@@ -3,8 +3,10 @@ import QtQuick.Controls 6.2
 import "../../qml/components"
 import "../../qml/common/settings.js" as Settings
 import "components"
+import "../../qml/components/messages"
 
 Rectangle {
+    id: privateMessagesView
     color: Settings.backgroundColor
     focus: true
 
@@ -13,21 +15,30 @@ Rectangle {
 
         LeftColumn {
             id: leftColumn
-        }
-        Column {
             height: parent.height
-            width: parent.width - leftColumn.width - friendsColumn.width
+        }
+        Item {
+            width: parent.width - 2*leftColumn.width
+            height: parent.height
 
-            FriendTopBar {
-                id: friendTopBar
-                visible: false
-                width: parent.width
-            }
             Item {
-                id: defaultView
-                height: parent.height - friendTopBar.height
-                visible: true
-                width: parent.width
+                id: friendView
+                anchors.fill: parent
+                visible: false
+
+                FriendTopBar {
+                    id: friendTopBar
+                    anchors.left: parent.left
+                    anchors.top: parent.top
+                    width: parent.width
+                }
+                MessageView {
+                    id: messageView
+                    anchors.left: parent.left
+                    anchors.top: friendTopBar.bottom
+                    height: parent.height - friendTopBar.height
+                    width: parent.width
+                }
             }
         }
         Separator {
@@ -43,23 +54,40 @@ Rectangle {
         function onAddFriend(friendName: string, friendId: string, isActive: bool) {
             friendsColumn.addFriend(friendName, friendId, isActive);
         }
-        function onAddFriendRequest(friendName: string, requestId: string) {
-            friendsColumn.addFriendRequest(friendName, requestId);
+        function onAddFriendInvitation(friendName: string, requestId: string) {
+            friendsColumn.addFriendInvitation(friendName, requestId);
+        }
+        function onClearFriendInvitationList() {
+            friendsColumn.clearFriendInvitationList();
         }
         function onClearFriendList() {
             friendsColumn.clearFriendList();
         }
-        function onClearFriendRequestList() {
-            friendsColumn.clearFriendRequestList();
-        }
         function onRemovedFromFriends() {
-            friendTopBar.visible = false;
+            privateMessagesView.state = "OutsideChat"
         }
         function onSetCurrentFriendName(friendName: string) {
             friendTopBar.setFriendName(friendName);
-            friendTopBar.visible = true;
+            privateMessagesView.state = "OnChat"
         }
 
         target: privateMessagesController
     }
+    state: "OutsideChat"
+    states: [
+        State {
+            name: "OnChat"
+            PropertyChanges { target: friendView; visible: true }
+        },
+        State {
+            extend: ""
+            name: "OutsideChat"
+            PropertyChanges { target: friendView; visible: false }
+
+            PropertyChanges {
+                target: friendsColumn
+                width: leftColumn.width
+            }
+        }
+    ]
 }

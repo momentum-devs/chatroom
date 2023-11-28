@@ -21,24 +21,15 @@ ScrollView {
         contentWidth: parent.width
         spacing: 5
 
-        delegate: Row {
-            height: 30
+        delegate: Invitation {
+            invitationName: modelData[0]
             width: parent.width
 
-            Text {
-                color: Settings.textColor
-                text: modelData[0]
+            onAccepted: {
+                leftColumnController.acceptChannelInvitation(modelData[1]);
             }
-            AcceptButton {
-                id: acceptChannelInvitation
-                onClicked: {
-                    leftColumnController.acceptChannelInvitation(modelData[1]);
-                }
-            }
-            RejectButton {
-                onClicked: {
-                    leftColumnController.rejectChannelInvitation(modelData[1]);
-                }
+            onRejected: {
+                leftColumnController.rejectChannelInvitation(modelData[1]);
             }
         }
     }

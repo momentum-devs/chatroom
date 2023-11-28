@@ -18,7 +18,7 @@ public:
     std::shared_ptr<State> createChannelState(const std::string& channelId, const std::string& channelName,
                                               bool isOwner) const;
     std::shared_ptr<State> createCreateChannelState() const;
-    std::shared_ptr<State> createSendFriendRequestState() const;
+    std::shared_ptr<State> createSendFriendInvitationState() const;
     std::shared_ptr<State> createUserSettingsState() const;
     std::shared_ptr<State> createVerifyUserState() const;
     std::shared_ptr<State> createPrivateMessagesState() const;

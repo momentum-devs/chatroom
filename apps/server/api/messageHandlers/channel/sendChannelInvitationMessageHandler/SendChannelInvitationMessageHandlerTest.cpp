@@ -37,10 +37,10 @@ auto findFriendEmailErrorMessageResponse =
     common::messages::Message{common::messages::MessageId::SendChannelInvitationResponse,
                               common::bytes::Bytes{R"({"error":"findFriendEmailError"})"}};
 
-std::runtime_error sendFriendRequestError("sendFriendRequestError");
-auto sendFriendRequestErrorMessageResponse =
+std::runtime_error sendFriendInvitationError("sendFriendInvitationError");
+auto sendFriendInvitationErrorMessageResponse =
     common::messages::Message{common::messages::MessageId::SendChannelInvitationResponse,
-                              common::bytes::Bytes{R"({"error":"sendFriendRequestError"})"}};
+                              common::bytes::Bytes{R"({"error":"sendFriendInvitationError"})"}};
 }
 
 class SendChannelInvitationMessageHandlerTest : public Test
@@ -62,7 +62,7 @@ public:
         tokenServiceMock, findUserByEmailQueryHandler, std::move(createChannelInvitationCommandHandlerMockInit)};
 };
 
-TEST_F(SendChannelInvitationMessageHandlerTest, handleValidFriendRequestMessage)
+TEST_F(SendChannelInvitationMessageHandlerTest, handleValidFriendInvitationMessage)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*findUserByEmailQueryHandler,
@@ -77,7 +77,7 @@ TEST_F(SendChannelInvitationMessageHandlerTest, handleValidFriendRequestMessage)
     EXPECT_EQ(responseMessage, validMessageResponse);
 }
 
-TEST_F(SendChannelInvitationMessageHandlerTest, handleFriendRequestMessageWithInvalidToken)
+TEST_F(SendChannelInvitationMessageHandlerTest, handleFriendInvitationMessageWithInvalidToken)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Throw(invalidToken));
 
@@ -86,7 +86,7 @@ TEST_F(SendChannelInvitationMessageHandlerTest, handleFriendRequestMessageWithIn
     EXPECT_EQ(responseMessage, invalidTokenMessageResponse);
 }
 
-TEST_F(SendChannelInvitationMessageHandlerTest, handleFriendRequestMessageWithErrorWhileFindingFriendEmail)
+TEST_F(SendChannelInvitationMessageHandlerTest, handleFriendInvitationMessageWithErrorWhileFindingFriendEmail)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*findUserByEmailQueryHandler,
@@ -98,7 +98,7 @@ TEST_F(SendChannelInvitationMessageHandlerTest, handleFriendRequestMessageWithEr
     EXPECT_EQ(responseMessage, findFriendEmailErrorMessageResponse);
 }
 
-TEST_F(SendChannelInvitationMessageHandlerTest, handleFriendRequestMessageWithErrorWhileHandling)
+TEST_F(SendChannelInvitationMessageHandlerTest, handleFriendInvitationMessageWithErrorWhileHandling)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*findUserByEmailQueryHandler,
@@ -106,9 +106,9 @@ TEST_F(SendChannelInvitationMessageHandlerTest, handleFriendRequestMessageWithEr
         .WillOnce(Return(server::application::FindUserByEmailQueryHandlerResult{friendUser}));
     EXPECT_CALL(*createChannelInvitationCommandHandlerMock,
                 execute(server::application::CreateChannelInvitationCommandHandlerPayload{userId, friendId, channelId}))
-        .WillOnce(Throw(sendFriendRequestError));
+        .WillOnce(Throw(sendFriendInvitationError));
 
     auto responseMessage = sendChannelInvitationMessageHandler.handleMessage(message);
 
-    EXPECT_EQ(responseMessage, sendFriendRequestErrorMessageResponse);
+    EXPECT_EQ(responseMessage, sendFriendInvitationErrorMessageResponse);
 }

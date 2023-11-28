@@ -18,8 +18,8 @@ set(SOURCES
         gui/qml/LoaderController.cpp
         gui/states/createChannel/CreateChannelState.cpp
         gui/states/createChannel/CreateChannelController.cpp
-        gui/states/sendFriendRequest/SendFriendRequestController.cpp
-        gui/states/sendFriendRequest/SendFriendRequestState.cpp
+        gui/states/sendFriendInvitation/SendFriendInvitationController.cpp
+        gui/states/sendFriendInvitation/SendFriendInvitationState.cpp
         gui/states/userSettings/UserSettingsController.cpp
         gui/states/userSettings/UserSettingsState.cpp
         gui/states/verifyUser/VerifyUserState.cpp
@@ -53,13 +53,15 @@ set(QML_SOURCES
         gui/qml/components/RejectButton.ui.qml
         gui/qml/components/Separator.ui.qml
         gui/qml/components/ActivityIndicator.ui.qml
-        gui/qml/components/SettingsButton.ui.qml
-        gui/qml/components/CustomButton.ui.qml
+        gui/qml/components/SettingsButton.qml
+        gui/qml/components/CustomButton.qml
+        gui/qml/components/Invitation.qml
+        gui/qml/components/messages/MessageView.qml
 
         gui/states/register/RegisterView.qml
         gui/states/login/LoginView.qml
         gui/states/createChannel/CreateChannelView.qml
-        gui/states/sendFriendRequest/SendFriendRequestView.qml
+        gui/states/sendFriendInvitation/SendFriendInvitationView.qml
         gui/states/verifyUser/VerifyUserView.qml
         gui/states/inviteToChannel/InviteToChannelView.qml
 
@@ -84,6 +86,8 @@ set(RESOURCES
         resources/svg/offline.svg
         resources/svg/crown.svg
         resources/svg/close.svg
+        resources/svg/check.svg
+        resources/svg/cross.svg
         )
 
 qt_add_executable(${EXECUTABLE_NAME} Main.cpp ${SOURCES})

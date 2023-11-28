@@ -8,10 +8,10 @@
 
 namespace server::api
 {
-class RejectFriendRequestMessageHandler : public MessageHandler
+class RejectFriendInvitationMessageHandler : public MessageHandler
 {
 public:
-    RejectFriendRequestMessageHandler(
+    RejectFriendInvitationMessageHandler(
         std::shared_ptr<application::TokenService> tokenService,
         std::unique_ptr<application::RejectFriendInvitationCommandHandler> rejectFriendInvitationCommandHandler);
 

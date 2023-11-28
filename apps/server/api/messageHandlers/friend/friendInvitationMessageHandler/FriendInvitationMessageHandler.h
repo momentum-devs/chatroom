@@ -9,10 +9,10 @@
 
 namespace server::api
 {
-class FriendRequestMessageHandler : public MessageHandler
+class FriendInvitationMessageHandler : public MessageHandler
 {
 public:
-    FriendRequestMessageHandler(
+    FriendInvitationMessageHandler(
         std::shared_ptr<application::TokenService> tokenService,
         std::shared_ptr<application::FindUserByEmailQueryHandler> findUserByEmailQueryHandler,
         std::unique_ptr<application::CreateFriendInvitationCommandHandler> createFriendInvitationCommandHandler);

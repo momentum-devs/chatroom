@@ -1,13 +1,13 @@
-#include "FriendRequestMessageHandler.h"
-
 #include <format>
 #include <loguru.hpp>
 #include <nlohmann/json.hpp>
 #include <regex>
 
+#include "FriendInvitationMessageHandler.h"
+
 namespace server::api
 {
-FriendRequestMessageHandler::FriendRequestMessageHandler(
+FriendInvitationMessageHandler::FriendInvitationMessageHandler(
     std::shared_ptr<application::TokenService> tokenServiceInit,
     std::shared_ptr<application::FindUserByEmailQueryHandler> findUserByEmailQueryHandlerInit,
     std::unique_ptr<application::CreateFriendInvitationCommandHandler> createFriendInvitationCommandHandlerInit)
@@ -17,7 +17,7 @@ FriendRequestMessageHandler::FriendRequestMessageHandler(
 {
 }
 
-common::messages::Message FriendRequestMessageHandler::handleMessage(const common::messages::Message& message) const
+common::messages::Message FriendInvitationMessageHandler::handleMessage(const common::messages::Message& message) const
 {
     try
     {
@@ -36,7 +36,7 @@ common::messages::Message FriendRequestMessageHandler::handleMessage(const commo
         LOG_S(INFO) << std::format("Sent invitation to friend to user with id {} by user with id {}", invitedId,
                                    senderId);
 
-        common::messages::Message responseMessage{common::messages::MessageId::SendFriendRequestResponse,
+        common::messages::Message responseMessage{common::messages::MessageId::SendFriendInvitationResponse,
                                                   common::bytes::Bytes{R"(["ok"])"}};
 
         return responseMessage;
@@ -45,7 +45,8 @@ common::messages::Message FriendRequestMessageHandler::handleMessage(const commo
     {
         nlohmann::json responsePayload{{"error", e.what()}};
 
-        return {common::messages::MessageId::SendFriendRequestResponse, common::bytes::Bytes{responsePayload.dump()}};
+        return {common::messages::MessageId::SendFriendInvitationResponse,
+                common::bytes::Bytes{responsePayload.dump()}};
     }
 }
 }

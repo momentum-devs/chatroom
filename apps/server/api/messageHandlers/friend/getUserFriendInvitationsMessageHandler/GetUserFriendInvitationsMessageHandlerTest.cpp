@@ -1,5 +1,3 @@
-#include "GetUserFriendRequestsMessageHandler.h"
-
 #include <format>
 #include <gtest/gtest.h>
 #include <regex>
@@ -9,6 +7,7 @@
 
 #include "faker-cxx/Date.h"
 #include "faker-cxx/String.h"
+#include "GetUserFriendInvitationsMessageHandler.h"
 #include "nlohmann/json.hpp"
 
 using namespace ::testing;
@@ -19,36 +18,36 @@ namespace
 auto token = "token";
 auto validPayloadJson = nlohmann::json{{"token", token}};
 auto validPayload = common::bytes::Bytes{validPayloadJson.dump()};
-auto message = common::messages::Message{common::messages::MessageId::GetFriendRequests, validPayload};
+auto message = common::messages::Message{common::messages::MessageId::GetFriendInvitations, validPayload};
 
-auto noFriendRequestResponsePayloadJson = nlohmann::json{{"data", nlohmann::json::array()}};
-auto noFriendRequestMessageResponse =
-    common::messages::Message{common::messages::MessageId::GetFriendRequestsResponse,
-                              common::bytes::Bytes{noFriendRequestResponsePayloadJson.dump()}};
+auto noFriendInvitationResponsePayloadJson = nlohmann::json{{"data", nlohmann::json::array()}};
+auto noFriendInvitationMessageResponse =
+    common::messages::Message{common::messages::MessageId::GetFriendInvitationsResponse,
+                              common::bytes::Bytes{noFriendInvitationResponsePayloadJson.dump()}};
 
 auto requestId1 = "id1";
 auto friendName1 = "friendName1";
 auto requestId2 = "id2";
 auto friendName2 = "friendName2";
-auto fewFriendRequestsResponsePayloadJson =
+auto fewFriendInvitationsResponsePayloadJson =
     nlohmann::json{{"data", nlohmann::json::array({{{"id", requestId1}, {"name", friendName1}},
                                                    {{"id", requestId2}, {"name", friendName2}}})}};
 
-auto fewFriendRequestsMessageResponse =
-    common::messages::Message{common::messages::MessageId::GetFriendRequestsResponse,
-                              common::bytes::Bytes{fewFriendRequestsResponsePayloadJson.dump()}};
+auto fewFriendInvitationsMessageResponse =
+    common::messages::Message{common::messages::MessageId::GetFriendInvitationsResponse,
+                              common::bytes::Bytes{fewFriendInvitationsResponsePayloadJson.dump()}};
 
 std::runtime_error invalidToken("invalidToken");
-auto invalidTokenMessageResponse = common::messages::Message{common::messages::MessageId::GetFriendRequestsResponse,
+auto invalidTokenMessageResponse = common::messages::Message{common::messages::MessageId::GetFriendInvitationsResponse,
                                                              common::bytes::Bytes{R"({"error":"invalidToken"})"}};
 
-std::runtime_error getFriendRequestsError("getFriendRequestsError");
-auto getFriendRequestsErrorMessageResponse =
-    common::messages::Message{common::messages::MessageId::GetFriendRequestsResponse,
-                              common::bytes::Bytes{R"({"error":"getFriendRequestsError"})"}};
+std::runtime_error getFriendInvitationsError("getFriendInvitationsError");
+auto getFriendInvitationsErrorMessageResponse =
+    common::messages::Message{common::messages::MessageId::GetFriendInvitationsResponse,
+                              common::bytes::Bytes{R"({"error":"getFriendInvitationsError"})"}};
 }
 
-class GetUserFriendRequestsMessageHandlerTest : public Test
+class GetUserFriendInvitationsMessageHandlerTest : public Test
 {
 public:
     std::shared_ptr<server::application::TokenServiceMock> tokenServiceMock =
@@ -60,11 +59,11 @@ public:
     server::application::FindReceivedFriendInvitationsQueryHandlerMock* findReceivedFriendInvitationsQueryHandlerMock =
         findReceivedFriendInvitationsQueryHandlerMockInit.get();
 
-    GetUserFriendRequestsMessageHandler getUserFriendRequestsMessageHandler{
+    GetUserFriendInvitationsMessageHandler getUserFriendInvitationsMessageHandler{
         tokenServiceMock, std::move(findReceivedFriendInvitationsQueryHandlerMockInit)};
 };
 
-TEST_F(GetUserFriendRequestsMessageHandlerTest, handleValidGetUserFriendRequestsMessageWithNoFriendRequests)
+TEST_F(GetUserFriendInvitationsMessageHandlerTest, handleValidGetUserFriendInvitationsMessageWithNoFriendInvitations)
 {
     const auto userId = faker::String::uuid();
 
@@ -75,12 +74,12 @@ TEST_F(GetUserFriendRequestsMessageHandlerTest, handleValidGetUserFriendRequests
                 execute(server::application::FindReceivedFriendInvitationsQueryHandlerPayload{userId}))
         .WillOnce(Return(server::application::FindReceivedFriendInvitationsQueryHandlerResult{}));
 
-    auto responseMessage = getUserFriendRequestsMessageHandler.handleMessage(message);
+    auto responseMessage = getUserFriendInvitationsMessageHandler.handleMessage(message);
 
-    EXPECT_EQ(responseMessage, noFriendRequestMessageResponse);
+    EXPECT_EQ(responseMessage, noFriendInvitationMessageResponse);
 }
 
-TEST_F(GetUserFriendRequestsMessageHandlerTest, handleValidGetUserFriendRequestsMessageWithFewFriendRequests)
+TEST_F(GetUserFriendInvitationsMessageHandlerTest, handleValidGetUserFriendInvitationsMessageWithFewFriendInvitations)
 {
     const auto userId = faker::String::uuid();
     const auto email = "email";
@@ -98,32 +97,32 @@ TEST_F(GetUserFriendRequestsMessageHandlerTest, handleValidGetUserFriendRequests
 
     const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
 
-    const auto friendRequest1 =
+    const auto friendInvitation1 =
         std::make_shared<server::domain::FriendInvitation>(requestId1, user1, user2, createdAt);
-    const auto friendRequest2 =
+    const auto friendInvitation2 =
         std::make_shared<server::domain::FriendInvitation>(requestId2, user2, user2, createdAt);
 
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*findReceivedFriendInvitationsQueryHandlerMock,
                 execute(server::application::FindReceivedFriendInvitationsQueryHandlerPayload{userId}))
-        .WillOnce(Return(
-            server::application::FindReceivedFriendInvitationsQueryHandlerResult{{*friendRequest1, *friendRequest2}}));
+        .WillOnce(Return(server::application::FindReceivedFriendInvitationsQueryHandlerResult{
+            {*friendInvitation1, *friendInvitation2}}));
 
-    auto responseMessage = getUserFriendRequestsMessageHandler.handleMessage(message);
+    auto responseMessage = getUserFriendInvitationsMessageHandler.handleMessage(message);
 
-    EXPECT_EQ(responseMessage, fewFriendRequestsMessageResponse);
+    EXPECT_EQ(responseMessage, fewFriendInvitationsMessageResponse);
 }
 
-TEST_F(GetUserFriendRequestsMessageHandlerTest, handleGetUserFriendRequestsMessageWithInvalidToken)
+TEST_F(GetUserFriendInvitationsMessageHandlerTest, handleGetUserFriendInvitationsMessageWithInvalidToken)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Throw(invalidToken));
 
-    auto responseMessage = getUserFriendRequestsMessageHandler.handleMessage(message);
+    auto responseMessage = getUserFriendInvitationsMessageHandler.handleMessage(message);
 
     EXPECT_EQ(responseMessage, invalidTokenMessageResponse);
 }
 
-TEST_F(GetUserFriendRequestsMessageHandlerTest, handleGetUserFriendRequestsMessageWithErrorWhileHandling)
+TEST_F(GetUserFriendInvitationsMessageHandlerTest, handleGetUserFriendInvitationsMessageWithErrorWhileHandling)
 {
     const auto userId = faker::String::uuid();
 
@@ -132,9 +131,9 @@ TEST_F(GetUserFriendRequestsMessageHandlerTest, handleGetUserFriendRequestsMessa
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*findReceivedFriendInvitationsQueryHandlerMock,
                 execute(server::application::FindReceivedFriendInvitationsQueryHandlerPayload{userId}))
-        .WillOnce(Throw(getFriendRequestsError));
+        .WillOnce(Throw(getFriendInvitationsError));
 
-    auto responseMessage = getUserFriendRequestsMessageHandler.handleMessage(message);
+    auto responseMessage = getUserFriendInvitationsMessageHandler.handleMessage(message);
 
-    EXPECT_EQ(responseMessage, getFriendRequestsErrorMessageResponse);
+    EXPECT_EQ(responseMessage, getFriendInvitationsErrorMessageResponse);
 }

@@ -1,5 +1,3 @@
-#include "RejectFriendRequestMessageHandler.h"
-
 #include <format>
 #include <gtest/gtest.h>
 #include <regex>
@@ -8,6 +6,7 @@
 #include "server/application/services/tokenService/TokenServiceMock.h"
 
 #include "nlohmann/json.hpp"
+#include "RejectFriendInvitationMessageHandler.h"
 
 using namespace ::testing;
 using namespace server::api;
@@ -20,21 +19,21 @@ auto recipientId = "id";
 const auto verifyTokenResult = server::application::VerifyTokenResult{recipientId};
 auto validPayloadJson = nlohmann::json{{"data", nlohmann::json{{"requestId", requestId}}}, {"token", token}};
 auto validPayload = common::bytes::Bytes{validPayloadJson.dump()};
-auto message = common::messages::Message{common::messages::MessageId::RejectFriendRequests, validPayload};
-auto validMessageResponse = common::messages::Message{common::messages::MessageId::ChangeFriendRequestsResponse,
+auto message = common::messages::Message{common::messages::MessageId::RejectFriendInvitations, validPayload};
+auto validMessageResponse = common::messages::Message{common::messages::MessageId::ChangeFriendInvitationsResponse,
                                                       common::bytes::Bytes{R"(["ok"])"}};
 
 std::runtime_error invalidToken("invalidToken");
-auto invalidTokenMessageResponse = common::messages::Message{common::messages::MessageId::ChangeFriendRequestsResponse,
-                                                             common::bytes::Bytes{R"({"error":"invalidToken"})"}};
+auto invalidTokenMessageResponse = common::messages::Message{
+    common::messages::MessageId::ChangeFriendInvitationsResponse, common::bytes::Bytes{R"({"error":"invalidToken"})"}};
 
-std::runtime_error rejectFriendRequestError("rejectFriendRequestError");
-auto rejectFriendRequestErrorMessageResponse =
-    common::messages::Message{common::messages::MessageId::ChangeFriendRequestsResponse,
-                              common::bytes::Bytes{R"({"error":"rejectFriendRequestError"})"}};
+std::runtime_error rejectFriendInvitationError("rejectFriendInvitationError");
+auto rejectFriendInvitationErrorMessageResponse =
+    common::messages::Message{common::messages::MessageId::ChangeFriendInvitationsResponse,
+                              common::bytes::Bytes{R"({"error":"rejectFriendInvitationError"})"}};
 }
 
-class RejectFriendRequestMessageHandlerTest : public Test
+class RejectFriendInvitationMessageHandlerTest : public Test
 {
 public:
     std::shared_ptr<server::application::TokenServiceMock> tokenServiceMock =
@@ -46,38 +45,38 @@ public:
     server::application::RejectFriendInvitationCommandHandlerMock* rejectFriendInvitationCommandHandlerMock =
         rejectFriendInvitationCommandHandlerMockInit.get();
 
-    RejectFriendRequestMessageHandler rejectFriendRequestMessageHandler{
+    RejectFriendInvitationMessageHandler rejectFriendInvitationMessageHandler{
         tokenServiceMock, std::move(rejectFriendInvitationCommandHandlerMockInit)};
 };
 
-TEST_F(RejectFriendRequestMessageHandlerTest, handleValidRejectFriendRequestMessage)
+TEST_F(RejectFriendInvitationMessageHandlerTest, handleValidRejectFriendInvitationMessage)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*rejectFriendInvitationCommandHandlerMock,
                 execute(server::application::RejectFriendInvitationCommandHandlerPayload{recipientId, requestId}));
 
-    auto responseMessage = rejectFriendRequestMessageHandler.handleMessage(message);
+    auto responseMessage = rejectFriendInvitationMessageHandler.handleMessage(message);
 
     EXPECT_EQ(responseMessage, validMessageResponse);
 }
 
-TEST_F(RejectFriendRequestMessageHandlerTest, handleRejectFriendRequestMessageWithInvalidToken)
+TEST_F(RejectFriendInvitationMessageHandlerTest, handleRejectFriendInvitationMessageWithInvalidToken)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Throw(invalidToken));
 
-    auto responseMessage = rejectFriendRequestMessageHandler.handleMessage(message);
+    auto responseMessage = rejectFriendInvitationMessageHandler.handleMessage(message);
 
     EXPECT_EQ(responseMessage, invalidTokenMessageResponse);
 }
 
-TEST_F(RejectFriendRequestMessageHandlerTest, handleRejectFriendRequestMessageWithErrorWhileHandling)
+TEST_F(RejectFriendInvitationMessageHandlerTest, handleRejectFriendInvitationMessageWithErrorWhileHandling)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*rejectFriendInvitationCommandHandlerMock,
                 execute(server::application::RejectFriendInvitationCommandHandlerPayload{recipientId, requestId}))
-        .WillOnce(Throw(rejectFriendRequestError));
+        .WillOnce(Throw(rejectFriendInvitationError));
 
-    auto responseMessage = rejectFriendRequestMessageHandler.handleMessage(message);
+    auto responseMessage = rejectFriendInvitationMessageHandler.handleMessage(message);
 
-    EXPECT_EQ(responseMessage, rejectFriendRequestErrorMessageResponse);
+    EXPECT_EQ(responseMessage, rejectFriendInvitationErrorMessageResponse);
 }

@@ -5,8 +5,8 @@ import "../common/settings.js" as Settings
 Rectangle {
     id: leftRectangle
     color: "#2b2d31"
-    height: parent.height
     width: leftColumn.width + 16
+    height: parent.height
 
     Column {
         id: leftColumn
