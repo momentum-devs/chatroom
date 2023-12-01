@@ -1,164 +1,90 @@
-// TODO: implement
+#include "GetChannelMembersMessageHandler.h"
 
-// #include "GetChannelMembersMessageHandler.h"
-//
-// #include <format>
-// #include <gtest/gtest.h>
-// #include <regex>
-//
-// #include
-// "server/application/queryHandlers/channel/findUsersBelongingToChannelQueryHandler/FindUsersBelongingToChannelQueryHandlerMock.h"
-// #include "server/application/services/tokenService/TokenServiceMock.h"
-//
-// #include "faker-cxx/Datatype.h"
-// #include "faker-cxx/Date.h"
-// #include "faker-cxx/Internet.h"
-// #include "faker-cxx/String.h"
-// #include "nlohmann/json.hpp"
-//
-// using namespace ::testing;
-// using namespace server::api;
-//
-// namespace
-//{
-// auto token = "token";
-// auto validPayloadJson = nlohmann::json{{"token", token}};
-// auto validPayload = common::bytes::Bytes{validPayloadJson.dump()};
-// auto message = common::messages::Message{common::messages::MessageId::GetUserChannels, validPayload};
-//
-// auto noFriendInvitationResponsePayloadJson = nlohmann::json{{"data", nlohmann::json::array()}};
-// auto noFriendInvitationMessageResponse =
-//     common::messages::Message{common::messages::MessageId::GetUserChannelsResponse,
-//                               common::bytes::Bytes{noFriendInvitationResponsePayloadJson.dump()}};
-//
-// auto requestId1 = "id1";
-// auto friendName1 = "id1";
-// auto channelId2 = "id1";
-// auto channelName2 = "id1";
-// auto fewChannelResponsePayloadJson =
-//     nlohmann::json{{"data", nlohmann::json::array({{{"id", requestId1}, {"name", friendName1}, {"isOwner", true}},
-//                                                    {{"id", channelId2}, {"name", channelName2}, {"isOwner",
-//                                                    true}}})}};
-//
-// auto fewChannelMessageResponse = common::messages::Message{common::messages::MessageId::GetUserChannelsResponse,
-//                                                            common::bytes::Bytes{fewChannelResponsePayloadJson.dump()}};
-//
-// std::runtime_error invalidToken("invalidToken");
-// auto invalidTokenMessageResponse = common::messages::Message{common::messages::MessageId::GetUserChannelsResponse,
-//                                                              common::bytes::Bytes{R"({"error":"invalidToken"})"}};
-//
-// std::runtime_error getUserChannelsError("getUserChannelsError");
-// auto getUserChannelsErrorMessageResponse = common::messages::Message{
-//     common::messages::MessageId::GetUserChannelsResponse,
-//     common::bytes::Bytes{R"({"error":"getUserChannelsError"})"}};
-// }
-//
-// class GetChannelMembersMessageHandlerTest : public Test
-//{
-// public:
-//     std::shared_ptr<server::application::TokenServiceMock> tokenServiceMock =
-//         std::make_shared<StrictMock<server::application::TokenServiceMock>>();
-//
-//     std::unique_ptr<server::application::FindUsersBelongingToChannelQueryHandlerMock>
-//         findUsersBelongingToChannelQueryHandlerMockInit =
-//             std::make_unique<StrictMock<server::application::FindUsersBelongingToChannelQueryHandlerMock>>();
-//     server::application::FindUsersBelongingToChannelQueryHandlerMock* findUsersBelongingToChannelQueryHandlerMock =
-//         findUsersBelongingToChannelQueryHandlerMockInit.get();
-//
-//     GetChannelMembersMessageHandler getChannelMembersMessageHandler{
-//         tokenServiceMock, std::move(findUsersBelongingToChannelQueryHandlerMockInit)};
-// };
-//
-// TEST_F(GetChannelMembersMessageHandlerTest, handleValidGetUserChannelsMessageWithNoChannels)
-//{
-//     const auto userId = faker::String::uuid();
-//     const auto email = faker::Internet::email();
-//     const auto password = faker::Internet::password();
-//     const auto nickname = faker::Internet::username();
-//     const auto active = faker::Datatype::boolean();
-//     const auto emailVerified = faker::Datatype::boolean();
-//     const auto verificationCode = faker::String::numeric(6);
-//     const auto createdAt = faker::Date::pastDate();
-//     const auto updatedAt = faker::Date::recentDate();
-//
-//     const auto user = std::make_shared<server::domain::User>(userId, email, password, nickname, active,
-//     emailVerified,
-//                                                              verificationCode, createdAt, updatedAt);
-//
-//     const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
-//
-//     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
-//     EXPECT_CALL(*findChannelsToWhichUserBelongsQueryHandlerMock,
-//                 execute(server::application::FindChannelsToWhichUserBelongsQueryHandlerPayload{userId}))
-//         .WillOnce(Return(server::application::FindChannelsToWhichUserBelongsQueryHandlerResult{}));
-//
-//     auto responseMessage = getUserChannelsMessageHandler.handleMessage(message);
-//
-//     EXPECT_EQ(responseMessage, noFriendInvitationMessageResponse);
-// }
-//
-// TEST_F(GetChannelMembersMessageHandlerTest, handleValidGetUserChannelsMessageWithFewChannels)
-//{
-//     const auto userId = faker::String::uuid();
-//     const auto email = faker::Internet::email();
-//     const auto password = faker::Internet::password();
-//     const auto nickname = faker::Internet::username();
-//     const auto active = faker::Datatype::boolean();
-//     const auto emailVerified = faker::Datatype::boolean();
-//     const auto verificationCode = faker::String::numeric(6);
-//     const auto createdAt = faker::Date::pastDate();
-//     const auto updatedAt = faker::Date::recentDate();
-//
-//     const auto user = std::make_shared<server::domain::User>(userId, email, password, nickname, active,
-//     emailVerified,
-//                                                              verificationCode, createdAt, updatedAt);
-//
-//     const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
-//
-//     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
-//     EXPECT_CALL(*findChannelsToWhichUserBelongsQueryHandlerMock,
-//                 execute(server::application::FindChannelsToWhichUserBelongsQueryHandlerPayload{userId}))
-//         .WillOnce(Return(server::application::FindChannelsToWhichUserBelongsQueryHandlerResult{
-//             {{requestId1, friendName1, user, "", ""}, {channelId2, channelName2, user, "", ""}}}));
-//
-//     auto responseMessage = getUserChannelsMessageHandler.handleMessage(message);
-//
-//     EXPECT_EQ(responseMessage, fewChannelMessageResponse);
-// }
-//
-// TEST_F(GetChannelMembersMessageHandlerTest, handleGetUserChannelsMessageWithInvalidToken)
-//{
-//     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Throw(invalidToken));
-//
-//     auto responseMessage = getUserChannelsMessageHandler.handleMessage(message);
-//
-//     EXPECT_EQ(responseMessage, invalidTokenMessageResponse);
-// }
-//
-// TEST_F(GetChannelMembersMessageHandlerTest, handleGetUserChannelsMessageWithErrorWhileHandling)
-//{
-//     const auto userId = faker::String::uuid();
-//     const auto email = faker::Internet::email();
-//     const auto password = faker::Internet::password();
-//     const auto nickname = faker::Internet::username();
-//     const auto active = faker::Datatype::boolean();
-//     const auto emailVerified = faker::Datatype::boolean();
-//     const auto verificationCode = faker::String::numeric(6);
-//     const auto createdAt = faker::Date::pastDate();
-//     const auto updatedAt = faker::Date::recentDate();
-//
-//     const auto user = std::make_shared<server::domain::User>(userId, email, password, nickname, active,
-//     emailVerified,
-//                                                              verificationCode, createdAt, updatedAt);
-//
-//     const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
-//
-//     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
-//     EXPECT_CALL(*findChannelsToWhichUserBelongsQueryHandlerMock,
-//                 execute(server::application::FindChannelsToWhichUserBelongsQueryHandlerPayload{userId}))
-//         .WillOnce(Throw(getUserChannelsError));
-//
-//     auto responseMessage = getUserChannelsMessageHandler.handleMessage(message);
-//
-//     EXPECT_EQ(responseMessage, getUserChannelsErrorMessageResponse);
-// }
+#include <gtest/gtest.h>
+#include <nlohmann/json.hpp>
+
+#include "server/application/queryHandlers/channel/findUsersBelongingToChannelQueryHandler/FindUsersBelongingToChannelQueryHandlerMock.h"
+#include "server/application/services/tokenService/TokenServiceMock.h"
+
+using namespace ::testing;
+using namespace server::api;
+using namespace server::application;
+
+namespace
+{
+auto token = "token";
+auto channelId = "channelId";
+auto validPayloadJson = nlohmann::json{{"token", token}, {"data", {{"channelId", channelId}}}};
+auto validPayload = common::bytes::Bytes{validPayloadJson.dump()};
+auto message = common::messages::Message{common::messages::MessageId::GetChannelMembers, validPayload};
+
+auto userId = "userId";
+auto channelMemberId1 = "channelMemberId1";
+auto channelMemberName1 = "channelMemberName1";
+auto channelMemberActive1 = true;
+auto channelMemberId2 = "channelMemberId2";
+auto channelMemberName2 = "channelMemberName2";
+auto channelMemberActive2 = false;
+auto channelMembers = std::vector<server::domain::User>{
+    {channelMemberId1, channelMemberName1, channelMemberActive1},
+    {channelMemberId2, channelMemberName2, channelMemberActive2}
+};
+
+class GetChannelMembersMessageHandlerTest: public Test{
+public:
+    std::unique_ptr<FindUsersBelongingToChannelQueryHandlerMock> findUsersBelongingToChannelQueryHandlerMock = 
+        std::make_unique<StrictMock<FindUsersBelongingToChannelQueryHandlerMock>>();
+    FindUsersBelongingToChannelQueryHandlerMock* findUsersBelongingToChannelQueryHandlerMockPtr = 
+        findUsersBelongingToChannelQueryHandlerMock.get();
+
+    std::shared_ptr<server::application::TokenServiceMock> tokenServiceMock =
+        std::make_shared<StrictMock<server::application::TokenServiceMock>>();
+
+    GetChannelMembersMessageHandler getChannelMembersMessageHandler{
+        tokenServiceMock, std::move(findUsersBelongingToChannelQueryHandlerMock)};
+}
+
+TEST_F(GetChannelMembersMessageHandlerTest, handleValidGetChannelMembersMessage)
+{
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(std::make_tuple(userId)));
+
+    EXPECT_CALL(*findUsersBelongingToChannelQueryHandlerMockPtr, execute(channelId))
+        .WillOnce(Return(std::make_tuple(channelMembers)));
+
+    auto responseMessage = getChannelMembersMessageHandler.handleMessage(message);
+
+    nlohmann::json expectedResponsePayload{{"data", {
+        {{"id", channelMemberId1}, {"name", channelMemberName1}, {"isActive", channelMemberActive1}},
+        {{"id", channelMemberId2}, {"name", channelMemberName2}, {"isActive", channelMemberActive2}}
+    }}};
+
+    EXPECT_EQ(responseMessage.id, common::messages::MessageId::GetChannelMembersResponse);
+    EXPECT_EQ(responseMessage.payload, common::bytes::Bytes{expectedResponsePayload.dump()});
+}
+
+TEST_F(GetChannelMembersMessageHandlerTest, handleGetChannelMembersMessageWithInvalidToken)
+{
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Throw(std::runtime_error("Invalid token")));
+
+    auto responseMessage = getChannelMembersMessageHandler.handleMessage(message);
+
+    nlohmann::json expectedResponsePayload{{"error", "Invalid token"}};
+
+    EXPECT_EQ(responseMessage.id, common::messages::MessageId::GetChannelMembersResponse);
+    EXPECT_EQ(responseMessage.payload, common::bytes::Bytes{expectedResponsePayload.dump()});
+}
+
+TEST_F(GetChannelMembersMessageHandlerTest, handleGetChannelMembersMessageWithException)
+{
+    EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(std::make_tuple(userId)));
+
+    EXPECT_CALL(*findUsersBelongingToChannelQueryHandlerMockPtr, execute(channelId))
+        .WillOnce(Throw(std::runtime_error("Error while executing query")));
+
+    auto responseMessage = getChannelMembersMessageHandler.handleMessage(message);
+
+    nlohmann::json expectedResponsePayload{{"error", "Error while executing query"}};
+
+    EXPECT_EQ(responseMessage.id, common::messages::MessageId::GetChannelMembersResponse);
+    EXPECT_EQ(responseMessage.payload, common::bytes::Bytes{expectedResponsePayload.dump()});
+}
