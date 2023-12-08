@@ -13,10 +13,8 @@ Rectangle {
     }
 
     function sendMessage() {
-        console.log("send message: " + messageInput.text);
-        messages.push({messageText: messageInput.text});
+        messagesController.sendMessage(messageInput.text);
         messageInput.text = "";
-        messagesRepeater.model = messages;
     }
 
     ScrollView {
@@ -30,7 +28,7 @@ Rectangle {
         spacing: 5
         ListView {
             id: messagesRepeater
-            model: messages
+            model: messagesController.messages
             width: parent.width
             spacing: 5
             delegate: Text {

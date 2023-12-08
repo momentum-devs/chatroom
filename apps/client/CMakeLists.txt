@@ -32,7 +32,9 @@ set(SOURCES
         gui/states/privateMessages/PrivateMessagesController.cpp
         gui/states/channel/ChannelState.cpp
         gui/states/channel/ChannelController.cpp
-        gui/controllers/MessagesController.h)
+        gui/controllers/MessagesController.h
+        gui/controllers/MessagesController.cpp
+        types/Message.cpp)
 
 set(UT_SOURCES
         api/SessionImplTest.cpp

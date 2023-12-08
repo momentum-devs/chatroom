@@ -9,9 +9,11 @@ namespace client::gui
 {
 PrivateMessagesState::PrivateMessagesState(std::unique_ptr<PrivateMessagesController> privateMessagesControllerInit,
                                            std::unique_ptr<LeftColumnController> leftColumnControllerInit,
+                                           std::unique_ptr<MessagesController> messagesControllerInit,
                                            std::shared_ptr<LoaderController> loaderControllerInit)
     : privateMessagesController{std::move(privateMessagesControllerInit)},
       leftColumnController{std::move(leftColumnControllerInit)},
+      messagesController{std::move(messagesControllerInit)},
       loaderController{std::move(loaderControllerInit)}
 {
 }
@@ -28,6 +30,9 @@ void PrivateMessagesState::activate()
 
     loaderController->getEngine()->rootContext()->setContextProperty(privateMessagesController->getName(),
                                                                      privateMessagesController.get());
+
+    loaderController->getEngine()->rootContext()->setContextProperty(messagesController->getName(),
+                                                                     messagesController.get());
 
     loaderController->callLoadView(qUrl,
                                    [this]()
@@ -47,6 +52,8 @@ void PrivateMessagesState::deactivate()
     loaderController->getEngine()->rootContext()->setContextProperty(leftColumnController->getName(), nullptr);
 
     loaderController->getEngine()->rootContext()->setContextProperty(privateMessagesController->getName(), nullptr);
+
+    loaderController->getEngine()->rootContext()->setContextProperty(messagesController->getName(), nullptr);
 
     leftColumnController->deactivate();
 

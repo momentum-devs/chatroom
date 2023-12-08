@@ -9,9 +9,11 @@ namespace client::gui
 {
 ChannelState::ChannelState(std::unique_ptr<ChannelController> channelControllerInit,
                            std::unique_ptr<LeftColumnController> leftColumnControllerInit,
+                           std::unique_ptr<MessagesController> messagesControllerInit,
                            std::shared_ptr<LoaderController> loaderControllerInit)
     : channelController{std::move(channelControllerInit)},
       leftColumnController{std::move(leftColumnControllerInit)},
+      messagesController{std::move(messagesControllerInit)},
       loaderController{std::move(loaderControllerInit)}
 {
 }
@@ -31,6 +33,9 @@ void ChannelState::activate()
 
     loaderController->getEngine()->rootContext()->setContextProperty(channelController->getName(),
                                                                      channelController.get());
+
+    loaderController->getEngine()->rootContext()->setContextProperty(messagesController->getName(),
+                                                                     messagesController.get());
 
     loaderController->callLoadView(qUrl,
                                    [this]()
@@ -53,6 +58,8 @@ void ChannelState::deactivate()
     loaderController->getEngine()->rootContext()->setContextProperty(leftColumnController->getName(), nullptr);
 
     loaderController->getEngine()->rootContext()->setContextProperty(channelController->getName(), nullptr);
+
+    loaderController->getEngine()->rootContext()->setContextProperty(messagesController->getName(), nullptr);
 
     leftColumnController->deactivate();
 
