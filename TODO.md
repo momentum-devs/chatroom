@@ -15,7 +15,7 @@
 ### SERVER:
 
 * reactions
-* add logs contexts
+* remove -> delete
 * user avatars and channel avatars
 * transactions
 * migrations
