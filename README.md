@@ -9,7 +9,7 @@
 
 ### Database diagram:
 
-![Schema](docs/resources/db-schema.png)
+![Schema](docs/resources/db-diagram.png)
 
 ### Docs
 
