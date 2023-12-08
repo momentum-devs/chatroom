@@ -89,3 +89,33 @@ TEST_F(MessageMapperTest, givenPersistenceMessageWithGroup_shouldMapToDomainMess
     ASSERT_EQ(domainMessage->getCreatedAt(), persistenceMessage->getCreatedAt());
     ASSERT_EQ(domainMessage->getUpdatedAt(), persistenceMessage->getUpdatedAt());
 }
+
+TEST_F(MessageMapperTest, givenDomainMessageWithChannel_shouldMapToPersistenceMessage)
+{
+    const auto sender = userTestFactory.createPersistentUser();
+
+    const auto domainSender = std::make_shared<domain::User>(
+        sender->getId(), sender->getEmail(), sender->getPassword(), sender->getNickname(), sender->isActive(),
+        sender->isEmailVerified(), sender->getVerificationCode(), sender->getCreatedAt(), sender->getUpdatedAt());
+
+    const auto channel = channelTestFactory.createPersistentChannel(sender);
+
+    const auto domainChannel = std::make_shared<domain::Channel>(channel->getId(), channel->getName(), domainSender,
+                                                                 channel->getCreatedAt(), channel->getUpdatedAt());
+
+    const auto domainMessage = messageTestFactory.createDomainMessage(domainSender, domainChannel, nullptr);
+
+    EXPECT_CALL(*userMapper, mapToPersistenceUser(domainSender)).WillOnce(Return(sender));
+
+    EXPECT_CALL(*channelMapper, mapToPersistenceChannel(domainChannel)).WillOnce(Return(channel));
+
+    const auto persistenceMessage = messageMapper.mapToPersistenceMessage(domainMessage);
+
+    ASSERT_EQ(persistenceMessage->getId(), domainMessage->getId());
+    ASSERT_EQ(persistenceMessage->getContent(), domainMessage->getContent());
+    ASSERT_EQ(persistenceMessage->getSender()->getId(), domainMessage->getSender()->getId());
+    ASSERT_EQ(persistenceMessage->getChannel()->getId(), domainMessage->getChannel()->getId());
+    ASSERT_EQ(persistenceMessage->getGroup(), nullptr);
+    ASSERT_EQ(persistenceMessage->getCreatedAt(), domainMessage->getCreatedAt());
+    ASSERT_EQ(persistenceMessage->getUpdatedAt(), domainMessage->getUpdatedAt());
+}

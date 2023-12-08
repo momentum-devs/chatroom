@@ -13,6 +13,7 @@ public:
     MessageMapperImpl(std::shared_ptr<UserMapper>, std::shared_ptr<ChannelMapper>, std::shared_ptr<GroupMapper>);
 
     std::shared_ptr<domain::Message> mapToDomainMessage(std::shared_ptr<Message>) const override;
+    std::shared_ptr<Message> mapToPersistenceMessage(const std::shared_ptr<domain::Message>) const override;
 
 private:
     std::shared_ptr<UserMapper> userMapper;

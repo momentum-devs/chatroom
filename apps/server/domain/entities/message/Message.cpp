@@ -57,4 +57,14 @@ void Message::setContent(const std::string& newContent)
     content = newContent;
 }
 
+bool Message::operator==(const Message& message) const
+{
+    auto tieStruct = [](const Message& message)
+    {
+        return std::tie(message.id, message.content, message.sender, message.channel, message.group, message.createdAt,
+                        message.updatedAt);
+    };
+    return tieStruct(*this) == tieStruct(message);
+}
+
 }

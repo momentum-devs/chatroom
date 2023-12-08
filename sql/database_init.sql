@@ -172,3 +172,24 @@ ALTER TABLE "messages"
         FOREIGN KEY ("group")
             REFERENCES "groups" ("id") ON DELETE CASCADE
             INITIALLY DEFERRED;
+
+
+DROP TABLE IF EXISTS "reactions" CASCADE;
+
+CREATE TABLE "reactions"
+(
+    "id"      TEXT NOT NULL PRIMARY KEY,
+    "name"    TEXT NOT NULL,
+    "user"    TEXT NOT NULL,
+    "message" TEXT NOT NULL
+);
+
+ALTER TABLE "reactions"
+    ADD CONSTRAINT "user_fk"
+        FOREIGN KEY ("user")
+            REFERENCES "users" ("id") ON DELETE CASCADE
+            INITIALLY DEFERRED,
+    ADD CONSTRAINT "message_fk"
+        FOREIGN KEY ("message")
+            REFERENCES "messages" ("id") ON DELETE CASCADE
+            INITIALLY DEFERRED;

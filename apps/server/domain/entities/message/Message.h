@@ -23,6 +23,7 @@ public:
     [[nodiscard]] std::string getCreatedAt() const;
     [[nodiscard]] std::string getUpdatedAt() const;
     void setContent(const std::string&);
+    bool operator==(const Message&) const;
 
 private:
     std::string id;

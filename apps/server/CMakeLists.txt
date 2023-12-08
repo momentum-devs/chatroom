@@ -97,6 +97,7 @@ set(SOURCES
         api/messageHandlers/friend/rejectFriendInvitationMessageHandler/RejectFriendInvitationMessageHandler.cpp
         api/messageHandlers/friend/getUserFriendsMessageHandler/GetUserFriendsMessageHandler.cpp
         api/messageHandlers/friend/removeFromFriendsMessageHandler/RemoveFromFriendsMessageHandler.cpp
+        api/messageHandlers/channel/getChannelMembersMessageHandler/GetChannelMembersMessageHandler.cpp
 
         domain/entities/message/Message.cpp
         infrastructure/repositories/messageRepository/MessageRepositoryImpl.cpp
@@ -109,7 +110,11 @@ set(SOURCES
         application/commandHandlers/message/setLastGroupMessageReadByUserCommandHandler/SetLastGroupMessageReadByUserCommandHandlerImpl.cpp
         application/queryHandlers/message/findChannelMessagesQueryHandler/FindChannelMessagesQueryHandlerImpl.cpp
         application/queryHandlers/message/findGroupMessagesQueryHandler/FindGroupMessagesQueryHandlerImpl.cpp
-        api/messageHandlers/channel/getChannelMembersMessageHandler/GetChannelMembersMessageHandler.cpp)
+
+        domain/entities/reaction/Reaction.cpp
+        infrastructure/repositories/reactionRepository/ReactionRepositoryImpl.cpp
+        infrastructure/repositories/reactionRepository/reactionMapper/ReactionMapperImpl.cpp
+)
 
 set(TEST_COMMON_SOURCES
         tests/factories/userTestFactory/UserTestFactory.cpp
@@ -121,6 +126,7 @@ set(TEST_COMMON_SOURCES
         tests/factories/groupTestFactory/GroupTestFactory.cpp
         tests/factories/userGroupTestFactory/UserGroupTestFactory.cpp
         tests/factories/messageTestFactory/MessageTestFactory.cpp
+        tests/factories/reactionTestFactory/ReactionTestFactory.cpp
 )
 
 set(UT_SOURCES
@@ -139,6 +145,7 @@ set(UT_SOURCES
         infrastructure/repositories/groupRepository/groupMapper/GroupMapperImplTest.cpp
         infrastructure/repositories/userGroupRepository/userGroupMapper/UserGroupMapperImplTest.cpp
         infrastructure/repositories/messageRepository/messageMapper/MessageMapperImplTest.cpp
+        infrastructure/repositories/reactionRepository/reactionMapper/ReactionMapperImplTest.cpp
 
         api/messageHandlers/channel/createChannelMessageHandler/CreateChannelMessageHandlerTest.cpp
         api/messageHandlers/channel/getUserChannelsMessageHandler/GetUserChannelsMessageHandlerTest.cpp
@@ -161,7 +168,8 @@ set(UT_SOURCES
         api/messageHandlers/friend/rejectFriendInvitationMessageHandler/RejectFriendInvitationMessageHandlerTest.cpp
         api/messageHandlers/friend/getUserFriendsMessageHandler/GetUserFriendsMessageHandlerTest.cpp
         api/messageHandlers/friend/removeFromFriendsMessageHandler/RemoveFromFriendsMessageHandlerTest.cpp
-        api/messageHandlers/channel/getChannelMembersMessageHandler/GetChannelMembersMessageHandlerTest.cpp)
+        api/messageHandlers/channel/getChannelMembersMessageHandler/GetChannelMembersMessageHandlerTest.cpp
+)
 
 set(IT_SOURCES
         tests/factories/databaseClientTestFactory/DatabaseClientTestFactory.cpp
@@ -174,6 +182,7 @@ set(IT_SOURCES
         tests/utils/groupTestUtils/GroupTestUtils.cpp
         tests/utils/userGroupTestUtils/UserGroupTestUtils.cpp
         tests/utils/messageTestUtils/MessageTestUtils.cpp
+        tests/utils/reactionTestUtils/ReactionTestUtils.cpp
 
         infrastructure/repositories/userRepository/UserRepositoryImplIntegrationTest.cpp
         application/services/tokenService/TokenServiceImplIntegrationTest.cpp
@@ -228,6 +237,8 @@ set(IT_SOURCES
         application/commandHandlers/message/setLastGroupMessageReadByUserCommandHandler/SetLastGroupMessageReadByUserCommandHandlerImplIntegrationTest.cpp
         application/queryHandlers/message/findChannelMessagesQueryHandler/FindChannelMessagesQueryHandlerImplIntegrationTest.cpp
         application/queryHandlers/message/findGroupMessagesQueryHandler/FindGroupMessagesQueryHandlerImplIntegrationTest.cpp
+
+        infrastructure/repositories/reactionRepository/ReactionRepositoryImplIntegrationTest.cpp
 )
 
 set(ODB_HEADERS
@@ -240,6 +251,7 @@ set(ODB_HEADERS
         infrastructure/database/entities/Group.h
         infrastructure/database/entities/UserGroup.h
         infrastructure/database/entities/Message.h
+        infrastructure/database/entities/Reaction.h
 )
 
 odb_compile(
@@ -264,6 +276,7 @@ set(ODB_SOURCES
         infrastructure/database/entities/Group.cpp
         infrastructure/database/entities/UserGroup.cpp
         infrastructure/database/entities/Message.cpp
+        infrastructure/database/entities/Reaction.cpp
         ${ODB_GENERATED_SOURCES}
 )
 

@@ -26,4 +26,19 @@ std::shared_ptr<domain::Message> MessageMapperImpl::mapToDomainMessage(std::shar
     return std::make_shared<domain::Message>(id, content, sender, channel, group, createdAt, updatedAt);
 }
 
+std::shared_ptr<Message>
+MessageMapperImpl::mapToPersistenceMessage(const std::shared_ptr<domain::Message> message) const
+{
+    const auto id = message->getId();
+    const auto content = message->getContent();
+    const auto sender = userMapper->mapToPersistenceUser(message->getSender());
+    const auto channel =
+        message->getChannel() ? channelMapper->mapToPersistenceChannel(message->getChannel()) : nullptr;
+    const auto group = message->getGroup() ? groupMapper->mapToPersistenceGroup(message->getGroup()) : nullptr;
+    const auto createdAt = message->getCreatedAt();
+    const auto updatedAt = message->getUpdatedAt();
+
+    return std::make_shared<Message>(id, content, sender, channel, group, createdAt, updatedAt);
+}
+
 }
