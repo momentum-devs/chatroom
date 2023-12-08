@@ -16,9 +16,11 @@ Item {
         addToChannelButton.visible = isOwner;
     }
 
+    height: channel.height
+    width: channel.width
+
     Column {
         id: channel
-        height: parent.height
         spacing: 5
         width: parent.width
 

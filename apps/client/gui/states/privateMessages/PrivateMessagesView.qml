@@ -18,7 +18,7 @@ Rectangle {
             height: parent.height
         }
         Item {
-            width: parent.width - 2*leftColumn.width
+            width: parent.width - 2 * leftColumn.width
             height: parent.height
 
             Item {
@@ -54,21 +54,27 @@ Rectangle {
         function onAddFriend(friendName: string, friendId: string, isActive: bool) {
             friendsColumn.addFriend(friendName, friendId, isActive);
         }
+
         function onAddFriendInvitation(friendName: string, requestId: string) {
             friendsColumn.addFriendInvitation(friendName, requestId);
         }
+
         function onClearFriendInvitationList() {
             friendsColumn.clearFriendInvitationList();
         }
+
         function onClearFriendList() {
             friendsColumn.clearFriendList();
         }
+
         function onRemovedFromFriends() {
             privateMessagesView.state = "OutsideChat"
         }
+
         function onSetCurrentFriendName(friendName: string) {
             friendTopBar.setFriendName(friendName);
             privateMessagesView.state = "OnChat"
+            messageView.setTextPlaceholder("Message @" + friendName)
         }
 
         target: privateMessagesController
@@ -77,12 +83,16 @@ Rectangle {
     states: [
         State {
             name: "OnChat"
-            PropertyChanges { target: friendView; visible: true }
+            PropertyChanges {
+                target: friendView; visible: true
+            }
         },
         State {
             extend: ""
             name: "OutsideChat"
-            PropertyChanges { target: friendView; visible: false }
+            PropertyChanges {
+                target: friendView; visible: false
+            }
 
             PropertyChanges {
                 target: friendsColumn
