@@ -14,7 +14,6 @@
 
 ### SERVER:
 
-* reactions
 * remove -> delete
 * user avatars and channel avatars
 * transactions
