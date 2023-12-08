@@ -7,9 +7,12 @@
 
 ![Schema](docs/resources/system-diagram.png)
 
+### Database diagram:
+
+![Schema](docs/resources/db-schema.png)
+
 ### Docs
 
 * [Setup](docs/setup.md)
 * [Message Protocol](docs/messageProtocol.md)
-* [Database Schema](docs/databaseSchema.md)
 * [TODO](TODO.md)
