@@ -116,6 +116,7 @@ set(SOURCES
         infrastructure/repositories/reactionRepository/reactionMapper/ReactionMapperImpl.cpp
         application/commandHandlers/message/createMessageReactionCommandHandler/CreateMessageReactionCommandHandlerImpl.cpp
         application/commandHandlers/message/deleteMessageReactionCommandHandler/DeleteMessageReactionCommandHandlerImpl.cpp
+        application/queryHandlers/message/findMessageReactionsQueryHandler/FindMessageReactionsQueryHandlerImpl.cpp
 )
 
 set(TEST_COMMON_SOURCES
@@ -243,6 +244,7 @@ set(IT_SOURCES
         infrastructure/repositories/reactionRepository/ReactionRepositoryImplIntegrationTest.cpp
         application/commandHandlers/message/createMessageReactionCommandHandler/CreateMessageReactionCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/message/deleteMessageReactionCommandHandler/DeleteMessageReactionCommandHandlerImplIntegrationTest.cpp
+        application/queryHandlers/message/findMessageReactionsQueryHandler/FindMessageReactionsQueryHandlerImplIntegrationTest.cpp
 )
 
 set(ODB_HEADERS

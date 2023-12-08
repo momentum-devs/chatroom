@@ -2,14 +2,13 @@
 
 #include <gmock/gmock.h>
 
-#include "DeleteChannelCommandHandler.h"
+#include "DeleteMessageReactionCommandHandler.h"
 
 namespace server::application
 {
-class DeleteChannelCommandHandlerMock : public DeleteChannelCommandHandler
+class DeleteMessageReactionCommandHandlerMock : public DeleteMessageReactionCommandHandler
 {
 public:
-    MOCK_METHOD(DeleteChannelCommandHandlerResult, execute, (const DeleteChannelCommandHandlerPayload&),
-                (const override));
+    MOCK_METHOD(void, execute, (const DeleteMessageReactionCommandHandlerPayload&), (const override));
 };
 }
