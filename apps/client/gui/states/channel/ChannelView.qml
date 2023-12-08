@@ -6,8 +6,10 @@ import "components"
 import "../../qml/components/messages"
 
 Rectangle {
+    id: channelView
     color: Settings.backgroundColor
     focus: true
+    Keys.onEnterPressed: messageView.sendMessage()
 
     Row {
         anchors.fill: parent
@@ -54,6 +56,7 @@ Rectangle {
         function onSetChannel(channelName: string, channelId: string, isOwner: bool) {
             channelTopBar.setChannel([channelName, channelId, isOwner]);
             messageView.setTextPlaceholder("Message #" + channelName)
+            channelView.focus = true;
         }
 
         target: channelController

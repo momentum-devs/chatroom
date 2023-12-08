@@ -9,6 +9,7 @@ Rectangle {
     id: privateMessagesView
     color: Settings.backgroundColor
     focus: true
+    Keys.onEnterPressed: messageView.sendMessage()
 
     Row {
         anchors.fill: parent
@@ -75,6 +76,7 @@ Rectangle {
             friendTopBar.setFriendName(friendName);
             privateMessagesView.state = "OnChat"
             messageView.setTextPlaceholder("Message @" + friendName)
+            privateMessagesView.focus = true;
         }
 
         target: privateMessagesController
