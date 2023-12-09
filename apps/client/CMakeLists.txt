@@ -60,6 +60,7 @@ set(QML_SOURCES
         gui/qml/components/CustomButton.qml
         gui/qml/components/Invitation.qml
         gui/qml/components/messages/MessageView.qml
+        gui/qml/components/messages/Message.qml
 
         gui/states/register/RegisterView.qml
         gui/states/login/LoginView.qml

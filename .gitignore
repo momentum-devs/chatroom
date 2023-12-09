@@ -45,3 +45,4 @@ vcpkg_installed
 *.profraw
 .cache
 lib
+CMakeLists.txt.user

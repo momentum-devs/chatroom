@@ -1,5 +1,7 @@
 #include "MessagesController.h"
 
+#include <cstdlib>
+
 namespace client::gui
 {
 MessagesController::MessagesController(std::shared_ptr<api::Session> sessionInit, const StateFactory& stateFactoryInit,
@@ -19,7 +21,11 @@ void MessagesController::deactivate() {}
 
 void MessagesController::sendMessage(const QString& text)
 {
-    messages.emplace_back(true, text, "", "", "time");
+    auto previousMessage = messages.empty() ? nullptr : &messages.back();
+
+    auto date = QDateTime::currentDateTimeUtc().addDays(rand() % 3 == 1 ? 1 : 0);
+
+    messages.emplace_back(true, text, "user", "", date, previousMessage);
 
     emit messagesUpdated();
 }
@@ -32,7 +38,7 @@ QList<QObject*> MessagesController::getMessages()
     {
         result.push_back(dynamic_cast<QObject*>(&message));
     }
-    
+
     return result;
 }
 }

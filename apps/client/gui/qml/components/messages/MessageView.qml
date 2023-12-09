@@ -6,8 +6,6 @@ Rectangle {
     id: messagesView
     color: Settings.backgroundColor
 
-    property var messages: []
-
     function setTextPlaceholder(text: string) {
         messageInput.placeholderText = text;
     }
@@ -18,28 +16,28 @@ Rectangle {
     }
 
     ScrollView {
-        anchors.top: parent.top
-        anchors.bottom: messageInput.bottom
-        anchors.left: parent.left
-        anchors.topMargin: 20
-        anchors.bottomMargin: 20
-        anchors.leftMargin: 20
+        anchors {
+            top: parent.top
+            bottom: messageInputRectangle.top
+            left: parent.left
+            topMargin: 20
+            bottomMargin: 20
+        }
         width: parent.width
-        spacing: 5
         ListView {
             id: messagesRepeater
             model: messagesController.messages
             width: parent.width
-            spacing: 5
-            delegate: Text {
-                color: "white"
-                text: modelData.messageText
+            spacing: 1
+            delegate: Message {
+                messageData: modelData
+                width: messagesView.width
             }
-
         }
     }
 
     Rectangle {
+        id: messageInputRectangle
         color: "#383940"
         radius: 10
         anchors.bottom: parent.bottom

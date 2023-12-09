@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QDateTime>
 #include <QList>
 #include <QObject>
 
@@ -8,23 +9,28 @@ namespace client::types
 class Message : public QObject
 {
     Q_OBJECT
-    
+
 public:
-    Message(bool fromUserInit, const QString& messageTextInit, const QString& senderIdInit,
-            const QString& messageIdInit, const QString& sendTimeInit);
+    Message(bool fromUserInit, const QString& messageTextInit, const QString& senderNameInit,
+            const QString& messageIdInit, const QDateTime& sendTimeInit, Message* previousMessageInit);
     Message(const Message& message);
 
     bool fromUser;
     QString messageText;
-    QString senderId;
+    QString senderName;
     QString messageId;
-    QString sendTime;
+    QDateTime sendTime;
+    Message* previousMessage;
 
-    Q_PROPERTY(bool fromUser MEMBER fromUser)
-    Q_PROPERTY(QString messageText MEMBER messageText)
-    Q_PROPERTY(QString senderId MEMBER senderId)
-    Q_PROPERTY(QString messageId MEMBER messageId)
-    Q_PROPERTY(QString sendTime MEMBER sendTime)
+    Q_PROPERTY(bool fromUser MEMBER fromUser CONSTANT)
+    Q_PROPERTY(QString messageText MEMBER messageText CONSTANT)
+    Q_PROPERTY(QString senderName MEMBER senderName CONSTANT)
+    Q_PROPERTY(QString messageId MEMBER messageId CONSTANT)
+    Q_PROPERTY(QDateTime sendTime MEMBER sendTime CONSTANT)
+    Q_PROPERTY(QObject* previousMessage MEMBER previousMessage CONSTANT)
+    Q_PROPERTY(bool showSeparator READ shouldShowSeparator CONSTANT)
+
+    bool shouldShowSeparator() const;
 
     bool operator==(const Message& rhs) const;
 
