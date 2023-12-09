@@ -1,50 +1,51 @@
-#include "GetChannelMembersMessageHandler.h"
-
-#include <gtest/gtest.h>
-#include <nlohmann/json.hpp>
-
-#include "server/application/queryHandlers/channel/findUsersBelongingToChannelQueryHandler/FindUsersBelongingToChannelQueryHandlerMock.h"
-#include "server/application/services/tokenService/TokenServiceMock.h"
-
-using namespace ::testing;
-using namespace server::api;
-using namespace server::application;
-
-namespace
-{
-auto token = "token";
-auto channelId = "channelId";
-auto validPayloadJson = nlohmann::json{{"token", token}, {"data", {{"channelId", channelId}}}};
-auto validPayload = common::bytes::Bytes{validPayloadJson.dump()};
-auto message = common::messages::Message{common::messages::MessageId::GetChannelMembers, validPayload};
-
-auto userId = "userId";
-auto channelMemberId1 = "channelMemberId1";
-auto channelMemberName1 = "channelMemberName1";
-auto channelMemberActive1 = true;
-auto channelMemberId2 = "channelMemberId2";
-auto channelMemberName2 = "channelMemberName2";
-auto channelMemberActive2 = false;
-auto channelMembers = std::vector<server::domain::User>{
-    //    TODO: fix
-    //    {channelMemberId1, channelMemberName1, channelMemberActive1},
-    //    {channelMemberId2, channelMemberName2, channelMemberActive2}
-};
-
-class GetChannelMembersMessageHandlerTest : public Test
-{
-public:
-    std::unique_ptr<FindUsersBelongingToChannelQueryHandlerMock> findUsersBelongingToChannelQueryHandlerMock =
-        std::make_unique<StrictMock<FindUsersBelongingToChannelQueryHandlerMock>>();
-    FindUsersBelongingToChannelQueryHandlerMock* findUsersBelongingToChannelQueryHandlerMockPtr =
-        findUsersBelongingToChannelQueryHandlerMock.get();
-
-    std::shared_ptr<server::application::TokenServiceMock> tokenServiceMock =
-        std::make_shared<StrictMock<server::application::TokenServiceMock>>();
-
-    GetChannelMembersMessageHandler getChannelMembersMessageHandler{
-        tokenServiceMock, std::move(findUsersBelongingToChannelQueryHandlerMock)};
-};
+// #include "GetChannelMembersMessageHandler.h"
+//
+// #include <gtest/gtest.h>
+// #include <nlohmann/json.hpp>
+//
+// #include
+// "server/application/queryHandlers/channel/findUsersBelongingToChannelQueryHandler/FindUsersBelongingToChannelQueryHandlerMock.h"
+// #include "server/application/services/tokenService/TokenServiceMock.h"
+//
+// using namespace ::testing;
+// using namespace server::api;
+// using namespace server::application;
+//
+// namespace
+//{
+// auto token = "token";
+// auto channelId = "channelId";
+// auto validPayloadJson = nlohmann::json{{"token", token}, {"data", {{"channelId", channelId}}}};
+// auto validPayload = common::bytes::Bytes{validPayloadJson.dump()};
+// auto message = common::messages::Message{common::messages::MessageId::GetChannelMembers, validPayload};
+//
+// auto userId = "userId";
+// auto channelMemberId1 = "channelMemberId1";
+// auto channelMemberName1 = "channelMemberName1";
+// auto channelMemberActive1 = true;
+// auto channelMemberId2 = "channelMemberId2";
+// auto channelMemberName2 = "channelMemberName2";
+// auto channelMemberActive2 = false;
+// auto channelMembers = std::vector<server::domain::User>{
+//     //    TODO: fix
+//     //    {channelMemberId1, channelMemberName1, channelMemberActive1},
+//     //    {channelMemberId2, channelMemberName2, channelMemberActive2}
+// };
+//
+// class GetChannelMembersMessageHandlerTest : public Test
+//{
+// public:
+//     std::unique_ptr<FindUsersBelongingToChannelQueryHandlerMock> findUsersBelongingToChannelQueryHandlerMock =
+//         std::make_unique<StrictMock<FindUsersBelongingToChannelQueryHandlerMock>>();
+//     FindUsersBelongingToChannelQueryHandlerMock* findUsersBelongingToChannelQueryHandlerMockPtr =
+//         findUsersBelongingToChannelQueryHandlerMock.get();
+//
+//     std::shared_ptr<server::application::TokenServiceMock> tokenServiceMock =
+//         std::make_shared<StrictMock<server::application::TokenServiceMock>>();
+//
+//     GetChannelMembersMessageHandler getChannelMembersMessageHandler{
+//         tokenServiceMock, std::move(findUsersBelongingToChannelQueryHandlerMock)};
+// };
 
 // TEST_F(GetChannelMembersMessageHandlerTest, handleValidGetChannelMembersMessage)
 //{
@@ -90,4 +91,4 @@ public:
 //     EXPECT_EQ(responseMessage.id, common::messages::MessageId::GetChannelMembersResponse);
 //     EXPECT_EQ(responseMessage.payload, common::bytes::Bytes{expectedResponsePayload.dump()});
 // }
-}
+//}
