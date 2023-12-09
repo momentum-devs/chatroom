@@ -7,6 +7,7 @@
 #include "client/api/Session.h"
 #include "client/gui/states/StateFactory.h"
 #include "client/gui/states/StateMachine.h"
+#include "client/types/Message.h"
 
 namespace client::gui
 {
@@ -35,6 +36,7 @@ signals:
 public slots:
     void goToChannel(const QString& channelName, const QString& channelId, bool isOwner);
     void goToPrivateMessages();
+    void sendChannelMessage(types::Message& message);
 
 private:
     void handleLeftChannelResponse(const common::messages::Message& message);

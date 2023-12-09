@@ -2,14 +2,14 @@
 
 #include <gmock/gmock.h>
 
-#include "CreateChannelCommandHandler.h"
+#include "CreateChannelMessageCommandHandler.h"
 
 namespace server::application
 {
-class CreateChannelCommandHandlerMock : public CreateChannelCommandHandler
+class CreateChannelMessageCommandHandlerMock : public CreateChannelMessageCommandHandler
 {
 public:
-    MOCK_METHOD(CreateChannelCommandHandlerResult, execute, (const CreateChannelCommandHandlerPayload&),
+    MOCK_METHOD(CreateChannelMessageCommandHandlerResult, execute, (const CreateChannelMessageCommandHandlerPayload&),
                 (const override));
 };
 }

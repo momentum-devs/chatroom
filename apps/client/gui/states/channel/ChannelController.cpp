@@ -150,4 +150,18 @@ void ChannelController::handleGetChannelMembersResponse(const common::messages::
         LOG_S(ERROR) << "Response without data";
     }
 }
+
+void ChannelController::sendChannelMessage(types::Message& message)
+{
+    LOG_S(INFO) << "Send channel message";
+
+    auto text = message.property("messageText").toString().toStdString();
+
+    nlohmann::json data{
+        {"channelId", currentChannelId},
+        {"text", text},
+    };
+
+    session->sendMessage(common::messages::MessageId::SendChannelMessage, data);
+}
 }

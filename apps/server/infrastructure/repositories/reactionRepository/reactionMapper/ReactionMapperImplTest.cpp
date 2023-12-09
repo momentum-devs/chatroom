@@ -28,7 +28,8 @@ public:
 
     ReactionMapperImpl reactionMapper{userMapper, messageMapper};
 };
-channel TEST_F(ReactionMapperTest, givenPersistenceReaction_shouldMapToDomainReaction)
+
+TEST_F(ReactionMapperTest, givenPersistenceReaction_shouldMapToDomainReaction)
 {
     const auto user = userTestFactory.createPersistentUser();
 
@@ -56,8 +57,6 @@ channel TEST_F(ReactionMapperTest, givenPersistenceReaction_shouldMapToDomainRea
     const auto domainReaction = reactionMapper.mapToDomainReaction(*reaction);
 
     ASSERT_EQ(domainReaction.getId(), reaction->getId());
-    ASSERT_EQ(domainReaction.getLastReadMessageId(), reaction->getLastReadMessageId().get());
     ASSERT_EQ(domainReaction.getUser(), domainUser);
     ASSERT_EQ(domainReaction.getMessage(), domainMessage);
-    ASSERT_EQ(domainReaction.getCreatedAt(), reaction->getCreatedAt());
 }

@@ -29,7 +29,7 @@ public:
     Q_INVOKABLE void sendMessage(const QString& text);
 
 signals:
-    void newMessageToSend(const types::Message& message);
+    void newMessageToSend(types::Message& message);
     void messagesUpdated();
 
 private:

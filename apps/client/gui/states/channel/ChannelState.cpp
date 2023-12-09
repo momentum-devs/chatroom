@@ -28,6 +28,9 @@ void ChannelState::activate()
     QObject::connect(leftColumnController.get(), &LeftColumnController::goToPrivateMessagesSignal,
                      channelController.get(), &ChannelController::goToPrivateMessages);
 
+    QObject::connect(messagesController.get(), &MessagesController::newMessageToSend, channelController.get(),
+                     &ChannelController::sendChannelMessage);
+
     loaderController->getEngine()->rootContext()->setContextProperty(leftColumnController->getName(),
                                                                      leftColumnController.get());
 

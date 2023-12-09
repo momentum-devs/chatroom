@@ -32,6 +32,8 @@ void MessagesController::sendMessage(const QString& text)
     messages.push_back(message);
 
     emit messagesUpdated();
+
+    emit newMessageToSend(*message);
 }
 
 QList<QObject*> MessagesController::getMessages()
