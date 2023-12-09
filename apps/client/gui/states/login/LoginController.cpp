@@ -91,8 +91,14 @@ void LoginController::handleGetUSerDataResponse(const common::messages::Message&
                                     responseJson.at("error").get<std::string>());
     }
 
-    if (responseJson.contains("data") and responseJson.at("data").contains("verified"))
+    if (responseJson.contains("data") and responseJson.at("data").contains("verified") and
+        responseJson.at("data").contains("nickname") and responseJson.at("data").contains("email"))
     {
+
+        session->storeUser({responseJson.at("data").at("verified").get<bool>(), true,
+                            responseJson.at("data").at("nickname").get<std::string>().c_str(), "",
+                            responseJson.at("data").at("email").get<std::string>().c_str()});
+
         if (responseJson.at("data").at("verified").get<bool>())
         {
             LOG_S(INFO) << "User verified, go to private message state";

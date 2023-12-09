@@ -15,9 +15,6 @@ LeftColumnController::LeftColumnController(std::shared_ptr<api::Session> session
 
 void LeftColumnController::activate()
 {
-    session->addMessageHandler({common::messages::MessageId::GetUserDataResponse, getUserDataResponseHandlerName,
-                                [this](const auto& msg) { handleGetUserDataResponse(msg); }});
-
     session->addMessageHandler({common::messages::MessageId::GetUserChannelsResponse,
                                 getUserChannelsResponseHandlerName,
                                 [this](const auto& msg) { handleGetUserChannelsResponse(msg); }});
@@ -30,17 +27,18 @@ void LeftColumnController::activate()
                                 changeChannelInvitationResponseHandlerName,
                                 [this](const auto& msg) { handleChangeChannelInvitationResponse(msg); }});
 
-    session->sendMessage(common::messages::MessageId::GetUserData, {});
     session->sendMessage(common::messages::MessageId::GetUserChannels, {});
     session->sendMessage(common::messages::MessageId::GetUserChannelInvitations, {});
+
+    auto userName = dynamic_cast<types::User*>(session->getUser())->property("nickname").toString();
+
+    emit setUserName(userName);
 }
 
 void LeftColumnController::deactivate()
 {
     session->removeMessageHandler(
         {common::messages::MessageId::GetUserChannelsResponse, getUserChannelsResponseHandlerName});
-
-    session->removeMessageHandler({common::messages::MessageId::GetUserDataResponse, getUserDataResponseHandlerName});
 
     session->removeMessageHandler(
         {common::messages::MessageId::GetUserChannelInvitationsResponse, getUserChannelInvitationsResponseHandlerName});
@@ -115,34 +113,6 @@ void LeftColumnController::handleGetUserChannelsResponse(const common::messages:
     else
     {
         LOG_S(ERROR) << "Response without data";
-    }
-}
-
-void LeftColumnController::handleGetUserDataResponse(const common::messages::Message& message)
-{
-    LOG_S(INFO) << "Handle get user data response";
-
-    auto responsePayload = static_cast<std::string>(message.payload);
-
-    auto responseJson = nlohmann::json::parse(responsePayload);
-
-    if (responseJson.contains("error"))
-    {
-        LOG_S(ERROR) << std::format("Error while getting user channels: {}",
-                                    responseJson.at("error").get<std::string>());
-    }
-
-    if (responseJson.contains("data") and responseJson.at("data").contains("nickname"))
-    {
-        auto nickname = responseJson.at("data").at("nickname").get<std::string>();
-
-        LOG_S(INFO) << std::format("Get user data for user {}", nickname);
-
-        emit setUserName(nickname.c_str());
-    }
-    else
-    {
-        LOG_S(ERROR) << "Wrong user data format";
     }
 }
 

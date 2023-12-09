@@ -21,11 +21,15 @@ void MessagesController::deactivate() {}
 
 void MessagesController::sendMessage(const QString& text)
 {
-    auto previousMessage = messages.empty() ? nullptr : &messages.back();
+    auto previousMessage = messages.empty() ? nullptr : messages.back();
 
-    auto date = QDateTime::currentDateTimeUtc().addDays(rand() % 3 == 1 ? 1 : 0);
+    auto date = QDateTime::currentDateTimeUtc();
 
-    messages.emplace_back(true, text, "user", "", date, previousMessage);
+    auto userName = dynamic_cast<types::User*>(session->getUser())->property("nickname").toString();
+
+    auto message = std::make_shared<types::Message>(false, text, userName, "", date, previousMessage);
+
+    messages.push_back(message);
 
     emit messagesUpdated();
 }
@@ -36,7 +40,7 @@ QList<QObject*> MessagesController::getMessages()
 
     for (auto& message : messages)
     {
-        result.push_back(dynamic_cast<QObject*>(&message));
+        result.push_back(dynamic_cast<QObject*>(message.get()));
     }
 
     return result;

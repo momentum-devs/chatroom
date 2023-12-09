@@ -12,7 +12,8 @@ SessionImpl::SessionImpl(std::unique_ptr<common::messages::MessageReader> messag
     : messageReader{std::move(messageReaderInit)},
       messageSender{std::move(messageSenderInit)},
       socketConnector{std::move(socketConnectorInit)},
-      messageFactory{std::move(messageFactoryInit)}
+      messageFactory{std::move(messageFactoryInit)},
+      user{}
 {
 }
 
@@ -128,5 +129,15 @@ void SessionImpl::logout()
     }
 
     token = std::nullopt;
+}
+
+void SessionImpl::storeUser(const types::User& userInit)
+{
+    user = userInit;
+}
+
+QObject* SessionImpl::getUser()
+{
+    return dynamic_cast<QObject*>(&user);
 }
 }

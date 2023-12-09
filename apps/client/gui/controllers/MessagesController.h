@@ -1,8 +1,9 @@
 #pragma once
 
-#include <list>
+#include <memory>
 #include <QList>
 #include <QObject>
+#include <vector>
 
 #include "client/api/Session.h"
 #include "client/gui/states/StateFactory.h"
@@ -38,6 +39,6 @@ private:
 
     inline static const QString name{"messagesController"};
 
-    std::list<types::Message> messages;
+    std::vector<std::shared_ptr<types::Message>> messages;
 };
 }

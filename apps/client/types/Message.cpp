@@ -3,13 +3,14 @@
 namespace client::types
 {
 Message::Message(bool fromUserInit, const QString& messageTextInit, const QString& senderNameInit,
-                 const QString& messageIdInit, const QDateTime& sendTimeInit, Message* previousMessageInit)
+                 const QString& messageIdInit, const QDateTime& sendTimeInit,
+                 std::shared_ptr<Message> previousMessageInit)
     : fromUser{fromUserInit},
       messageText{messageTextInit},
       senderName{senderNameInit},
       messageId{messageIdInit},
       sendTime{sendTimeInit},
-      previousMessage{previousMessageInit}
+      previousMessage{std::move(previousMessageInit)}
 {
 }
 

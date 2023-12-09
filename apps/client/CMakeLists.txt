@@ -34,12 +34,15 @@ set(SOURCES
         gui/states/channel/ChannelController.cpp
         gui/controllers/MessagesController.h
         gui/controllers/MessagesController.cpp
-        types/Message.cpp)
+        types/Message.cpp
+        types/User.cpp)
 
 set(UT_SOURCES
         api/SessionImplTest.cpp
         gui/states/StateMachineTest.cpp
         api/MessageFactoryImplTest.cpp
+        types/UserTest.cpp
+        types/MessageTest.cpp
 )
 
 set(QML_SOURCES
@@ -130,12 +133,14 @@ target_link_libraries(${EXECUTABLE_NAME}UT PUBLIC
         Qt6::Quick
         Qt6::QuickControls2
         Qt6::Svg
+        Qt6::Test
         loguru::loguru
         nlohmann_json::nlohmann_json
         messages
         filesystem
         collection
         envParser
+        faker-cxx
 )
 
 target_include_directories(${EXECUTABLE_NAME}UT PUBLIC ${GMOCK_INCLUDE_DIR})
