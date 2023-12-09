@@ -29,6 +29,10 @@ void ChannelController::activate()
                                 getChannelMembersResponseHandlerName,
                                 [this](const auto& msg) { handleGetChannelMembersResponse(msg); }});
 
+    session->addMessageHandler({common::messages::MessageId::SendChannelMessageResponse,
+                                sendChannelMessageResponseHandlerName,
+                                [this](const auto& msg) { handleSendChannelMessageResponse(msg); }});
+
     goToChannel(currentChannelName.c_str(), currentChannelId.c_str(), isOwnerOfCurrentChannel);
 }
 
@@ -42,6 +46,9 @@ void ChannelController::deactivate()
 
     session->removeMessageHandler(
         {common::messages::MessageId::GetChannelMembersResponse, getChannelMembersResponseHandlerName});
+
+    session->removeMessageHandler(
+        {common::messages::MessageId::SendChannelMessageResponse, sendChannelMessageResponseHandlerName});
 }
 
 const QString& ChannelController::getName() const
@@ -163,5 +170,19 @@ void ChannelController::sendChannelMessage(types::Message& message)
     };
 
     session->sendMessage(common::messages::MessageId::SendChannelMessage, data);
+}
+
+void ChannelController::handleSendChannelMessageResponse(const common::messages::Message& message)
+{
+    LOG_S(INFO) << "Received send channel message response";
+
+    auto responsePayload = static_cast<std::string>(message.payload);
+
+    auto responseJson = nlohmann::json::parse(responsePayload);
+
+    if (responseJson.contains("error"))
+    {
+        LOG_S(ERROR) << "Error while sending channel message: " << responseJson.at("error").get<std::string>();
+    }
 }
 }

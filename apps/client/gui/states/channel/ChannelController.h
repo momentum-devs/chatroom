@@ -41,7 +41,8 @@ public slots:
 private:
     void handleLeftChannelResponse(const common::messages::Message& message);
     void handleGetChannelMembersResponse(const common::messages::Message& message);
-
+    void handleSendChannelMessageResponse(const common::messages::Message& message);
+    
     std::shared_ptr<api::Session> session;
     const StateFactory& stateFactory;
     std::shared_ptr<StateMachine> stateMachine;
@@ -54,5 +55,6 @@ private:
     inline static const std::string leftChannelResponseHandlerName{"leftChannelResponseHandlerName"};
     inline static const std::string deleteChannelResponseHandlerName{"deleteChannelResponseHandlerName"};
     inline static const std::string getChannelMembersResponseHandlerName{"getChannelMembersResponseHandlerName"};
+    inline static const std::string sendChannelMessageResponseHandlerName{"sendChannelMessageResponseHandlerName"};
 };
 }

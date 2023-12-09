@@ -17,9 +17,10 @@ void MessageSenderImpl::sendMessage(const Message& message)
     auto serializedMessageWithLength =
         bytes::Bytes(static_cast<u_int32_t>(serializedMessage.size())) + serializedMessage;
 
-    asyncWrite(boost::asio::buffer(serializedMessageWithLength),
-               [](boost::system::error_code, std::size_t bytesTransferred)
-               { LOG_S(INFO) << "Sent message size: " << bytesTransferred << " bytes"; });
+    asyncWrite(
+        boost::asio::buffer(serializedMessageWithLength),
+        [message](boost::system::error_code, std::size_t bytesTransferred)
+        { LOG_S(INFO) << std::format("Sent message {} with size: {} bytes", toString(message.id), bytesTransferred); });
 }
 
 void MessageSenderImpl::asyncWrite(boost::asio::const_buffer writeBuffer,
