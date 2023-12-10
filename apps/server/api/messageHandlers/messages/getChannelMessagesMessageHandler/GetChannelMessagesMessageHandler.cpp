@@ -24,7 +24,7 @@ GetChannelMessagesMessageHandler::handleMessage(const common::messages::Message&
         auto limit = payloadJson["data"]["limit"].get<unsigned>();
         auto offset = payloadJson["data"]["offset"].get<unsigned>();
 
-        auto [senderId] = tokenService->verifyToken(token);
+        tokenService->verifyToken(token); // TODO: check if user is in channel
 
         auto [messages, totalCount] =
             findChannelMessagesQueryHandler->execute({.channelId = channelId, .offset = offset, .limit = limit});
