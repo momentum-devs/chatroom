@@ -56,6 +56,7 @@ Rectangle {
 
         Row {
             spacing: 10
+            visible: messageData.showNameAndDate
             Text {
                 id: userName
                 color: Settings.textColor

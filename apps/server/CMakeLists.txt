@@ -99,6 +99,7 @@ set(SOURCES
         api/messageHandlers/friend/getUserFriendsMessageHandler/GetUserFriendsMessageHandler.cpp
         api/messageHandlers/friend/removeFromFriendsMessageHandler/RemoveFromFriendsMessageHandler.cpp
         api/messageHandlers/messages/sendChannelMessage/SendChannelMessageHandler.cpp
+        api/messageHandlers/messages/getChannelMessagesMessageHandler/GetChannelMessagesMessageHandler.cpp
 
         domain/entities/message/Message.cpp
         infrastructure/repositories/messageRepository/MessageRepositoryImpl.cpp
@@ -174,6 +175,7 @@ set(UT_SOURCES
         api/messageHandlers/friend/getUserFriendsMessageHandler/GetUserFriendsMessageHandlerTest.cpp
         api/messageHandlers/friend/removeFromFriendsMessageHandler/RemoveFromFriendsMessageHandlerTest.cpp
         api/messageHandlers/messages/sendChannelMessage/SendChannelMessageHandlerTest.cpp
+        api/messageHandlers/messages/getChannelMessagesMessageHandler/GetChannelMessagesMessageHandlerTest.cpp
 )
 
 set(IT_SOURCES

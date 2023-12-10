@@ -2,11 +2,9 @@
 
 namespace client::types
 {
-Message::Message(bool fromUserInit, const QString& messageTextInit, const QString& senderNameInit,
-                 const QString& messageIdInit, const QDateTime& sendTimeInit,
-                 std::shared_ptr<Message> previousMessageInit)
-    : fromUser{fromUserInit},
-      messageText{messageTextInit},
+Message::Message(const QString& messageTextInit, const QString& senderNameInit, const QString& messageIdInit,
+                 const QDateTime& sendTimeInit, std::shared_ptr<Message> previousMessageInit)
+    : messageText{messageTextInit},
       senderName{senderNameInit},
       messageId{messageIdInit},
       sendTime{sendTimeInit},
@@ -16,7 +14,6 @@ Message::Message(bool fromUserInit, const QString& messageTextInit, const QStrin
 
 Message::Message(const Message& message)
     : QObject(),
-      fromUser{message.fromUser},
       messageText{message.messageText},
       senderName{message.senderName},
       messageId{message.messageId},
@@ -26,16 +23,14 @@ Message::Message(const Message& message)
 
 bool Message::operator==(const Message& rhs) const
 {
-    auto tieStruct = [](const Message& message) {
-        return std::tie(message.fromUser, message.messageText, message.senderName, message.messageId, message.sendTime);
-    };
+    auto tieStruct = [](const Message& message)
+    { return std::tie(message.messageText, message.senderName, message.messageId, message.sendTime); };
 
     return tieStruct(*this) == tieStruct(rhs);
 }
 
 Message& Message::operator=(const Message& message)
 {
-    fromUser = message.fromUser;
     messageText = message.messageText;
     senderName = message.senderName;
     messageId = message.messageId;
@@ -46,5 +41,11 @@ Message& Message::operator=(const Message& message)
 bool Message::shouldShowSeparator() const
 {
     return previousMessage != nullptr and previousMessage->sendTime.date() != sendTime.date();
+}
+
+bool Message::shouldShowNameAndDate() const
+{
+    return previousMessage == nullptr or previousMessage->senderName != senderName or
+           previousMessage->sendTime.addSecs(5 * 60) < sendTime;
 }
 }

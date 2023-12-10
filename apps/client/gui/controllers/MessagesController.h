@@ -32,6 +32,9 @@ signals:
     void newMessageToSend(types::Message& message);
     void messagesUpdated();
 
+public slots:
+    void handleMessages(const QList<types::Message>& messages);
+
 private:
     std::shared_ptr<api::Session> session;
     const StateFactory& stateFactory;

@@ -33,6 +33,10 @@ void ChannelController::activate()
                                 sendChannelMessageResponseHandlerName,
                                 [this](const auto& msg) { handleSendChannelMessageResponse(msg); }});
 
+    session->addMessageHandler({common::messages::MessageId::GetChannelMessagesResponse,
+                                getChannelMessagesResponseHandlerName,
+                                [this](const auto& msg) { handleGetChannelMessagesResponse(msg); }});
+
     goToChannel(currentChannelName.c_str(), currentChannelId.c_str(), isOwnerOfCurrentChannel);
 }
 
@@ -49,6 +53,9 @@ void ChannelController::deactivate()
 
     session->removeMessageHandler(
         {common::messages::MessageId::SendChannelMessageResponse, sendChannelMessageResponseHandlerName});
+
+    session->removeMessageHandler(
+        {common::messages::MessageId::GetChannelMessagesResponse, getChannelMessagesResponseHandlerName});
 }
 
 const QString& ChannelController::getName() const
@@ -67,11 +74,11 @@ void ChannelController::goToChannel(const QString& channelName, const QString& c
 
     emit setChannel(channelName, channelId, isOwner);
 
-    nlohmann::json data{
-        {"channelId", currentChannelId},
-    };
+    session->sendMessage(common::messages::MessageId::GetChannelMembers,
+                         nlohmann::json{{"channelId", currentChannelId}});
 
-    session->sendMessage(common::messages::MessageId::GetChannelMembers, data);
+    session->sendMessage(common::messages::MessageId::GetChannelMessages,
+                         nlohmann::json{{"channelId", currentChannelId}, {"offset", 0}, {"limit", 50}});
 }
 
 void ChannelController::goToPrivateMessages()
@@ -183,6 +190,54 @@ void ChannelController::handleSendChannelMessageResponse(const common::messages:
     if (responseJson.contains("error"))
     {
         LOG_S(ERROR) << "Error while sending channel message: " << responseJson.at("error").get<std::string>();
+    }
+}
+void ChannelController::handleGetChannelMessagesResponse(const common::messages::Message& message)
+{
+    LOG_S(INFO) << "Received channel messages list";
+
+    auto responsePayload = static_cast<std::string>(message.payload);
+
+    auto responseJson = nlohmann::json::parse(responsePayload);
+
+    if (responseJson.contains("error"))
+    {
+        LOG_S(ERROR) << "Error while getting channel messages: " << responseJson.at("error").get<std::string>();
+    }
+
+    QList<types::Message> messages;
+
+    if (responseJson.contains("data") and responseJson.at("data").contains("messages"))
+    {
+        for (const auto& message : responseJson.at("data").at("messages"))
+        {
+            if (message.contains("id") and message.contains("text") and message.contains("senderName") and
+                message.contains("sentAt"))
+            {
+                auto dateText = QString::fromStdString(message.at("sentAt").get<std::string>());
+
+                auto date = QDateTime::fromString(dateText, "yyyyMMddThhmmss");
+
+                LOG_S(INFO) << std::format("Adding message {} with id {} sent at {} to list",
+                                           message.at("text").get<std::string>(), message.at("id").get<std::string>(),
+                                           message.at("sentAt").get<std::string>());
+
+                messages.push_back(types::Message{QString::fromStdString(message.at("text").get<std::string>()),
+                                                  QString::fromStdString(message.at("senderName").get<std::string>()),
+                                                  QString::fromStdString(message.at("id").get<std::string>()), date,
+                                                  nullptr});
+            }
+            else
+            {
+                LOG_S(ERROR) << "Wrong message format";
+            }
+        }
+
+        emit addMessages(messages);
+    }
+    else
+    {
+        LOG_S(ERROR) << "Response without messages";
     }
 }
 }

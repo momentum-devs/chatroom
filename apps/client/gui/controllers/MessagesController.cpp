@@ -1,6 +1,6 @@
 #include "MessagesController.h"
 
-#include <cstdlib>
+#include <ranges>
 
 namespace client::gui
 {
@@ -27,7 +27,7 @@ void MessagesController::sendMessage(const QString& text)
 
     auto userName = dynamic_cast<types::User*>(session->getUser())->property("nickname").toString();
 
-    auto message = std::make_shared<types::Message>(false, text, userName, "", date, previousMessage);
+    auto message = std::make_shared<types::Message>(text, userName, "", date, previousMessage);
 
     messages.push_back(message);
 
@@ -46,5 +46,21 @@ QList<QObject*> MessagesController::getMessages()
     }
 
     return result;
+}
+
+void MessagesController::handleMessages(const QList<types::Message>& newMessages)
+{
+    messages.clear();
+
+    for (auto& newMessage : newMessages | std::views::reverse)
+    {
+        auto message = std::make_shared<types::Message>(newMessage);
+
+        message->previousMessage = messages.empty() ? nullptr : messages.back();
+
+        messages.push_back(message);
+    }
+
+    emit messagesUpdated();
 }
 }
