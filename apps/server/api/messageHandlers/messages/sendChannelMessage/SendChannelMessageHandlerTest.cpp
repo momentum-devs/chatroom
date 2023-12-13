@@ -5,7 +5,9 @@
 #include "server/application/commandHandlers/message/createChannelMessageCommandHandler/CreateChannelMessageCommandHandlerMock.h"
 #include "server/application/services/tokenService/TokenServiceMock.h"
 
+#include "faker-cxx/Datatype.h"
 #include "faker-cxx/Date.h"
+#include "faker-cxx/Internet.h"
 #include "faker-cxx/Lorem.h"
 #include "faker-cxx/String.h"
 #include "nlohmann/json.hpp"
@@ -15,6 +17,22 @@ using namespace ::testing;
 
 namespace
 {
+std::shared_ptr<server::domain::User> createUser()
+{
+    const auto userId = faker::String::uuid();
+    const auto userNickname = faker::String::alphanumeric(10);
+    const auto userEmail = faker::Internet::email();
+    const auto userPassword = faker::String::alphanumeric(10);
+    const auto userCreatedAt = faker::Date::recentDate();
+    const auto userUpdatedAt = faker::Date::recentDate();
+    const bool userActive = faker::Datatype::boolean();
+    const bool userEmailVerified = faker::Datatype::boolean();
+    const auto verificationCode = faker::String::numeric(6);
+    return std::make_shared<server::domain::User>(server::domain::User{userId, userEmail, userPassword, userNickname,
+                                                                       userActive, userEmailVerified, verificationCode,
+                                                                       userCreatedAt, userUpdatedAt});
+}
+
 const auto token = faker::String::alphanumeric(40);
 const auto channelId = faker::String::uuid();
 const auto senderId = faker::String::uuid();
@@ -26,7 +44,7 @@ const auto validPayload = common::bytes::Bytes{validPayloadJson.dump()};
 const auto validMessage = common::messages::Message{common::messages::MessageId::SendChannelMessage, validPayload};
 const auto messageId = faker::String::uuid();
 const auto messageContent = text;
-const std::shared_ptr<server::domain::User> messageSender = nullptr;
+const auto messageSender = createUser();
 const std::shared_ptr<server::domain::Channel> messageChannel = nullptr;
 const std::shared_ptr<server::domain::Group> messageGroup = nullptr;
 const auto messageCreatedAt = faker::Date::recentDate();
@@ -34,8 +52,15 @@ const auto messageUpdatedAt = faker::Date::recentDate();
 server::domain::Message message{messageId,    messageContent,   messageSender,   messageChannel,
                                 messageGroup, messageCreatedAt, messageUpdatedAt};
 const auto validCommandHandlerResponse = server::application::CreateChannelMessageCommandHandlerResult{message};
-const auto validMessageResponse = common::messages::Message{common::messages::MessageId::SendChannelMessageResponse,
-                                                            common::bytes::Bytes{R"(["ok"])"}};
+const auto validCommandHandlerResponseJson = nlohmann::json{{"data",
+                                                             {{"message",
+                                                               {{"id", messageId},
+                                                                {"text", messageContent},
+                                                                {"senderName", messageSender->getNickname()},
+                                                                {"sentAt", messageCreatedAt}}}}}};
+const auto validMessageResponse =
+    common::messages::Message{common::messages::MessageId::SendChannelMessageResponse,
+                              common::bytes::Bytes{validCommandHandlerResponseJson.dump()}};
 
 const auto invalidTokenError = std::runtime_error{"invalidToken"};
 const auto invalidTokenMessageResponse = common::messages::Message{

@@ -13,18 +13,15 @@ class Message : public QObject
 
 public:
     Message(const QString& messageTextInit, const QString& senderNameInit, const QString& messageIdInit,
-            const QDateTime& sendTimeInit, std::shared_ptr<Message> previousMessageInit);
+            const QDateTime& sendTimeInit);
     Message(const Message& message);
 
     Q_PROPERTY(QString messageText MEMBER messageText CONSTANT)
     Q_PROPERTY(QString senderName MEMBER senderName CONSTANT)
     Q_PROPERTY(QString messageId MEMBER messageId CONSTANT)
     Q_PROPERTY(QDateTime sendTime MEMBER sendTime CONSTANT)
-    Q_PROPERTY(bool showSeparator READ shouldShowSeparator CONSTANT)
-    Q_PROPERTY(bool showNameAndDate READ shouldShowNameAndDate CONSTANT)
-
-    bool shouldShowSeparator() const;
-    bool shouldShowNameAndDate() const;
+    Q_PROPERTY(bool showSeparator MEMBER showSeparator CONSTANT)
+    Q_PROPERTY(bool showNameAndDate MEMBER showNameAndDate CONSTANT)
 
     bool operator==(const Message& rhs) const;
 
@@ -34,6 +31,7 @@ public:
     QString senderName;
     QString messageId;
     QDateTime sendTime;
-    std::shared_ptr<Message> previousMessage;
+    bool showSeparator = false;
+    bool showNameAndDate = false;
 };
 }
