@@ -7,6 +7,8 @@
 #include "client/api/Session.h"
 #include "client/gui/states/StateFactory.h"
 #include "client/gui/states/StateMachine.h"
+#include "client/storage/ConversationStorage.h"
+#include "client/storage/MessageStorage.h"
 
 namespace client::gui
 {
@@ -16,7 +18,8 @@ class PrivateMessagesController : public QObject
 
 public:
     PrivateMessagesController(std::shared_ptr<api::Session> session, const StateFactory& stateFactory,
-                              std::shared_ptr<StateMachine> stateMachine);
+                              std::shared_ptr<StateMachine> stateMachine,
+                              std::shared_ptr<storage::ConversationStorage> conversationStorage);
 
     void activate();
     void deactivate();
@@ -35,19 +38,26 @@ signals:
     void clearFriendInvitationList();
     void setCurrentFriendName(const QString& friendName);
     void removedFromFriends();
+    void messagesUpdated(bool shouldScrollDown = false);
+    void setMessageStorage(const std::shared_ptr<storage::MessageStorage>& messageStorage);
 
 public slots:
     void goToChannel(const QString& channelName, const QString& channelId, bool isOwner);
+    void sendPrivateMessage(const QString& messageText);
 
 private:
     void handleGetUserFriendsResponse(const common::messages::Message& message);
     void handleGetUserFriendInvitationsResponse(const common::messages::Message& message);
     void handleChangeFriendInvitationResponse(const common::messages::Message& message);
     void handleRemoveFromFriendsResponse();
+    void handleSendPrivateMessageResponse(const common::messages::Message& message);
+    void handleGetPrivateMessagesResponse(const common::messages::Message& message);
 
     std::shared_ptr<api::Session> session;
     const StateFactory& stateFactory;
     std::shared_ptr<StateMachine> stateMachine;
+    std::shared_ptr<storage::MessageStorage> messageStorage;
+    std::shared_ptr<storage::ConversationStorage> conversationStorage;
     std::string currentFriendId;
     std::string currentFriendName;
 
@@ -61,5 +71,9 @@ private:
         "changeFriendInvitationResponseHandlerName_privateMessagesController"};
     inline static const std::string removeFromFriendsResponseHandlerName{
         "removeFromFriendsResponseHandlerName_privateMessagesController"};
+    inline static const std::string sendPrivateMessageResponseHandlerName{
+        "sendPrivateMessageResponseHandlerName_privateMessagesController"};
+    inline static const std::string getPrivateMessagesResponseHandlerName{
+        "getPrivateMessagesResponseHandlerName_privateMessagesController"};
 };
 }

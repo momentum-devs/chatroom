@@ -25,6 +25,12 @@ void PrivateMessagesState::activate()
     QObject::connect(leftColumnController.get(), &LeftColumnController::goToChannelSignal,
                      privateMessagesController.get(), &PrivateMessagesController::goToChannel);
 
+    QObject::connect(privateMessagesController.get(), &PrivateMessagesController::setMessageStorage,
+                     messagesController.get(), &MessagesController::setMessageStorage);
+
+    QObject::connect(messagesController.get(), &MessagesController::newMessageToSend, privateMessagesController.get(),
+                     &PrivateMessagesController::sendPrivateMessage);
+
     loaderController->getEngine()->rootContext()->setContextProperty(leftColumnController->getName(),
                                                                      leftColumnController.get());
 
@@ -48,6 +54,12 @@ void PrivateMessagesState::deactivate()
 
     QObject::disconnect(leftColumnController.get(), &LeftColumnController::goToChannelSignal,
                         privateMessagesController.get(), &PrivateMessagesController::goToChannel);
+
+    QObject::disconnect(privateMessagesController.get(), &PrivateMessagesController::setMessageStorage,
+                        messagesController.get(), &MessagesController::setMessageStorage);
+
+    QObject::disconnect(messagesController.get(), &MessagesController::newMessageToSend,
+                        privateMessagesController.get(), &PrivateMessagesController::sendPrivateMessage);
 
     loaderController->getEngine()->rootContext()->setContextProperty(leftColumnController->getName(), nullptr);
 

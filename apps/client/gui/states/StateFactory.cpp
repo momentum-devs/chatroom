@@ -88,7 +88,8 @@ std::shared_ptr<State> StateFactory::createInviteToChannelState(const std::strin
 
 std::shared_ptr<State> StateFactory::createPrivateMessagesState() const
 {
-    auto privateMessagesController = std::make_unique<PrivateMessagesController>(session, *this, stateMachine);
+    auto privateMessagesController =
+        std::make_unique<PrivateMessagesController>(session, *this, stateMachine, privateMessagesConversationStorage);
 
     auto leftColumnController = std::make_unique<LeftColumnController>(session, *this, stateMachine);
 

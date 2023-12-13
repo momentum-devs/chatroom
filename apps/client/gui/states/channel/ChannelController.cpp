@@ -15,7 +15,8 @@ ChannelController::ChannelController(std::shared_ptr<api::Session> sessionInit, 
       conversationStorage{std::move(conversationStorageInit)},
       currentChannelId{initialChannelId},
       currentChannelName(initialChannelName),
-      isOwnerOfCurrentChannel{initialIsChannelOwner}
+      isOwnerOfCurrentChannel{initialIsChannelOwner},
+      isActivated{false}
 {
 }
 
@@ -40,6 +41,8 @@ void ChannelController::activate()
                                 [this](const auto& msg) { handleGetChannelMessagesResponse(msg); }});
 
     goToChannel(currentChannelName.c_str(), currentChannelId.c_str(), isOwnerOfCurrentChannel);
+
+    isActivated = true;
 }
 
 void ChannelController::deactivate()
@@ -70,8 +73,22 @@ void ChannelController::goToChannel(const QString& channelName, const QString& c
     LOG_S(INFO) << std::format("Set channel {} with id {} as current", channelName.toStdString(),
                                channelId.toStdString());
 
-    isOwnerOfCurrentChannel = isOwner;
+    if (not isActivated or currentChannelId != channelId.toStdString())
+    {
+        if (conversationStorage->hasConversation(currentChannelId))
+        {
+            messageStorage = conversationStorage->getConversation(currentChannelId);
+        }
+        else
+        {
+            messageStorage = conversationStorage->createConversation(currentChannelId);
+        }
+
+        emit setMessageStorage(messageStorage);
+    }
+
     currentChannelId = channelId.toStdString();
+    isOwnerOfCurrentChannel = isOwner;
     currentChannelName = channelName.toStdString();
 
     emit setChannel(channelName, channelId, isOwner);
@@ -81,17 +98,6 @@ void ChannelController::goToChannel(const QString& channelName, const QString& c
 
     session->sendMessage(common::messages::MessageId::GetChannelMessages,
                          nlohmann::json{{"channelId", currentChannelId}, {"offset", 0}, {"limit", 50}});
-
-    if (conversationStorage->hasConversation(currentChannelId))
-    {
-        messageStorage = conversationStorage->getConversation(currentChannelId);
-    }
-    else
-    {
-        messageStorage = conversationStorage->createConversation(currentChannelId);
-    }
-
-    emit setMessageStorage(messageStorage);
 }
 
 void ChannelController::goToPrivateMessages()
@@ -202,9 +208,10 @@ void ChannelController::handleSendChannelMessageResponse(const common::messages:
     {
         LOG_S(ERROR) << "Error while sending channel message: " << responseJson.at("error").get<std::string>();
     }
-
-    if (responseJson.contains("data") and responseJson.at("data").contains("message"))
+    else if (responseJson.contains("data") and responseJson.at("data").contains("message"))
     {
+        LOG_S(INFO) << "Successfully sent channel message";
+
         auto message = responseJson.at("data").at("message");
 
         if (message.contains("id") and message.contains("text") and message.contains("senderName") and
@@ -255,6 +262,8 @@ void ChannelController::handleGetChannelMessagesResponse(const common::messages:
             messageStorage->hasMessage(responseJson.at("data").at("messages").back().at("id").get<std::string>()) and
             messageStorage->hasMessage(responseJson.at("data").at("messages").front().at("id").get<std::string>()))
         {
+            LOG_S(INFO) << "Messages already loaded";
+
             return;
         }
 

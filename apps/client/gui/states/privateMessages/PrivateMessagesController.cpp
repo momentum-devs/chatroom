@@ -4,10 +4,15 @@
 
 namespace client::gui
 {
-PrivateMessagesController::PrivateMessagesController(std::shared_ptr<api::Session> sessionInit,
-                                                     const StateFactory& stateFactoryInit,
-                                                     std::shared_ptr<StateMachine> stateMachineInit)
-    : session{std::move(sessionInit)}, stateFactory{stateFactoryInit}, stateMachine{std::move(stateMachineInit)}
+PrivateMessagesController::PrivateMessagesController(
+    std::shared_ptr<api::Session> sessionInit, const StateFactory& stateFactoryInit,
+    std::shared_ptr<StateMachine> stateMachineInit,
+    std::shared_ptr<storage::ConversationStorage> conversationStorageInit)
+    : session{std::move(sessionInit)},
+      stateFactory{stateFactoryInit},
+      stateMachine{std::move(stateMachineInit)},
+      messageStorage{std::make_shared<storage::MessageStorage>()},
+      conversationStorage{std::move(conversationStorageInit)}
 {
 }
 
@@ -99,10 +104,26 @@ void PrivateMessagesController::setCurrentFriend(const QString& friendId, const 
 {
     LOG_S(INFO) << std::format("Set current friend to {} with id {}", friendName.toStdString(), friendId.toStdString());
 
+    if (currentFriendId != friendId.toStdString())
+    {
+        if (not conversationStorage->hasConversation(currentFriendId))
+        {
+            messageStorage = conversationStorage->createConversation(currentFriendId);
+        }
+        else
+        {
+            messageStorage = conversationStorage->getConversation(currentFriendId);
+        }
+
+        emit setMessageStorage(messageStorage);
+    }
+
     currentFriendId = friendId.toStdString();
     currentFriendName = friendName.toStdString();
 
     emit setCurrentFriendName(friendName);
+
+    session->sendMessage(common::messages::MessageId::GetPrivateMessages, {{"friendId", currentFriendId}});
 }
 
 void PrivateMessagesController::removeFromFriends()
@@ -229,5 +250,131 @@ void PrivateMessagesController::handleRemoveFromFriendsResponse()
     session->sendMessage(common::messages::MessageId::GetUserFriends, {});
 
     emit removedFromFriends();
+}
+
+void PrivateMessagesController::sendPrivateMessage(const QString& messageText)
+{
+    LOG_S(INFO) << std::format("Send private message: {} to {} with id {}", messageText.toStdString(),
+                               currentFriendName, currentFriendId);
+
+    nlohmann::json data{
+        {"receiverId", currentFriendId},
+        {"message", messageText.toStdString()},
+    };
+
+    session->sendMessage(common::messages::MessageId::SendPrivateMessage, data);
+}
+
+void PrivateMessagesController::handleSendPrivateMessageResponse(const common::messages::Message& message)
+{
+    LOG_S(INFO) << "Handle send private message response";
+
+    auto responsePayload = static_cast<std::string>(message.payload);
+
+    auto responseJson = nlohmann::json::parse(responsePayload);
+
+    if (responseJson.contains("error"))
+    {
+        LOG_S(ERROR) << std::format("Error while sending private message: {}",
+                                    responseJson.at("error").get<std::string>());
+    }
+    else if (responseJson.contains("data") and responseJson.at("data").contains("message"))
+    {
+        LOG_S(INFO) << "Successfully sent private message";
+
+        auto message = responseJson.at("data").at("message");
+
+        if (message.contains("id") and message.contains("text") and message.contains("senderName") and
+            message.contains("sentAt"))
+        {
+            auto dateText = QString::fromStdString(message.at("sentAt").get<std::string>());
+
+            auto date = QDateTime::fromString(dateText, "yyyyMMddThhmmss");
+
+            LOG_S(INFO) << std::format("Adding message {} with id {} sent at {} to list",
+                                       message.at("text").get<std::string>(), message.at("id").get<std::string>(),
+                                       message.at("sentAt").get<std::string>());
+
+            messageStorage->addMessage(
+                std::make_shared<types::Message>(QString::fromStdString(message.at("text").get<std::string>()),
+                                                 QString::fromStdString(message.at("senderName").get<std::string>()),
+                                                 QString::fromStdString(message.at("id").get<std::string>()), date));
+
+            emit messagesUpdated(true);
+        }
+        else
+        {
+            LOG_S(ERROR) << "Wrong message format";
+        }
+    }
+    else
+    {
+        LOG_S(ERROR) << "Response without message";
+    }
+}
+
+void PrivateMessagesController::handleGetPrivateMessagesResponse(const common::messages::Message& message)
+{
+    LOG_S(INFO) << "Received private messages list";
+
+    auto responsePayload = static_cast<std::string>(message.payload);
+
+    auto responseJson = nlohmann::json::parse(responsePayload);
+
+    if (responseJson.contains("error"))
+    {
+        LOG_S(ERROR) << "Error while getting private messages: " << responseJson.at("error").get<std::string>();
+    }
+
+    if (responseJson.contains("data") and responseJson.at("data").contains("messages"))
+    {
+        if (not responseJson.at("data").at("messages").empty() and
+            messageStorage->hasMessage(responseJson.at("data").at("messages").back().at("id").get<std::string>()) and
+            messageStorage->hasMessage(responseJson.at("data").at("messages").front().at("id").get<std::string>()))
+        {
+            return;
+        }
+
+        for (const auto& message : responseJson.at("data").at("messages"))
+        {
+            if (message.contains("id") and message.contains("text") and message.contains("senderName") and
+                message.contains("sentAt"))
+            {
+                auto dateText = QString::fromStdString(message.at("sentAt").get<std::string>());
+
+                auto date = QDateTime::fromString(dateText, "yyyyMMddThhmmss");
+
+                LOG_S(INFO) << std::format("Adding message {} with id {} sent at {} to list",
+                                           message.at("text").get<std::string>(), message.at("id").get<std::string>(),
+                                           message.at("sentAt").get<std::string>());
+
+                messageStorage->addMessage(std::make_shared<types::Message>(
+                    QString::fromStdString(message.at("text").get<std::string>()),
+                    QString::fromStdString(message.at("senderName").get<std::string>()),
+                    QString::fromStdString(message.at("id").get<std::string>()), date));
+            }
+            else
+            {
+                LOG_S(ERROR) << "Wrong message format";
+            }
+        }
+
+        if (responseJson.at("data").at("messages").empty())
+        {
+            emit messagesUpdated(true);
+
+            return;
+        }
+
+        auto lastMessageId = responseJson.at("data").at("messages").front().at("id").get<std::string>();
+
+        bool shouldScrollDown = lastMessageId == messageStorage->getLatestMessage()->messageId.toStdString();
+
+        emit messagesUpdated(shouldScrollDown);
+    }
+    else
+    {
+        LOG_S(ERROR) << "Response without messages";
+    }
 }
 }

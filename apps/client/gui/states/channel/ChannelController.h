@@ -58,6 +58,7 @@ private:
     std::string currentChannelId;
     std::string currentChannelName;
     bool isOwnerOfCurrentChannel;
+    bool isActivated;
 
     inline static const QString name{"channelController"};
 
