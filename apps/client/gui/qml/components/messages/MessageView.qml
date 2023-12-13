@@ -16,6 +16,7 @@ Rectangle {
     }
 
     ScrollView {
+        id: messagesScrollView
         anchors {
             top: parent.top
             bottom: messageInputRectangle.top
@@ -23,6 +24,7 @@ Rectangle {
             topMargin: 20
             bottomMargin: 20
         }
+        clip: true
         width: parent.width
         ListView {
             id: messagesRepeater
@@ -64,6 +66,14 @@ Rectangle {
             background: Rectangle {
                 visible: false
             }
+        }
+    }
+
+    Connections {
+        target: messagesController
+
+        function onScrollDown() {
+            messagesScrollView.ScrollBar.vertical.position = messagesScrollView.contentHeight
         }
     }
 }

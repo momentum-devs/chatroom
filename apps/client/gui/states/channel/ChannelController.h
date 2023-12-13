@@ -34,7 +34,7 @@ signals:
     void setChannel(const QString& channelName, const QString& channelId, bool isOwner);
     void addMember(const QString& memberName, const QString& memberId, bool isActive);
     void clearMembersList();
-    void messagesUpdated();
+    void messagesUpdated(bool shouldScrollDown = false);
 
 public slots:
     void goToChannel(const QString& channelName, const QString& channelId, bool isOwner);

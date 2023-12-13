@@ -40,8 +40,13 @@ QList<QObject*> MessagesController::getMessages()
     return result;
 }
 
-void MessagesController::handleMessageUpdate()
+void MessagesController::handleMessageUpdate(bool shouldScrollDown)
 {
     emit messagesUpdated();
+
+    if (shouldScrollDown)
+    {
+        emit scrollDown();
+    }
 }
 }

@@ -212,7 +212,7 @@ void ChannelController::handleSendChannelMessageResponse(const common::messages:
                                                  QString::fromStdString(message.at("senderName").get<std::string>()),
                                                  QString::fromStdString(message.at("id").get<std::string>()), date));
 
-            emit messagesUpdated();
+            emit messagesUpdated(true);
         }
         else
         {
@@ -266,7 +266,11 @@ void ChannelController::handleGetChannelMessagesResponse(const common::messages:
             }
         }
 
-        emit messagesUpdated();
+        auto lastMessageId = responseJson.at("data").at("messages").front().at("id").get<std::string>();
+
+        bool shouldScrollDown = lastMessageId == messageStorage->getLatestMessage()->messageId.toStdString();
+
+        emit messagesUpdated(shouldScrollDown);
     }
     else
     {
