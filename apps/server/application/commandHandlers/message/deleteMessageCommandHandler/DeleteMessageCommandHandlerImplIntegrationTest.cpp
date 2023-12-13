@@ -42,7 +42,7 @@ public:
         userTestUtils.truncateTable();
     }
 
-    std::shared_ptr<odb::pgsql::database> db = DatabaseClientTestFactory::create();
+    std::shared_ptr<odb::sqlite::database> db = DatabaseClientTestFactory::create();
 
     UserTestUtils userTestUtils{db};
     ChannelTestUtils channelTestUtils{db};
@@ -54,7 +54,8 @@ public:
 
     std::shared_ptr<ChannelMapper> channelMapper = std::make_shared<ChannelMapperImpl>(userMapper);
 
-    std::shared_ptr<MessageMapper> messageMapper = std::make_shared<MessageMapperImpl>(userMapper, channelMapper, groupMapper);
+    std::shared_ptr<MessageMapper> messageMapper =
+        std::make_shared<MessageMapperImpl>(userMapper, channelMapper, groupMapper);
 
     std::shared_ptr<domain::MessageRepository> messageRepository =
         std::make_shared<MessageRepositoryImpl>(db, messageMapper, userMapper, channelMapper, groupMapper);

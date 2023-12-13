@@ -30,14 +30,13 @@ public:
         userTestUtils.truncateTable();
     }
 
-    std::shared_ptr<odb::pgsql::database> db = DatabaseClientTestFactory::create();
+    std::shared_ptr<odb::sqlite::database> db = DatabaseClientTestFactory::create();
 
     UserTestUtils userTestUtils{db};
 
     std::shared_ptr<UserMapper> userMapper = std::make_shared<UserMapperImpl>();
 
-    std::shared_ptr<domain::UserRepository> userRepository =
-        std::make_shared<UserRepositoryImpl>(db, userMapper);
+    std::shared_ptr<domain::UserRepository> userRepository = std::make_shared<UserRepositoryImpl>(db, userMapper);
 
     VerifyUserEmailCommandHandlerImpl verifyUserEmailCommandHandler{userRepository};
 };
@@ -63,8 +62,8 @@ TEST_F(VerifyUserEmailCommandImplIntegrationTest, verifyExistingUserWithInvalidV
 
     const auto invalidVerificationCode = faker::String::numeric(5);
 
-    const auto user = std::make_shared<server::infrastructure::User>(
-        id, email, password, email, active, emailVerified, verificationCode, createdAt, updatedAt);
+    const auto user = std::make_shared<server::infrastructure::User>(id, email, password, email, active, emailVerified,
+                                                                     verificationCode, createdAt, updatedAt);
 
     userTestUtils.persist(user);
 
@@ -85,8 +84,8 @@ TEST_F(VerifyUserEmailCommandImplIntegrationTest, verifyAlreadyVerifiedUser)
     const auto createdAt = faker::Date::pastDate();
     const auto updatedAt = faker::Date::recentDate();
 
-    const auto user = std::make_shared<server::infrastructure::User>(
-        id, email, password, email, active, emailVerified, verificationCode, createdAt, updatedAt);
+    const auto user = std::make_shared<server::infrastructure::User>(id, email, password, email, active, emailVerified,
+                                                                     verificationCode, createdAt, updatedAt);
 
     userTestUtils.persist(user);
 
@@ -106,8 +105,8 @@ TEST_F(VerifyUserEmailCommandImplIntegrationTest, verifyExistingUserWithValidVer
     const auto createdAt = faker::Date::pastDate();
     const auto updatedAt = faker::Date::recentDate();
 
-    const auto user = std::make_shared<server::infrastructure::User>(
-        id, email, password, email, active, emailVerified, verificationCode, createdAt, updatedAt);
+    const auto user = std::make_shared<server::infrastructure::User>(id, email, password, email, active, emailVerified,
+                                                                     verificationCode, createdAt, updatedAt);
 
     userTestUtils.persist(user);
 

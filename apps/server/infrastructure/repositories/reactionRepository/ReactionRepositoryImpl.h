@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <odb/pgsql/database.hxx>
+#include <odb/sqlite/database.hxx>
 #include <vector>
 
 #include "server/domain/repositories/reactionRepository/ReactionRepository.h"
@@ -15,7 +15,7 @@ namespace server::infrastructure
 class ReactionRepositoryImpl : public domain::ReactionRepository
 {
 public:
-    ReactionRepositoryImpl(std::shared_ptr<odb::pgsql::database>, std::shared_ptr<ReactionMapper>,
+    ReactionRepositoryImpl(std::shared_ptr<odb::sqlite::database>, std::shared_ptr<ReactionMapper>,
                            std::shared_ptr<UserMapper>, std::shared_ptr<MessageMapper>);
 
     domain::Reaction createReaction(const domain::CreateReactionPayload&) const;
@@ -24,7 +24,7 @@ public:
     void deleteReaction(const domain::DeleteReactionPayload&) const;
 
 private:
-    std::shared_ptr<odb::pgsql::database> db;
+    std::shared_ptr<odb::sqlite::database> db;
     std::shared_ptr<ReactionMapper> reactionMapper;
     std::shared_ptr<UserMapper> userMapper;
     std::shared_ptr<MessageMapper> messageMapper;

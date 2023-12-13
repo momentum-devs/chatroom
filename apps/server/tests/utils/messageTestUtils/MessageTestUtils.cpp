@@ -9,7 +9,7 @@
 namespace server::tests
 {
 
-MessageTestUtils::MessageTestUtils(std::shared_ptr<odb::pgsql::database> databaseClientInit)
+MessageTestUtils::MessageTestUtils(std::shared_ptr<odb::sqlite::database> databaseClientInit)
     : databaseClient{std::move(databaseClientInit)},
       messageTestFactory{std::make_unique<MessageTestFactory>()},
       channelTestFactory{std::make_unique<ChannelTestFactory>()},

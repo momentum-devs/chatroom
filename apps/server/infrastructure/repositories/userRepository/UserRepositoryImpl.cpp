@@ -9,7 +9,7 @@
 
 namespace server::infrastructure
 {
-UserRepositoryImpl::UserRepositoryImpl(std::shared_ptr<odb::pgsql::database> dbInit,
+UserRepositoryImpl::UserRepositoryImpl(std::shared_ptr<odb::sqlite::database> dbInit,
                                        std::shared_ptr<UserMapper> userMapperInit)
     : db{std::move(dbInit)}, userMapper{std::move(userMapperInit)}
 {

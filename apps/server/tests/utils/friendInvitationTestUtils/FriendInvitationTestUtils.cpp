@@ -9,7 +9,7 @@
 namespace server::tests
 {
 
-FriendInvitationTestUtils::FriendInvitationTestUtils(std::shared_ptr<odb::pgsql::database> databaseClientInit)
+FriendInvitationTestUtils::FriendInvitationTestUtils(std::shared_ptr<odb::sqlite::database> databaseClientInit)
     : databaseClient{std::move(databaseClientInit)},
       friendInvitationTestFactory{std::make_unique<FriendInvitationTestFactory>()},
       userTestFactory{std::make_unique<UserTestFactory>()}
@@ -62,7 +62,8 @@ std::shared_ptr<infrastructure::FriendInvitation> FriendInvitationTestUtils::fin
     odb::transaction transaction(databaseClient->begin());
 
     std::shared_ptr<infrastructure::FriendInvitation> foundFriendInvitation(
-        databaseClient->query_one<infrastructure::FriendInvitation>(query::sender->id == senderId && query::recipient->id == recipientId));
+        databaseClient->query_one<infrastructure::FriendInvitation>(query::sender->id == senderId &&
+                                                                    query::recipient->id == recipientId));
 
     transaction.commit();
 

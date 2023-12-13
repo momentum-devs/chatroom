@@ -8,7 +8,7 @@
 
 namespace server::infrastructure
 {
-GroupRepositoryImpl::GroupRepositoryImpl(std::shared_ptr<odb::pgsql::database> dbInit,
+GroupRepositoryImpl::GroupRepositoryImpl(std::shared_ptr<odb::sqlite::database> dbInit,
                                          std::shared_ptr<GroupMapper> groupMapperInit)
     : db{std::move(dbInit)}, groupMapper{std::move(groupMapperInit)}
 {

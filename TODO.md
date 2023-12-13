@@ -21,3 +21,4 @@
 * encryption
 * infrastructure setup
 * deploy
+* prevent sql injection

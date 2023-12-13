@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <odb/pgsql/database.hxx>
+#include <odb/sqlite/database.hxx>
 #include <vector>
 
 #include "server/domain/repositories/userGroupRepository/UserGroupRepository.h"
@@ -14,7 +14,7 @@ namespace server::infrastructure
 class UserGroupRepositoryImpl : public domain::UserGroupRepository
 {
 public:
-    UserGroupRepositoryImpl(std::shared_ptr<odb::pgsql::database>, std::shared_ptr<UserGroupMapper>,
+    UserGroupRepositoryImpl(std::shared_ptr<odb::sqlite::database>, std::shared_ptr<UserGroupMapper>,
                             std::shared_ptr<UserMapper>, std::shared_ptr<GroupMapper>);
 
     domain::UserGroup createUserGroup(const domain::CreateUserGroupPayload&) const;
@@ -26,7 +26,7 @@ public:
     void deleteUserGroup(const domain::DeleteUserGroupPayload&) const;
 
 private:
-    std::shared_ptr<odb::pgsql::database> db;
+    std::shared_ptr<odb::sqlite::database> db;
     std::shared_ptr<UserGroupMapper> userGroupMapper;
     std::shared_ptr<UserMapper> userMapper;
     std::shared_ptr<GroupMapper> groupMapper;

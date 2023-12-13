@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <odb/pgsql/database.hxx>
+#include <odb/sqlite/database.hxx>
 #include <vector>
 
 #include "server/domain/repositories/channelInvitationRepository/ChannelInvitationRepository.h"
@@ -14,7 +14,7 @@ namespace server::infrastructure
 class ChannelInvitationRepositoryImpl : public domain::ChannelInvitationRepository
 {
 public:
-    ChannelInvitationRepositoryImpl(std::shared_ptr<odb::pgsql::database>, std::shared_ptr<ChannelInvitationMapper>,
+    ChannelInvitationRepositoryImpl(std::shared_ptr<odb::sqlite::database>, std::shared_ptr<ChannelInvitationMapper>,
                                     std::shared_ptr<UserMapper>, std::shared_ptr<ChannelMapper>);
 
     domain::ChannelInvitation createChannelInvitation(const domain::CreateChannelInvitationPayload&) const;
@@ -26,7 +26,7 @@ public:
     void deleteChannelInvitation(const domain::DeleteChannelInvitationPayload&) const;
 
 private:
-    std::shared_ptr<odb::pgsql::database> db;
+    std::shared_ptr<odb::sqlite::database> db;
     std::shared_ptr<ChannelInvitationMapper> channelInvitationMapper;
     std::shared_ptr<UserMapper> userMapper;
     std::shared_ptr<ChannelMapper> channelMapper;

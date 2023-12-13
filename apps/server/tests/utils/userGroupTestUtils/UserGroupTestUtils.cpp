@@ -10,7 +10,7 @@
 namespace server::tests
 {
 
-UserGroupTestUtils::UserGroupTestUtils(std::shared_ptr<odb::pgsql::database> databaseClientInit)
+UserGroupTestUtils::UserGroupTestUtils(std::shared_ptr<odb::sqlite::database> databaseClientInit)
     : databaseClient{std::move(databaseClientInit)},
       userGroupTestFactory{std::make_unique<UserGroupTestFactory>()},
       groupTestFactory{std::make_unique<GroupTestFactory>()},

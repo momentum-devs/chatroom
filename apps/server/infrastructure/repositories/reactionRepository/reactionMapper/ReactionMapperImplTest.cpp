@@ -28,7 +28,8 @@ public:
 
     ReactionMapperImpl reactionMapper{userMapper, messageMapper};
 };
-channel TEST_F(ReactionMapperTest, givenPersistenceReaction_shouldMapToDomainReaction)
+
+TEST_F(ReactionMapperTest, givenPersistenceReaction_shouldMapToDomainReaction)
 {
     const auto user = userTestFactory.createPersistentUser();
 

@@ -9,7 +9,7 @@
 
 namespace server::infrastructure
 {
-ChannelRepositoryImpl::ChannelRepositoryImpl(std::shared_ptr<odb::pgsql::database> dbInit,
+ChannelRepositoryImpl::ChannelRepositoryImpl(std::shared_ptr<odb::sqlite::database> dbInit,
                                              std::shared_ptr<ChannelMapper> channelMapperInit,
                                              std::shared_ptr<UserMapper> userMapperInit)
     : db{std::move(dbInit)}, channelMapper{std::move(channelMapperInit)}, userMapper{std::move(userMapperInit)}

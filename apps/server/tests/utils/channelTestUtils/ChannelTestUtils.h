@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <odb/pgsql/database.hxx>
+#include <odb/sqlite/database.hxx>
 
 #include "Channel.h"
 #include "server/tests/factories/channelTestFactory/ChannelTestFactory.h"
@@ -13,7 +13,7 @@ namespace server::tests
 class ChannelTestUtils
 {
 public:
-    explicit ChannelTestUtils(std::shared_ptr<odb::pgsql::database> databaseClient);
+    explicit ChannelTestUtils(std::shared_ptr<odb::sqlite::database> databaseClient);
 
     void persist(const std::shared_ptr<infrastructure::Channel>& channel);
     std::shared_ptr<infrastructure::Channel>
@@ -22,7 +22,7 @@ public:
     void truncateTable();
 
 private:
-    std::shared_ptr<odb::pgsql::database> databaseClient;
+    std::shared_ptr<odb::sqlite::database> databaseClient;
     std::unique_ptr<ChannelTestFactory> channelTestFactory;
     std::unique_ptr<UserTestUtils> userTestUtils;
 };

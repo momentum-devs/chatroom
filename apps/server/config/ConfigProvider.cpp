@@ -4,24 +4,9 @@
 
 namespace server::config
 {
-std::string ConfigProvider::getDatabaseHost() const
+std::string ConfigProvider::getDatabasePath() const
 {
-    return common::envParser::EnvironmentParser::parseString("DATABASE_HOST");
-}
-
-std::string ConfigProvider::getDatabaseName() const
-{
-    return common::envParser::EnvironmentParser::parseString("DATABASE_NAME");
-}
-
-std::string ConfigProvider::getDatabaseUsername() const
-{
-    return common::envParser::EnvironmentParser::parseString("DATABASE_USERNAME");
-}
-
-std::string ConfigProvider::getDatabasePassword() const
-{
-    return common::envParser::EnvironmentParser::parseString("DATABASE_PASSWORD");
+    return common::envParser::EnvironmentParser::parseString("DATABASE_PATH");
 }
 
 int ConfigProvider::getServerPort() const

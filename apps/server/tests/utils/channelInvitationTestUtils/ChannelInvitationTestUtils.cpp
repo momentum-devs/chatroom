@@ -9,7 +9,7 @@
 namespace server::tests
 {
 
-ChannelInvitationTestUtils::ChannelInvitationTestUtils(std::shared_ptr<odb::pgsql::database> databaseClientInit)
+ChannelInvitationTestUtils::ChannelInvitationTestUtils(std::shared_ptr<odb::sqlite::database> databaseClientInit)
     : databaseClient{std::move(databaseClientInit)},
       channelInvitationTestFactory{std::make_unique<ChannelInvitationTestFactory>()},
       channelTestFactory{std::make_unique<ChannelTestFactory>()},
@@ -67,8 +67,9 @@ std::shared_ptr<infrastructure::ChannelInvitation> ChannelInvitationTestUtils::f
 
     odb::transaction transaction(databaseClient->begin());
 
-    std::shared_ptr<infrastructure::ChannelInvitation> foundChannelInvitation(databaseClient->query_one<infrastructure::ChannelInvitation>(
-        query::sender->id == senderId && query::recipient->id == recipientId && query::channel->id == channelId));
+    std::shared_ptr<infrastructure::ChannelInvitation> foundChannelInvitation(
+        databaseClient->query_one<infrastructure::ChannelInvitation>(
+            query::sender->id == senderId && query::recipient->id == recipientId && query::channel->id == channelId));
 
     transaction.commit();
 

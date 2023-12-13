@@ -7,6 +7,7 @@
 #include "loguru.hpp"
 #include "server/config/ConfigProvider.h"
 #include "server/core/database/DatabaseConnectionFactory.h"
+#include "server/core/database/DatabaseMigrationsRunner.h"
 #include "server/core/session/ConnectionAcceptorImpl.h"
 #include "server/core/session/SessionFactoryImpl.h"
 #include "server/core/session/SessionManager.h"
@@ -16,7 +17,9 @@ int main(int argc, char* argv[])
 {
     const auto projectPath = common::filesystem::getProjectPath("chatroom");
 
-    dotenv::init(std::format("{}/apps/server/.env", projectPath).c_str());
+    const auto serverRootPath = std::format("{}/apps/server", projectPath);
+
+    dotenv::init(std::format("{}/.env", serverRootPath).c_str());
 
     loguru::g_preamble_date = false;
 
@@ -24,10 +27,7 @@ int main(int argc, char* argv[])
 
     server::config::ConfigProvider configProvider;
 
-    const auto databaseHost = configProvider.getDatabaseHost();
-    const auto databaseName = configProvider.getDatabaseName();
-    const auto databaseUsername = configProvider.getDatabaseUsername();
-    const auto databasePassword = configProvider.getDatabasePassword();
+    const auto databaseRelativePath = configProvider.getDatabasePath();
     const auto serverPort = configProvider.getServerPort();
     const auto jwtSecret = configProvider.getJwtSecret();
     const auto jwtExpireIn = configProvider.getJwtExpireIn();
@@ -37,8 +37,13 @@ int main(int argc, char* argv[])
 
     const auto numberOfSupportedThreads = std::thread::hardware_concurrency();
 
-    auto db = server::core::DatabaseConnectionFactory::create(
-        {databaseHost, databaseName, databaseUsername, databasePassword});
+    const auto databaseFullPath = std::format("{}/{}", serverRootPath, databaseRelativePath);
+
+    const auto databaseMigrationsFilePath = std::format("{}/scripts/migrations.sql", serverRootPath);
+
+    server::core::DatabaseMigrationsRunner::runMigrations(databaseFullPath, databaseMigrationsFilePath);
+
+    auto db = server::core::DatabaseConnectionFactory::create({databaseFullPath});
 
     boost::asio::io_context context;
 

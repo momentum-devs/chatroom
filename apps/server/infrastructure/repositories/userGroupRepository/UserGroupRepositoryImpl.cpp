@@ -9,7 +9,7 @@
 
 namespace server::infrastructure
 {
-UserGroupRepositoryImpl::UserGroupRepositoryImpl(std::shared_ptr<odb::pgsql::database> dbInit,
+UserGroupRepositoryImpl::UserGroupRepositoryImpl(std::shared_ptr<odb::sqlite::database> dbInit,
                                                  std::shared_ptr<UserGroupMapper> userGroupMapperInit,
                                                  std::shared_ptr<UserMapper> userMapperInit,
                                                  std::shared_ptr<GroupMapper> groupMapperInit)

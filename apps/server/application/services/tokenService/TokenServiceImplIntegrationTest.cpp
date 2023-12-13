@@ -2,10 +2,12 @@
 
 #include "faker-cxx/String.h"
 #include "server/application/errors/InvalidTokenError.h"
+#include "server/tests/factories/databaseClientTestFactory/DatabaseClientTestFactory.h"
 #include "TokenServiceImpl.h"
 
 using namespace ::testing;
 using namespace server;
+using namespace server::tests;
 using namespace server::application;
 
 namespace

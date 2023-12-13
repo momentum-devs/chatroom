@@ -3,14 +3,13 @@
 #include <format>
 #include <utility>
 
-#include "server/infrastructure/database/tables/ChannelTable.h"
 #include "server/infrastructure/database/tables/UserChannelTable.h"
 #include "UserChannel.odb.h"
 
 namespace server::tests
 {
 
-UserChannelTestUtils::UserChannelTestUtils(std::shared_ptr<odb::pgsql::database> databaseClientInit)
+UserChannelTestUtils::UserChannelTestUtils(std::shared_ptr<odb::sqlite::database> databaseClientInit)
     : databaseClient{std::move(databaseClientInit)},
       userChannelTestFactory{std::make_unique<UserChannelTestFactory>()},
       channelTestFactory{std::make_unique<ChannelTestFactory>()},
@@ -56,14 +55,16 @@ std::shared_ptr<infrastructure::UserChannel> UserChannelTestUtils::findById(cons
     return foundUserChannel;
 }
 
-std::shared_ptr<infrastructure::UserChannel> UserChannelTestUtils::find(const std::string& userId, const std::string& channelId)
+std::shared_ptr<infrastructure::UserChannel> UserChannelTestUtils::find(const std::string& userId,
+                                                                        const std::string& channelId)
 {
     typedef odb::query<infrastructure::UserChannel> query;
 
     odb::transaction transaction(databaseClient->begin());
 
     std::shared_ptr<infrastructure::UserChannel> foundUserChannel(
-        databaseClient->query_one<infrastructure::UserChannel>(query::user->id == userId && query::channel->id == channelId));
+        databaseClient->query_one<infrastructure::UserChannel>(query::user->id == userId &&
+                                                               query::channel->id == channelId));
 
     transaction.commit();
 

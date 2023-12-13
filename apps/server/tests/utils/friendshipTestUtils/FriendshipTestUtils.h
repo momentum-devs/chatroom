@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <odb/pgsql/database.hxx>
+#include <odb/sqlite/database.hxx>
 
 #include "Friendship.h"
 #include "server/tests/factories/friendshipTestFactory/FriendshipTestFactory.h"
@@ -13,7 +13,7 @@ namespace server::tests
 class FriendshipTestUtils
 {
 public:
-    explicit FriendshipTestUtils(std::shared_ptr<odb::pgsql::database> databaseClient);
+    explicit FriendshipTestUtils(std::shared_ptr<odb::sqlite::database> databaseClient);
 
     void persist(const std::shared_ptr<infrastructure::Friendship>& friendship);
     std::shared_ptr<infrastructure::Friendship>
@@ -24,7 +24,7 @@ public:
     void truncateTable();
 
 private:
-    std::shared_ptr<odb::pgsql::database> databaseClient;
+    std::shared_ptr<odb::sqlite::database> databaseClient;
     std::unique_ptr<FriendshipTestFactory> friendshipTestFactory;
     std::unique_ptr<UserTestFactory> userTestFactory;
 };

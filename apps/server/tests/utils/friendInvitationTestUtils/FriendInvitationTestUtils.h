@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <odb/pgsql/database.hxx>
+#include <odb/sqlite/database.hxx>
 
 #include "FriendInvitation.h"
 #include "server/tests/factories/friendInvitationTestFactory/FriendInvitationTestFactory.h"
@@ -13,7 +13,7 @@ namespace server::tests
 class FriendInvitationTestUtils
 {
 public:
-    explicit FriendInvitationTestUtils(std::shared_ptr<odb::pgsql::database> databaseClient);
+    explicit FriendInvitationTestUtils(std::shared_ptr<odb::sqlite::database> databaseClient);
 
     void persist(const std::shared_ptr<infrastructure::FriendInvitation>& friendInvitation);
     std::shared_ptr<infrastructure::FriendInvitation>
@@ -24,7 +24,7 @@ public:
     void truncateTable();
 
 private:
-    std::shared_ptr<odb::pgsql::database> databaseClient;
+    std::shared_ptr<odb::sqlite::database> databaseClient;
     std::unique_ptr<FriendInvitationTestFactory> friendInvitationTestFactory;
     std::unique_ptr<UserTestFactory> userTestFactory;
 };

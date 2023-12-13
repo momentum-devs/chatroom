@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <odb/pgsql/database.hxx>
+#include <odb/sqlite/database.hxx>
 #include <vector>
 
 #include "server/domain/repositories/userChannelRepository/UserChannelRepository.h"
@@ -14,7 +14,7 @@ namespace server::infrastructure
 class UserChannelRepositoryImpl : public domain::UserChannelRepository
 {
 public:
-    UserChannelRepositoryImpl(std::shared_ptr<odb::pgsql::database>, std::shared_ptr<UserChannelMapper>,
+    UserChannelRepositoryImpl(std::shared_ptr<odb::sqlite::database>, std::shared_ptr<UserChannelMapper>,
                               std::shared_ptr<UserMapper>, std::shared_ptr<ChannelMapper>);
 
     domain::UserChannel createUserChannel(const domain::CreateUserChannelPayload&) const;
@@ -27,7 +27,7 @@ public:
     void deleteUserChannel(const domain::DeleteUserChannelPayload&) const;
 
 private:
-    std::shared_ptr<odb::pgsql::database> db;
+    std::shared_ptr<odb::sqlite::database> db;
     std::shared_ptr<UserChannelMapper> userChannelMapper;
     std::shared_ptr<UserMapper> userMapper;
     std::shared_ptr<ChannelMapper> channelMapper;
