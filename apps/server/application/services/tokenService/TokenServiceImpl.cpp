@@ -1,8 +1,7 @@
 #include "TokenServiceImpl.h"
 
 #include <chrono>
-#include <redis-cpp/execute.h>
-#include <redis-cpp/stream.h>
+#include <iostream>
 
 #include "jwt/jwt.hpp"
 #include "server/application/errors/InvalidTokenError.h"
@@ -28,15 +27,8 @@ std::string TokenServiceImpl::createToken(const std::string& userId) const
 
 VerifyTokenResult TokenServiceImpl::verifyToken(const std::string& token) const
 {
-    auto stream = rediscpp::make_stream("localhost", "6379");
-
-    const auto response = rediscpp::execute(*stream, "get", token);
-
     try
     {
-        // Test if value exists in invalid tokens, if yes throws
-        response.as_string();
-
         throw errors::InvalidTokenError{"Invalid token."};
     }
     catch (const std::logic_error&)
@@ -53,9 +45,7 @@ VerifyTokenResult TokenServiceImpl::verifyToken(const std::string& token) const
 
 void TokenServiceImpl::invalidateToken(const std::string& token) const
 {
-    auto stream = rediscpp::make_stream("localhost", "6379");
-
-    rediscpp::execute(*stream, "set", token, "invalid");
+    std::cout << token;
 }
 
 }

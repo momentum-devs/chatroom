@@ -120,6 +120,10 @@ set(SOURCES
         application/commandHandlers/message/createMessageReactionCommandHandler/CreateMessageReactionCommandHandlerImpl.cpp
         application/commandHandlers/message/deleteMessageReactionCommandHandler/DeleteMessageReactionCommandHandlerImpl.cpp
         application/queryHandlers/message/findMessageReactionsQueryHandler/FindMessageReactionsQueryHandlerImpl.cpp
+
+        domain/entities/blacklistToken/BlacklistToken.cpp
+        infrastructure/repositories/blacklistTokenRepository/blacklistTokenMapper/BlacklistTokenMapperImpl.cpp
+        infrastructure/repositories/blacklistTokenRepository/BlacklistTokenRepositoryImpl.cpp
 )
 
 set(TEST_COMMON_SOURCES
@@ -133,6 +137,7 @@ set(TEST_COMMON_SOURCES
         tests/factories/userGroupTestFactory/UserGroupTestFactory.cpp
         tests/factories/messageTestFactory/MessageTestFactory.cpp
         tests/factories/reactionTestFactory/ReactionTestFactory.cpp
+        tests/factories/blacklistTokenTestFactory/BlacklistTokenTestFactory.cpp
 )
 
 set(UT_SOURCES
@@ -153,6 +158,7 @@ set(UT_SOURCES
         infrastructure/repositories/userGroupRepository/userGroupMapper/UserGroupMapperImplTest.cpp
         infrastructure/repositories/messageRepository/messageMapper/MessageMapperImplTest.cpp
         infrastructure/repositories/reactionRepository/reactionMapper/ReactionMapperImplTest.cpp
+        infrastructure/repositories/blacklistTokenRepository/blacklistTokenMapper/BlacklistTokenMapperImplTest.cpp
 
         api/messageHandlers/channel/createChannelMessageHandler/CreateChannelMessageHandlerTest.cpp
         api/messageHandlers/channel/getUserChannelsMessageHandler/GetUserChannelsMessageHandlerTest.cpp
@@ -193,6 +199,7 @@ set(IT_SOURCES
         tests/utils/userGroupTestUtils/UserGroupTestUtils.cpp
         tests/utils/messageTestUtils/MessageTestUtils.cpp
         tests/utils/reactionTestUtils/ReactionTestUtils.cpp
+        tests/utils/blacklistTokenTestUtils/BlacklistTokenTestUtils.cpp
 
         infrastructure/repositories/userRepository/UserRepositoryImplIntegrationTest.cpp
         application/services/tokenService/TokenServiceImplIntegrationTest.cpp
@@ -252,6 +259,8 @@ set(IT_SOURCES
         application/commandHandlers/message/createMessageReactionCommandHandler/CreateMessageReactionCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/message/deleteMessageReactionCommandHandler/DeleteMessageReactionCommandHandlerImplIntegrationTest.cpp
         application/queryHandlers/message/findMessageReactionsQueryHandler/FindMessageReactionsQueryHandlerImplIntegrationTest.cpp
+
+        infrastructure/repositories/blacklistTokenRepository/BlacklistTokenRepositoryImplIntegrationTest.cpp
 )
 
 set(ODB_HEADERS
@@ -265,6 +274,7 @@ set(ODB_HEADERS
         infrastructure/database/entities/UserGroup.h
         infrastructure/database/entities/Message.h
         infrastructure/database/entities/Reaction.h
+        infrastructure/database/entities/BlacklistToken.h
 )
 
 odb_compile(
@@ -290,6 +300,7 @@ set(ODB_SOURCES
         infrastructure/database/entities/UserGroup.cpp
         infrastructure/database/entities/Message.cpp
         infrastructure/database/entities/Reaction.cpp
+        infrastructure/database/entities/BlacklistToken.cpp
         ${ODB_GENERATED_SOURCES}
 )
 
@@ -316,7 +327,6 @@ target_link_libraries(${EXECUTABLE_NAME} PRIVATE
         collection
         httpClient
         random
-        redis-cpp
         ${ODB_LIBRARIES}
         envParser
         sqlite3
@@ -343,7 +353,6 @@ target_link_libraries(${EXECUTABLE_NAME}UT PRIVATE
         collection
         httpClient
         random
-        redis-cpp
         ${ODB_LIBRARIES}
         faker-cxx
         envParser
@@ -374,7 +383,6 @@ target_link_libraries(${EXECUTABLE_NAME}IT PRIVATE
         collection
         httpClient
         random
-        redis-cpp
         ${ODB_LIBRARIES}
         faker-cxx
         envParser
