@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <odb/pgsql/database.hxx>
+#include <odb/sqlite/database.hxx>
 #include <vector>
 
 #include "server/domain/repositories/messageRepository/MessageRepository.h"
@@ -15,7 +15,7 @@ namespace server::infrastructure
 class MessageRepositoryImpl : public domain::MessageRepository
 {
 public:
-    MessageRepositoryImpl(std::shared_ptr<odb::pgsql::database>, std::shared_ptr<MessageMapper>,
+    MessageRepositoryImpl(std::shared_ptr<odb::sqlite::database>, std::shared_ptr<MessageMapper>,
                           std::shared_ptr<UserMapper>, std::shared_ptr<ChannelMapper>, std::shared_ptr<GroupMapper>);
 
     std::shared_ptr<domain::Message> createMessage(const domain::CreateMessagePayload&) const;
@@ -30,7 +30,7 @@ public:
     unsigned countMessagesByGroupId(const domain::CountMessagesByGroupIdPayload&) const;
 
 private:
-    std::shared_ptr<odb::pgsql::database> db;
+    std::shared_ptr<odb::sqlite::database> db;
     std::shared_ptr<MessageMapper> messageMapper;
     std::shared_ptr<UserMapper> userMapper;
     std::shared_ptr<ChannelMapper> channelMapper;

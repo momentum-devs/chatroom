@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <odb/pgsql/database.hxx>
+#include <odb/sqlite/database.hxx>
 #include <vector>
 
 #include "../../../domain/repositories/userRepository/UserRepository.h"
@@ -12,7 +12,7 @@ namespace server::infrastructure
 class UserRepositoryImpl : public domain::UserRepository
 {
 public:
-    UserRepositoryImpl(std::shared_ptr<odb::pgsql::database>, std::shared_ptr<UserMapper>);
+    UserRepositoryImpl(std::shared_ptr<odb::sqlite::database>, std::shared_ptr<UserMapper>);
 
     std::shared_ptr<domain::User> createUser(const domain::CreateUserPayload&) const override;
     std::optional<std::shared_ptr<domain::User>> findUserById(const domain::FindUserByIdPayload&) const override;
@@ -21,7 +21,7 @@ public:
     void deleteUser(const domain::DeleteUserPayload&) const override;
 
 private:
-    std::shared_ptr<odb::pgsql::database> db;
+    std::shared_ptr<odb::sqlite::database> db;
     std::shared_ptr<UserMapper> userMapper;
 };
 }

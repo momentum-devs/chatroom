@@ -13,6 +13,7 @@ set(SOURCES
         core/session/MessageRouterImpl.cpp
         core/session/MessageRouterFactory.cpp
         core/database/DatabaseConnectionFactory.cpp
+        core/database/DatabaseMigrationsRunner.cpp
 
         domain/entities/user/User.cpp
         infrastructure/repositories/userRepository/UserRepositoryImpl.cpp
@@ -135,6 +136,7 @@ set(TEST_COMMON_SOURCES
 )
 
 set(UT_SOURCES
+        TestUnitMain.cpp
         core/session/SessionImplTest.cpp
         core/session/SessionManagerTest.cpp
         core/session/MessageRouterImplTest.cpp
@@ -179,6 +181,7 @@ set(UT_SOURCES
 )
 
 set(IT_SOURCES
+        TestIntegrationMain.cpp
         tests/factories/databaseClientTestFactory/DatabaseClientTestFactory.cpp
         tests/utils/userTestUtils/UserTestUtils.cpp
         tests/utils/channelTestUtils/ChannelTestUtils.cpp
@@ -266,7 +269,7 @@ set(ODB_HEADERS
 
 odb_compile(
         HEADERS ${ODB_HEADERS}
-        DB pgsql
+        DB sqlite
         STANDARD c++14
         GENERATE_QUERY GENERATE_SESSION GENERATE_SCHEMA
         HEADER_SUFFIX ".h"
@@ -292,7 +295,7 @@ set(ODB_SOURCES
 
 set(ODB_LIBRARIES
         odb
-        odb-pgsql
+        odb-sqlite
 )
 
 include_directories(infrastructure/database/entities)
@@ -316,6 +319,7 @@ target_link_libraries(${EXECUTABLE_NAME} PRIVATE
         redis-cpp
         ${ODB_LIBRARIES}
         envParser
+        sqlite3
 )
 
 target_include_directories(${EXECUTABLE_NAME} PRIVATE
@@ -330,7 +334,6 @@ add_executable(${EXECUTABLE_NAME}UT
 )
 
 target_link_libraries(${EXECUTABLE_NAME}UT PRIVATE
-        GTest::gmock_main
         Qt6::Core
         loguru::loguru
         nlohmann_json::nlohmann_json
@@ -344,6 +347,8 @@ target_link_libraries(${EXECUTABLE_NAME}UT PRIVATE
         ${ODB_LIBRARIES}
         faker-cxx
         envParser
+        gtest
+        gmock
 )
 
 target_include_directories(${EXECUTABLE_NAME}UT PUBLIC ${GMOCK_INCLUDE_DIR})
@@ -360,7 +365,6 @@ add_executable(${EXECUTABLE_NAME}IT
 )
 
 target_link_libraries(${EXECUTABLE_NAME}IT PRIVATE
-        GTest::gtest_main
         Qt6::Core
         loguru::loguru
         nlohmann_json::nlohmann_json
@@ -374,9 +378,12 @@ target_link_libraries(${EXECUTABLE_NAME}IT PRIVATE
         ${ODB_LIBRARIES}
         faker-cxx
         envParser
+        sqlite3
+        gtest
+        gmock
 )
 
-target_include_directories(${EXECUTABLE_NAME}IT PUBLIC ${GMOCK_INCLUDE_DIR})
+target_include_directories(${EXECUTABLE_NAME}IT PUBLIC ${GMOCK_INCLUDE_DIR} ${DOTENV_INCLUDE_DIR})
 
 add_test(NAME ${EXECUTABLE_NAME}IT COMMAND ${EXECUTABLE_NAME}IT WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 

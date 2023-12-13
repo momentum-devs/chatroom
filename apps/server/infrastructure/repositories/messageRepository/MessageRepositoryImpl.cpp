@@ -9,7 +9,7 @@
 
 namespace server::infrastructure
 {
-MessageRepositoryImpl::MessageRepositoryImpl(std::shared_ptr<odb::pgsql::database> dbInit,
+MessageRepositoryImpl::MessageRepositoryImpl(std::shared_ptr<odb::sqlite::database> dbInit,
                                              std::shared_ptr<MessageMapper> messageMapperInit,
                                              std::shared_ptr<UserMapper> userMapperInit,
                                              std::shared_ptr<ChannelMapper> channelMapperInit,
@@ -89,8 +89,8 @@ MessageRepositoryImpl::findMessagesByChannelId(const domain::FindMessagesByChann
         typedef odb::query<Message> Query;
 
         auto result = db->query<Message>(
-            Query(std::format(R"(WHERE "channel"='{}' ORDER BY "created_at" DESC OFFSET {} LIMIT {})",
-                              payload.channelId, payload.offset, payload.limit)));
+            Query(std::format(R"(WHERE "channel"='{}' ORDER BY "created_at" DESC LIMIT {} OFFSET {})",
+                              payload.channelId, payload.limit, payload.offset)));
 
         std::vector<std::shared_ptr<domain::Message>> domainMessages;
 
@@ -119,8 +119,8 @@ MessageRepositoryImpl::findMessagesByGroupId(const domain::FindMessagesByGroupId
         typedef odb::query<Message> Query;
 
         auto result =
-            db->query<Message>(Query(std::format(R"(WHERE "group"='{}' ORDER BY "created_at" DESC OFFSET {} LIMIT {})",
-                                                 payload.groupId, payload.offset, payload.limit)));
+            db->query<Message>(Query(std::format(R"(WHERE "group"='{}' ORDER BY "created_at" DESC LIMIT {} OFFSET {})",
+                                                 payload.groupId, payload.limit, payload.offset)));
 
         std::vector<std::shared_ptr<domain::Message>> domainMessages;
 
@@ -195,7 +195,20 @@ unsigned MessageRepositoryImpl::countMessagesByChannelId(const domain::CountMess
 
         typedef odb::query<Message> Query;
 
-        return db->query<Message>(Query::channel->id == payload.channelId).size();
+        auto result = db->query<Message>(Query::channel->id == payload.channelId);
+
+        auto iter = result.begin();
+        int count = 0;
+
+        while (iter != result.end())
+        {
+            iter++;
+            count++;
+        };
+
+        transaction.commit();
+
+        return count;
     }
     catch (const std::exception& error)
     {
@@ -211,7 +224,20 @@ unsigned MessageRepositoryImpl::countMessagesByGroupId(const domain::CountMessag
 
         typedef odb::query<Message> Query;
 
-        return db->query<Message>(Query::group->id == payload.groupId).size();
+        auto result = db->query<Message>(Query::group->id == payload.groupId);
+
+        auto iter = result.begin();
+        int count = 0;
+
+        while (iter != result.end())
+        {
+            iter++;
+            count++;
+        };
+
+        transaction.commit();
+
+        return count;
     }
     catch (const std::exception& error)
     {

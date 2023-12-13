@@ -6,9 +6,6 @@ namespace server::core
 {
 struct DatabaseConfig
 {
-    const std::string host;
-    const std::string databaseName;
-    const std::string username;
-    const std::string password;
+    const std::string path;
 };
 }

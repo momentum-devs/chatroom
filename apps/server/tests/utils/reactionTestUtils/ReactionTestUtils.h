@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <odb/pgsql/database.hxx>
+#include <odb/sqlite/database.hxx>
 
 #include "Channel.h"
 #include "Reaction.h"
@@ -16,7 +16,7 @@ namespace server::tests
 class ReactionTestUtils
 {
 public:
-    explicit ReactionTestUtils(std::shared_ptr<odb::pgsql::database> databaseClient);
+    explicit ReactionTestUtils(std::shared_ptr<odb::sqlite::database> databaseClient);
 
     void persist(const std::shared_ptr<infrastructure::Reaction>& reaction);
     std::shared_ptr<infrastructure::Reaction> createAndPersist(const std::shared_ptr<infrastructure::User>& user,
@@ -26,7 +26,7 @@ public:
     void truncateTable();
 
 private:
-    std::shared_ptr<odb::pgsql::database> databaseClient;
+    std::shared_ptr<odb::sqlite::database> databaseClient;
     std::unique_ptr<ReactionTestFactory> reactionTestFactory;
     std::unique_ptr<UserTestFactory> userTestFactory;
     std::unique_ptr<MessageTestFactory> messageTestFactory;

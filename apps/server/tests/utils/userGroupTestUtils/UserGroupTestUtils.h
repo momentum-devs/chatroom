@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <odb/pgsql/database.hxx>
+#include <odb/sqlite/database.hxx>
 
 #include "Group.h"
 #include "server/tests/factories/groupTestFactory/GroupTestFactory.h"
@@ -15,7 +15,7 @@ namespace server::tests
 class UserGroupTestUtils
 {
 public:
-    explicit UserGroupTestUtils(std::shared_ptr<odb::pgsql::database> databaseClient);
+    explicit UserGroupTestUtils(std::shared_ptr<odb::sqlite::database> databaseClient);
 
     void persist(const std::shared_ptr<infrastructure::UserGroup>& userGroup);
     std::shared_ptr<infrastructure::UserGroup> createAndPersist(const std::shared_ptr<infrastructure::User>& user,
@@ -25,7 +25,7 @@ public:
     void truncateTable();
 
 private:
-    std::shared_ptr<odb::pgsql::database> databaseClient;
+    std::shared_ptr<odb::sqlite::database> databaseClient;
     std::unique_ptr<UserGroupTestFactory> userGroupTestFactory;
     std::unique_ptr<GroupTestFactory> groupTestFactory;
     std::unique_ptr<UserTestFactory> userTestFactory;

@@ -8,7 +8,7 @@
 
 namespace server::infrastructure
 {
-ReactionRepositoryImpl::ReactionRepositoryImpl(std::shared_ptr<odb::pgsql::database> dbInit,
+ReactionRepositoryImpl::ReactionRepositoryImpl(std::shared_ptr<odb::sqlite::database> dbInit,
                                                std::shared_ptr<ReactionMapper> reactionMapperInit,
                                                std::shared_ptr<UserMapper> userMapperInit,
                                                std::shared_ptr<MessageMapper> messageMapperInit)

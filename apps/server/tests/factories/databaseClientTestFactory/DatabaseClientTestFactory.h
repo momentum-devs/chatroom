@@ -1,13 +1,13 @@
 #pragma once
 
 #include <memory>
-#include <odb/pgsql/database.hxx>
+#include <odb/sqlite/database.hxx>
 
 namespace server::tests
 {
 class DatabaseClientTestFactory
 {
 public:
-    static std::shared_ptr<odb::pgsql::database> create();
+    static std::shared_ptr<odb::sqlite::database> create();
 };
 }

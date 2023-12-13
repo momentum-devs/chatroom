@@ -9,7 +9,7 @@
 namespace server::tests
 {
 
-FriendshipTestUtils::FriendshipTestUtils(std::shared_ptr<odb::pgsql::database> databaseClientInit)
+FriendshipTestUtils::FriendshipTestUtils(std::shared_ptr<odb::sqlite::database> databaseClientInit)
     : databaseClient{std::move(databaseClientInit)},
       friendshipTestFactory{std::make_unique<FriendshipTestFactory>()},
       userTestFactory{std::make_unique<UserTestFactory>()}

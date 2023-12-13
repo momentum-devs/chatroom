@@ -26,7 +26,7 @@ public:
         groupTestUtils.truncateTable();
     }
 
-    std::shared_ptr<odb::pgsql::database> db = DatabaseClientTestFactory::create();
+    std::shared_ptr<odb::sqlite::database> db = DatabaseClientTestFactory::create();
 
     GroupTestUtils groupTestUtils{db};
 

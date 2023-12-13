@@ -10,7 +10,7 @@
 namespace server::tests
 {
 
-ReactionTestUtils::ReactionTestUtils(std::shared_ptr<odb::pgsql::database> databaseClientInit)
+ReactionTestUtils::ReactionTestUtils(std::shared_ptr<odb::sqlite::database> databaseClientInit)
     : databaseClient{std::move(databaseClientInit)},
       reactionTestFactory{std::make_unique<ReactionTestFactory>()},
       userTestFactory{std::make_unique<UserTestFactory>()},

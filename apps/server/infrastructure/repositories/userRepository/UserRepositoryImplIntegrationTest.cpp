@@ -1,4 +1,4 @@
-#include <odb/pgsql/database.hxx>
+#include <odb/sqlite/database.hxx>
 
 #include "gtest/gtest.h"
 
@@ -29,7 +29,7 @@ public:
         userTestUtils.truncateTable();
     }
 
-    std::shared_ptr<odb::pgsql::database> db = DatabaseClientTestFactory::create();
+    std::shared_ptr<odb::sqlite::database> db = DatabaseClientTestFactory::create();
 
     UserTestUtils userTestUtils{db};
 

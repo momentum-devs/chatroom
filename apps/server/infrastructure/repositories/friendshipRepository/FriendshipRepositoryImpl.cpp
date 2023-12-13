@@ -7,7 +7,7 @@
 
 namespace server::infrastructure
 {
-FriendshipRepositoryImpl::FriendshipRepositoryImpl(std::shared_ptr<odb::pgsql::database> dbInit,
+FriendshipRepositoryImpl::FriendshipRepositoryImpl(std::shared_ptr<odb::sqlite::database> dbInit,
                                                    std::shared_ptr<FriendshipMapper> friendshipMapperInit,
                                                    std::shared_ptr<UserMapper> userMapperInit)
     : db{std::move(dbInit)}, friendshipMapper{std::move(friendshipMapperInit)}, userMapper{std::move(userMapperInit)}

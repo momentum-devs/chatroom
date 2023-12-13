@@ -76,7 +76,7 @@
 
 namespace server::core
 {
-MessageRouterFactory::MessageRouterFactory(std::shared_ptr<odb::pgsql::database> dbInit, const std::string& jwtSecret,
+MessageRouterFactory::MessageRouterFactory(std::shared_ptr<odb::sqlite::database> dbInit, const std::string& jwtSecret,
                                            const int jwtExpireIn, std::string sendGridApiKeyInit,
                                            std::string sendGridEmailInit)
     : db{std::move(dbInit)},

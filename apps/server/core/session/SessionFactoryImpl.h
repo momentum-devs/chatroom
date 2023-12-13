@@ -1,6 +1,6 @@
 #pragma once
 
-#include <odb/pgsql/database.hxx>
+#include <odb/sqlite/database.hxx>
 
 #include "common/messages/MessageSerializer.h"
 #include "MessageRouterFactory.h"
@@ -14,7 +14,7 @@ namespace server::core
 class SessionFactoryImpl : public SessionFactory
 {
 public:
-    SessionFactoryImpl(boost::asio::io_context& context, const std::shared_ptr<odb::pgsql::database>& db,
+    SessionFactoryImpl(boost::asio::io_context& context, const std::shared_ptr<odb::sqlite::database>& db,
                        const std::string& jwtSecret, int jwtExpireIn, const std::string& sendGridApiKey,
                        const std::string& sendGridEmail);
 
@@ -22,7 +22,7 @@ public:
 
 private:
     boost::asio::io_context& context;
-    std::shared_ptr<odb::pgsql::database> db;
+    std::shared_ptr<odb::sqlite::database> db;
     MessageRouterFactory messageRouterFactory;
     std::shared_ptr<server::application::TokenService> tokenService;
 };
