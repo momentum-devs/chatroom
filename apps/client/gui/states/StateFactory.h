@@ -2,6 +2,7 @@
 
 #include "client/api/Session.h"
 #include "client/gui/qml/LoaderController.h"
+#include "client/storage/ConversationStorage.h"
 #include "State.h"
 #include "StateMachine.h"
 
@@ -28,5 +29,7 @@ private:
     std::shared_ptr<client::api::Session> session;
     std::shared_ptr<StateMachine> stateMachine;
     std::shared_ptr<LoaderController> loaderController;
+    std::shared_ptr<storage::ConversationStorage> privateMessagesConversationStorage;
+    std::shared_ptr<storage::ConversationStorage> channelConversationStorage;
 };
 }

@@ -19,8 +19,7 @@ class MessagesController : public QObject
     Q_PROPERTY(QList<QObject*> messages READ getMessages NOTIFY messagesUpdated)
 public:
     MessagesController(std::shared_ptr<api::Session> sessionInit, const StateFactory& stateFactoryInit,
-                       std::shared_ptr<StateMachine> stateMachineInit,
-                       std::shared_ptr<storage::MessageStorage> messageStorage);
+                       std::shared_ptr<StateMachine> stateMachineInit);
 
     void activate();
     void deactivate();
@@ -37,6 +36,7 @@ signals:
 
 public slots:
     void handleMessageUpdate(bool shouldScrollDown = false);
+    void setMessageStorage(const std::shared_ptr<storage::MessageStorage>& messageStorage);
 
 private:
     std::shared_ptr<api::Session> session;

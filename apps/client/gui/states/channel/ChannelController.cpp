@@ -6,13 +6,13 @@ namespace client::gui
 {
 ChannelController::ChannelController(std::shared_ptr<api::Session> sessionInit, const StateFactory& stateFactoryInit,
                                      std::shared_ptr<StateMachine> stateMachineInit,
-                                     std::shared_ptr<storage::MessageStorage> messageStorageInit,
+                                     std::shared_ptr<storage::ConversationStorage> conversationStorageInit,
                                      const std::string& initialChannelId, const std::string& initialChannelName,
                                      bool initialIsChannelOwner)
     : session{std::move(sessionInit)},
       stateFactory{std::move(stateFactoryInit)},
       stateMachine{std::move(stateMachineInit)},
-      messageStorage{std::move(messageStorageInit)},
+      conversationStorage{std::move(conversationStorageInit)},
       currentChannelId{initialChannelId},
       currentChannelName(initialChannelName),
       isOwnerOfCurrentChannel{initialIsChannelOwner}
@@ -81,6 +81,17 @@ void ChannelController::goToChannel(const QString& channelName, const QString& c
 
     session->sendMessage(common::messages::MessageId::GetChannelMessages,
                          nlohmann::json{{"channelId", currentChannelId}, {"offset", 0}, {"limit", 50}});
+
+    if (conversationStorage->hasConversation(currentChannelId))
+    {
+        messageStorage = conversationStorage->getConversation(currentChannelId);
+    }
+    else
+    {
+        messageStorage = conversationStorage->createConversation(currentChannelId);
+    }
+
+    emit setMessageStorage(messageStorage);
 }
 
 void ChannelController::goToPrivateMessages()
@@ -238,10 +249,15 @@ void ChannelController::handleGetChannelMessagesResponse(const common::messages:
         LOG_S(ERROR) << "Error while getting channel messages: " << responseJson.at("error").get<std::string>();
     }
 
-    QList<types::Message> messages;
-
     if (responseJson.contains("data") and responseJson.at("data").contains("messages"))
     {
+        if (not responseJson.at("data").at("messages").empty() and
+            messageStorage->hasMessage(responseJson.at("data").at("messages").back().at("id").get<std::string>()) and
+            messageStorage->hasMessage(responseJson.at("data").at("messages").front().at("id").get<std::string>()))
+        {
+            return;
+        }
+
         for (const auto& message : responseJson.at("data").at("messages"))
         {
             if (message.contains("id") and message.contains("text") and message.contains("senderName") and
@@ -264,6 +280,13 @@ void ChannelController::handleGetChannelMessagesResponse(const common::messages:
             {
                 LOG_S(ERROR) << "Wrong message format";
             }
+        }
+
+        if (responseJson.at("data").at("messages").empty())
+        {
+            emit messagesUpdated(true);
+
+            return;
         }
 
         auto lastMessageId = responseJson.at("data").at("messages").front().at("id").get<std::string>();

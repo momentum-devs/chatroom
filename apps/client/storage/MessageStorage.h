@@ -1,8 +1,8 @@
 #pragma once
 
 #include <list>
-#include <map>
 #include <memory>
+#include <unordered_map>
 
 #include "client/types/Message.h"
 
@@ -16,11 +16,12 @@ public:
     const std::list<std::shared_ptr<types::Message>>& getMessages() const;
     std::shared_ptr<types::Message> getMessage(const std::string& messageId) const;
     std::shared_ptr<types::Message> getLatestMessage() const;
+    bool hasMessage(const std::string& messageId) const;
 
 private:
     void addMessageBefore(std::shared_ptr<types::Message> message,
                           std::list<std::shared_ptr<types::Message>>::iterator it);
     std::list<std::shared_ptr<types::Message>> messages;
-    std::map<std::string, std::shared_ptr<types::Message>> messagesIdMap;
+    std::unordered_map<std::string, std::shared_ptr<types::Message>> messagesIdMap;
 };
 }

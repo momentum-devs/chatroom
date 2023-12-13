@@ -70,6 +70,8 @@ Rectangle {
     }
 
     Connections {
+        id: connections
+
         target: messagesController
 
         function onScrollDown() {

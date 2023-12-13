@@ -28,6 +28,7 @@ TEST_F(MessageStorageTest, addMessage)
     ASSERT_EQ(messageStorage.getMessages().back(), message);
     ASSERT_EQ(messageStorage.getMessage("messageId"), message);
     ASSERT_EQ(messageStorage.getLatestMessage(), message);
+    ASSERT_TRUE(messageStorage.hasMessage("messageId"));
 }
 
 TEST_F(MessageStorageTest, clearMessages)
@@ -40,6 +41,7 @@ TEST_F(MessageStorageTest, clearMessages)
     messageStorage.clearMessages();
 
     ASSERT_EQ(messageStorage.getMessages().size(), 0);
+    ASSERT_FALSE(messageStorage.hasMessage("messageId"));
 }
 
 TEST_F(MessageStorageTest, getLastMessage)
@@ -53,6 +55,8 @@ TEST_F(MessageStorageTest, getLastMessage)
     messageStorage.addMessage(message2);
 
     ASSERT_EQ(messageStorage.getLatestMessage(), message2);
+    ASSERT_TRUE(messageStorage.hasMessage("messageId"));
+    ASSERT_TRUE(messageStorage.hasMessage("messageId2"));
 }
 
 TEST_F(MessageStorageTest, addExistingMessage)
@@ -64,6 +68,7 @@ TEST_F(MessageStorageTest, addExistingMessage)
     messageStorage.addMessage(message);
 
     ASSERT_EQ(messageStorage.getMessages().size(), 1);
+    ASSERT_TRUE(messageStorage.hasMessage("messageId"));
 }
 
 TEST_F(MessageStorageTest, addMessageWithSendTimeLessThanLatestMessage)
@@ -77,6 +82,9 @@ TEST_F(MessageStorageTest, addMessageWithSendTimeLessThanLatestMessage)
     messageStorage.addMessage(message2);
 
     ASSERT_EQ(messageStorage.getLatestMessage(), message);
+
+    ASSERT_TRUE(messageStorage.hasMessage("messageId"));
+    ASSERT_TRUE(messageStorage.hasMessage("messageId2"));
 }
 
 TEST_F(MessageStorageTest, addMessageWithSendTimeOver5MinutesLessThanLatestMessage)
@@ -92,6 +100,8 @@ TEST_F(MessageStorageTest, addMessageWithSendTimeOver5MinutesLessThanLatestMessa
     ASSERT_EQ(messageStorage.getLatestMessage()->messageId, message->messageId);
     ASSERT_EQ(messageStorage.getLatestMessage()->showNameAndDate, true);
     ASSERT_EQ(messageStorage.getLatestMessage()->showSeparator, false);
+    ASSERT_TRUE(messageStorage.hasMessage("messageId"));
+    ASSERT_TRUE(messageStorage.hasMessage("messageId2"));
 }
 
 TEST_F(MessageStorageTest, addMessageWithSendTimeOverDayLessThanLatestMessage)
@@ -107,6 +117,8 @@ TEST_F(MessageStorageTest, addMessageWithSendTimeOverDayLessThanLatestMessage)
     ASSERT_EQ(messageStorage.getLatestMessage()->messageId, message->messageId);
     ASSERT_EQ(messageStorage.getLatestMessage()->showNameAndDate, true);
     ASSERT_EQ(messageStorage.getLatestMessage()->showSeparator, true);
+    ASSERT_TRUE(messageStorage.hasMessage("messageId"));
+    ASSERT_TRUE(messageStorage.hasMessage("messageId2"));
 }
 
 TEST_F(MessageStorageTest, addMessageWithSendTimeOver5MinutesGreaterThanLatestMessage)
@@ -122,6 +134,8 @@ TEST_F(MessageStorageTest, addMessageWithSendTimeOver5MinutesGreaterThanLatestMe
     ASSERT_EQ(messageStorage.getLatestMessage()->messageId, message2->messageId);
     ASSERT_EQ(messageStorage.getLatestMessage()->showNameAndDate, true);
     ASSERT_EQ(messageStorage.getLatestMessage()->showSeparator, false);
+    ASSERT_TRUE(messageStorage.hasMessage("messageId"));
+    ASSERT_TRUE(messageStorage.hasMessage("messageId2"));
 }
 
 TEST_F(MessageStorageTest, addMessageWithSendTimeOverDayGreaterThanLatestMessage)
@@ -137,4 +151,6 @@ TEST_F(MessageStorageTest, addMessageWithSendTimeOverDayGreaterThanLatestMessage
     ASSERT_EQ(messageStorage.getLatestMessage()->messageId, message2->messageId);
     ASSERT_EQ(messageStorage.getLatestMessage()->showNameAndDate, true);
     ASSERT_EQ(messageStorage.getLatestMessage()->showSeparator, true);
+    ASSERT_TRUE(messageStorage.hasMessage("messageId"));
+    ASSERT_TRUE(messageStorage.hasMessage("messageId2"));
 }

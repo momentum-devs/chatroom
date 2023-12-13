@@ -76,4 +76,9 @@ std::shared_ptr<types::Message> MessageStorage::getLatestMessage() const
 {
     return messages.back();
 }
+
+bool MessageStorage::hasMessage(const std::string& messageId) const
+{
+    return messagesIdMap.contains(messageId);
+}
 }

@@ -5,12 +5,11 @@
 namespace client::gui
 {
 MessagesController::MessagesController(std::shared_ptr<api::Session> sessionInit, const StateFactory& stateFactoryInit,
-                                       std::shared_ptr<StateMachine> stateMachineInit,
-                                       std::shared_ptr<storage::MessageStorage> messageStorageInit)
+                                       std::shared_ptr<StateMachine> stateMachineInit)
     : session{std::move(sessionInit)},
       stateFactory{stateFactoryInit},
       stateMachine{std::move(stateMachineInit)},
-      messageStorage{std::move(messageStorageInit)}
+      messageStorage{std::make_shared<storage::MessageStorage>()}
 {
 }
 
@@ -48,5 +47,14 @@ void MessagesController::handleMessageUpdate(bool shouldScrollDown)
     {
         emit scrollDown();
     }
+}
+
+void MessagesController::setMessageStorage(const std::shared_ptr<storage::MessageStorage>& messageStorage)
+{
+    this->messageStorage = messageStorage;
+
+    emit messagesUpdated();
+
+    emit scrollDown();
 }
 }

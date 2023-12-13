@@ -7,6 +7,7 @@
 #include "client/api/Session.h"
 #include "client/gui/states/StateFactory.h"
 #include "client/gui/states/StateMachine.h"
+#include "client/storage/ConversationStorage.h"
 #include "client/storage/MessageStorage.h"
 #include "client/types/Message.h"
 
@@ -19,8 +20,9 @@ class ChannelController : public QObject
 public:
     ChannelController(std::shared_ptr<api::Session> session, const StateFactory& stateFactory,
                       std::shared_ptr<StateMachine> stateMachine,
-                      std::shared_ptr<storage::MessageStorage> messageStorage, const std::string& initialChannelId,
-                      const std::string& initialChannelName, bool initialIsChannelOwner);
+                      std::shared_ptr<storage::ConversationStorage> conversationStorage,
+                      const std::string& initialChannelId, const std::string& initialChannelName,
+                      bool initialIsChannelOwner);
 
     void activate();
     void deactivate();
@@ -35,6 +37,7 @@ signals:
     void addMember(const QString& memberName, const QString& memberId, bool isActive);
     void clearMembersList();
     void messagesUpdated(bool shouldScrollDown = false);
+    void setMessageStorage(const std::shared_ptr<storage::MessageStorage>& messageStorage);
 
 public slots:
     void goToChannel(const QString& channelName, const QString& channelId, bool isOwner);
@@ -51,6 +54,7 @@ private:
     const StateFactory& stateFactory;
     std::shared_ptr<StateMachine> stateMachine;
     std::shared_ptr<storage::MessageStorage> messageStorage;
+    std::shared_ptr<storage::ConversationStorage> conversationStorage;
     std::string currentChannelId;
     std::string currentChannelName;
     bool isOwnerOfCurrentChannel;

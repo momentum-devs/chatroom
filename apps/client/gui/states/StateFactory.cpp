@@ -26,7 +26,9 @@ StateFactory::StateFactory(std::shared_ptr<client::api::Session> sessionInit,
                            std::shared_ptr<LoaderController> loaderControllerInit)
     : session{std::move(sessionInit)},
       stateMachine{std::move(stateMachineInit)},
-      loaderController{std::move(loaderControllerInit)}
+      loaderController{std::move(loaderControllerInit)},
+      privateMessagesConversationStorage{std::make_shared<storage::ConversationStorage>()},
+      channelConversationStorage{std::make_shared<storage::ConversationStorage>()}
 {
 }
 
@@ -86,13 +88,11 @@ std::shared_ptr<State> StateFactory::createInviteToChannelState(const std::strin
 
 std::shared_ptr<State> StateFactory::createPrivateMessagesState() const
 {
-    auto messageStorage = std::make_shared<storage::MessageStorage>();
-
     auto privateMessagesController = std::make_unique<PrivateMessagesController>(session, *this, stateMachine);
 
     auto leftColumnController = std::make_unique<LeftColumnController>(session, *this, stateMachine);
 
-    auto messagesController = std::make_unique<MessagesController>(session, *this, stateMachine, messageStorage);
+    auto messagesController = std::make_unique<MessagesController>(session, *this, stateMachine);
 
     return std::make_shared<PrivateMessagesState>(std::move(privateMessagesController), std::move(leftColumnController),
                                                   std::move(messagesController), loaderController);
@@ -101,14 +101,12 @@ std::shared_ptr<State> StateFactory::createPrivateMessagesState() const
 std::shared_ptr<State> StateFactory::createChannelState(const std::string& channelId, const std::string& channelName,
                                                         bool isOwner) const
 {
-    auto messageStorage = std::make_shared<storage::MessageStorage>();
-
-    auto channelController = std::make_unique<ChannelController>(session, *this, stateMachine, messageStorage,
-                                                                 channelId, channelName, isOwner);
+    auto channelController = std::make_unique<ChannelController>(
+        session, *this, stateMachine, channelConversationStorage, channelId, channelName, isOwner);
 
     auto leftColumnController = std::make_unique<LeftColumnController>(session, *this, stateMachine);
 
-    auto messagesController = std::make_unique<MessagesController>(session, *this, stateMachine, messageStorage);
+    auto messagesController = std::make_unique<MessagesController>(session, *this, stateMachine);
 
     return std::make_shared<ChannelState>(std::move(channelController), std::move(leftColumnController),
                                           std::move(messagesController), loaderController);
