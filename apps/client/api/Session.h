@@ -5,6 +5,7 @@
 #include <optional>
 #include <string>
 
+#include "client/types/User.h"
 #include "ConnectorPayload.h"
 #include "MessageHandlerPayload.h"
 
@@ -21,6 +22,8 @@ public:
     virtual void addMessageHandler(const MessageHandlerPayload& messageHandlerPayload) = 0;
     virtual void removeMessageHandler(const MessageHandlerPayload& messageHandlerPayload) = 0;
     virtual void storeToken(const std::string& token) = 0;
+    virtual void storeUser(const types::User& user) = 0;
+    virtual QObject* getUser() = 0;
     virtual void logout() = 0;
 };
 }

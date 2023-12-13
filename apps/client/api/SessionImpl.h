@@ -24,6 +24,8 @@ public:
     void addMessageHandler(const MessageHandlerPayload& messageHandlerPayload) override;
     void removeMessageHandler(const MessageHandlerPayload& messageHandlerPayload) override;
     void storeToken(const std::string& token) override;
+    void storeUser(const types::User& user) override;
+    QObject* getUser() override;
     void logout() override;
 
 private:
@@ -38,5 +40,6 @@ private:
     std::optional<std::string> token;
     std::mutex lock;
     std::vector<MessageHandlerPayload> messageHandlersToDelete;
+    types::User user;
 };
 }

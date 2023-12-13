@@ -24,7 +24,10 @@ void UserSettingsController::activate()
     session->addMessageHandler({common::messages::MessageId::GetUserDataResponse, getUserDataResponseHandlerName,
                                 [this](const auto& msg) { handleGetUserDataResponse(msg); }});
 
-    session->sendMessage(common::messages::MessageId::GetUserData, {});
+    auto userName = dynamic_cast<types::User*>(session->getUser())->property("nickname").toString();
+    auto userEmail = dynamic_cast<types::User*>(session->getUser())->property("email").toString();
+
+    emit setUserData(userEmail, userName);
 }
 
 void UserSettingsController::deactivate()
@@ -95,7 +98,7 @@ void UserSettingsController::handleUpdateUserResponse(const common::messages::Me
     {
         LOG_S(INFO) << "Successfully updated user";
 
-        stateMachine->returnToThePreviousState();
+        session->sendMessage(common::messages::MessageId::GetUserData, {});
     }
 }
 
@@ -144,8 +147,17 @@ void UserSettingsController::handleGetUserDataResponse(const common::messages::M
     {
         LOG_S(INFO) << "Successfully obtain user data";
 
-        emit setUserData(QString::fromStdString(responseJson.at("data").at("email").get<std::string>()),
-                         QString::fromStdString(responseJson.at("data").at("nickname").get<std::string>()));
+        auto user = dynamic_cast<types::User*>(session->getUser());
+
+        auto userNickname = QString::fromStdString(responseJson.at("data").at("nickname").get<std::string>());
+        auto userEmail = QString::fromStdString(responseJson.at("data").at("email").get<std::string>());
+        auto userIsVerified = user->property("isVerified").toBool();
+        auto userIsOnline = user->property("isOnline").toBool();
+        auto userId = user->property("userId").toString();
+
+        emit setUserData(userEmail, userNickname);
+
+        session->storeUser({userIsVerified, userIsOnline, userNickname, userId, userEmail});
     }
     else
     {

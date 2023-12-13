@@ -9,13 +9,12 @@ Rectangle {
     property var members: []
 
     function addMember(memberName: string, memberId: string, isActive: bool) {
-        console.log("elo");
         members.push([memberName, memberId, isActive]);
         membersView.model = members;
         membersView.height = 36 * members.length;
     }
+
     function clearMembersList() {
-        console.log("adios");
         members = [];
         membersView.model = members;
     }

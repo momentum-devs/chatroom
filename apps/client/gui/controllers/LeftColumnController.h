@@ -37,7 +37,6 @@ signals:
 
 private:
     void handleGetUserChannelsResponse(const common::messages::Message& message);
-    void handleGetUserDataResponse(const common::messages::Message& message);
     void handleGetUserChannelInvitationsResponse(const common::messages::Message& message);
     void handleChangeChannelInvitationResponse(const common::messages::Message& message);
 
@@ -48,8 +47,6 @@ private:
     inline static const QString name{"leftColumnController"};
 
     inline static const std::string getUserChannelsResponseHandlerName{
-        "getUserChannelsResponseHandlerName_LeftColumnController"};
-    inline static const std::string getUserDataResponseHandlerName{
         "getUserChannelsResponseHandlerName_LeftColumnController"};
     inline static const std::string changeChannelInvitationResponseHandlerName{
         "changeChannelInvitationResponseHandlerName_LeftColumnController"};

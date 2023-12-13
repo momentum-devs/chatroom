@@ -3,10 +3,13 @@ import QtQuick.Controls 6.2
 import "../../qml/components"
 import "../../qml/common/settings.js" as Settings
 import "components"
+import "../../qml/components/messages"
 
 Rectangle {
+    id: channelView
     color: Settings.backgroundColor
     focus: true
+    Keys.onEnterPressed: messageView.sendMessage()
 
     Row {
         anchors.fill: parent
@@ -14,18 +17,21 @@ Rectangle {
         LeftColumn {
             id: leftColumn
         }
-        Column {
+        Item {
             height: parent.height
             width: parent.width - leftColumn.width - membersColumn.width
 
             ChannelTopBar {
                 id: channelTopBar
                 width: parent.width
+                anchors.left: parent.left
+                anchors.top: parent.top
             }
-            Item {
-                id: defaultView
+            MessageView {
+                id: messageView
+                anchors.left: parent.left
+                anchors.top: channelTopBar.bottom
                 height: parent.height - channelTopBar.height
-                visible: true
                 width: parent.width
             }
         }
@@ -42,11 +48,15 @@ Rectangle {
         function onAddMember(memberName: string, memberId: string, isActive: bool) {
             membersColumn.addMember(memberName, memberId, isActive);
         }
+
         function onClearMembersList() {
             membersColumn.clearMembersList();
         }
+
         function onSetChannel(channelName: string, channelId: string, isOwner: bool) {
             channelTopBar.setChannel([channelName, channelId, isOwner]);
+            messageView.setTextPlaceholder("Message #" + channelName)
+            channelView.focus = true;
         }
 
         target: channelController

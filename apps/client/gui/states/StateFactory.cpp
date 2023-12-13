@@ -89,8 +89,10 @@ std::shared_ptr<State> StateFactory::createPrivateMessagesState() const
 
     auto leftColumnController = std::make_unique<LeftColumnController>(session, *this, stateMachine);
 
+    auto messagesController = std::make_unique<MessagesController>(session, *this, stateMachine);
+
     return std::make_shared<PrivateMessagesState>(std::move(privateMessagesController), std::move(leftColumnController),
-                                                  loaderController);
+                                                  std::move(messagesController), loaderController);
 }
 
 std::shared_ptr<State> StateFactory::createChannelState(const std::string& channelId, const std::string& channelName,
@@ -101,7 +103,9 @@ std::shared_ptr<State> StateFactory::createChannelState(const std::string& chann
 
     auto leftColumnController = std::make_unique<LeftColumnController>(session, *this, stateMachine);
 
+    auto messagesController = std::make_unique<MessagesController>(session, *this, stateMachine);
+
     return std::make_shared<ChannelState>(std::move(channelController), std::move(leftColumnController),
-                                          loaderController);
+                                          std::move(messagesController), loaderController);
 }
 }
