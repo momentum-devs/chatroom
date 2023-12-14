@@ -3,12 +3,8 @@
 namespace client::types
 {
 Message::Message(const QString& messageTextInit, const QString& senderNameInit, const QString& messageIdInit,
-                 const QDateTime& sendTimeInit, std::shared_ptr<Message> previousMessageInit)
-    : messageText{messageTextInit},
-      senderName{senderNameInit},
-      messageId{messageIdInit},
-      sendTime{sendTimeInit},
-      previousMessage{std::move(previousMessageInit)}
+                 const QDateTime& sendTimeInit)
+    : messageText{messageTextInit}, senderName{senderNameInit}, messageId{messageIdInit}, sendTime{sendTimeInit}
 {
 }
 
@@ -17,14 +13,19 @@ Message::Message(const Message& message)
       messageText{message.messageText},
       senderName{message.senderName},
       messageId{message.messageId},
-      sendTime{message.sendTime}
+      sendTime{message.sendTime},
+      showSeparator{message.showSeparator},
+      showNameAndDate{message.showNameAndDate}
 {
 }
 
 bool Message::operator==(const Message& rhs) const
 {
     auto tieStruct = [](const Message& message)
-    { return std::tie(message.messageText, message.senderName, message.messageId, message.sendTime); };
+    {
+        return std::tie(message.messageText, message.senderName, message.messageId, message.sendTime,
+                        message.showSeparator, message.showNameAndDate);
+    };
 
     return tieStruct(*this) == tieStruct(rhs);
 }
@@ -36,16 +37,5 @@ Message& Message::operator=(const Message& message)
     messageId = message.messageId;
     sendTime = message.sendTime;
     return *this;
-}
-
-bool Message::shouldShowSeparator() const
-{
-    return previousMessage != nullptr and previousMessage->sendTime.date() != sendTime.date();
-}
-
-bool Message::shouldShowNameAndDate() const
-{
-    return previousMessage == nullptr or previousMessage->senderName != senderName or
-           previousMessage->sendTime.addSecs(5 * 60) < sendTime;
 }
 }

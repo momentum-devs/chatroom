@@ -31,8 +31,11 @@ void ChannelState::activate()
     QObject::connect(messagesController.get(), &MessagesController::newMessageToSend, channelController.get(),
                      &ChannelController::sendChannelMessage);
 
-    QObject::connect(channelController.get(), &ChannelController::addMessages, messagesController.get(),
-                     &MessagesController::handleMessages);
+    QObject::connect(channelController.get(), &ChannelController::messagesUpdated, messagesController.get(),
+                     &MessagesController::handleMessageUpdate);
+
+    QObject::connect(channelController.get(), &ChannelController::setMessageStorage, messagesController.get(),
+                     &MessagesController::setMessageStorage);
 
     loaderController->getEngine()->rootContext()->setContextProperty(leftColumnController->getName(),
                                                                      leftColumnController.get());
@@ -64,8 +67,11 @@ void ChannelState::deactivate()
     QObject::disconnect(messagesController.get(), &MessagesController::newMessageToSend, channelController.get(),
                         &ChannelController::sendChannelMessage);
 
-    QObject::disconnect(channelController.get(), &ChannelController::addMessages, messagesController.get(),
-                        &MessagesController::handleMessages);
+    QObject::disconnect(channelController.get(), &ChannelController::messagesUpdated, messagesController.get(),
+                        &MessagesController::handleMessageUpdate);
+
+    QObject::disconnect(channelController.get(), &ChannelController::setMessageStorage, messagesController.get(),
+                        &MessagesController::setMessageStorage);
 
     loaderController->getEngine()->rootContext()->setContextProperty(leftColumnController->getName(), nullptr);
 
@@ -77,5 +83,4 @@ void ChannelState::deactivate()
 
     channelController->deactivate();
 }
-
 }

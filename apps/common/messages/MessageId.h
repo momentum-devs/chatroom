@@ -54,6 +54,10 @@ enum class MessageId : unsigned char
     GetChannelMessagesResponse,
     SendChannelMessage,
     SendChannelMessageResponse,
+    GetPrivateMessages,
+    GetPrivateMessagesResponse,
+    SendPrivateMessage,
+    SendPrivateMessageResponse,
 };
 
 inline std::string toString(MessageId messageId)
@@ -105,6 +109,10 @@ inline std::string toString(MessageId messageId)
         {MessageId::GetChannelMessagesResponse, "GetChannelMessagesResponse"},
         {MessageId::SendChannelMessage, "SendChannelMessage"},
         {MessageId::SendChannelMessageResponse, "SendChannelMessageResponse"},
+        {MessageId::GetPrivateMessages, "GetPrivateMessages"},
+        {MessageId::GetPrivateMessagesResponse, "GetPrivateMessagesResponse"},
+        {MessageId::SendPrivateMessage, "SendPrivateMessage"},
+        {MessageId::SendPrivateMessageResponse, "SendPrivateMessageResponse"},
     };
 
     try

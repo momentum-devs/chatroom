@@ -6,14 +6,17 @@ namespace client::gui
 {
 ChannelController::ChannelController(std::shared_ptr<api::Session> sessionInit, const StateFactory& stateFactoryInit,
                                      std::shared_ptr<StateMachine> stateMachineInit,
+                                     std::shared_ptr<storage::ConversationStorage> conversationStorageInit,
                                      const std::string& initialChannelId, const std::string& initialChannelName,
                                      bool initialIsChannelOwner)
     : session{std::move(sessionInit)},
       stateFactory{std::move(stateFactoryInit)},
       stateMachine{std::move(stateMachineInit)},
+      conversationStorage{std::move(conversationStorageInit)},
       currentChannelId{initialChannelId},
       currentChannelName(initialChannelName),
-      isOwnerOfCurrentChannel{initialIsChannelOwner}
+      isOwnerOfCurrentChannel{initialIsChannelOwner},
+      isActivated{false}
 {
 }
 
@@ -38,6 +41,8 @@ void ChannelController::activate()
                                 [this](const auto& msg) { handleGetChannelMessagesResponse(msg); }});
 
     goToChannel(currentChannelName.c_str(), currentChannelId.c_str(), isOwnerOfCurrentChannel);
+
+    isActivated = true;
 }
 
 void ChannelController::deactivate()
@@ -68,8 +73,22 @@ void ChannelController::goToChannel(const QString& channelName, const QString& c
     LOG_S(INFO) << std::format("Set channel {} with id {} as current", channelName.toStdString(),
                                channelId.toStdString());
 
-    isOwnerOfCurrentChannel = isOwner;
+    if (not isActivated or currentChannelId != channelId.toStdString())
+    {
+        if (conversationStorage->hasConversation(currentChannelId))
+        {
+            messageStorage = conversationStorage->getConversation(currentChannelId);
+        }
+        else
+        {
+            messageStorage = conversationStorage->createConversation(currentChannelId);
+        }
+
+        emit setMessageStorage(messageStorage);
+    }
+
     currentChannelId = channelId.toStdString();
+    isOwnerOfCurrentChannel = isOwner;
     currentChannelName = channelName.toStdString();
 
     emit setChannel(channelName, channelId, isOwner);
@@ -165,15 +184,13 @@ void ChannelController::handleGetChannelMembersResponse(const common::messages::
     }
 }
 
-void ChannelController::sendChannelMessage(types::Message& message)
+void ChannelController::sendChannelMessage(const QString& messageText)
 {
     LOG_S(INFO) << "Send channel message";
 
-    auto text = message.property("messageText").toString().toStdString();
-
     nlohmann::json data{
         {"channelId", currentChannelId},
-        {"text", text},
+        {"text", messageText.toStdString()},
     };
 
     session->sendMessage(common::messages::MessageId::SendChannelMessage, data);
@@ -191,7 +208,41 @@ void ChannelController::handleSendChannelMessageResponse(const common::messages:
     {
         LOG_S(ERROR) << "Error while sending channel message: " << responseJson.at("error").get<std::string>();
     }
+    else if (responseJson.contains("data") and responseJson.at("data").contains("message"))
+    {
+        LOG_S(INFO) << "Successfully sent channel message";
+
+        auto message = responseJson.at("data").at("message");
+
+        if (message.contains("id") and message.contains("text") and message.contains("senderName") and
+            message.contains("sentAt"))
+        {
+            auto dateText = QString::fromStdString(message.at("sentAt").get<std::string>());
+
+            auto date = QDateTime::fromString(dateText, "yyyyMMddThhmmss");
+
+            LOG_S(INFO) << std::format("Adding message {} with id {} sent at {} to list",
+                                       message.at("text").get<std::string>(), message.at("id").get<std::string>(),
+                                       message.at("sentAt").get<std::string>());
+
+            messageStorage->addMessage(
+                std::make_shared<types::Message>(QString::fromStdString(message.at("text").get<std::string>()),
+                                                 QString::fromStdString(message.at("senderName").get<std::string>()),
+                                                 QString::fromStdString(message.at("id").get<std::string>()), date));
+
+            emit messagesUpdated(true);
+        }
+        else
+        {
+            LOG_S(ERROR) << "Wrong message format";
+        }
+    }
+    else
+    {
+        LOG_S(ERROR) << "Response without message";
+    }
 }
+
 void ChannelController::handleGetChannelMessagesResponse(const common::messages::Message& message)
 {
     LOG_S(INFO) << "Received channel messages list";
@@ -205,10 +256,17 @@ void ChannelController::handleGetChannelMessagesResponse(const common::messages:
         LOG_S(ERROR) << "Error while getting channel messages: " << responseJson.at("error").get<std::string>();
     }
 
-    QList<types::Message> messages;
-
     if (responseJson.contains("data") and responseJson.at("data").contains("messages"))
     {
+        if (not responseJson.at("data").at("messages").empty() and
+            messageStorage->hasMessage(responseJson.at("data").at("messages").back().at("id").get<std::string>()) and
+            messageStorage->hasMessage(responseJson.at("data").at("messages").front().at("id").get<std::string>()))
+        {
+            LOG_S(INFO) << "Messages already loaded";
+
+            return;
+        }
+
         for (const auto& message : responseJson.at("data").at("messages"))
         {
             if (message.contains("id") and message.contains("text") and message.contains("senderName") and
@@ -222,10 +280,10 @@ void ChannelController::handleGetChannelMessagesResponse(const common::messages:
                                            message.at("text").get<std::string>(), message.at("id").get<std::string>(),
                                            message.at("sentAt").get<std::string>());
 
-                messages.push_back(types::Message{QString::fromStdString(message.at("text").get<std::string>()),
-                                                  QString::fromStdString(message.at("senderName").get<std::string>()),
-                                                  QString::fromStdString(message.at("id").get<std::string>()), date,
-                                                  nullptr});
+                messageStorage->addMessage(std::make_shared<types::Message>(
+                    QString::fromStdString(message.at("text").get<std::string>()),
+                    QString::fromStdString(message.at("senderName").get<std::string>()),
+                    QString::fromStdString(message.at("id").get<std::string>()), date));
             }
             else
             {
@@ -233,7 +291,18 @@ void ChannelController::handleGetChannelMessagesResponse(const common::messages:
             }
         }
 
-        emit addMessages(messages);
+        if (responseJson.at("data").at("messages").empty())
+        {
+            emit messagesUpdated(true);
+
+            return;
+        }
+
+        auto lastMessageId = responseJson.at("data").at("messages").front().at("id").get<std::string>();
+
+        bool shouldScrollDown = lastMessageId == messageStorage->getLatestMessage()->messageId.toStdString();
+
+        emit messagesUpdated(shouldScrollDown);
     }
     else
     {

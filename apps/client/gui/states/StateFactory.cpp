@@ -2,6 +2,7 @@
 
 #include "client/gui/controllers/LeftColumnController.h"
 #include "client/gui/states/channel/ChannelState.h"
+#include "client/storage/MessageStorage.h"
 #include "createChannel/CreateChannelController.h"
 #include "createChannel/CreateChannelState.h"
 #include "inviteToChannel/InviteToChannelController.h"
@@ -25,7 +26,9 @@ StateFactory::StateFactory(std::shared_ptr<client::api::Session> sessionInit,
                            std::shared_ptr<LoaderController> loaderControllerInit)
     : session{std::move(sessionInit)},
       stateMachine{std::move(stateMachineInit)},
-      loaderController{std::move(loaderControllerInit)}
+      loaderController{std::move(loaderControllerInit)},
+      privateMessagesConversationStorage{std::make_shared<storage::ConversationStorage>()},
+      channelConversationStorage{std::make_shared<storage::ConversationStorage>()}
 {
 }
 
@@ -85,7 +88,8 @@ std::shared_ptr<State> StateFactory::createInviteToChannelState(const std::strin
 
 std::shared_ptr<State> StateFactory::createPrivateMessagesState() const
 {
-    auto privateMessagesController = std::make_unique<PrivateMessagesController>(session, *this, stateMachine);
+    auto privateMessagesController =
+        std::make_unique<PrivateMessagesController>(session, *this, stateMachine, privateMessagesConversationStorage);
 
     auto leftColumnController = std::make_unique<LeftColumnController>(session, *this, stateMachine);
 
@@ -98,8 +102,8 @@ std::shared_ptr<State> StateFactory::createPrivateMessagesState() const
 std::shared_ptr<State> StateFactory::createChannelState(const std::string& channelId, const std::string& channelName,
                                                         bool isOwner) const
 {
-    auto channelController =
-        std::make_unique<ChannelController>(session, *this, stateMachine, channelId, channelName, isOwner);
+    auto channelController = std::make_unique<ChannelController>(
+        session, *this, stateMachine, channelConversationStorage, channelId, channelName, isOwner);
 
     auto leftColumnController = std::make_unique<LeftColumnController>(session, *this, stateMachine);
 

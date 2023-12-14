@@ -8,6 +8,7 @@
 #include "client/api/Session.h"
 #include "client/gui/states/StateFactory.h"
 #include "client/gui/states/StateMachine.h"
+#include "client/storage/MessageStorage.h"
 #include "client/types/Message.h"
 
 namespace client::gui
@@ -29,19 +30,20 @@ public:
     Q_INVOKABLE void sendMessage(const QString& text);
 
 signals:
-    void newMessageToSend(types::Message& message);
+    void newMessageToSend(const QString& messageText);
     void messagesUpdated();
+    void scrollDown();
 
 public slots:
-    void handleMessages(const QList<types::Message>& messages);
+    void handleMessageUpdate(bool shouldScrollDown = false);
+    void setMessageStorage(const std::shared_ptr<storage::MessageStorage>& messageStorage);
 
 private:
     std::shared_ptr<api::Session> session;
     const StateFactory& stateFactory;
     std::shared_ptr<StateMachine> stateMachine;
+    std::shared_ptr<storage::MessageStorage> messageStorage;
 
     inline static const QString name{"messagesController"};
-
-    std::vector<std::shared_ptr<types::Message>> messages;
 };
 }

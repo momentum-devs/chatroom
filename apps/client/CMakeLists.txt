@@ -35,7 +35,10 @@ set(SOURCES
         gui/controllers/MessagesController.h
         gui/controllers/MessagesController.cpp
         types/Message.cpp
-        types/User.cpp)
+        types/User.cpp
+        storage/MessageStorage.cpp
+        storage/ConversationStorage.cpp
+)
 
 set(UT_SOURCES
         api/SessionImplTest.cpp
@@ -43,6 +46,8 @@ set(UT_SOURCES
         api/MessageFactoryImplTest.cpp
         types/UserTest.cpp
         types/MessageTest.cpp
+        storage/MessageStorageTest.cpp
+        storage/ConversationStorageTest.cpp
 )
 
 set(QML_SOURCES

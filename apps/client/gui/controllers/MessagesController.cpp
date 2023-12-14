@@ -6,7 +6,10 @@ namespace client::gui
 {
 MessagesController::MessagesController(std::shared_ptr<api::Session> sessionInit, const StateFactory& stateFactoryInit,
                                        std::shared_ptr<StateMachine> stateMachineInit)
-    : session{std::move(sessionInit)}, stateFactory{stateFactoryInit}, stateMachine{std::move(stateMachineInit)}
+    : session{std::move(sessionInit)},
+      stateFactory{stateFactoryInit},
+      stateMachine{std::move(stateMachineInit)},
+      messageStorage{std::make_shared<storage::MessageStorage>()}
 {
 }
 
@@ -21,46 +24,37 @@ void MessagesController::deactivate() {}
 
 void MessagesController::sendMessage(const QString& text)
 {
-    auto previousMessage = messages.empty() ? nullptr : messages.back();
-
-    auto date = QDateTime::currentDateTimeUtc();
-
-    auto userName = dynamic_cast<types::User*>(session->getUser())->property("nickname").toString();
-
-    auto message = std::make_shared<types::Message>(text, userName, "", date, previousMessage);
-
-    messages.push_back(message);
-
-    emit messagesUpdated();
-
-    emit newMessageToSend(*message);
+    emit newMessageToSend(text);
 }
 
 QList<QObject*> MessagesController::getMessages()
 {
     QList<QObject*> result;
 
-    for (auto& message : messages)
+    for (const auto& message : messageStorage->getMessages())
     {
-        result.push_back(dynamic_cast<QObject*>(message.get()));
+        result.push_back(message.get());
     }
 
     return result;
 }
 
-void MessagesController::handleMessages(const QList<types::Message>& newMessages)
+void MessagesController::handleMessageUpdate(bool shouldScrollDown)
 {
-    messages.clear();
+    emit messagesUpdated();
 
-    for (auto& newMessage : newMessages | std::views::reverse)
+    if (shouldScrollDown)
     {
-        auto message = std::make_shared<types::Message>(newMessage);
-
-        message->previousMessage = messages.empty() ? nullptr : messages.back();
-
-        messages.push_back(message);
+        emit scrollDown();
     }
+}
+
+void MessagesController::setMessageStorage(const std::shared_ptr<storage::MessageStorage>& messageStorage)
+{
+    this->messageStorage = messageStorage;
 
     emit messagesUpdated();
+
+    emit scrollDown();
 }
 }

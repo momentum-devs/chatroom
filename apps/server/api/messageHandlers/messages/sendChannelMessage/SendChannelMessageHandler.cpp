@@ -27,9 +27,18 @@ common::messages::Message SendChannelMessageHandler::handleMessage(const common:
 
         auto [senderId] = tokenService->verifyToken(token);
 
-        createChannelMessageCommandHandler->execute({text, senderId, channelId});
+        auto [newMessage] = createChannelMessageCommandHandler->execute({text, senderId, channelId});
 
-        return {common::messages::MessageId::SendChannelMessageResponse, common::bytes::Bytes{R"(["ok"])"}};
+        nlohmann::json responsePayload;
+
+        responsePayload["data"]["message"] = {
+            {"id", newMessage.getId()},
+            {"text", newMessage.getContent()},
+            {"senderName", newMessage.getSender()->getNickname()},
+            {"sentAt", newMessage.getCreatedAt()},
+        };
+
+        return {common::messages::MessageId::SendChannelMessageResponse, common::bytes::Bytes{responsePayload.dump()}};
     }
     catch (const std::exception& e)
     {
