@@ -16,44 +16,33 @@ using namespace ::testing;
 using namespace server::api;
 using namespace server::application;
 
-namespace
-{
-server::domain::User createUser()
-{
-    const auto userId = faker::String::uuid();
-    const auto userNickname = faker::String::alphanumeric(10);
-    const auto userEmail = faker::Internet::email();
-    const auto userPassword = faker::String::alphanumeric(10);
-    const auto userCreatedAt = faker::Date::recentDate();
-    const auto userUpdatedAt = faker::Date::recentDate();
-    const bool userActive = faker::Datatype::boolean();
-    const bool userEmailVerified = faker::Datatype::boolean();
-    const auto verificationCode = faker::String::numeric(6);
-    return {userId,           userEmail,     userPassword, userNickname, userActive, userEmailVerified,
-            verificationCode, userCreatedAt, userUpdatedAt};
-}
-
-const auto token = "token";
-const auto channelId = "channelId";
-const auto queryHandlerPayload = FindUsersBelongingToChannelQueryHandlerPayload{channelId};
-const auto validPayloadJson = nlohmann::json{{"token", token}, {"data", {{"channelId", channelId}}}};
-const auto validPayload = common::bytes::Bytes{validPayloadJson.dump()};
-const auto message = common::messages::Message{common::messages::MessageId::GetChannelMembers, validPayload};
-
-const auto userId = "userId";
-const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
-const auto channelMember1 = createUser();
-const auto channelMember2 = createUser();
-const auto channelMembers = std::vector<server::domain::User>{
-    channelMember1,
-    channelMember2,
-};
-const auto queryHandlerResult = FindUsersBelongingToChannelQueryHandlerResult{channelMembers};
-}
-
 class GetChannelMembersMessageHandlerTest : public Test
 {
 public:
+    server::domain::User createUser()
+    {
+        const auto userId = faker::String::uuid();
+        const auto userNickname = faker::String::alphanumeric(10, faker::StringCasing::Upper);
+        const auto userEmail = faker::Internet::email();
+        const auto userPassword = faker::String::alphanumeric(10, faker::StringCasing::Upper);
+        const auto userCreatedAt = faker::Date::recentDate();
+        const auto userUpdatedAt = faker::Date::recentDate();
+        const bool userActive = faker::Datatype::boolean();
+        const bool userEmailVerified = faker::Datatype::boolean();
+        const auto verificationCode = faker::String::numeric(6);
+        return {userId,           userEmail,     userPassword, userNickname, userActive, userEmailVerified,
+                verificationCode, userCreatedAt, userUpdatedAt};
+    }
+
+    std::string token = "token";
+    std::string channelId = "channelId";
+    FindUsersBelongingToChannelQueryHandlerPayload queryHandlerPayload{channelId};
+    nlohmann::json validPayloadJson{{"token", token}, {"data", {{"channelId", channelId}}}};
+    common::bytes::Bytes validPayload{validPayloadJson.dump()};
+    common::messages::Message message{common::messages::MessageId::GetChannelMembers, validPayload};
+
+    server::application::VerifyTokenResult verifyTokenResult{"userId"};
+
     std::unique_ptr<FindUsersBelongingToChannelQueryHandlerMock> findUsersBelongingToChannelQueryHandlerMock =
         std::make_unique<StrictMock<FindUsersBelongingToChannelQueryHandlerMock>>();
     FindUsersBelongingToChannelQueryHandlerMock* findUsersBelongingToChannelQueryHandlerMockPtr =
@@ -68,6 +57,16 @@ public:
 
 TEST_F(GetChannelMembersMessageHandlerTest, handleValidGetChannelMembersMessage)
 {
+    server::domain::User channelMember1 = createUser();
+    server::domain::User channelMember2 = createUser();
+
+    std::vector<server::domain::User> channelMembers{
+        channelMember1,
+        channelMember2,
+    };
+
+    FindUsersBelongingToChannelQueryHandlerResult queryHandlerResult{channelMembers};
+
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
 
     EXPECT_CALL(*findUsersBelongingToChannelQueryHandlerMockPtr, execute(queryHandlerPayload))

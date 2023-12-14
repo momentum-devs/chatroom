@@ -17,51 +17,9 @@ using namespace ::testing;
 
 namespace
 {
-std::shared_ptr<server::domain::User> createUser()
-{
-    const auto userId = faker::String::uuid();
-    const auto userNickname = faker::String::alphanumeric(10);
-    const auto userEmail = faker::Internet::email();
-    const auto userPassword = faker::String::alphanumeric(10);
-    const auto userCreatedAt = faker::Date::recentDate();
-    const auto userUpdatedAt = faker::Date::recentDate();
-    const bool userActive = faker::Datatype::boolean();
-    const bool userEmailVerified = faker::Datatype::boolean();
-    const auto verificationCode = faker::String::numeric(6);
-    return std::make_shared<server::domain::User>(server::domain::User{userId, userEmail, userPassword, userNickname,
-                                                                       userActive, userEmailVerified, verificationCode,
-                                                                       userCreatedAt, userUpdatedAt});
-}
 
-const auto token = faker::String::alphanumeric(40);
-const auto channelId = faker::String::uuid();
-const auto senderId = faker::String::uuid();
-const auto verifyTokenResult = server::application::VerifyTokenResult{senderId};
-const auto text = faker::Lorem::sentence();
-const auto validPayloadJson =
-    nlohmann::json{{"data", nlohmann::json{{"channelId", channelId}, {"text", text}}}, {"token", token}};
-const auto validPayload = common::bytes::Bytes{validPayloadJson.dump()};
-const auto validMessage = common::messages::Message{common::messages::MessageId::SendChannelMessage, validPayload};
 const auto messageId = faker::String::uuid();
-const auto messageContent = text;
-const auto messageSender = createUser();
-const std::shared_ptr<server::domain::Channel> messageChannel = nullptr;
-const std::shared_ptr<server::domain::Group> messageGroup = nullptr;
-const auto messageCreatedAt = faker::Date::recentDate();
-const auto messageUpdatedAt = faker::Date::recentDate();
-server::domain::Message message{messageId,    messageContent,   messageSender,   messageChannel,
-                                messageGroup, messageCreatedAt, messageUpdatedAt};
-const auto validCommandHandlerResponse = server::application::CreateChannelMessageCommandHandlerResult{message};
-const auto validCommandHandlerResponseJson = nlohmann::json{{"data",
-                                                             {{"message",
-                                                               {{"id", messageId},
-                                                                {"text", messageContent},
-                                                                {"senderName", messageSender->getNickname()},
-                                                                {"sentAt", messageCreatedAt}}}}}};
-const auto validMessageResponse =
-    common::messages::Message{common::messages::MessageId::SendChannelMessageResponse,
-                              common::bytes::Bytes{validCommandHandlerResponseJson.dump()}};
-
+const auto messageContent = "text";
 const auto invalidTokenError = std::runtime_error{"invalidToken"};
 const auto invalidTokenMessageResponse = common::messages::Message{
     common::messages::MessageId::SendChannelMessageResponse, common::bytes::Bytes{R"({"error":"invalidToken"})"}};
@@ -75,6 +33,32 @@ const auto createChannelMessageCommandHandlerErrorMessageResponse =
 class SendChannelMessageHandlerTest : public Test
 {
 public:
+    std::shared_ptr<server::domain::User> createUser()
+    {
+        const auto userId = faker::String::uuid();
+        const auto userNickname = faker::String::alphanumeric(10);
+        const auto userEmail = faker::Internet::email();
+        const auto userPassword = faker::String::alphanumeric(10);
+        const auto userCreatedAt = faker::Date::recentDate();
+        const auto userUpdatedAt = faker::Date::recentDate();
+        const bool userActive = faker::Datatype::boolean();
+        const bool userEmailVerified = faker::Datatype::boolean();
+        const auto verificationCode = faker::String::numeric(6);
+        return std::make_shared<server::domain::User>(
+            server::domain::User{userId, userEmail, userPassword, userNickname, userActive, userEmailVerified,
+                                 verificationCode, userCreatedAt, userUpdatedAt});
+    }
+
+    std::string token = faker::String::alphanumeric(40);
+    std::string channelId = faker::String::uuid();
+    std::string senderId = faker::String::uuid();
+    server::application::VerifyTokenResult verifyTokenResult{senderId};
+    std::string text = faker::Lorem::sentence();
+    nlohmann::json validPayloadJson{{"data", nlohmann::json{{"channelId", channelId}, {"text", text}}},
+                                    {"token", token}};
+    common::bytes::Bytes validPayload{validPayloadJson.dump()};
+    common::messages::Message validMessage{common::messages::MessageId::SendChannelMessage, validPayload};
+
     std::shared_ptr<server::application::TokenServiceMock> tokenServiceMock =
         std::make_shared<StrictMock<server::application::TokenServiceMock>>();
 
@@ -91,6 +75,23 @@ public:
 
 TEST_F(SendChannelMessageHandlerTest, handleValidSendChannelMessage)
 {
+    const auto messageSender = createUser();
+    const std::shared_ptr<server::domain::Channel> messageChannel = nullptr;
+    const std::shared_ptr<server::domain::Group> messageGroup = nullptr;
+    const auto messageCreatedAt = faker::Date::recentDate();
+    const auto messageUpdatedAt = faker::Date::recentDate();
+    server::domain::Message message{messageId,    messageContent,   messageSender,   messageChannel,
+                                    messageGroup, messageCreatedAt, messageUpdatedAt};
+    const auto validCommandHandlerResponse = server::application::CreateChannelMessageCommandHandlerResult{message};
+    const auto validCommandHandlerResponseJson = nlohmann::json{{"data",
+                                                                 {{"message",
+                                                                   {{"id", messageId},
+                                                                    {"text", messageContent},
+                                                                    {"senderName", messageSender->getNickname()},
+                                                                    {"sentAt", messageCreatedAt}}}}}};
+    const auto validMessageResponse =
+        common::messages::Message{common::messages::MessageId::SendChannelMessageResponse,
+                                  common::bytes::Bytes{validCommandHandlerResponseJson.dump()}};
 
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*createChannelMessageCommandHandlerMock,
