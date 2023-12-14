@@ -4,8 +4,8 @@
 
 namespace server::domain
 {
-BlacklistToken::BlacklistToken(std::string idInit, std::string tokenInit, std::string createdAtInit)
-    : id{std::move(idInit)}, token{std::move(tokenInit)}, createdAt{std::move(createdAtInit)}
+BlacklistToken::BlacklistToken(std::string idInit, std::string tokenInit, std::string expiresAtInit)
+    : id{std::move(idInit)}, token{std::move(tokenInit)}, expiresAt{std::move(expiresAtInit)}
 {
 }
 
@@ -19,9 +19,9 @@ std::string BlacklistToken::getToken() const
     return token;
 }
 
-std::string BlacklistToken::getCreatedAt() const
+std::string BlacklistToken::getExpiresAt() const
 {
-    return createdAt;
+    return expiresAt;
 }
 
 }

@@ -358,6 +358,7 @@ target_link_libraries(${EXECUTABLE_NAME}UT PRIVATE
         envParser
         gtest
         gmock
+        sqlite3
 )
 
 target_include_directories(${EXECUTABLE_NAME}UT PUBLIC ${GMOCK_INCLUDE_DIR})

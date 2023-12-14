@@ -25,5 +25,5 @@ TEST_F(BlacklistTokenMapperTest, givenPersistenceBlacklistToken_shouldMapToDomai
 
     ASSERT_EQ(domainBlacklistToken->getId(), persistenceBlacklistToken->getId());
     ASSERT_EQ(domainBlacklistToken->getToken(), persistenceBlacklistToken->getToken());
-    ASSERT_EQ(domainBlacklistToken->getCreatedAt(), persistenceBlacklistToken->getCreatedAt());
+    ASSERT_EQ(domainBlacklistToken->getExpiresAt(), persistenceBlacklistToken->getExpiresAt());
 }

@@ -1,11 +1,9 @@
 #include "BlacklistTokenRepositoryImpl.h"
 
-#include <boost/date_time/posix_time/posix_time.hpp>
 #include <format>
 
 #include "BlacklistToken.odb.h"
 #include "server/infrastructure/errors/BlacklistTokenRepositoryError.h"
-#include "server/infrastructure/errors/ResourceNotFoundError.h"
 
 namespace server::infrastructure
 {
@@ -21,9 +19,7 @@ BlacklistTokenRepositoryImpl::createBlacklistToken(const domain::CreateBlacklist
     try
     {
         {
-            const auto currentDate = to_iso_string(boost::posix_time::second_clock::universal_time());
-
-            const auto blacklistToken = std::make_shared<BlacklistToken>(payload.id, payload.token, currentDate);
+            const auto blacklistToken = std::make_shared<BlacklistToken>(payload.id, payload.token, payload.expiresAt);
 
             odb::transaction transaction(db->begin());
 

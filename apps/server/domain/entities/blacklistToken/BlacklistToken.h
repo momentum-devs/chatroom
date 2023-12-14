@@ -7,15 +7,15 @@ namespace server::domain
 class BlacklistToken
 {
 public:
-    BlacklistToken(std::string id, std::string token, std::string createdAt);
+    BlacklistToken(std::string id, std::string token, std::string expiresAt);
 
     [[nodiscard]] std::string getId() const;
     [[nodiscard]] std::string getToken() const;
-    [[nodiscard]] std::string getCreatedAt() const;
+    [[nodiscard]] std::string getExpiresAt() const;
 
 private:
     std::string id;
     std::string token;
-    std::string createdAt;
+    std::string expiresAt;
 };
 }

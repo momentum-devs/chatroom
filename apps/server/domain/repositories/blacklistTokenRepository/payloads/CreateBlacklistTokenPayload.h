@@ -8,6 +8,7 @@ struct CreateBlacklistTokenPayload
 {
     std::string id;
     std::string token;
+    std::string expiresAt;
 };
 
 inline bool operator==(const CreateBlacklistTokenPayload& lhs, const CreateBlacklistTokenPayload& rhs)

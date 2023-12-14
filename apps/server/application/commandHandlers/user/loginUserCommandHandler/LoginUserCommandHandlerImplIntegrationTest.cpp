@@ -8,6 +8,8 @@
 #include "server/application/errors/ResourceNotFoundError.h"
 #include "server/application/services/hashService/HashServiceImpl.h"
 #include "server/application/services/tokenService/TokenServiceImpl.h"
+#include "server/infrastructure/repositories/blacklistTokenRepository/blacklistTokenMapper/BlacklistTokenMapperImpl.h"
+#include "server/infrastructure/repositories/blacklistTokenRepository/BlacklistTokenRepositoryImpl.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "server/infrastructure/repositories/userRepository/UserRepositoryImpl.h"
 #include "server/tests/factories/databaseClientTestFactory/DatabaseClientTestFactory.h"
@@ -17,6 +19,7 @@ using namespace ::testing;
 using namespace server;
 using namespace server::infrastructure;
 using namespace server::application;
+using namespace server::domain;
 using namespace server::tests;
 
 const auto jwtSecret = "12321313423565365654546654121890008";
@@ -45,7 +48,13 @@ public:
 
     std::shared_ptr<HashService> hashService = std::make_shared<HashServiceImpl>();
 
-    std::shared_ptr<TokenService> tokenService = std::make_shared<TokenServiceImpl>(jwtSecret, jwtExpiresIn);
+    std::shared_ptr<BlacklistTokenMapper> blacklistTokenMapper = std::make_shared<BlacklistTokenMapperImpl>();
+
+    std::shared_ptr<BlacklistTokenRepository> blacklistTokenRepository =
+        std::make_shared<BlacklistTokenRepositoryImpl>(db, blacklistTokenMapper);
+
+    std::shared_ptr<TokenService> tokenService =
+        std::make_shared<TokenServiceImpl>(jwtSecret, jwtExpiresIn, blacklistTokenRepository);
 
     LoginUserCommandHandlerImpl loginUserCommandHandler{userRepository, hashService, tokenService};
 };

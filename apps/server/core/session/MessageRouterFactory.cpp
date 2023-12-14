@@ -53,7 +53,6 @@
 #include "server/application/queryHandlers/user/findUserByEmailQueryHandler/FindUserByEmailQueryHandlerImpl.h"
 #include "server/application/queryHandlers/user/findUserQueryHandler/FindUserQueryHandlerImpl.h"
 #include "server/application/services/hashService/HashServiceImpl.h"
-#include "server/application/services/tokenService/TokenServiceImpl.h"
 #include "server/infrastructure/repositories/channelInvitationRepository/channelInvitationMapper/ChannelInvitationMapperImpl.h"
 #include "server/infrastructure/repositories/channelInvitationRepository/ChannelInvitationRepositoryImpl.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
@@ -76,12 +75,11 @@
 
 namespace server::core
 {
-MessageRouterFactory::MessageRouterFactory(std::shared_ptr<odb::sqlite::database> dbInit, const std::string& jwtSecret,
-                                           const int jwtExpireIn, std::string sendGridApiKeyInit,
-                                           std::string sendGridEmailInit)
+MessageRouterFactory::MessageRouterFactory(std::shared_ptr<odb::sqlite::database> dbInit,
+                                           std::shared_ptr<server::application::TokenService> tokenServiceInit,
+                                           std::string sendGridApiKeyInit, std::string sendGridEmailInit)
     : db{std::move(dbInit)},
-      hashService{std::make_shared<server::application::HashServiceImpl>()},
-      tokenService{std::make_shared<server::application::TokenServiceImpl>(jwtSecret, jwtExpireIn)},
+      tokenService{std::move(tokenServiceInit)},
       sendGridApiKey{std::move(sendGridApiKeyInit)},
       sendGridEmail{std::move(sendGridEmailInit)}
 {
@@ -89,6 +87,8 @@ MessageRouterFactory::MessageRouterFactory(std::shared_ptr<odb::sqlite::database
 
 std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
 {
+    std::shared_ptr<application::HashService> hashService = std::make_shared<application::HashServiceImpl>();
+
     auto userMapper = std::make_shared<server::infrastructure::UserMapperImpl>();
 
     auto userRepository = std::make_shared<server::infrastructure::UserRepositoryImpl>(db, userMapper);

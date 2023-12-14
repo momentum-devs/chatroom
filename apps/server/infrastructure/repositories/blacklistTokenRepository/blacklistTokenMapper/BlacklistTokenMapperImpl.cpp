@@ -7,9 +7,9 @@ BlacklistTokenMapperImpl::mapToDomainBlacklistToken(std::shared_ptr<BlacklistTok
 {
     const auto id = blacklistToken->getId();
     const auto token = blacklistToken->getToken();
-    const auto createdAt = blacklistToken->getCreatedAt();
+    const auto expiresAt = blacklistToken->getExpiresAt();
 
-    return std::make_shared<domain::BlacklistToken>(id, token, createdAt);
+    return std::make_shared<domain::BlacklistToken>(id, token, expiresAt);
 }
 
 }

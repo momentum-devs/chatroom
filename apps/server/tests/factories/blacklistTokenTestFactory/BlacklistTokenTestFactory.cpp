@@ -11,17 +11,17 @@ std::shared_ptr<domain::BlacklistToken> BlacklistTokenTestFactory::createDomainB
 {
     const auto id = faker::String::uuid();
     const auto token = faker::String::alphanumeric(32);
-    const auto createdAt = faker::Date::pastDate();
+    const auto expiresAt = faker::Date::pastDate();
 
-    return std::make_shared<domain::BlacklistToken>(id, token, createdAt);
+    return std::make_shared<domain::BlacklistToken>(id, token, expiresAt);
 }
 
 std::shared_ptr<infrastructure::BlacklistToken> BlacklistTokenTestFactory::createPersistentBlacklistToken()
 {
     const auto id = faker::String::uuid();
     const auto token = faker::String::alphanumeric(32);
-    const auto createdAt = faker::Date::pastDate();
+    const auto expiresAt = faker::Date::pastDate();
 
-    return std::make_shared<infrastructure::BlacklistToken>(id, token, createdAt);
+    return std::make_shared<infrastructure::BlacklistToken>(id, token, expiresAt);
 }
 }

@@ -11,6 +11,7 @@ DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS channels;
 DROP TABLE IF EXISTS groups;
 DROP TABLE IF EXISTS users_groups;
+DROP TABLE IF EXISTS blacklist_tokens;
 
 PRAGMA foreign_keys=on;
 
@@ -119,4 +120,11 @@ CREATE TABLE reactions
     message TEXT NOT NULL,
     FOREIGN KEY ("user") REFERENCES users (id) ON DELETE CASCADE,
     FOREIGN KEY (message) REFERENCES messages (id) ON DELETE CASCADE
+);
+
+CREATE TABLE blacklist_tokens
+(
+    id         TEXT NOT NULL PRIMARY KEY,
+    token      TEXT NOT NULL,
+    expires_at TEXT NOT NULL
 );

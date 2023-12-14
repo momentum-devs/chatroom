@@ -15,15 +15,16 @@ class SessionFactoryImpl : public SessionFactory
 {
 public:
     SessionFactoryImpl(boost::asio::io_context& context, const std::shared_ptr<odb::sqlite::database>& db,
-                       const std::string& jwtSecret, int jwtExpireIn, const std::string& sendGridApiKey,
-                       const std::string& sendGridEmail);
+                       std::string jwtSecret, int jwtExpireIn, std::string sendGridApiKey, std::string sendGridEmail);
 
     std::pair<std::shared_ptr<boost::asio::ip::tcp::socket>, std::shared_ptr<Session>> create() const override;
 
 private:
     boost::asio::io_context& context;
     std::shared_ptr<odb::sqlite::database> db;
-    MessageRouterFactory messageRouterFactory;
-    std::shared_ptr<server::application::TokenService> tokenService;
+    std::string jwtSecret;
+    int jwtExpireIn;
+    std::string sendGridApiKey;
+    std::string sendGridEmail;
 };
 }

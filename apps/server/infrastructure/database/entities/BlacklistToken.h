@@ -11,8 +11,8 @@ namespace server::infrastructure
 class BlacklistToken
 {
 public:
-    BlacklistToken(std::string idInit, std::string tokenInit, std::string createdAtInit)
-        : id{std::move(idInit)}, token{std::move(tokenInit)}, created_at{std::move(createdAtInit)}
+    BlacklistToken(std::string idInit, std::string tokenInit, std::string expiresAtInit)
+        : id{std::move(idInit)}, token{std::move(tokenInit)}, expires_at{std::move(expiresAtInit)}
     {
     }
 
@@ -26,9 +26,9 @@ public:
         return token;
     }
 
-    [[nodiscard]] std::string getCreatedAt() const
+    [[nodiscard]] std::string getExpiresAt() const
     {
-        return created_at;
+        return expires_at;
     }
 
 private:
@@ -39,6 +39,6 @@ private:
 #pragma db id
     std::string id;
     std::string token;
-    std::string created_at;
+    std::string expires_at;
 };
 }

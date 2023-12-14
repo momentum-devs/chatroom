@@ -4,6 +4,7 @@
 
 #include "BlacklistTokenRepositoryImpl.h"
 #include "faker-cxx/Datatype.h"
+#include "faker-cxx/Date.h"
 #include "faker-cxx/String.h"
 #include "server/infrastructure/repositories/blacklistTokenRepository/blacklistTokenMapper/BlacklistTokenMapperImpl.h"
 #include "server/tests/factories/databaseClientTestFactory/DatabaseClientTestFactory.h"
@@ -42,10 +43,12 @@ TEST_F(BlacklistTokenRepositoryIntegrationTest, shouldCreateBlacklistToken)
 {
     const auto id = faker::String::uuid();
     const auto token = faker::String::alphanumeric(32);
+    const auto expiresAt = faker::Date::soonDate();
 
-    const auto blacklistToken = blacklistTokenRepository->createBlacklistToken({id, token});
+    const auto blacklistToken = blacklistTokenRepository->createBlacklistToken({id, token, expiresAt});
 
     ASSERT_EQ(blacklistToken->getToken(), token);
+    ASSERT_EQ(blacklistToken->getExpiresAt(), expiresAt);
 }
 
 TEST_F(BlacklistTokenRepositoryIntegrationTest, shouldFindExistingBlacklistTokenByToken)
