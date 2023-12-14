@@ -20,9 +20,9 @@ jobs:
 
       - name: Configure CMake
         run: |
-          docker run -t wsekta/chatroom-builder -v ${{github.workspace}}:/home/chatroom -w /home/chatroom \
+          docker run -v ${{github.workspace}}:/home/chatroom -w /home/chatroom wsekta/chatroom-builder \
             --entrypoint \
-              cmake -B ${{github.workspace}}/build \
+              cmake -B build \
                 -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
                 -DCMAKE_CXX_COMPILER=/usr/bin/clang++-16 \
                 -DCODE_COVERAGE:BOOL=ON \
@@ -30,9 +30,9 @@ jobs:
 
       - name: Build
         run: |
-          docker run -t wsekta/chatroom-builder -v ${{github.workspace}}:/home/chatroom -w /home/chatroom \
+          docker run -v ${{github.workspace}}:/home/chatroom -w /home/chatroom wsekta/chatroom-builder \
             --entrypoint \
-              cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+              cmake --build build --config ${{env.BUILD_TYPE}}
 
       - name: Prepare environment files
         run: |
@@ -42,7 +42,7 @@ jobs:
       - name: Test
         working-directory: ${{github.workspace}}/build
         run: |
-          docker run -t wsekta/chatroom-builder -v ${{github.workspace}}:/home/chatroom -w /home/chatroom \
+          docker run -v ${{github.workspace}}:/home/chatroom -w /home/chatroom/build wsekta/chatroom-builder \
             --entrypoint \
               ninja chatroom-ccov-all \
               && llvm-cov-16 show `cat ccov/binaries.list` -instr-profile=ccov/all-merged.profdata > coverage.txt

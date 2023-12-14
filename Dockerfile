@@ -11,8 +11,6 @@ RUN apt update -y \
 COPY externals externals
 
 RUN cd externals \
-    && ./install_externals.sh \
-    && /home/chatroom \
-    && /home/chatroom/build
+    && ./install_externals.sh
 
-ENTRYPOINT ["/bin/bash"]
+CMD ["/bin/bash"]
