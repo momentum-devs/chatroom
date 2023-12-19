@@ -8,10 +8,10 @@
 
 namespace server::api
 {
-class SendChannelMessageHandler : public MessageHandler
+class SendMessageToChannelMessageHandler : public MessageHandler
 {
 public:
-    SendChannelMessageHandler(
+    SendMessageToChannelMessageHandler(
         std::shared_ptr<application::TokenService> tokenService,
         std::unique_ptr<application::CreateChannelMessageCommandHandler> createChannelMessageCommandHandler);
 

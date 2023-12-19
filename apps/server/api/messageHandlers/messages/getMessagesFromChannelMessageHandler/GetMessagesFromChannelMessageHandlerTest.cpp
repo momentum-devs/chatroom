@@ -1,4 +1,4 @@
-#include "GetChannelMessagesMessageHandler.h"
+#include "GetMessagesFromChannelMessageHandler.h"
 
 #include <format>
 #include <gtest/gtest.h>
@@ -24,7 +24,7 @@ const auto invalidTokenMessageResponse = common::messages::Message{
     common::messages::MessageId::GetChannelMessagesResponse, common::bytes::Bytes{R"({"error":"invalidToken"})"}};
 }
 
-class GetChannelMessagesMessageHandlerTest : public Test
+class GetMessagesFromChannelMessageHandlerTest : public Test
 {
 public:
     // TODO: move it to common test utils
@@ -92,36 +92,36 @@ public:
     server::application::FindChannelMessagesQueryHandlerMock* findChannelMessagesQueryHandlerMock =
         findChannelMessagesQueryHandlerMockInit.get();
 
-    GetChannelMessagesMessageHandler getChannelMessagesMessageHandler{
+    GetMessagesFromChannelMessageHandler getMessagesFromChannelMessageHandler{
         tokenServiceMock, std::move(findChannelMessagesQueryHandlerMockInit)};
 };
 
-TEST_F(GetChannelMessagesMessageHandlerTest, handleMessage_shouldReturnValidMessageResponse)
+TEST_F(GetMessagesFromChannelMessageHandlerTest, handleMessage_shouldReturnValidMessageResponse)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*findChannelMessagesQueryHandlerMock, execute(_)).WillOnce(Return(validCommandHandlerResponse));
 
-    const auto messageResponse = getChannelMessagesMessageHandler.handleMessage(validMessage);
+    const auto messageResponse = getMessagesFromChannelMessageHandler.handleMessage(validMessage);
 
     ASSERT_EQ(messageResponse, validMessageResponse);
 }
 
-TEST_F(GetChannelMessagesMessageHandlerTest, handleMessage_shouldReturnInvalidTokenMessageResponse)
+TEST_F(GetMessagesFromChannelMessageHandlerTest, handleMessage_shouldReturnInvalidTokenMessageResponse)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Throw(invalidTokenError));
 
-    const auto messageResponse = getChannelMessagesMessageHandler.handleMessage(validMessage);
+    const auto messageResponse = getMessagesFromChannelMessageHandler.handleMessage(validMessage);
 
     ASSERT_EQ(messageResponse, invalidTokenMessageResponse);
 }
 
-TEST_F(GetChannelMessagesMessageHandlerTest, handleMessage_shouldReturnValidMessageResponseWithEmptyMessages)
+TEST_F(GetMessagesFromChannelMessageHandlerTest, handleMessage_shouldReturnValidMessageResponseWithEmptyMessages)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*findChannelMessagesQueryHandlerMock, execute(_))
         .WillOnce(Return(server::application::FindChannelMessagesQueryHandlerResult{{}, 0}));
 
-    const auto messageResponse = getChannelMessagesMessageHandler.handleMessage(validMessage);
+    const auto messageResponse = getMessagesFromChannelMessageHandler.handleMessage(validMessage);
 
     const auto validMessageResponse =
         common::messages::Message{common::messages::MessageId::GetChannelMessagesResponse,
@@ -129,13 +129,13 @@ TEST_F(GetChannelMessagesMessageHandlerTest, handleMessage_shouldReturnValidMess
     ASSERT_EQ(messageResponse, validMessageResponse);
 }
 
-TEST_F(GetChannelMessagesMessageHandlerTest, handleMessage_shouldReturnValidMessageResponseWithOneMessage)
+TEST_F(GetMessagesFromChannelMessageHandlerTest, handleMessage_shouldReturnValidMessageResponseWithOneMessage)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*findChannelMessagesQueryHandlerMock, execute(_))
         .WillOnce(Throw(std::runtime_error{"findChannelMessagesQueryHandlerError"}));
 
-    const auto messageResponse = getChannelMessagesMessageHandler.handleMessage(validMessage);
+    const auto messageResponse = getMessagesFromChannelMessageHandler.handleMessage(validMessage);
 
     const auto validMessageResponse =
         common::messages::Message{common::messages::MessageId::GetChannelMessagesResponse,

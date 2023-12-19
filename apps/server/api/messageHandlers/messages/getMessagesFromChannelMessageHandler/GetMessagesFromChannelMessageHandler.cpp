@@ -1,10 +1,10 @@
-#include "GetChannelMessagesMessageHandler.h"
+#include "GetMessagesFromChannelMessageHandler.h"
 
 #include "nlohmann/json.hpp"
 
 namespace server::api
 {
-GetChannelMessagesMessageHandler::GetChannelMessagesMessageHandler(
+GetMessagesFromChannelMessageHandler::GetMessagesFromChannelMessageHandler(
     std::shared_ptr<application::TokenService> tokenServiceInit,
     std::unique_ptr<application::FindChannelMessagesQueryHandler> findChannelMessagesQueryHandlerInit)
     : tokenService{std::move(tokenServiceInit)},
@@ -13,7 +13,7 @@ GetChannelMessagesMessageHandler::GetChannelMessagesMessageHandler(
 }
 
 common::messages::Message
-GetChannelMessagesMessageHandler::handleMessage(const common::messages::Message& message) const
+GetMessagesFromChannelMessageHandler::handleMessage(const common::messages::Message& message) const
 {
     try
     {

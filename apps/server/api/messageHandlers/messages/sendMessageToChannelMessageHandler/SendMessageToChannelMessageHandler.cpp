@@ -1,4 +1,4 @@
-#include "SendChannelMessageHandler.h"
+#include "SendMessageToChannelMessageHandler.h"
 
 #include <format>
 #include <loguru.hpp>
@@ -7,7 +7,7 @@
 
 namespace server::api
 {
-SendChannelMessageHandler::SendChannelMessageHandler(
+SendMessageToChannelMessageHandler::SendMessageToChannelMessageHandler(
     std::shared_ptr<application::TokenService> tokenServiceInit,
     std::unique_ptr<application::CreateChannelMessageCommandHandler> createChannelMessageCommandHandlerInit)
     : tokenService{std::move(tokenServiceInit)},
@@ -15,7 +15,7 @@ SendChannelMessageHandler::SendChannelMessageHandler(
 {
 }
 
-common::messages::Message SendChannelMessageHandler::handleMessage(const common::messages::Message& message) const
+common::messages::Message SendMessageToChannelMessageHandler::handleMessage(const common::messages::Message& message) const
 {
     try
     {
