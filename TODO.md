@@ -15,9 +15,7 @@
 
 ### SERVER:
 
-* remove -> delete
 * user avatars and channel avatars
 * transactions
 * infrastructure setup
 * deploy
-* prevent sql injection

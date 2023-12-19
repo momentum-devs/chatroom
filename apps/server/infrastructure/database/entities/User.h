@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <odb/core.hxx>
+#include <odb/nullable.hxx>
 #include <string>
 #include <utility>
 
@@ -12,7 +13,8 @@ class User
 {
 public:
     User(std::string idInit, std::string emailInit, std::string passwordInit, std::string nicknameInit, bool activeInit,
-         bool emailVerifiedInit, std::string verificationCodeInit, std::string createdAtInit, std::string updatedAtInit)
+         bool emailVerifiedInit, std::string verificationCodeInit, std::string createdAtInit, std::string updatedAtInit,
+         const odb::nullable<std::string>& avatarUrlInit)
         : id{std::move(idInit)},
           email{std::move(emailInit)},
           password{std::move(passwordInit)},
@@ -21,7 +23,8 @@ public:
           email_verified{emailVerifiedInit},
           verification_code(std::move(verificationCodeInit)),
           created_at{std::move(createdAtInit)},
-          updated_at{std::move(updatedAtInit)}
+          updated_at{std::move(updatedAtInit)},
+          avatar_url{avatarUrlInit}
     {
     }
 
@@ -70,6 +73,11 @@ public:
         return updated_at;
     }
 
+    [[nodiscard]] odb::nullable<std::string> getAvatarUrl() const
+    {
+        return avatar_url;
+    }
+
     void setNickname(const std::string& nicknameInit)
     {
         nickname = nicknameInit;
@@ -95,10 +103,18 @@ public:
         verification_code = verificationCodeInit;
     }
 
+    void setAvatarUrl(const std::string& avatarUrlInit)
+    {
+        avatar_url = avatarUrlInit;
+    }
+
     bool operator==(const User& user) const
     {
         auto tieStruct = [](const User& user)
-        { return std::tie(user.id, user.email, user.password, user.nickname, user.created_at, user.updated_at); };
+        {
+            return std::tie(user.id, user.email, user.password, user.nickname, user.created_at, user.updated_at,
+                            user.avatar_url, user.active, user.email_verified, user.verification_code);
+        };
 
         return tieStruct(*this) == tieStruct(user);
     }
@@ -118,5 +134,6 @@ private:
     std::string verification_code;
     std::string created_at;
     std::string updated_at;
+    odb::nullable<std::string> avatar_url;
 };
 }

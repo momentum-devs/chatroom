@@ -2,6 +2,7 @@
 
 #include "faker-cxx/Datatype.h"
 #include "faker-cxx/Date.h"
+#include "faker-cxx/Image.h"
 #include "faker-cxx/Internet.h"
 #include "faker-cxx/String.h"
 #include "server/application/errors/ResourceNotFoundError.h"
@@ -59,11 +60,12 @@ TEST_F(VerifyUserEmailCommandImplIntegrationTest, verifyExistingUserWithInvalidV
     const auto verificationCode = faker::String::numeric(6);
     const auto createdAt = faker::Date::pastDate();
     const auto updatedAt = faker::Date::recentDate();
+    const auto avatarUrl = faker::Image::imageUrl();
 
     const auto invalidVerificationCode = faker::String::numeric(5);
 
     const auto user = std::make_shared<server::infrastructure::User>(id, email, password, email, active, emailVerified,
-                                                                     verificationCode, createdAt, updatedAt);
+                                                                     verificationCode, createdAt, updatedAt, avatarUrl);
 
     userTestUtils.persist(user);
 
@@ -83,9 +85,10 @@ TEST_F(VerifyUserEmailCommandImplIntegrationTest, verifyAlreadyVerifiedUser)
     const auto invalidVerificationCode = faker::String::numeric(5);
     const auto createdAt = faker::Date::pastDate();
     const auto updatedAt = faker::Date::recentDate();
+    const auto avatarUrl = faker::Image::imageUrl();
 
     const auto user = std::make_shared<server::infrastructure::User>(id, email, password, email, active, emailVerified,
-                                                                     verificationCode, createdAt, updatedAt);
+                                                                     verificationCode, createdAt, updatedAt, avatarUrl);
 
     userTestUtils.persist(user);
 
@@ -104,9 +107,10 @@ TEST_F(VerifyUserEmailCommandImplIntegrationTest, verifyExistingUserWithValidVer
     const auto verificationCode = faker::String::numeric(6);
     const auto createdAt = faker::Date::pastDate();
     const auto updatedAt = faker::Date::recentDate();
+    const auto avatarUrl = faker::Image::imageUrl();
 
     const auto user = std::make_shared<server::infrastructure::User>(id, email, password, email, active, emailVerified,
-                                                                     verificationCode, createdAt, updatedAt);
+                                                                     verificationCode, createdAt, updatedAt, avatarUrl);
 
     userTestUtils.persist(user);
 

@@ -6,7 +6,7 @@ namespace server::domain
 {
 User::User(std::string idInit, std::string emailInit, std::string passwordInit, std::string nicknameInit,
            bool activeInit, bool emailVerifiedInit, std::string verificationCodeInit, std::string createdAtInit,
-           std::string updatedAtInit)
+           std::string updatedAtInit, std::optional<std::string> avatarUrlInit)
     : id{std::move(idInit)},
       email{std::move(emailInit)},
       password{std::move(passwordInit)},
@@ -15,7 +15,8 @@ User::User(std::string idInit, std::string emailInit, std::string passwordInit, 
       emailVerified{emailVerifiedInit},
       verificationCode{std::move(verificationCodeInit)},
       createdAt{std::move(createdAtInit)},
-      updatedAt{std::move(updatedAtInit)}
+      updatedAt{std::move(updatedAtInit)},
+      avatarUrl{std::move(avatarUrlInit)}
 {
 }
 
@@ -64,6 +65,11 @@ std::string User::getUpdatedAt() const
     return updatedAt;
 }
 
+std::optional<std::string> User::getAvatarUrl() const
+{
+    return avatarUrl;
+}
+
 void User::setPassword(const std::string& newPassword)
 {
     password = newPassword;
@@ -87,6 +93,11 @@ void User::setEmailVerified(bool emailVerifiedInit)
 void User::setVerificationCode(const std::string& newVerificationCode)
 {
     verificationCode = newVerificationCode;
+}
+
+void User::setAvatarUrl(const std::string& avatarUrlInit)
+{
+    avatarUrl = avatarUrlInit;
 }
 
 bool User::operator==(const User& user) const

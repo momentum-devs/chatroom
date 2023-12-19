@@ -2,6 +2,7 @@
 
 #include "faker-cxx/Datatype.h"
 #include "faker-cxx/Date.h"
+#include "faker-cxx/Image.h"
 #include "faker-cxx/Internet.h"
 #include "faker-cxx/String.h"
 #include "LoginUserCommandHandlerImpl.h"
@@ -71,9 +72,10 @@ TEST_F(LoginUserCommandImplIntegrationTest, loginExistingUserWithValidPassword)
     const auto verificationCode = faker::String::numeric(8);
     const auto createdAt = faker::Date::pastDate();
     const auto updatedAt = faker::Date::recentDate();
+    const auto avatarUrl = faker::Image::imageUrl();
 
     const auto user = std::make_shared<server::infrastructure::User>(
-        id, email, hashedPassword, email, active, emailVerified, verificationCode, createdAt, updatedAt);
+        id, email, hashedPassword, email, active, emailVerified, verificationCode, createdAt, updatedAt, avatarUrl);
 
     userTestUtils.persist(user);
 
@@ -101,9 +103,10 @@ TEST_F(LoginUserCommandImplIntegrationTest, loginExistingUserWithInvalidPassword
     const auto verificationCode = faker::String::numeric(8);
     const auto createdAt = faker::Date::pastDate();
     const auto updatedAt = faker::Date::recentDate();
+    const auto avatarUrl = faker::Image::imageUrl();
 
     const auto user = std::make_shared<server::infrastructure::User>(
-        id, email, hashedPassword, email, active, emailVerified, verificationCode, createdAt, updatedAt);
+        id, email, hashedPassword, email, active, emailVerified, verificationCode, createdAt, updatedAt, avatarUrl);
 
     userTestUtils.persist(user);
 

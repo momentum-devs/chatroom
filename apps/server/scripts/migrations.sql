@@ -25,7 +25,8 @@ CREATE TABLE users
     email_verified    INTEGER NOT NULL,
     verification_code TEXT    NOT NULL,
     created_at        TEXT    NOT NULL,
-    updated_at        TEXT    NOT NULL
+    updated_at        TEXT    NOT NULL,
+    avatar_url        TEXT    NULL
 );
 
 CREATE TABLE channels

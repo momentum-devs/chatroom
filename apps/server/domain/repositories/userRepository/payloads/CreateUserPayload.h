@@ -1,5 +1,6 @@
 #pragma once
 
+#include <optional>
 #include <string>
 
 namespace server::domain
@@ -13,6 +14,7 @@ struct CreateUserPayload
     bool active;
     bool emailVerified;
     std::string verificationCode;
+    std::optional<std::string> avatarUrl;
 };
 
 inline bool operator==(const CreateUserPayload& lhs, const CreateUserPayload& rhs)
@@ -20,7 +22,7 @@ inline bool operator==(const CreateUserPayload& lhs, const CreateUserPayload& rh
     auto tieStruct = [](const CreateUserPayload& payload)
     {
         return std::tie(payload.id, payload.email, payload.password, payload.nickname, payload.active,
-                        payload.emailVerified, payload.verificationCode);
+                        payload.emailVerified, payload.verificationCode, payload.avatarUrl);
     };
 
     return tieStruct(lhs) == tieStruct(rhs);

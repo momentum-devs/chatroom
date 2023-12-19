@@ -32,6 +32,7 @@ TEST_F(UserMapperTest, givenPersistenceUser_shouldMapToDomainUser)
     ASSERT_EQ(domainUser->getVerificationCode(), persistenceUser->getVerificationCode());
     ASSERT_EQ(domainUser->getCreatedAt(), persistenceUser->getCreatedAt());
     ASSERT_EQ(domainUser->getUpdatedAt(), persistenceUser->getUpdatedAt());
+    ASSERT_EQ(domainUser->getAvatarUrl(), persistenceUser->getAvatarUrl().get());
 }
 
 TEST_F(UserMapperTest, givenDomainUser_shouldMapToPersistenceUser)
@@ -49,4 +50,5 @@ TEST_F(UserMapperTest, givenDomainUser_shouldMapToPersistenceUser)
     ASSERT_EQ(persistenceUser->getVerificationCode(), domainUser->getVerificationCode());
     ASSERT_EQ(persistenceUser->getCreatedAt(), domainUser->getCreatedAt());
     ASSERT_EQ(persistenceUser->getUpdatedAt(), domainUser->getUpdatedAt());
+    ASSERT_EQ(persistenceUser->getAvatarUrl().get(), domainUser->getAvatarUrl());
 }
