@@ -9,6 +9,7 @@
 
 #include "faker-cxx/Datatype.h"
 #include "faker-cxx/Date.h"
+#include "faker-cxx/Image.h"
 #include "faker-cxx/Internet.h"
 #include "faker-cxx/String.h"
 
@@ -30,8 +31,10 @@ public:
         const bool userActive = faker::Datatype::boolean();
         const bool userEmailVerified = faker::Datatype::boolean();
         const auto verificationCode = faker::String::numeric(6);
-        return {userId,           userEmail,     userPassword, userNickname, userActive, userEmailVerified,
-                verificationCode, userCreatedAt, userUpdatedAt};
+        const auto avatarUrl = faker::Image::imageUrl();
+
+        return {userId,           userEmail,     userPassword,  userNickname, userActive, userEmailVerified,
+                verificationCode, userCreatedAt, userUpdatedAt, avatarUrl};
     }
 
     std::string token = "token";

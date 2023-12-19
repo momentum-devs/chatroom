@@ -7,6 +7,7 @@
 
 #include "faker-cxx/Datatype.h"
 #include "faker-cxx/Date.h"
+#include "faker-cxx/Image.h"
 #include "faker-cxx/Internet.h"
 #include "faker-cxx/Lorem.h"
 #include "faker-cxx/String.h"
@@ -32,7 +33,7 @@ const auto createChannelMessageCommandHandlerErrorMessageResponse =
 class SendChannelMessageHandlerTest : public Test
 {
 public:
-    std::shared_ptr<server::domain::User> createUser()
+    static std::shared_ptr<server::domain::User> createUser()
     {
         const auto userId = faker::String::uuid();
         const auto userNickname = faker::String::alphanumeric(10);
@@ -43,9 +44,11 @@ public:
         const bool userActive = faker::Datatype::boolean();
         const bool userEmailVerified = faker::Datatype::boolean();
         const auto verificationCode = faker::String::numeric(6);
+        const auto avatarUrl = faker::Image::imageUrl();
+
         return std::make_shared<server::domain::User>(
             server::domain::User{userId, userEmail, userPassword, userNickname, userActive, userEmailVerified,
-                                 verificationCode, userCreatedAt, userUpdatedAt});
+                                 verificationCode, userCreatedAt, userUpdatedAt, avatarUrl});
     }
 
     std::string token = faker::String::alphanumeric(40);

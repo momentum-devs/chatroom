@@ -9,6 +9,7 @@
 
 #include "faker-cxx/Datatype.h"
 #include "faker-cxx/Date.h"
+#include "faker-cxx/Image.h"
 #include "faker-cxx/Internet.h"
 #include "faker-cxx/String.h"
 #include "nlohmann/json.hpp"
@@ -63,14 +64,15 @@ TEST_F(CreateChannelMessageHandlerTest, handleValidCreateChannelMessage)
     const auto verificationCode = faker::String::numeric(6);
     const auto createdAt = faker::Date::pastDate();
     const auto updatedAt = faker::Date::recentDate();
+    const auto avatarUrl = faker::Image::imageUrl();
 
     const auto user = std::make_shared<server::domain::User>(userId, email, password, nickname, active, emailVerified,
-                                                             verificationCode, createdAt, updatedAt);
+                                                             verificationCode, createdAt, updatedAt, avatarUrl);
 
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*createChannelCommandHandlerMock,
                 execute(server::application::CreateChannelCommandHandlerPayload{channelName, creatorId}))
-        .WillOnce(Return(server::application::CreateChannelCommandHandlerResult{{"", "", user, "", ""}}));
+        .WillOnce(Return(server::application::CreateChannelCommandHandlerResult{{"", "", user, "", "", ""}}));
 
     auto responseMessage = createChannelMessageHandler.handleMessage(message);
 

@@ -1,3 +1,5 @@
+#include "GetUserFriendInvitationsMessageHandler.h"
+
 #include <format>
 #include <gtest/gtest.h>
 #include <regex>
@@ -6,8 +8,8 @@
 #include "server/application/services/tokenService/TokenServiceMock.h"
 
 #include "faker-cxx/Date.h"
+#include "faker-cxx/Image.h"
 #include "faker-cxx/String.h"
-#include "GetUserFriendInvitationsMessageHandler.h"
 #include "nlohmann/json.hpp"
 
 using namespace ::testing;
@@ -89,11 +91,12 @@ TEST_F(GetUserFriendInvitationsMessageHandlerTest, handleValidGetUserFriendInvit
     const auto verificationCode = faker::String::numeric(6);
     const auto createdAt = faker::Date::pastDate();
     const auto updatedAt = faker::Date::recentDate();
+    const auto avatarUrl = faker::Image::imageUrl();
 
-    const auto user1 = std::make_shared<server::domain::User>(userId, email, password, friendName1, active,
-                                                              emailVerified, verificationCode, createdAt, updatedAt);
-    const auto user2 = std::make_shared<server::domain::User>(userId, email, password, friendName2, active,
-                                                              emailVerified, verificationCode, createdAt, updatedAt);
+    const auto user1 = std::make_shared<server::domain::User>(
+        userId, email, password, friendName1, active, emailVerified, verificationCode, createdAt, updatedAt, avatarUrl);
+    const auto user2 = std::make_shared<server::domain::User>(
+        userId, email, password, friendName2, active, emailVerified, verificationCode, createdAt, updatedAt, avatarUrl);
 
     const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
 

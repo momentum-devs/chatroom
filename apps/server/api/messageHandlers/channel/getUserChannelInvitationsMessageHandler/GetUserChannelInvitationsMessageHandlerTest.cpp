@@ -9,6 +9,7 @@
 
 #include "faker-cxx/Datatype.h"
 #include "faker-cxx/Date.h"
+#include "faker-cxx/Image.h"
 #include "faker-cxx/Internet.h"
 #include "faker-cxx/String.h"
 #include "nlohmann/json.hpp"
@@ -94,16 +95,17 @@ TEST_F(GetUserChannelInvitationsMessageHandlerTest, handleValidGetUserChannelsMe
     const auto verificationCode = faker::String::numeric(6);
     const auto createdAt = faker::Date::pastDate();
     const auto updatedAt = faker::Date::recentDate();
+    const auto avatarUrl = faker::Image::imageUrl();
 
     const auto user = std::make_shared<server::domain::User>(userId, email, password, nickname, active, emailVerified,
-                                                             verificationCode, createdAt, updatedAt);
+                                                             verificationCode, createdAt, updatedAt, avatarUrl);
 
     const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
 
     const auto channel1 =
-        std::make_shared<server::domain::Channel>(requestId1, friendName1, user, createdAt, updatedAt);
+        std::make_shared<server::domain::Channel>(requestId1, friendName1, user, createdAt, updatedAt, avatarUrl);
     const auto channel2 =
-        std::make_shared<server::domain::Channel>(channelId2, channelName2, user, createdAt, updatedAt);
+        std::make_shared<server::domain::Channel>(channelId2, channelName2, user, createdAt, updatedAt, avatarUrl);
 
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*findReceivedChannelInvitationsQueryHandlerMock,

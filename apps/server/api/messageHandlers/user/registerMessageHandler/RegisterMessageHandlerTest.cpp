@@ -62,7 +62,7 @@ TEST_F(RegisterMessageHandlerTest, handleValidRegisterUserMessage)
     EXPECT_CALL(*registerUserCommandHandlerMock,
                 execute(server::application::RegisterUserCommandHandlerPayload{userEmail, userPassword, userNickname}))
         .WillOnce(Return(server::application::RegisterUserCommandHandlerResult{
-            {userId, userEmail, userPassword, userNickname, userIsActive, userEmailVerified, "123", "", ""}}));
+            {userId, userEmail, userPassword, userNickname, userIsActive, userEmailVerified, "123", "", "", ""}}));
 
     EXPECT_CALL(*sendRegistrationVerificationEmailCommandHandlerMock,
                 execute(server::application::SendRegistrationVerificationEmailCommandHandlerPayload{userEmail}));

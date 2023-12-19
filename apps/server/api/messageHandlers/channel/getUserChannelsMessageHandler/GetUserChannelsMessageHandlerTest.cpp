@@ -9,6 +9,7 @@
 
 #include "faker-cxx/Datatype.h"
 #include "faker-cxx/Date.h"
+#include "faker-cxx/Image.h"
 #include "faker-cxx/Internet.h"
 #include "faker-cxx/String.h"
 #include "nlohmann/json.hpp"
@@ -75,9 +76,10 @@ TEST_F(GetUserChannelsMessageHandlerTest, handleValidGetUserChannelsMessageWithN
     const auto verificationCode = faker::String::numeric(6);
     const auto createdAt = faker::Date::pastDate();
     const auto updatedAt = faker::Date::recentDate();
+    const auto avatarUrl = faker::Image::imageUrl();
 
     const auto user = std::make_shared<server::domain::User>(userId, email, password, nickname, active, emailVerified,
-                                                             verificationCode, createdAt, updatedAt);
+                                                             verificationCode, createdAt, updatedAt, avatarUrl);
 
     const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
 
@@ -102,9 +104,10 @@ TEST_F(GetUserChannelsMessageHandlerTest, handleValidGetUserChannelsMessageWithF
     const auto verificationCode = faker::String::numeric(6);
     const auto createdAt = faker::Date::pastDate();
     const auto updatedAt = faker::Date::recentDate();
+    const auto avatarUrl = faker::Image::imageUrl();
 
     const auto user = std::make_shared<server::domain::User>(userId, email, password, nickname, active, emailVerified,
-                                                             verificationCode, createdAt, updatedAt);
+                                                             verificationCode, createdAt, updatedAt, avatarUrl);
 
     const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
 
@@ -112,7 +115,7 @@ TEST_F(GetUserChannelsMessageHandlerTest, handleValidGetUserChannelsMessageWithF
     EXPECT_CALL(*findChannelsToWhichUserBelongsQueryHandlerMock,
                 execute(server::application::FindChannelsToWhichUserBelongsQueryHandlerPayload{userId}))
         .WillOnce(Return(server::application::FindChannelsToWhichUserBelongsQueryHandlerResult{
-            {{requestId1, friendName1, user, "", ""}, {channelId2, channelName2, user, "", ""}}}));
+            {{requestId1, friendName1, user, "", "", ""}, {channelId2, channelName2, user, "", "", ""}}}));
 
     auto responseMessage = getUserChannelsMessageHandler.handleMessage(message);
 
@@ -139,9 +142,10 @@ TEST_F(GetUserChannelsMessageHandlerTest, handleGetUserChannelsMessageWithErrorW
     const auto verificationCode = faker::String::numeric(6);
     const auto createdAt = faker::Date::pastDate();
     const auto updatedAt = faker::Date::recentDate();
+    const auto avatarUrl = faker::Image::imageUrl();
 
     const auto user = std::make_shared<server::domain::User>(userId, email, password, nickname, active, emailVerified,
-                                                             verificationCode, createdAt, updatedAt);
+                                                             verificationCode, createdAt, updatedAt, avatarUrl);
 
     const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
 

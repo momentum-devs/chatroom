@@ -8,6 +8,7 @@
 #include "server/application/services/tokenService/TokenServiceMock.h"
 
 #include "faker-cxx/Date.h"
+#include "faker-cxx/Image.h"
 #include "faker-cxx/String.h"
 #include "nlohmann/json.hpp"
 
@@ -87,11 +88,14 @@ TEST_F(GetUserFriendsMessageHandlerTest, handleValidGetUserFriendsMessageWithFew
     const auto verificationCode = faker::String::numeric(6);
     const auto createdAt = faker::Date::pastDate();
     const auto updatedAt = faker::Date::recentDate();
+    const auto avatarUrl = faker::Image::imageUrl();
 
-    const auto user1 = std::make_shared<server::domain::User>(friendId1, email, password, friendName1, false,
-                                                              emailVerified, verificationCode, createdAt, updatedAt);
-    const auto user2 = std::make_shared<server::domain::User>(friendId2, email, password, friendName2, true,
-                                                              emailVerified, verificationCode, createdAt, updatedAt);
+    const auto user1 =
+        std::make_shared<server::domain::User>(friendId1, email, password, friendName1, false, emailVerified,
+                                               verificationCode, createdAt, updatedAt, avatarUrl);
+    const auto user2 =
+        std::make_shared<server::domain::User>(friendId2, email, password, friendName2, true, emailVerified,
+                                               verificationCode, createdAt, updatedAt, avatarUrl);
 
     const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
 

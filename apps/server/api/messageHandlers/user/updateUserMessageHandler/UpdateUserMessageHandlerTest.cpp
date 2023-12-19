@@ -60,7 +60,7 @@ TEST_F(UpdateUserMessageHandlerTest, handleValidUpdateUserMessage)
     EXPECT_CALL(*updateUserCommandHandlerMock,
                 execute(server::application::UpdateUserCommandHandlerPayload{userId, userNickname, userPassword}))
         .WillOnce(Return(server::application::UpdateUserCommandHandlerResult{
-            {userId, userEmail, userPassword, userNickname, userIsActive, userEmailVerified, "123", "", ""}}));
+            {userId, userEmail, userPassword, userNickname, userIsActive, userEmailVerified, "123", "", "", ""}}));
 
     auto responseMessage = updateUserMessageHandler.handleMessage(message);
 

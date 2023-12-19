@@ -1,3 +1,5 @@
+#include "FriendInvitationMessageHandler.h"
+
 #include <format>
 #include <gtest/gtest.h>
 #include <regex>
@@ -6,7 +8,6 @@
 #include "server/application/queryHandlers/user/findUserByEmailQueryHandler/FindUserByEmailQueryHandlerMock.h"
 #include "server/application/services/tokenService/TokenServiceMock.h"
 
-#include "FriendInvitationMessageHandler.h"
 #include "nlohmann/json.hpp"
 
 using namespace ::testing;
@@ -19,7 +20,7 @@ auto userId = "id";
 const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
 auto friendId = "friendId";
 auto friendEmail = "friend_email";
-auto friendUser = server::domain::User{friendId, friendEmail, "", "", true, true, "123", "", ""};
+auto friendUser = server::domain::User{friendId, friendEmail, "", "", true, true, "123", "", "", ""};
 auto validPayloadJson = nlohmann::json{{"data", {{"friend_email", friendEmail}}}, {"token", token}};
 auto validPayload = common::bytes::Bytes{validPayloadJson.dump()};
 auto message = common::messages::Message{common::messages::MessageId::SendFriendInvitation, validPayload};

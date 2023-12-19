@@ -30,13 +30,15 @@ TEST_F(FriendInvitationMapperTest, givenPersistenceFriendInvitation_shouldMapToD
 
     const auto domainSender = std::make_shared<domain::User>(
         sender->getId(), sender->getEmail(), sender->getPassword(), sender->getNickname(), sender->isActive(),
-        sender->isEmailVerified(), sender->getVerificationCode(), sender->getCreatedAt(), sender->getUpdatedAt());
+        sender->isEmailVerified(), sender->getVerificationCode(), sender->getCreatedAt(), sender->getUpdatedAt(),
+        sender->getAvatarUrl().null() ? std::optional<std::string>(std::nullopt) : sender->getAvatarUrl().get());
 
     const auto recipient = userTestFactory.createPersistentUser();
 
     const auto domainRecipient = std::make_shared<domain::User>(
         sender->getId(), sender->getEmail(), sender->getPassword(), sender->getNickname(), sender->isActive(),
-        sender->isEmailVerified(), sender->getVerificationCode(), sender->getCreatedAt(), sender->getUpdatedAt());
+        sender->isEmailVerified(), sender->getVerificationCode(), sender->getCreatedAt(), sender->getUpdatedAt(),
+        sender->getAvatarUrl().null() ? std::optional<std::string>(std::nullopt) : sender->getAvatarUrl().get());
 
     const auto persistenceFriendInvitation =
         friendInvitationTestFactory.createPersistentFriendInvitation(sender, recipient);

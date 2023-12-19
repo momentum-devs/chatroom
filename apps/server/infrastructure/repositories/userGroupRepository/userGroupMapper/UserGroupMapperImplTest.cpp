@@ -33,7 +33,8 @@ TEST_F(UserGroupMapperTest, givenPersistenceUserGroup_shouldMapToDomainUserGroup
 
     const auto domainUser = std::make_shared<domain::User>(
         user->getId(), user->getEmail(), user->getPassword(), user->getNickname(), user->isActive(),
-        user->isEmailVerified(), user->getVerificationCode(), user->getCreatedAt(), user->getUpdatedAt());
+        user->isEmailVerified(), user->getVerificationCode(), user->getCreatedAt(), user->getUpdatedAt(),
+        user->getAvatarUrl().null() ? std::optional<std::string>(std::nullopt) : user->getAvatarUrl().get());
 
     const auto group = groupTestFactory.createPersistentGroup();
 
