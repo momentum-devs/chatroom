@@ -25,3 +25,4 @@
 * deploy
 * update updatedAt date when updating
 * replace std::format with fmt
+* add flag to server to not run migrations at start
