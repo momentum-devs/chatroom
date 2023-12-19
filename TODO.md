@@ -6,7 +6,7 @@
 * user has history of direct messages and messages in channel
 * reaction to messages
 * push messages, invitations, online/offline instead of polling
-* reconnection to server after losting connection
+* reconnection to server after losing connection
 * repeating messages (with obtaining channels, invitations, messages, etc.)
 * sound effect on new message and new invitation
 * encryption
@@ -18,8 +18,6 @@
 * remove -> delete
 * user avatars and channel avatars
 * transactions
-* migrations
-* encryption
 * infrastructure setup
 * deploy
 * prevent sql injection

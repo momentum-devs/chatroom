@@ -18,7 +18,6 @@ using namespace ::testing;
 namespace
 {
 
-const auto messageId = faker::String::uuid();
 const auto messageContent = "text";
 const auto invalidTokenError = std::runtime_error{"invalidToken"};
 const auto invalidTokenMessageResponse = common::messages::Message{
@@ -80,6 +79,7 @@ TEST_F(SendChannelMessageHandlerTest, handleValidSendChannelMessage)
     const std::shared_ptr<server::domain::Group> messageGroup = nullptr;
     const auto messageCreatedAt = faker::Date::recentDate();
     const auto messageUpdatedAt = faker::Date::recentDate();
+    const auto messageId = faker::String::uuid();
     server::domain::Message message{messageId,    messageContent,   messageSender,   messageChannel,
                                     messageGroup, messageCreatedAt, messageUpdatedAt};
     const auto validCommandHandlerResponse = server::application::CreateChannelMessageCommandHandlerResult{message};
