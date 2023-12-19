@@ -19,3 +19,4 @@
 * transactions
 * infrastructure setup
 * deploy
+* update updatedAt date when updating

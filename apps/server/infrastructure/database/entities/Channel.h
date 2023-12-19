@@ -14,12 +14,13 @@ class Channel
 {
 public:
     Channel(std::string idInit, std::string nameInit, std::shared_ptr<User> creatorInit, std::string createdAtInit,
-            std::string updatedAtInit)
+            std::string updatedAtInit, const odb::nullable<std::string>& avatarUrlInit)
         : id{std::move(idInit)},
           name{std::move(nameInit)},
           creator{std::move(creatorInit)},
           created_at{std::move(createdAtInit)},
-          updated_at{std::move(updatedAtInit)}
+          updated_at{std::move(updatedAtInit)},
+          avatar_url{avatarUrlInit}
     {
     }
 
@@ -48,11 +49,20 @@ public:
         return updated_at;
     }
 
+    [[nodiscard]] odb::nullable<std::string> getAvatarUrl() const
+    {
+        return avatar_url;
+    }
+
     void setName(const std::string& newName)
     {
         name = newName;
     }
 
+    void setAvatarUrl(const std::string& newAvatarUrl)
+    {
+        avatar_url = newAvatarUrl;
+    }
 
     bool operator==(const Channel& channel) const
     {
@@ -76,5 +86,6 @@ private:
 
     std::string created_at;
     std::string updated_at;
+    odb::nullable<std::string> avatar_url;
 };
 }

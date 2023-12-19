@@ -31,7 +31,7 @@ std::shared_ptr<User> UserMapperImpl::mapToPersistenceUser(std::shared_ptr<domai
     const auto verificationCode = user->getVerificationCode();
     const auto createdAt = user->getCreatedAt();
     const auto updatedAt = user->getUpdatedAt();
-    const auto avatarUrl = user->getAvatarUrl() ? odb::nullable<std::string>() : *user->getAvatarUrl();
+    const auto avatarUrl = user->getAvatarUrl() ? *user->getAvatarUrl() : odb::nullable<std::string>();
 
     return std::make_shared<User>(id, email, password, nickname, active, emailVerified, verificationCode, createdAt,
                                   updatedAt, avatarUrl);

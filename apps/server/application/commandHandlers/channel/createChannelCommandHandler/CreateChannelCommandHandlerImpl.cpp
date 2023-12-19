@@ -36,7 +36,7 @@ CreateChannelCommandHandlerImpl::execute(const CreateChannelCommandHandlerPayloa
 
     const auto channelId = uuid.str();
 
-    const auto channel = channelRepository->createChannel({channelId, payload.name, *creator});
+    const auto channel = channelRepository->createChannel({channelId, payload.name, *creator, std::nullopt});
 
     LOG_S(INFO) << std::format("Channel with name \"{}\" created.", channel->getName());
 

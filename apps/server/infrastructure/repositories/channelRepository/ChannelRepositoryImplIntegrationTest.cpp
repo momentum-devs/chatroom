@@ -3,6 +3,7 @@
 #include "gtest/gtest.h"
 
 #include "ChannelRepositoryImpl.h"
+#include "faker-cxx/Image.h"
 #include "faker-cxx/String.h"
 #include "faker-cxx/Word.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
@@ -57,12 +58,15 @@ TEST_F(ChannelRepositoryIntegrationTest, shouldCreateChannel)
 
     const auto channelId = faker::String::uuid();
     const auto name = faker::Word::noun();
+    const auto avatarUrl = faker::Image::imageUrl();
 
-    const auto channel = channelRepository->createChannel({channelId, name, userMapper->mapToDomainUser(user)});
+    const auto channel =
+        channelRepository->createChannel({channelId, name, userMapper->mapToDomainUser(user), avatarUrl});
 
     ASSERT_EQ(channel->getId(), channelId);
     ASSERT_EQ(channel->getName(), name);
     ASSERT_EQ(channel->getCreator()->getId(), user->getId());
+    ASSERT_EQ(channel->getAvatarUrl(), avatarUrl);
 }
 
 TEST_F(ChannelRepositoryIntegrationTest, shouldDeleteExistingChannel)
@@ -113,12 +117,14 @@ TEST_F(ChannelRepositoryIntegrationTest, givenNonExistingChannel_shouldNotFindAn
 TEST_F(ChannelRepositoryIntegrationTest, shouldUpdateExistingChannel)
 {
     const auto updatedName = faker::Word::noun();
+    const auto updatedAvatarUrl = faker::Image::imageUrl();
 
     const auto channel = channelTestUtils.createAndPersist();
 
     const auto domainChannel = channelMapper->mapToDomainChannel(channel);
 
     domainChannel->setName(updatedName);
+    domainChannel->setAvatarUrl(updatedAvatarUrl);
 
     channelRepository->updateChannel({*domainChannel});
 
@@ -126,6 +132,7 @@ TEST_F(ChannelRepositoryIntegrationTest, shouldUpdateExistingChannel)
 
     ASSERT_TRUE(updatedUser);
     ASSERT_EQ((*updatedUser).getName(), updatedName);
+    ASSERT_EQ((*updatedUser).getAvatarUrl().get(), updatedAvatarUrl);
 }
 
 TEST_F(ChannelRepositoryIntegrationTest, update_givenNonExistingUser_shouldThrowError)

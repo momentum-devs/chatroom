@@ -25,7 +25,10 @@ std::shared_ptr<domain::Channel> ChannelRepositoryImpl::createChannel(const doma
 
             const auto creator = userMapper->mapToPersistenceUser(payload.creator);
 
-            const auto channel = std::make_shared<Channel>(payload.id, payload.name, creator, currentDate, currentDate);
+            const auto avatarUrl = payload.avatarUrl ? *payload.avatarUrl : odb::nullable<std::string>();
+
+            const auto channel =
+                std::make_shared<Channel>(payload.id, payload.name, creator, currentDate, currentDate, avatarUrl);
 
             odb::transaction transaction(db->begin());
 
@@ -86,6 +89,11 @@ std::shared_ptr<domain::Channel> ChannelRepositoryImpl::updateChannel(const doma
             }
 
             channel->setName(payload.channel.getName());
+
+            if (payload.channel.getAvatarUrl())
+            {
+                channel->setAvatarUrl(*payload.channel.getAvatarUrl());
+            }
 
             db->update(*channel);
 

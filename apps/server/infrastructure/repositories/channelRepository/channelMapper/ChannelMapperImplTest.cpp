@@ -29,7 +29,8 @@ TEST_F(ChannelMapperTest, givenPersistenceChannel_shouldMapToDomainChannel)
 
     const auto domainUser = std::make_shared<domain::User>(
         user->getId(), user->getEmail(), user->getPassword(), user->getNickname(), user->isActive(),
-        user->isEmailVerified(), user->getVerificationCode(), user->getCreatedAt(), user->getUpdatedAt());
+        user->isEmailVerified(), user->getVerificationCode(), user->getCreatedAt(), user->getUpdatedAt(),
+        user->getAvatarUrl().null() ? std::optional<std::string>(std::nullopt) : user->getAvatarUrl().get());
 
     const auto channel = channelTestFactory.createPersistentChannel(user);
 
@@ -42,6 +43,7 @@ TEST_F(ChannelMapperTest, givenPersistenceChannel_shouldMapToDomainChannel)
     ASSERT_EQ(domainChannel->getCreator(), domainUser);
     ASSERT_EQ(domainChannel->getCreatedAt(), channel->getCreatedAt());
     ASSERT_EQ(domainChannel->getUpdatedAt(), channel->getUpdatedAt());
+    ASSERT_EQ(domainChannel->getAvatarUrl(), channel->getAvatarUrl().get());
 }
 
 TEST_F(ChannelMapperTest, givenDomainChannel_shouldMapToPersistenceChannel)
@@ -50,7 +52,8 @@ TEST_F(ChannelMapperTest, givenDomainChannel_shouldMapToPersistenceChannel)
 
     const auto domainUser = std::make_shared<domain::User>(
         user->getId(), user->getEmail(), user->getPassword(), user->getNickname(), user->isActive(),
-        user->isEmailVerified(), user->getVerificationCode(), user->getCreatedAt(), user->getUpdatedAt());
+        user->isEmailVerified(), user->getVerificationCode(), user->getCreatedAt(), user->getUpdatedAt(),
+        user->getAvatarUrl().null() ? std::optional<std::string>(std::nullopt) : user->getAvatarUrl().get());
 
     const auto domainChannel = channelTestFactory.createDomainChannel(domainUser);
 
@@ -63,4 +66,5 @@ TEST_F(ChannelMapperTest, givenDomainChannel_shouldMapToPersistenceChannel)
     ASSERT_EQ(persistenceChannel->getCreator(), user);
     ASSERT_EQ(persistenceChannel->getCreatedAt(), domainChannel->getCreatedAt());
     ASSERT_EQ(persistenceChannel->getUpdatedAt(), domainChannel->getUpdatedAt());
+    ASSERT_EQ(persistenceChannel->getAvatarUrl().get(), domainChannel->getAvatarUrl());
 }

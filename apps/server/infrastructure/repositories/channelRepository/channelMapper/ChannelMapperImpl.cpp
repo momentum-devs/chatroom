@@ -13,8 +13,10 @@ std::shared_ptr<domain::Channel> ChannelMapperImpl::mapToDomainChannel(std::shar
     const auto creator = userMapper->mapToDomainUser(channel->getCreator());
     const auto createdAt = channel->getCreatedAt();
     const auto updatedAt = channel->getUpdatedAt();
+    const auto avatarUrl =
+        channel->getAvatarUrl().null() ? std::optional<std::string>(std::nullopt) : channel->getAvatarUrl().get();
 
-    return std::make_shared<domain::Channel>(id, name, creator, createdAt, updatedAt);
+    return std::make_shared<domain::Channel>(id, name, creator, createdAt, updatedAt, avatarUrl);
 }
 
 std::shared_ptr<Channel> ChannelMapperImpl::mapToPersistenceChannel(std::shared_ptr<domain::Channel> channel) const
@@ -24,7 +26,8 @@ std::shared_ptr<Channel> ChannelMapperImpl::mapToPersistenceChannel(std::shared_
     const auto creator = userMapper->mapToPersistenceUser(channel->getCreator());
     const auto createdAt = channel->getCreatedAt();
     const auto updatedAt = channel->getUpdatedAt();
+    const auto avatarUrl = channel->getAvatarUrl() ? *channel->getAvatarUrl() : odb::nullable<std::string>();
 
-    return std::make_shared<Channel>(id, name, creator, createdAt, updatedAt);
+    return std::make_shared<Channel>(id, name, creator, createdAt, updatedAt, avatarUrl);
 }
 }

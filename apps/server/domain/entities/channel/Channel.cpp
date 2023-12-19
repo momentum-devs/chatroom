@@ -5,12 +5,13 @@
 namespace server::domain
 {
 Channel::Channel(std::string idInit, std::string nameInit, std::shared_ptr<User> creatorInit, std::string createdAtInit,
-                 std::string updatedAtInit)
+                 std::string updatedAtInit, const std::optional<std::string>& avatarUrlInit)
     : id{std::move(idInit)},
       name{std::move(nameInit)},
       creator{std::move(creatorInit)},
       createdAt{std::move(createdAtInit)},
-      updatedAt{std::move(updatedAtInit)}
+      updatedAt{std::move(updatedAtInit)},
+      avatarUrl{avatarUrlInit}
 {
 }
 
@@ -39,6 +40,11 @@ std::string Channel::getUpdatedAt() const
     return updatedAt;
 }
 
+std::optional<std::string> Channel::getAvatarUrl() const
+{
+    return avatarUrl;
+}
+
 bool Channel::operator==(const Channel& channel) const
 {
     auto tieStruct = [](const Channel& channel)
@@ -51,4 +57,10 @@ void Channel::setName(const std::string& newName)
 {
     name = newName;
 }
+
+void Channel::setAvatarUrl(const std::string& avatarUrlInit)
+{
+    avatarUrl = avatarUrlInit;
+}
+
 }

@@ -1,6 +1,7 @@
 #include "ChannelTestFactory.h"
 
 #include "faker-cxx/Date.h"
+#include "faker-cxx/Image.h"
 #include "faker-cxx/String.h"
 #include "faker-cxx/Word.h"
 
@@ -12,8 +13,9 @@ std::shared_ptr<domain::Channel> ChannelTestFactory::createDomainChannel(const s
     const auto name = faker::Word::noun();
     const auto createdAt = faker::Date::pastDate();
     const auto updatedAt = faker::Date::recentDate();
+    const auto avatarUrl = faker::Image::imageUrl();
 
-    return std::make_shared<domain::Channel>(id, name, creator, createdAt, updatedAt);
+    return std::make_shared<domain::Channel>(id, name, creator, createdAt, updatedAt, avatarUrl);
 }
 
 std::shared_ptr<infrastructure::Channel>
@@ -23,7 +25,8 @@ ChannelTestFactory::createPersistentChannel(const std::shared_ptr<infrastructure
     const auto name = faker::Word::noun();
     const auto createdAt = faker::Date::pastDate();
     const auto updatedAt = faker::Date::recentDate();
+    const auto avatarUrl = faker::Image::imageUrl();
 
-    return std::make_shared<infrastructure::Channel>(id, name, creator, createdAt, updatedAt);
+    return std::make_shared<infrastructure::Channel>(id, name, creator, createdAt, updatedAt, avatarUrl);
 }
 }

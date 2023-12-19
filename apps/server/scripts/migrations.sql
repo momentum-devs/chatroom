@@ -36,6 +36,7 @@ CREATE TABLE channels
     creator    TEXT NOT NULL,
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
+    avatar_url TEXT NULL,
     FOREIGN KEY (creator) REFERENCES users (id) ON DELETE CASCADE
 );
 
