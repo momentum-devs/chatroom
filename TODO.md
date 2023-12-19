@@ -13,6 +13,9 @@
 * avatars
 * add caching information (e.g. channel list, avatars, etc.)
 
+
+* refactor tests with common code and faker library
+
 ### SERVER:
 
 * remove -> delete

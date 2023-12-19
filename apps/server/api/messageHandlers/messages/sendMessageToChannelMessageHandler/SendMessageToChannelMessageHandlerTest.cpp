@@ -1,4 +1,4 @@
-#include "SendChannelMessageHandler.h"
+#include "SendMessageToChannelMessageHandler.h"
 
 #include <gtest/gtest.h>
 
@@ -29,7 +29,7 @@ const auto createChannelMessageCommandHandlerErrorMessageResponse =
                               common::bytes::Bytes{R"({"error":"createChannelMessageCommandHandlerError"})"}};
 }
 
-class SendChannelMessageHandlerTest : public Test
+class SendMessageToChannelMessageHandlerTest : public Test
 {
 public:
     std::shared_ptr<server::domain::User> createUser()
@@ -68,11 +68,11 @@ public:
     server::application::CreateChannelMessageCommandHandlerMock* createChannelMessageCommandHandlerMock =
         createChannelMessageCommandHandlerMockInit.get();
 
-    SendChannelMessageHandler sendChannelMessageHandler{tokenServiceMock,
+    SendMessageToChannelMessageHandler sendMessageToChannelMessageHandler{tokenServiceMock,
                                                         std::move(createChannelMessageCommandHandlerMockInit)};
 };
 
-TEST_F(SendChannelMessageHandlerTest, handleValidSendChannelMessage)
+TEST_F(SendMessageToChannelMessageHandlerTest, handleValidSendChannelMessage)
 {
     const auto messageSender = createUser();
     const std::shared_ptr<server::domain::Channel> messageChannel = nullptr;
@@ -98,28 +98,28 @@ TEST_F(SendChannelMessageHandlerTest, handleValidSendChannelMessage)
                 execute(server::application::CreateChannelMessageCommandHandlerPayload{text, senderId, channelId}))
         .WillOnce(Return(validCommandHandlerResponse));
 
-    auto responseMessage = sendChannelMessageHandler.handleMessage(validMessage);
+    auto responseMessage = sendMessageToChannelMessageHandler.handleMessage(validMessage);
 
     EXPECT_EQ(responseMessage, validMessageResponse);
 }
 
-TEST_F(SendChannelMessageHandlerTest, handleSendChannelMessageWithInvalidToken)
+TEST_F(SendMessageToChannelMessageHandlerTest, handleSendChannelMessageWithInvalidToken)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Throw(invalidTokenError));
 
-    auto responseMessage = sendChannelMessageHandler.handleMessage(validMessage);
+    auto responseMessage = sendMessageToChannelMessageHandler.handleMessage(validMessage);
 
     EXPECT_EQ(responseMessage, invalidTokenMessageResponse);
 }
 
-TEST_F(SendChannelMessageHandlerTest, handleSendChannelMessageWithCreateChannelMessageCommandHandlerError)
+TEST_F(SendMessageToChannelMessageHandlerTest, handleSendChannelMessageWithCreateChannelMessageCommandHandlerError)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*createChannelMessageCommandHandlerMock,
                 execute(server::application::CreateChannelMessageCommandHandlerPayload{text, senderId, channelId}))
         .WillOnce(Throw(createChannelMessageCommandHandlerError));
 
-    auto responseMessage = sendChannelMessageHandler.handleMessage(validMessage);
+    auto responseMessage = sendMessageToChannelMessageHandler.handleMessage(validMessage);
 
     EXPECT_EQ(responseMessage, createChannelMessageCommandHandlerErrorMessageResponse);
 }

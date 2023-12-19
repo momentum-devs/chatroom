@@ -99,8 +99,8 @@ set(SOURCES
         api/messageHandlers/friend/rejectFriendInvitationMessageHandler/RejectFriendInvitationMessageHandler.cpp
         api/messageHandlers/friend/getUserFriendsMessageHandler/GetUserFriendsMessageHandler.cpp
         api/messageHandlers/friend/removeFromFriendsMessageHandler/RemoveFromFriendsMessageHandler.cpp
-        api/messageHandlers/messages/sendChannelMessage/SendChannelMessageHandler.cpp
-        api/messageHandlers/messages/getChannelMessagesMessageHandler/GetChannelMessagesMessageHandler.cpp
+        api/messageHandlers/messages/sendMessageToChannelMessageHandler/SendMessageToChannelMessageHandler.cpp
+        api/messageHandlers/messages/getMessagesFromChannelMessageHandler/GetMessagesFromChannelMessageHandler.cpp
 
         domain/entities/message/Message.cpp
         infrastructure/repositories/messageRepository/MessageRepositoryImpl.cpp
@@ -182,8 +182,8 @@ set(UT_SOURCES
         api/messageHandlers/friend/rejectFriendInvitationMessageHandler/RejectFriendInvitationMessageHandlerTest.cpp
         api/messageHandlers/friend/getUserFriendsMessageHandler/GetUserFriendsMessageHandlerTest.cpp
         api/messageHandlers/friend/removeFromFriendsMessageHandler/RemoveFromFriendsMessageHandlerTest.cpp
-        api/messageHandlers/messages/sendChannelMessage/SendChannelMessageHandlerTest.cpp
-        api/messageHandlers/messages/getChannelMessagesMessageHandler/GetChannelMessagesMessageHandlerTest.cpp
+        api/messageHandlers/messages/sendMessageToChannelMessageHandler/SendMessageToChannelMessageHandlerTest.cpp
+        api/messageHandlers/messages/getMessagesFromChannelMessageHandler/GetMessagesFromChannelMessageHandlerTest.cpp
 )
 
 set(IT_SOURCES

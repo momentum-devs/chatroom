@@ -8,10 +8,10 @@
 
 namespace server::api
 {
-class GetChannelMessagesMessageHandler : public MessageHandler
+class GetMessagesFromChannelMessageHandler : public MessageHandler
 {
 public:
-    GetChannelMessagesMessageHandler(
+    GetMessagesFromChannelMessageHandler(
         std::shared_ptr<application::TokenService> tokenService,
         std::unique_ptr<application::FindChannelMessagesQueryHandler> findChannelMessagesQueryHandler);
 

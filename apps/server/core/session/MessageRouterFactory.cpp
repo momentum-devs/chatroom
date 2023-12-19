@@ -17,8 +17,8 @@
 #include "server/api/messageHandlers/friend/getUserFriendsMessageHandler/GetUserFriendsMessageHandler.h"
 #include "server/api/messageHandlers/friend/rejectFriendInvitationMessageHandler/RejectFriendInvitationMessageHandler.h"
 #include "server/api/messageHandlers/friend/removeFromFriendsMessageHandler/RemoveFromFriendsMessageHandler.h"
-#include "server/api/messageHandlers/messages/getChannelMessagesMessageHandler/GetChannelMessagesMessageHandler.h"
-#include "server/api/messageHandlers/messages/sendChannelMessage/SendChannelMessageHandler.h"
+#include "server/api/messageHandlers/messages/getMessagesFromChannelMessageHandler/GetMessagesFromChannelMessageHandler.h"
+#include "server/api/messageHandlers/messages/sendMessageToChannelMessageHandler/SendMessageToChannelMessageHandler.h"
 #include "server/api/messageHandlers/user/deleteUserMessageHandler/DeleteUserMessageHandler.h"
 #include "server/api/messageHandlers/user/getUserDataMessageHandler/GetUserDataMessageHandler.h"
 #include "server/api/messageHandlers/user/loginMessageHandler/LoginMessageHandler.h"
@@ -285,13 +285,13 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
         std::make_unique<server::application::CreateChannelMessageCommandHandlerImpl>(
             channelRepository, userRepository, userChannelRepository, messageRepository);
 
-    auto sendChannelMessageHandler = std::make_shared<server::api::SendChannelMessageHandler>(
+    auto sendMessageToChannelMessageHandler = std::make_shared<server::api::SendMessageToChannelMessageHandler>(
         tokenService, std::move(createChannelMessageCommandHandler));
 
     auto findChannelMessagesQueryHandler =
         std::make_unique<server::application::FindChannelMessagesQueryHandlerImpl>(messageRepository);
 
-    auto getChannelMessagesMessageHandler = std::make_shared<server::api::GetChannelMessagesMessageHandler>(
+    auto getMessageFromChannelMessageHandler = std::make_shared<server::api::GetMessagesFromChannelMessageHandler>(
         tokenService, std::move(findChannelMessagesQueryHandler));
 
     std::unordered_map<common::messages::MessageId, std::shared_ptr<api::MessageHandler>> messageHandlers{
@@ -317,8 +317,8 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
         {common::messages::MessageId::GetUserFriends, getUserFriendsMessageHandler},
         {common::messages::MessageId::RemoveFromFriends, removeFromFriendsMessageHandler},
         {common::messages::MessageId::GetChannelMembers, getChannelMembersMessageHandler},
-        {common::messages::MessageId::SendChannelMessage, sendChannelMessageHandler},
-        {common::messages::MessageId::GetChannelMessages, getChannelMessagesMessageHandler},
+        {common::messages::MessageId::SendChannelMessage, sendMessageToChannelMessageHandler},
+        {common::messages::MessageId::GetChannelMessages, getMessageFromChannelMessageHandler},
     };
 
     return std::make_unique<MessageRouterImpl>(std::move(messageHandlers));
