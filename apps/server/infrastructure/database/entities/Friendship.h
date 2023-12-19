@@ -5,6 +5,7 @@
 #include <string>
 #include <utility>
 
+#include "Group.h"
 #include "User.h"
 
 namespace server::infrastructure
@@ -14,11 +15,12 @@ class Friendship
 {
 public:
     Friendship(std::string idInit, std::shared_ptr<User> userInit, std::shared_ptr<User> userFriendInit,
-               std::string createdAtInit)
+               std::string createdAtInit, std::shared_ptr<Group> groupInit)
         : id{std::move(idInit)},
           created_at{std::move(createdAtInit)},
           user{std::move(userInit)},
-          user_friend{std::move(userFriendInit)}
+          user_friend{std::move(userFriendInit)},
+          group{std::move(groupInit)}
     {
     }
 
@@ -42,6 +44,11 @@ public:
         return created_at;
     }
 
+    [[nodiscard]] std::shared_ptr<Group> getGroup() const
+    {
+        return group;
+    }
+
 private:
     Friendship() = default;
 
@@ -56,5 +63,8 @@ private:
 
 #pragma db not_null
     std::shared_ptr<User> user_friend;
+
+#pragma db not_null
+    std::shared_ptr<Group> group;
 };
 }

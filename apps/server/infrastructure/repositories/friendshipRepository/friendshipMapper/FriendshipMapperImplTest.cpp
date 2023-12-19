@@ -3,8 +3,10 @@
 #include "gtest/gtest.h"
 
 #include "../../userRepository/userMapper/UserMapperMock.h"
+#include "server/infrastructure/repositories/groupRepository/groupMapper/GroupMapperMock.h"
 
 #include "server/tests/factories/friendshipTestFactory/FriendshipTestFactory.h"
+#include "server/tests/factories/groupTestFactory/GroupTestFactory.h"
 #include "server/tests/factories/userTestFactory/UserTestFactory.h"
 
 using namespace ::testing;
@@ -16,12 +18,14 @@ class FriendshipMapperTest : public Test
 {
 public:
     UserTestFactory userTestFactory;
-
+    GroupTestFactory groupTestFactory;
     FriendshipTestFactory friendshipTestFactory;
 
     std::shared_ptr<UserMapperMock> userMapper = std::make_shared<StrictMock<UserMapperMock>>();
 
-    FriendshipMapperImpl channelInvitationMapper{userMapper};
+    std::shared_ptr<GroupMapperMock> groupMapper = std::make_shared<StrictMock<GroupMapperMock>>();
+
+    FriendshipMapperImpl channelInvitationMapper{userMapper, groupMapper};
 };
 
 TEST_F(FriendshipMapperTest, givenPersistenceFriendship_shouldMapToDomainFriendship)
@@ -42,15 +46,21 @@ TEST_F(FriendshipMapperTest, givenPersistenceFriendship_shouldMapToDomainFriends
         userFriend->getAvatarUrl().null() ? std::optional<std::string>(std::nullopt) :
                                             userFriend->getAvatarUrl().get());
 
-    const auto friendship = friendshipTestFactory.createPersistentFriendship(user, userFriend);
+    const auto group = groupTestFactory.createPersistentGroup();
+
+    const auto domainGroup = std::make_shared<domain::Group>(group->getId(), group->getCreatedAt());
+
+    const auto friendship = friendshipTestFactory.createPersistentFriendship(user, userFriend, group);
 
     EXPECT_CALL(*userMapper, mapToDomainUser(user)).WillOnce(Return(domainUser));
     EXPECT_CALL(*userMapper, mapToDomainUser(userFriend)).WillOnce(Return(domainUserFriend));
+    EXPECT_CALL(*groupMapper, mapToDomainGroup(group)).WillOnce(Return(domainGroup));
 
     const auto domainFriendship = channelInvitationMapper.mapToDomainFriendship(*friendship);
 
     ASSERT_EQ(domainFriendship.getId(), friendship->getId());
     ASSERT_EQ(domainFriendship.getUser(), domainUser);
     ASSERT_EQ(domainFriendship.getUserFriend(), domainUserFriend);
+    ASSERT_EQ(domainFriendship.getGroup(), domainGroup);
     ASSERT_EQ(domainFriendship.getCreatedAt(), friendship->getCreatedAt());
 }

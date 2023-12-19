@@ -15,9 +15,11 @@ class FriendshipTestFactory
 {
 public:
     std::shared_ptr<domain::Friendship> createDomainFriendship(const std::shared_ptr<domain::User>& user,
-                                                               const std::shared_ptr<domain::User>& userFriend);
+                                                               const std::shared_ptr<domain::User>& userFriend,
+                                                               const std::shared_ptr<domain::Group>& group);
     std::shared_ptr<infrastructure::Friendship>
     createPersistentFriendship(const std::shared_ptr<infrastructure::User>& user,
-                               const std::shared_ptr<infrastructure::User>& userFriend);
+                               const std::shared_ptr<infrastructure::User>& userFriend,
+                               const std::shared_ptr<infrastructure::Group>& group);
 };
 }

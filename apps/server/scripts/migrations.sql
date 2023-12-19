@@ -79,8 +79,10 @@ CREATE TABLE friendships
     created_at  TEXT NOT NULL,
     "user"      TEXT NOT NULL,
     user_friend TEXT NOT NULL,
+    "group"     TEXT NOT NULL,
     FOREIGN KEY ("user") REFERENCES users (id) ON DELETE CASCADE,
-    FOREIGN KEY (user_friend) REFERENCES users (id) ON DELETE CASCADE
+    FOREIGN KEY (user_friend) REFERENCES users (id) ON DELETE CASCADE,
+    FOREIGN KEY ("group") REFERENCES groups (id) ON DELETE CASCADE
 );
 
 CREATE TABLE groups

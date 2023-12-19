@@ -5,12 +5,12 @@
 namespace server::domain
 {
 Friendship::Friendship(std::string idInit, std::shared_ptr<User> userInit, std::shared_ptr<User> userFriendInit,
-                       std::string createdAtInit)
+                       std::string createdAtInit, std::shared_ptr<Group> groupInit)
     : id{std::move(idInit)},
       createdAt{std::move(createdAtInit)},
       user{std::move(userInit)},
-      userFriend{std::move(userFriendInit)}
-
+      userFriend{std::move(userFriendInit)},
+      group{std::move(groupInit)}
 {
 }
 
@@ -32,6 +32,11 @@ std::shared_ptr<User> Friendship::getUserFriend() const
 std::string Friendship::getCreatedAt() const
 {
     return createdAt;
+}
+
+std::shared_ptr<Group> Friendship::getGroup() const
+{
+    return group;
 }
 
 }

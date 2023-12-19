@@ -12,7 +12,8 @@ namespace server::tests
 FriendshipTestUtils::FriendshipTestUtils(std::shared_ptr<odb::sqlite::database> databaseClientInit)
     : databaseClient{std::move(databaseClientInit)},
       friendshipTestFactory{std::make_unique<FriendshipTestFactory>()},
-      userTestFactory{std::make_unique<UserTestFactory>()}
+      userTestFactory{std::make_unique<UserTestFactory>()},
+      groupTestFactory{std::make_unique<GroupTestFactory>()}
 {
 }
 
@@ -27,13 +28,16 @@ void FriendshipTestUtils::persist(const std::shared_ptr<infrastructure::Friendsh
 
 std::shared_ptr<infrastructure::Friendship>
 FriendshipTestUtils::createAndPersist(const std::shared_ptr<infrastructure::User>& userInput,
-                                      const std::shared_ptr<infrastructure::User>& userFriendInput)
+                                      const std::shared_ptr<infrastructure::User>& userFriendInput,
+                                      const std::shared_ptr<infrastructure::Group>& groupInput)
 {
     const auto user = userInput ? userInput : userTestFactory->createPersistentUser();
 
     const auto userFriend = userFriendInput ? userFriendInput : userTestFactory->createPersistentUser();
 
-    auto friendship = friendshipTestFactory->createPersistentFriendship(user, userFriend);
+    const auto group = groupInput ? groupInput : groupTestFactory->createPersistentGroup();
+
+    auto friendship = friendshipTestFactory->createPersistentFriendship(user, userFriend, group);
 
     persist(friendship);
 

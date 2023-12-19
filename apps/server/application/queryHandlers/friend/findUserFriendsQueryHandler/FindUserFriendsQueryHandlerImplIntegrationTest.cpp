@@ -5,11 +5,12 @@
 #include "server/infrastructure/repositories/friendshipRepository/friendshipMapper/FriendshipMapper.h"
 #include "server/infrastructure/repositories/friendshipRepository/friendshipMapper/FriendshipMapperImpl.h"
 #include "server/infrastructure/repositories/friendshipRepository/FriendshipRepositoryImpl.h"
+#include "server/infrastructure/repositories/groupRepository/groupMapper/GroupMapperImpl.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "server/infrastructure/repositories/userRepository/UserRepositoryImpl.h"
 #include "server/tests/factories/databaseClientTestFactory/DatabaseClientTestFactory.h"
 #include "server/tests/utils/friendshipTestUtils/FriendshipTestUtils.h"
-#include "server/tests/utils/userTestUtils/UserTestUtils.h"
+#include "server/tests/utils/groupTestUtils/GroupTestUtils.h"
 #include "User.h"
 
 using namespace ::testing;
@@ -25,6 +26,8 @@ public:
     {
         friendshipTestUtils.truncateTable();
 
+        groupTestUtils.truncateTable();
+
         userTestUtils.truncateTable();
     }
 
@@ -32,23 +35,28 @@ public:
     {
         friendshipTestUtils.truncateTable();
 
+        groupTestUtils.truncateTable();
+
         userTestUtils.truncateTable();
     }
 
     std::shared_ptr<odb::sqlite::database> db = DatabaseClientTestFactory::create();
 
     UserTestUtils userTestUtils{db};
-
+    GroupTestUtils groupTestUtils{db};
     FriendshipTestUtils friendshipTestUtils{db};
 
     std::shared_ptr<UserMapper> userMapper = std::make_shared<UserMapperImpl>();
 
+    std::shared_ptr<GroupMapper> groupMapper = std::make_shared<GroupMapperImpl>();
+
     std::shared_ptr<domain::UserRepository> userRepository = std::make_shared<UserRepositoryImpl>(db, userMapper);
 
-    std::shared_ptr<FriendshipMapper> friendshipMapperInit = std::make_shared<FriendshipMapperImpl>(userMapper);
+    std::shared_ptr<FriendshipMapper> friendshipMapperInit =
+        std::make_shared<FriendshipMapperImpl>(userMapper, groupMapper);
 
     std::shared_ptr<domain::FriendshipRepository> friendshipRepository =
-        std::make_shared<FriendshipRepositoryImpl>(db, friendshipMapperInit, userMapper);
+        std::make_shared<FriendshipRepositoryImpl>(db, friendshipMapperInit, userMapper, groupMapper);
 
     FindUserFriendsQueryHandlerImpl findUserFriendsQueryHandler{friendshipRepository};
 };
@@ -59,11 +67,13 @@ TEST_F(FindUserFriendsQueryHandlerImplIntegrationTest, findUsersChannelsByUserId
 
     const auto user2 = userTestUtils.createAndPersist();
 
+    const auto group = groupTestUtils.createAndPersist();
+
     const auto userFriend = userTestUtils.createAndPersist();
 
-    friendshipTestUtils.createAndPersist(userFriend, user1);
-    friendshipTestUtils.createAndPersist(userFriend, user2);
-    friendshipTestUtils.createAndPersist(user1, user2);
+    friendshipTestUtils.createAndPersist(userFriend, user1, group);
+    friendshipTestUtils.createAndPersist(userFriend, user2, group);
+    friendshipTestUtils.createAndPersist(user1, user2, group);
 
     const auto [friends] = findUserFriendsQueryHandler.execute({user1->getId()});
 

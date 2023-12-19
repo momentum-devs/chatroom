@@ -9,8 +9,12 @@ namespace server::infrastructure
 {
 FriendshipRepositoryImpl::FriendshipRepositoryImpl(std::shared_ptr<odb::sqlite::database> dbInit,
                                                    std::shared_ptr<FriendshipMapper> friendshipMapperInit,
-                                                   std::shared_ptr<UserMapper> userMapperInit)
-    : db{std::move(dbInit)}, friendshipMapper{std::move(friendshipMapperInit)}, userMapper{std::move(userMapperInit)}
+                                                   std::shared_ptr<UserMapper> userMapperInit,
+                                                   std::shared_ptr<GroupMapper> groupMapperInit)
+    : db{std::move(dbInit)},
+      friendshipMapper{std::move(friendshipMapperInit)},
+      userMapper{std::move(userMapperInit)},
+      groupMapper{std::move(groupMapperInit)}
 {
 }
 
@@ -25,7 +29,9 @@ domain::Friendship FriendshipRepositoryImpl::createFriendship(const domain::Crea
 
             const auto userFriend = userMapper->mapToPersistenceUser(payload.userFriend);
 
-            Friendship friendship{payload.id, user, userFriend, currentDate};
+            const auto group = groupMapper->mapToPersistenceGroup(payload.group);
+
+            Friendship friendship{payload.id, user, userFriend, currentDate, group};
 
             odb::transaction transaction(db->begin());
 

@@ -12,6 +12,7 @@
 * encryption
 * avatars
 * add caching information (e.g. channel list, avatars, etc.)
+* add pipelines for CI/CD for client
 
 ### SERVER:
 
@@ -20,3 +21,4 @@
 * infrastructure setup
 * deploy
 * update updatedAt date when updating
+* replace std::format with fmt

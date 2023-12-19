@@ -13,10 +13,12 @@ namespace server::application
 AcceptFriendInvitationCommandHandlerImpl::AcceptFriendInvitationCommandHandlerImpl(
     std::shared_ptr<domain::FriendInvitationRepository> friendInvitationRepositoryInit,
     std::shared_ptr<domain::UserRepository> userRepositoryInit,
-    std::shared_ptr<domain::FriendshipRepository> friendshipRepositoryInit)
+    std::shared_ptr<domain::FriendshipRepository> friendshipRepositoryInit,
+    std::shared_ptr<domain::GroupRepository> groupRepositoryInit)
     : friendInvitationRepository{std::move(friendInvitationRepositoryInit)},
       userRepository{std::move(userRepositoryInit)},
-      friendshipRepository{std::move(friendshipRepositoryInit)}
+      friendshipRepository{std::move(friendshipRepositoryInit)},
+      groupRepository{std::move(groupRepositoryInit)}
 {
 }
 
@@ -71,6 +73,13 @@ void AcceptFriendInvitationCommandHandlerImpl::createFriendship(const std::strin
         throw errors::ResourceNotFoundError{std::format("User with id {} not found.", userFriendId)};
     }
 
+    std::stringstream groupUuid;
+    groupUuid << boost::uuids::random_generator()();
+
+    const auto groupId = groupUuid.str();
+
+    const auto group = groupRepository->createGroup({groupId});
+
     const auto existingFriendship = friendshipRepository->findFriendshipByUserIds({userId, userFriendId});
 
     if (existingFriendship)
@@ -84,7 +93,7 @@ void AcceptFriendInvitationCommandHandlerImpl::createFriendship(const std::strin
 
     const auto friendshipId = uuid.str();
 
-    const auto friendship = friendshipRepository->createFriendship({friendshipId, *user, *userFriend});
+    const auto friendship = friendshipRepository->createFriendship({friendshipId, *user, *userFriend, group});
 
     LOG_S(INFO) << std::format("Friendship created. {{friendshipId: {}}}", friendship.getId());
 }
