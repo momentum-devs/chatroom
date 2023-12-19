@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "FindUserFriendsQueryHandlerImpl.h"
+#include "FindUserFriendshipsQueryHandlerImpl.h"
 #include "server/infrastructure/repositories/friendInvitationRepository/friendInvitationMapper/FriendInvitationMapperImpl.h"
 #include "server/infrastructure/repositories/friendshipRepository/friendshipMapper/FriendshipMapper.h"
 #include "server/infrastructure/repositories/friendshipRepository/friendshipMapper/FriendshipMapperImpl.h"
@@ -19,7 +19,7 @@ using namespace server::infrastructure;
 using namespace server::application;
 using namespace server::tests;
 
-class FindUserFriendsQueryHandlerImplIntegrationTest : public Test
+class FindUserFriendshipsQueryHandlerImplIntegrationTest : public Test
 {
 public:
     void SetUp() override
@@ -58,10 +58,10 @@ public:
     std::shared_ptr<domain::FriendshipRepository> friendshipRepository =
         std::make_shared<FriendshipRepositoryImpl>(db, friendshipMapperInit, userMapper, groupMapper);
 
-    FindUserFriendsQueryHandlerImpl findUserFriendsQueryHandler{friendshipRepository};
+    FindUserFriendshipsQueryHandlerImpl findUserFriendshipsQueryHandler{friendshipRepository};
 };
 
-TEST_F(FindUserFriendsQueryHandlerImplIntegrationTest, findUsersChannelsByUserId)
+TEST_F(FindUserFriendshipsQueryHandlerImplIntegrationTest, findUsersChannelsByUserId)
 {
     const auto user1 = userTestUtils.createAndPersist();
 
@@ -75,12 +75,13 @@ TEST_F(FindUserFriendsQueryHandlerImplIntegrationTest, findUsersChannelsByUserId
     friendshipTestUtils.createAndPersist(userFriend, user2, group);
     friendshipTestUtils.createAndPersist(user1, user2, group);
 
-    const auto [friends] = findUserFriendsQueryHandler.execute({user1->getId()});
+    const auto [friendships] = findUserFriendshipsQueryHandler.execute({user1->getId()});
 
-    ASSERT_EQ(friends.size(), 2);
-    ASSERT_TRUE(std::any_of(friends.begin(), friends.end(),
-                            [userFriend](const auto& currentFriend)
-                            { return userFriend->getId() == currentFriend.getId(); }));
-    ASSERT_TRUE(std::any_of(friends.begin(), friends.end(),
-                            [user2](const auto& currentFriend) { return user2->getId() == currentFriend.getId(); }));
+    ASSERT_EQ(friendships.size(), 2);
+    ASSERT_TRUE(std::any_of(friendships.begin(), friendships.end(),
+                            [userFriend](const domain::Friendship& friendship)
+                            { return userFriend->getId() == friendship.getUser()->getId(); }));
+    ASSERT_TRUE(std::any_of(friendships.begin(), friendships.end(),
+                            [user2](const domain::Friendship& friendship)
+                            { return user2->getId() == friendship.getUserFriend()->getId(); }));
 }

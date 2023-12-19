@@ -48,7 +48,7 @@
 #include "server/application/queryHandlers/channel/findReceivedChannelInvitationsQueryHandler/FindReceivedChannelInvitationsQueryHandlerImpl.h"
 #include "server/application/queryHandlers/channel/findUsersBelongingToChannelQueryHandler/FindUsersBelongingToChannelQueryHandlerImpl.h"
 #include "server/application/queryHandlers/friend/findReceivedFriendInvitationsQueryHandler/FindReceivedFriendInvitationsQueryHandlerImpl.h"
-#include "server/application/queryHandlers/friend/findUserFriendsQueryHandler/FindUserFriendsQueryHandlerImpl.h"
+#include "server/application/queryHandlers/friend/findUserFriendshipsQueryHandler/FindUserFriendshipsQueryHandlerImpl.h"
 #include "server/application/queryHandlers/message/findChannelMessagesQueryHandler/FindChannelMessagesQueryHandlerImpl.h"
 #include "server/application/queryHandlers/user/findUserByEmailQueryHandler/FindUserByEmailQueryHandlerImpl.h"
 #include "server/application/queryHandlers/user/findUserQueryHandler/FindUserQueryHandlerImpl.h"
@@ -257,11 +257,11 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
     auto rejectFriendInvitationMessageHandler = std::make_shared<api::RejectFriendInvitationMessageHandler>(
         tokenService, std::move(rejectFriendInvitationCommandHandlerImpl));
 
-    auto findUserFriendsQueryHandler =
-        std::make_unique<server::application::FindUserFriendsQueryHandlerImpl>(friendshipRepository);
+    auto findUserFriendshipsQueryHandler =
+        std::make_unique<server::application::FindUserFriendshipsQueryHandlerImpl>(friendshipRepository);
 
     auto getUserFriendsMessageHandler =
-        std::make_shared<api::GetUserFriendsMessageHandler>(tokenService, std::move(findUserFriendsQueryHandler));
+        std::make_shared<api::GetUserFriendsMessageHandler>(tokenService, std::move(findUserFriendshipsQueryHandler));
 
     auto deleteFriendshipCommandHandler =
         std::make_unique<server::application::DeleteFriendshipCommandHandlerImpl>(friendshipRepository, userRepository);

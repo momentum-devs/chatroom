@@ -9,8 +9,9 @@ namespace server::api
 {
 GetUserFriendsMessageHandler::GetUserFriendsMessageHandler(
     std::shared_ptr<application::TokenService> tokenServiceInit,
-    std::unique_ptr<application::FindUserFriendsQueryHandler> findUserFriendsQueryHandlerInit)
-    : tokenService{std::move(tokenServiceInit)}, findUserFriendsQueryHandler{std::move(findUserFriendsQueryHandlerInit)}
+    std::unique_ptr<application::FindUserFriendshipsQueryHandler> findUserFriendshipsQueryHandlerInit)
+    : tokenService{std::move(tokenServiceInit)},
+      findUserFriendshipsQueryHandler{std::move(findUserFriendshipsQueryHandlerInit)}
 {
 }
 
@@ -24,12 +25,15 @@ common::messages::Message GetUserFriendsMessageHandler::handleMessage(const comm
 
         auto [userId] = tokenService->verifyToken(token);
 
-        const auto& [friends] = findUserFriendsQueryHandler->execute({userId});
+        const auto& [friendships] = findUserFriendshipsQueryHandler->execute({userId});
 
         nlohmann::json friendsJsonArray = nlohmann::json::array();
 
-        for (const auto& userFriend : friends)
+        for (const auto& friendship : friendships)
         {
+            const auto userFriend =
+                friendship.getUser()->getId() == userId ? *friendship.getUserFriend() : *friendship.getUser();
+
             nlohmann::json friendJson{
                 {"id", userFriend.getId()}, {"name", userFriend.getNickname()}, {"isActive", userFriend.isActive()}};
 

@@ -4,13 +4,14 @@
 #include <gtest/gtest.h>
 #include <regex>
 
-#include "server/application/queryHandlers/friend/findUserFriendsQueryHandler/FindUserFriendsQueryHandlerMock.h"
+#include "server/application/queryHandlers/friend/findUserFriendshipsQueryHandler/FindUserFriendshipsQueryHandlerMock.h"
 #include "server/application/services/tokenService/TokenServiceMock.h"
 
 #include "faker-cxx/Date.h"
 #include "faker-cxx/Image.h"
 #include "faker-cxx/String.h"
 #include "nlohmann/json.hpp"
+#include "server/tests/factories/friendshipTestFactory/FriendshipTestFactory.h"
 
 using namespace ::testing;
 using namespace server::api;
@@ -31,13 +32,6 @@ auto friendId1 = "id1";
 auto friendName1 = "friendName1";
 auto friendId2 = "id2";
 auto friendName2 = "friendName2";
-auto fewFriendInvitationsResponsePayloadJson =
-    nlohmann::json{{"data", nlohmann::json::array({{{"id", friendId1}, {"name", friendName1}, {"isActive", false}},
-                                                   {{"id", friendId2}, {"name", friendName2}, {"isActive", true}}})}};
-
-auto fewFriendInvitationsMessageResponse =
-    common::messages::Message{common::messages::MessageId::GetUserFriendsResponse,
-                              common::bytes::Bytes{fewFriendInvitationsResponsePayloadJson.dump()}};
 
 std::runtime_error invalidToken("invalidToken");
 auto invalidTokenMessageResponse = common::messages::Message{common::messages::MessageId::GetUserFriendsResponse,
@@ -51,16 +45,18 @@ auto getUserChannelsErrorMessageResponse = common::messages::Message{
 class GetUserFriendsMessageHandlerTest : public Test
 {
 public:
+    server::tests::FriendshipTestFactory friendshipTestFactory;
+
     std::shared_ptr<server::application::TokenServiceMock> tokenServiceMock =
         std::make_shared<StrictMock<server::application::TokenServiceMock>>();
 
-    std::unique_ptr<server::application::FindUserFriendsQueryHandlerMock> findUserFriendsQueryHandlerMockInit =
-        std::make_unique<StrictMock<server::application::FindUserFriendsQueryHandlerMock>>();
-    server::application::FindUserFriendsQueryHandlerMock* findUserFriendsQueryHandlerMock =
-        findUserFriendsQueryHandlerMockInit.get();
+    std::unique_ptr<server::application::FindUserFriendshipsQueryHandlerMock> findUserFriendshipsQueryHandlerMockInit =
+        std::make_unique<StrictMock<server::application::FindUserFriendshipsQueryHandlerMock>>();
+    server::application::FindUserFriendshipsQueryHandlerMock* findUserFriendshipsQueryHandlerMock =
+        findUserFriendshipsQueryHandlerMockInit.get();
 
     GetUserFriendsMessageHandler getUserFriendsMessageHandler{tokenServiceMock,
-                                                              std::move(findUserFriendsQueryHandlerMockInit)};
+                                                              std::move(findUserFriendshipsQueryHandlerMockInit)};
 };
 
 TEST_F(GetUserFriendsMessageHandlerTest, handleValidGetUserFriendsMessageWithNoFriends)
@@ -70,9 +66,9 @@ TEST_F(GetUserFriendsMessageHandlerTest, handleValidGetUserFriendsMessageWithNoF
     const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
 
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
-    EXPECT_CALL(*findUserFriendsQueryHandlerMock,
-                execute(server::application::FindUserFriendsQueryHandlerPayload{userId}))
-        .WillOnce(Return(server::application::FindUserFriendsQueryHandlerResult{}));
+    EXPECT_CALL(*findUserFriendshipsQueryHandlerMock,
+                execute(server::application::FindUserFriendshipsQueryHandlerPayload{userId}))
+        .WillOnce(Return(server::application::FindUserFriendshipsQueryHandlerResult{}));
 
     auto responseMessage = getUserFriendsMessageHandler.handleMessage(message);
 
@@ -81,7 +77,6 @@ TEST_F(GetUserFriendsMessageHandlerTest, handleValidGetUserFriendsMessageWithNoF
 
 TEST_F(GetUserFriendsMessageHandlerTest, handleValidGetUserFriendsMessageWithFewFriends)
 {
-    const auto userId = faker::String::uuid();
     const auto email = "email";
     const auto password = "password";
     const auto emailVerified = true;
@@ -97,16 +92,28 @@ TEST_F(GetUserFriendsMessageHandlerTest, handleValidGetUserFriendsMessageWithFew
         std::make_shared<server::domain::User>(friendId2, email, password, friendName2, true, emailVerified,
                                                verificationCode, createdAt, updatedAt, avatarUrl);
 
-    const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
+    const auto groupId = faker::String::uuid();
+
+    const auto group = std::make_shared<server::domain::Group>(groupId, createdAt);
+
+    const auto verifyTokenResult = server::application::VerifyTokenResult{friendId1};
+
+    const auto friendship = friendshipTestFactory.createDomainFriendship(user1, user2, group);
 
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
-    EXPECT_CALL(*findUserFriendsQueryHandlerMock,
-                execute(server::application::FindUserFriendsQueryHandlerPayload{userId}))
-        .WillOnce(Return(server::application::FindUserFriendsQueryHandlerResult{{*user1, *user2}}));
+    EXPECT_CALL(*findUserFriendshipsQueryHandlerMock,
+                execute(server::application::FindUserFriendshipsQueryHandlerPayload{friendId1}))
+        .WillOnce(Return(server::application::FindUserFriendshipsQueryHandlerResult{{*friendship}}));
 
     auto responseMessage = getUserFriendsMessageHandler.handleMessage(message);
 
-    EXPECT_EQ(responseMessage, fewFriendInvitationsMessageResponse);
+    auto expectedResponsePayloadJson = nlohmann::json{
+        {"data", nlohmann::json::array({{{"id", friendId2}, {"name", friendName2}, {"isActive", true}}})}};
+
+    auto expectedMessageResponse = common::messages::Message{common::messages::MessageId::GetUserFriendsResponse,
+                                                             common::bytes::Bytes{expectedResponsePayloadJson.dump()}};
+
+    EXPECT_EQ(responseMessage, expectedMessageResponse);
 }
 
 TEST_F(GetUserFriendsMessageHandlerTest, handleGetUserFriendsMessageWithInvalidToken)
@@ -125,8 +132,8 @@ TEST_F(GetUserFriendsMessageHandlerTest, handleGetUserFriendsMessageWithErrorWhi
     const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
 
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
-    EXPECT_CALL(*findUserFriendsQueryHandlerMock,
-                execute(server::application::FindUserFriendsQueryHandlerPayload{userId}))
+    EXPECT_CALL(*findUserFriendshipsQueryHandlerMock,
+                execute(server::application::FindUserFriendshipsQueryHandlerPayload{userId}))
         .WillOnce(Throw(getUserChannelsError));
 
     auto responseMessage = getUserFriendsMessageHandler.handleMessage(message);
