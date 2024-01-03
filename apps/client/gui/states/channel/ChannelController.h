@@ -43,6 +43,7 @@ public slots:
     void goToChannel(const QString& channelName, const QString& channelId, bool isOwner);
     void goToPrivateMessages();
     void sendChannelMessage(const QString& messageText);
+    void getMoreMessages();
 
 private:
     void handleLeftChannelResponse(const common::messages::Message& message);

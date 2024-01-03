@@ -46,3 +46,4 @@ vcpkg_installed
 .cache
 lib
 CMakeLists.txt.user
+coverage.txt

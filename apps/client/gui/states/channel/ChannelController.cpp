@@ -76,13 +76,13 @@ void ChannelController::goToChannel(const QString& channelName, const QString& c
 
     if (not isActivated or currentChannelId != channelId.toStdString())
     {
-        if (conversationStorage->hasConversation(currentChannelId))
+        if (conversationStorage->hasConversation(channelId.toStdString()))
         {
-            messageStorage = conversationStorage->getConversation(currentChannelId);
+            messageStorage = conversationStorage->getConversation(channelId.toStdString());
         }
         else
         {
-            messageStorage = conversationStorage->createConversation(currentChannelId);
+            messageStorage = conversationStorage->createConversation(channelId.toStdString());
         }
 
         emit setMessageStorage(messageStorage);
@@ -294,7 +294,7 @@ void ChannelController::handleGetChannelMessagesResponse(const common::messages:
 
         if (responseJson.at("data").at("messages").empty())
         {
-            emit messagesUpdated(true);
+            emit messagesUpdated(false);
 
             return;
         }
@@ -309,5 +309,13 @@ void ChannelController::handleGetChannelMessagesResponse(const common::messages:
     {
         LOG_S(ERROR) << "Response without messages";
     }
+}
+
+void ChannelController::getMoreMessages()
+{
+    auto offset = messageStorage->getMessages().size();
+
+    session->sendMessage(common::messages::MessageId::GetChannelMessages,
+                         nlohmann::json{{"channelId", currentChannelId}, {"offset", offset}, {"limit", 50}});
 }
 }

@@ -18,6 +18,7 @@
 #include "server/api/messageHandlers/friend/rejectFriendInvitationMessageHandler/RejectFriendInvitationMessageHandler.h"
 #include "server/api/messageHandlers/friend/removeFromFriendsMessageHandler/RemoveFromFriendsMessageHandler.h"
 #include "server/api/messageHandlers/messages/getMessagesFromChannelMessageHandler/GetMessagesFromChannelMessageHandler.h"
+#include "server/api/messageHandlers/messages/getMessagesFromGroupMessageHandler/GetMessagesFromGroupMessageHandler.h"
 #include "server/api/messageHandlers/messages/sendMessageToChannelMessageHandler/SendMessageToChannelMessageHandler.h"
 #include "server/api/messageHandlers/user/deleteUserMessageHandler/DeleteUserMessageHandler.h"
 #include "server/api/messageHandlers/user/getUserDataMessageHandler/GetUserDataMessageHandler.h"
@@ -50,6 +51,7 @@
 #include "server/application/queryHandlers/friend/findReceivedFriendInvitationsQueryHandler/FindReceivedFriendInvitationsQueryHandlerImpl.h"
 #include "server/application/queryHandlers/friend/findUserFriendshipsQueryHandler/FindUserFriendshipsQueryHandlerImpl.h"
 #include "server/application/queryHandlers/message/findChannelMessagesQueryHandler/FindChannelMessagesQueryHandlerImpl.h"
+#include "server/application/queryHandlers/message/findGroupMessagesQueryHandler/FindGroupMessagesQueryHandlerImpl.h"
 #include "server/application/queryHandlers/user/findUserByEmailQueryHandler/FindUserByEmailQueryHandlerImpl.h"
 #include "server/application/queryHandlers/user/findUserQueryHandler/FindUserQueryHandlerImpl.h"
 #include "server/application/services/hashService/HashServiceImpl.h"
@@ -294,6 +296,12 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
     auto getMessageFromChannelMessageHandler = std::make_shared<server::api::GetMessagesFromChannelMessageHandler>(
         tokenService, std::move(findChannelMessagesQueryHandler));
 
+    auto findGroupMessagesQueryHandler =
+        std::make_unique<server::application::FindGroupMessagesQueryHandlerImpl>(messageRepository);
+
+    auto getMessagesFromGroupMessageHandler = std::make_shared<server::api::GetMessagesFromGroupMessageHandler>(
+        tokenService, std::move(findGroupMessagesQueryHandler));
+
     std::unordered_map<common::messages::MessageId, std::shared_ptr<api::MessageHandler>> messageHandlers{
         {common::messages::MessageId::CreateChannel, createChannelMessageHandler},
         {common::messages::MessageId::GetUserChannels, getUserChannelsMessageHandler},
@@ -319,6 +327,7 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
         {common::messages::MessageId::GetChannelMembers, getChannelMembersMessageHandler},
         {common::messages::MessageId::SendChannelMessage, sendMessageToChannelMessageHandler},
         {common::messages::MessageId::GetChannelMessages, getMessageFromChannelMessageHandler},
+        {common::messages::MessageId::GetPrivateMessages, getMessagesFromGroupMessageHandler},
     };
 
     return std::make_unique<MessageRouterImpl>(std::move(messageHandlers));

@@ -1,5 +1,6 @@
 #include "MessagesController.h"
 
+#include <loguru.hpp>
 #include <ranges>
 
 namespace client::gui
@@ -56,5 +57,12 @@ void MessagesController::setMessageStorage(const std::shared_ptr<storage::Messag
     emit messagesUpdated();
 
     emit scrollDown();
+}
+
+void MessagesController::requestMoreMessages()
+{
+    LOG_S(INFO) << "Requesting more messages";
+
+    emit getMoreMessages();
 }
 }
