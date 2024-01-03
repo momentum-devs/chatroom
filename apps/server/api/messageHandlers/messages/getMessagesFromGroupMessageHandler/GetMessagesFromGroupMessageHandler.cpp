@@ -7,7 +7,8 @@ namespace server::api
 GetMessagesFromGroupMessageHandler::GetMessagesFromGroupMessageHandler(
     std::shared_ptr<application::TokenService> tokenServiceInit,
     std::unique_ptr<application::FindGroupMessagesQueryHandler> findGroupMessagesQueryHandlerInit)
-    : tokenService{std::move(tokenServiceInit)}, findGroupMessagesQueryHandler{std::move(findGroupMessagesQueryHandler)}
+    : tokenService{std::move(tokenServiceInit)},
+      findGroupMessagesQueryHandler{std::move(findGroupMessagesQueryHandlerInit)}
 {
 }
 
@@ -49,7 +50,7 @@ GetMessagesFromGroupMessageHandler::handleMessage(const common::messages::Messag
     {
         nlohmann::json responsePayload{{"error", e.what()}};
 
-        return {common::messages::MessageId::GetChannelMessagesResponse, common::bytes::Bytes{responsePayload.dump()}};
+        return {common::messages::MessageId::GetPrivateMessagesResponse, common::bytes::Bytes{responsePayload.dump()}};
     }
 }
 }

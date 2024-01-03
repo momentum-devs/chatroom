@@ -8,13 +8,16 @@
 
 #include "faker-cxx/Datatype.h"
 #include "faker-cxx/Date.h"
-#include "faker-cxx/Internet.h"
-#include "faker-cxx/Lorem.h"
 #include "faker-cxx/String.h"
 #include "nlohmann/json.hpp"
+#include "server/tests/factories/channelTestFactory/ChannelTestFactory.h"
+#include "server/tests/factories/groupTestFactory/GroupTestFactory.h"
+#include "server/tests/factories/messageTestFactory/MessageTestFactory.h"
+#include "server/tests/factories/userTestFactory/UserTestFactory.h"
 
 using namespace server::api;
 using namespace ::testing;
+using namespace server::tests;
 
 namespace
 {
@@ -26,42 +29,21 @@ const auto invalidTokenMessageResponse = common::messages::Message{
 class GetMessagesFromGroupMessageHandlerTest : public Test
 {
 public:
-    // TODO: move it to common test utils
-    server::domain::User createUser()
-    {
-        const auto userId = faker::String::uuid();
-        const auto userNickname = faker::String::alphanumeric(10);
-        const auto userEmail = faker::Internet::email();
-        const auto userPassword = faker::String::alphanumeric(10);
-        const auto userCreatedAt = faker::Date::recentDate();
-        const auto userUpdatedAt = faker::Date::recentDate();
-        const bool userActive = faker::Datatype::boolean();
-        const bool userEmailVerified = faker::Datatype::boolean();
-        const auto verificationCode = faker::String::numeric(6);
-        return {userId,           userEmail,     userPassword, userNickname, userActive, userEmailVerified,
-                verificationCode, userCreatedAt, userUpdatedAt};
-    }
-
-    server::domain::Message createMessage()
-    {
-        const auto messageId = faker::String::uuid();
-        const auto messageContent = faker::Lorem::sentence();
-        const auto messageSender = std::make_shared<server::domain::User>(createUser());
-        const std::shared_ptr<server::domain::Channel> messageChannel = nullptr;
-        const std::shared_ptr<server::domain::Group> messageGroup = nullptr;
-        const auto messageCreatedAt = faker::Date::recentDate();
-        const auto messageUpdatedAt = faker::Date::recentDate();
-        return server::domain::Message{messageId,    messageContent,   messageSender,   messageChannel,
-                                       messageGroup, messageCreatedAt, messageUpdatedAt};
-    }
-
+    UserTestFactory userFactory;
+    ChannelTestFactory channelFactory;
+    MessageTestFactory messageFactory;
+    GroupTestFactory groupFactory;
     const std::string token = faker::String::alphanumeric(40);
     const std::string groupId = faker::String::uuid();
     const std::string senderId = faker::String::uuid();
     const server::application::VerifyTokenResult verifyTokenResult{senderId};
-    const server::domain::Message message1 = createMessage();
-    const server::domain::Message message2 = createMessage();
-    const std::vector<server::domain::Message> messages{message1, message2};
+    const std::shared_ptr<server::domain::Message> message1 = messageFactory.createDomainMessage(
+        userFactory.createDomainUser(), channelFactory.createDomainChannel(userFactory.createDomainUser()),
+        groupFactory.createDomainGroup());
+    const std::shared_ptr<server::domain::Message> message2 = messageFactory.createDomainMessage(
+        userFactory.createDomainUser(), channelFactory.createDomainChannel(userFactory.createDomainUser()),
+        groupFactory.createDomainGroup());
+    const std::vector<server::domain::Message> messages{*message1, *message2};
     const unsigned totalCount = 2;
 
     const nlohmann::json validPayloadJson{{"data", nlohmann::json{{"groupId", groupId}, {"limit", 10}, {"offset", 0}}},
@@ -71,10 +53,10 @@ public:
 
     const std::string validMessageResponsePayload =
         R"({"data":{"messages":[)" +
-        std::format(R"({{"id":"{}","senderName":"{}","sentAt":"{}","text":"{}"}},)", message1.getId(),
-                    message1.getSender()->getNickname(), message1.getCreatedAt(), message1.getContent()) +
-        std::format(R"({{"id":"{}","senderName":"{}","sentAt":"{}","text":"{}"}})", message2.getId(),
-                    message2.getSender()->getNickname(), message2.getCreatedAt(), message2.getContent()) +
+        std::format(R"({{"id":"{}","senderName":"{}","sentAt":"{}","text":"{}"}},)", message1->getId(),
+                    message1->getSender()->getNickname(), message1->getCreatedAt(), message1->getContent()) +
+        std::format(R"({{"id":"{}","senderName":"{}","sentAt":"{}","text":"{}"}})", message2->getId(),
+                    message2->getSender()->getNickname(), message2->getCreatedAt(), message2->getContent()) +
         R"(],"totalCount":2}})";
     const common::messages::Message validMessageResponse{common::messages::MessageId::GetPrivateMessagesResponse,
                                                          common::bytes::Bytes{validMessageResponsePayload}};
@@ -121,12 +103,12 @@ TEST_F(GetMessagesFromGroupMessageHandlerTest, handleMessage_shouldReturnValidMe
     const auto messageResponse = getMessagesFromGroupMessageHandler.handleMessage(validMessage);
 
     const auto validMessageResponse =
-        common::messages::Message{common::messages::MessageId::GetChannelMessagesResponse,
+        common::messages::Message{common::messages::MessageId::GetPrivateMessagesResponse,
                                   common::bytes::Bytes{R"({"data":{"messages":[],"totalCount":0}})"}};
     ASSERT_EQ(messageResponse, validMessageResponse);
 }
 
-TEST_F(GetMessagesFromGroupMessageHandlerTest, handleMessage_shouldReturnValidMessageResponseWithOneMessage)
+TEST_F(GetMessagesFromGroupMessageHandlerTest, handleMessage_shouldReturnErrorMessageResponse)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*findGroupMessagesQueryHandlerMock, execute(_))
@@ -135,7 +117,7 @@ TEST_F(GetMessagesFromGroupMessageHandlerTest, handleMessage_shouldReturnValidMe
     const auto messageResponse = getMessagesFromGroupMessageHandler.handleMessage(validMessage);
 
     const auto validMessageResponse =
-        common::messages::Message{common::messages::MessageId::GetChannelMessagesResponse,
+        common::messages::Message{common::messages::MessageId::GetPrivateMessagesResponse,
                                   common::bytes::Bytes{R"({"error":"findChannelMessagesQueryHandlerError"})"}};
     ASSERT_EQ(messageResponse, validMessageResponse);
 }
