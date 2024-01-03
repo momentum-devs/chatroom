@@ -64,6 +64,11 @@ public:
         avatar_url = newAvatarUrl;
     }
 
+    void setUpdatedAt(const std::string& updatedAtInit)
+    {
+        updated_at = updatedAtInit;
+    }
+
     bool operator==(const Channel& channel) const
     {
         auto tieStruct = [](const Channel& channel)

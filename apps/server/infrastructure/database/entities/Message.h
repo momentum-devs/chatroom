@@ -68,6 +68,11 @@ public:
         content = newContent;
     }
 
+    void setUpdatedAt(const std::string& updatedAtInit)
+    {
+        updated_at = updatedAtInit;
+    }
+
 private:
     Message() = default;
 

@@ -95,6 +95,10 @@ std::shared_ptr<domain::Channel> ChannelRepositoryImpl::updateChannel(const doma
                 channel->setAvatarUrl(*payload.channel.getAvatarUrl());
             }
 
+            const auto currentDate = to_iso_string(boost::posix_time::second_clock::universal_time());
+
+            channel->setUpdatedAt(currentDate);
+
             db->update(*channel);
 
             transaction.commit();

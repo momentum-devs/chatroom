@@ -118,6 +118,10 @@ std::shared_ptr<domain::User> UserRepositoryImpl::updateUser(const domain::Updat
             user->setEmailVerified(payload.user.isEmailVerified());
             user->setVerificationCode(payload.user.getVerificationCode());
 
+            const auto currentDate = to_iso_string(boost::posix_time::second_clock::universal_time());
+            
+            user->setUpdatedAt(currentDate);
+
             if (payload.user.getAvatarUrl())
             {
                 user->setAvatarUrl(*payload.user.getAvatarUrl());

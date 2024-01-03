@@ -158,6 +158,10 @@ std::shared_ptr<domain::Message> MessageRepositoryImpl::updateMessage(const doma
 
             message->setContent(payload.message.getContent());
 
+            const auto currentDate = to_iso_string(boost::posix_time::second_clock::universal_time());
+
+            message->setUpdatedAt(currentDate);
+
             db->update(*message);
 
             transaction.commit();

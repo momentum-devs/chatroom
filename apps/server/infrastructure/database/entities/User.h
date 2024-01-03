@@ -108,6 +108,11 @@ public:
         avatar_url = avatarUrlInit;
     }
 
+    void setUpdatedAt(const std::string& updatedAtInit)
+    {
+        updated_at = updatedAtInit;
+    }
+
     bool operator==(const User& user) const
     {
         auto tieStruct = [](const User& user)

@@ -20,7 +20,7 @@
 ### SERVER:
 
 * user avatars and channel avatars
+* config-cxx
 * transactions
 * infrastructure setup
 * deploy
-* update updatedAt date when updating
