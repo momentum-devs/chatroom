@@ -1,7 +1,7 @@
 #include "EnvironmentParser.h"
 
 #include "errors/MissingEnvironmentVariableError.h"
-#include <fmt/format.h>
+#include "fmt/format.h"
 
 namespace common::envParser
 {

@@ -2,7 +2,7 @@
 
 #include <gtest/gtest.h>
 
-#include <fmt/format.h>
+#include "fmt/format.h"
 
 using namespace ::testing;
 using namespace client::api;

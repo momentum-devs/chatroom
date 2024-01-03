@@ -330,6 +330,7 @@ target_link_libraries(${EXECUTABLE_NAME} PRIVATE
         ${ODB_LIBRARIES}
         envParser
         sqlite3
+        fmt::fmt
 )
 
 target_include_directories(${EXECUTABLE_NAME} PRIVATE
@@ -359,6 +360,7 @@ target_link_libraries(${EXECUTABLE_NAME}UT PRIVATE
         gtest
         gmock
         sqlite3
+        fmt::fmt
 )
 
 target_include_directories(${EXECUTABLE_NAME}UT PUBLIC ${GMOCK_INCLUDE_DIR})
@@ -390,6 +392,7 @@ target_link_libraries(${EXECUTABLE_NAME}IT PRIVATE
         sqlite3
         gtest
         gmock
+        fmt::fmt
 )
 
 target_include_directories(${EXECUTABLE_NAME}IT PUBLIC ${GMOCK_INCLUDE_DIR} ${DOTENV_INCLUDE_DIR})

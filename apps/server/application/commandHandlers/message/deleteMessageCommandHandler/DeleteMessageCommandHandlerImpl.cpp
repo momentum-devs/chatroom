@@ -1,6 +1,6 @@
 #include "DeleteMessageCommandHandlerImpl.h"
 
-#include <fmt/format.h>
+#include "fmt/format.h"
 #include "server/application/errors/OperationNotValidError.h"
 #include "server/application/errors/ResourceNotFoundError.h"
 

@@ -3,7 +3,7 @@
 #include <utility>
 
 #include "BlacklistToken.odb.h"
-#include <fmt/format.h>
+#include "fmt/format.h"
 #include "server/infrastructure/database/tables/BlacklistTokenTable.h"
 
 namespace server::tests

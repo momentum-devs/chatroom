@@ -2,6 +2,7 @@
 
 #include <nlohmann/json.hpp>
 
+#include "fmt/format.h"
 #include "loguru.hpp"
 
 namespace client::gui

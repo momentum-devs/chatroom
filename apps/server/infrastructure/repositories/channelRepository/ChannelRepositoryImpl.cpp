@@ -3,7 +3,7 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 #include "Channel.odb.h"
-#include <fmt/format.h>
+#include "fmt/format.h"
 #include "server/infrastructure/errors/ChannelRepositoryError.h"
 #include "server/infrastructure/errors/ResourceNotFoundError.h"
 

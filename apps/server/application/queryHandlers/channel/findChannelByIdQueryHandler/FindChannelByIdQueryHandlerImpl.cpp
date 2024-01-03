@@ -1,6 +1,6 @@
 #include "FindChannelByIdQueryHandlerImpl.h"
 
-#include <fmt/format.h>
+#include "fmt/format.h"
 #include "server/application/errors/ResourceNotFoundError.h"
 
 namespace server::application

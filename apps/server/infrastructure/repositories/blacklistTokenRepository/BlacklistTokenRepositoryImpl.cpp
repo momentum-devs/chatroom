@@ -1,7 +1,7 @@
 #include "BlacklistTokenRepositoryImpl.h"
 
 #include "BlacklistToken.odb.h"
-#include <fmt/format.h>
+#include "fmt/format.h"
 #include "server/infrastructure/errors/BlacklistTokenRepositoryError.h"
 
 namespace server::infrastructure

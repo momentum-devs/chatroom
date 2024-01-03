@@ -1,5 +1,6 @@
 #include "SessionImpl.h"
 
+#include "fmt/format.h"
 #include <nlohmann/json.hpp>
 
 #include "loguru.hpp"

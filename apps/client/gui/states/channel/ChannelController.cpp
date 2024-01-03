@@ -1,5 +1,6 @@
 #include "ChannelController.h"
 
+#include "fmt/format.h"
 #include "loguru.hpp"
 
 namespace client::gui

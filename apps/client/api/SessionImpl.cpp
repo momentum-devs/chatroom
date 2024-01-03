@@ -1,5 +1,6 @@
 #include "SessionImpl.h"
 
+#include "fmt/format.h"
 #include "loguru.hpp"
 #include "RemoveHandlerError.h"
 

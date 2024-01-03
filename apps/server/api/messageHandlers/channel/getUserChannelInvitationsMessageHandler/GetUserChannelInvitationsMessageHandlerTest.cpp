@@ -11,7 +11,7 @@
 #include "faker-cxx/Image.h"
 #include "faker-cxx/Internet.h"
 #include "faker-cxx/String.h"
-#include <fmt/format.h>
+#include "fmt/format.h"
 #include "nlohmann/json.hpp"
 
 using namespace ::testing;

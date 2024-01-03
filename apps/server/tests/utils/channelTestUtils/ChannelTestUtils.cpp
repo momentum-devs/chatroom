@@ -3,7 +3,7 @@
 #include <utility>
 
 #include "Channel.odb.h"
-#include <fmt/format.h>
+#include "fmt/format.h"
 #include "server/infrastructure/database/tables/ChannelTable.h"
 
 namespace server::tests

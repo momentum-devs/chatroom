@@ -1,4 +1,5 @@
 #include <boost/asio.hpp>
+#include "fmt/format.h"
 #include <odb/exception.hxx>
 #include <thread>
 

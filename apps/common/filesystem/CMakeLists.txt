@@ -19,6 +19,7 @@ target_include_directories(${LIBRARY_NAME} PUBLIC ${PARENT_DIR})
 
 target_link_libraries(${LIBRARY_NAME} PUBLIC
         collection
+        fmt::fmt
 )
 
 add_executable(${LIBRARY_NAME}UT ${SOURCES} ${UT_SOURCES})
@@ -26,6 +27,7 @@ add_executable(${LIBRARY_NAME}UT ${SOURCES} ${UT_SOURCES})
 target_link_libraries(${LIBRARY_NAME}UT PRIVATE
         GTest::gtest_main
         collection
+        fmt::fmt
 )
 
 target_include_directories(${LIBRARY_NAME}UT

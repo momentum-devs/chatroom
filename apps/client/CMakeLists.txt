@@ -125,6 +125,7 @@ target_link_libraries(${EXECUTABLE_NAME} PUBLIC
         filesystem
         collection
         envParser
+        fmt::fmt
 )
 
 target_include_directories(${EXECUTABLE_NAME} PUBLIC ${GMOCK_INCLUDE_DIR} ${DOTENV_INCLUDE_DIR})
@@ -146,6 +147,7 @@ target_link_libraries(${EXECUTABLE_NAME}UT PUBLIC
         collection
         envParser
         faker-cxx
+        fmt::fmt
 )
 
 target_include_directories(${EXECUTABLE_NAME}UT PUBLIC ${GMOCK_INCLUDE_DIR})

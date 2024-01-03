@@ -3,7 +3,7 @@
 #include <boost/uuid/random_generator.hpp>
 #include <boost/uuid/uuid_io.hpp>
 #include <chrono>
-#include <iostream>
+#include "fmt/format.h"
 #include <sstream>
 
 #include "jwt/jwt.hpp"
