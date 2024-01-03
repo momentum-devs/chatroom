@@ -14,5 +14,6 @@ public:
     std::string getSendGridApiKey() const;
     std::string getSendGridEmail() const;
     int getRefreshSessionsInterval() const;
+    std::string getCxxEnv() const;
 };
 }

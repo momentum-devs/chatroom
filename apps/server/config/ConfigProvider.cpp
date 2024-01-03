@@ -39,4 +39,9 @@ int ConfigProvider::getRefreshSessionsInterval() const
     return common::envParser::EnvironmentParser::parseInt("REFRESH_SESSION_INTERVAL");
 }
 
+std::string ConfigProvider::getCxxEnv() const
+{
+    return common::envParser::EnvironmentParser::parseString("CXX_ENV");
+}
+
 }

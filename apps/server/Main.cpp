@@ -33,6 +33,7 @@ int main(int argc, char* argv[])
     const auto jwtExpireIn = configProvider.getJwtExpireIn();
     const auto sendGridApiKey = configProvider.getSendGridApiKey();
     const auto sendGridEmail = configProvider.getSendGridEmail();
+    const auto cxxEnv = configProvider.getCxxEnv();
     const auto refreshSessionsInterval = boost::posix_time::seconds{configProvider.getRefreshSessionsInterval()};
 
     const auto numberOfSupportedThreads = std::thread::hardware_concurrency();
@@ -41,7 +42,12 @@ int main(int argc, char* argv[])
 
     const auto databaseMigrationsFilePath = std::format("{}/scripts/migrations.sql", serverRootPath);
 
-    server::core::DatabaseMigrationsRunner::runMigrations(databaseFullPath, databaseMigrationsFilePath);
+    if (cxxEnv != "development")
+    {
+        server::core::DatabaseMigrationsRunner::runMigrations(databaseFullPath, databaseMigrationsFilePath);
+
+        LOG_F(INFO, "Database migrations executed.");
+    }
 
     auto db = server::core::DatabaseConnectionFactory::create({databaseFullPath});
 

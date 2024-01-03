@@ -12,16 +12,16 @@ namespace
 void executeSqlScript(sqlite3* db, const std::string& sqlScript)
 {
     char* errMsg = nullptr;
+
     int rc = sqlite3_exec(db, sqlScript.c_str(), nullptr, nullptr, &errMsg);
 
     if (rc != SQLITE_OK)
     {
-        std::cerr << "Error executing SQL script: " << errMsg << std::endl;
+        std::cerr << errMsg << std::endl;
+
         sqlite3_free(errMsg);
-    }
-    else
-    {
-        std::cout << "SQL script executed successfully." << std::endl;
+
+        throw std::runtime_error("Error executing SQL script.");
     }
 }
 }
@@ -47,14 +47,16 @@ void DatabaseMigrationsRunner::runMigrations(const std::string& databasePath, co
         }
         else
         {
-            std::cerr << "Error opening SQL file: " << sqlScriptPath << std::endl;
+            throw std::runtime_error("Error opening SQL file." + sqlScriptPath);
         }
 
         sqlite3_close(db);
     }
     else
     {
-        std::cerr << "Error opening database: " << sqlite3_errmsg(db) << std::endl;
+        std::cerr << sqlite3_errmsg(db) << std::endl;
+
+        throw std::runtime_error("Error opening database.");
     }
 }
 }
