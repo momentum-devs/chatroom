@@ -22,3 +22,6 @@
 [submodule "externals/fmt"]
 	path = externals/fmt
 	url = https://github.com/fmtlib/fmt.git
+[submodule "externals/config-cxx"]
+	path = externals/config-cxx
+	url = https://github.com/cieslarmichal/config-cxx.git
