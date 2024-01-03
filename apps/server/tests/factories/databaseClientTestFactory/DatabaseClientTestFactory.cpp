@@ -1,9 +1,9 @@
 #include "DatabaseClientTestFactory.h"
 
-#include "fmt/format.h"
 #include <iostream>
 
 #include "filesystem/GetProjectPath.h"
+#include "fmt/format.h"
 #include "server/config/ConfigProvider.h"
 
 namespace server::tests

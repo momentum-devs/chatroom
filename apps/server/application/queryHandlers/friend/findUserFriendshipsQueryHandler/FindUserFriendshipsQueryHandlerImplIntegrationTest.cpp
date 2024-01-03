@@ -78,10 +78,8 @@ TEST_F(FindUserFriendshipsQueryHandlerImplIntegrationTest, findUsersChannelsByUs
     const auto [friendships] = findUserFriendshipsQueryHandler.execute({user1->getId()});
 
     ASSERT_EQ(friendships.size(), 2);
-    ASSERT_TRUE(std::any_of(friendships.begin(), friendships.end(),
-                            [userFriend](const domain::Friendship& friendship)
+    ASSERT_TRUE(std::any_of(friendships.begin(), friendships.end(), [userFriend](const domain::Friendship& friendship)
                             { return userFriend->getId() == friendship.getUser()->getId(); }));
-    ASSERT_TRUE(std::any_of(friendships.begin(), friendships.end(),
-                            [user2](const domain::Friendship& friendship)
+    ASSERT_TRUE(std::any_of(friendships.begin(), friendships.end(), [user2](const domain::Friendship& friendship)
                             { return user2->getId() == friendship.getUserFriend()->getId(); }));
 }

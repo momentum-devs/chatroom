@@ -14,14 +14,17 @@ Rectangle {
         friendsView.model = friends;
         friendsView.height = 36 * friends.length;
     }
+
     function addFriendInvitation(friendName: string, requestId: string) {
         friendInvitations.push([friendName, requestId]);
         friendInvitationsView.model = friendInvitations;
     }
+
     function clearFriendInvitationList() {
         friendInvitations = [];
         friendInvitationsView.model = friendInvitations;
     }
+
     function clearFriendList() {
         friends = [];
         friendsView.model = friends;

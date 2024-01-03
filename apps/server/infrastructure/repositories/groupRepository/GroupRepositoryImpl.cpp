@@ -1,8 +1,8 @@
 #include "GroupRepositoryImpl.h"
 
 #include <boost/date_time/posix_time/posix_time.hpp>
-#include "fmt/format.h"
 
+#include "fmt/format.h"
 #include "Group.odb.h"
 #include "server/infrastructure/errors/GroupRepositoryError.h"
 

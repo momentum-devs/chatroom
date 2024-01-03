@@ -33,7 +33,7 @@ User& User::operator=(const User& user)
     nickname = user.nickname;
     userId = user.userId;
     email = user.email;
-    
+
     return *this;
 }
 

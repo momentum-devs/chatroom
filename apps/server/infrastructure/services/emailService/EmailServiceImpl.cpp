@@ -1,7 +1,8 @@
 #include "EmailServiceImpl.h"
 
-#include "fmt/format.h"
 #include <utility>
+
+#include "fmt/format.h"
 
 namespace server::application
 {

@@ -1,6 +1,5 @@
 #include "SessionImpl.h"
 
-#include "fmt/format.h"
 #include <gtest/gtest.h>
 #include <regex>
 
@@ -9,6 +8,8 @@
 #include "messages/MessageSenderMock.h"
 #include "server/application/commandHandlers/user/logoutUserCommandHandler/LogoutUserCommandHandlerMock.h"
 #include "server/application/services/tokenService/TokenServiceMock.h"
+
+#include "fmt/format.h"
 
 using namespace ::testing;
 using namespace server::core;

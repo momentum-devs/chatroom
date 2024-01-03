@@ -12,7 +12,7 @@ FindUserFriendshipsQueryHandlerResult
 FindUserFriendshipsQueryHandlerImpl::execute(const FindUserFriendshipsQueryHandlerPayload& payload) const
 {
     const auto friendships = friendshipRepository->findFriendshipsByUserId({payload.userId});
-    
+
     return {friendships};
 }
 }

@@ -1,7 +1,6 @@
 #include "SetLastGroupMessageReadByUserCommandHandlerImpl.h"
 
 #include "fmt/format.h"
-
 #include "loguru.hpp"
 #include "server/application/errors/OperationNotValidError.h"
 #include "server/application/errors/ResourceNotFoundError.h"
@@ -23,9 +22,8 @@ SetLastGroupMessageReadByUserCommandHandlerImpl::SetLastGroupMessageReadByUserCo
 void SetLastGroupMessageReadByUserCommandHandlerImpl::execute(
     const SetLastGroupMessageReadByUserCommandHandlerPayload& payload) const
 {
-    LOG_S(INFO) << fmt::format(
-        "Setting last group message read by user... {{userId: {}, groupId: {}, messageId: {}}}", payload.userId,
-        payload.groupId, payload.messageId);
+    LOG_S(INFO) << fmt::format("Setting last group message read by user... {{userId: {}, groupId: {}, messageId: {}}}",
+                               payload.userId, payload.groupId, payload.messageId);
 
     const auto message = messageRepository->findMessageById({payload.messageId});
 

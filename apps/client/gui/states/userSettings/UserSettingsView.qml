@@ -109,6 +109,7 @@ Rectangle {
                 }
                 Button {
                     id: changePassword
+
                     function activate() {
                         const password = passwordField.text;
                         const passwordRepeat = passwordRepeatField.text;
@@ -134,6 +135,7 @@ Rectangle {
         }
         Button {
             id: deleteUser
+
             function activate() {
                 userSettingsController.deleteUser();
             }
@@ -164,10 +166,12 @@ Rectangle {
             errorPopup.contentItem.text = message;
             errorPopup.open();
         }
+
         function onSetUserData(email: string, nickname: string) {
             nicknameField.text = nickname;
             emailField.text = email;
         }
+
         function onUpdateUserFailure(message: string) {
             errorPopup.contentItem.text = message;
             errorPopup.open();

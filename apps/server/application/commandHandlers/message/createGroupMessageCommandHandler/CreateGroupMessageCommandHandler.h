@@ -10,8 +10,7 @@ class CreateGroupMessageCommandHandler
 public:
     virtual ~CreateGroupMessageCommandHandler() = default;
 
-    virtual CreateGroupMessageCommandHandlerResult
-    execute(const CreateGroupMessageCommandHandlerPayload&) const = 0;
+    virtual CreateGroupMessageCommandHandlerResult execute(const CreateGroupMessageCommandHandlerPayload&) const = 0;
 };
 
 }

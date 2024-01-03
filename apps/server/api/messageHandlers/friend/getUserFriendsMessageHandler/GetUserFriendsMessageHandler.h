@@ -11,8 +11,9 @@ namespace server::api
 class GetUserFriendsMessageHandler : public MessageHandler
 {
 public:
-    GetUserFriendsMessageHandler(std::shared_ptr<application::TokenService> tokenService,
-                                 std::unique_ptr<application::FindUserFriendshipsQueryHandler> findUserFriendshipsQueryHandler);
+    GetUserFriendsMessageHandler(
+        std::shared_ptr<application::TokenService> tokenService,
+        std::unique_ptr<application::FindUserFriendshipsQueryHandler> findUserFriendshipsQueryHandler);
 
     common::messages::Message handleMessage(const common::messages::Message& message) const override;
 

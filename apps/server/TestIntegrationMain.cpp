@@ -1,8 +1,8 @@
-#include "fmt/format.h"
 #include <gmock/gmock.h>
 
 #include "core/database/DatabaseMigrationsRunner.h"
 #include "filesystem/GetProjectPath.h"
+#include "fmt/format.h"
 #include "laserpants/dotenv/dotenv.h"
 #include "server/config/ConfigProvider.h"
 

@@ -1,8 +1,8 @@
 #include "MessageTestUtils.h"
 
-#include "fmt/format.h"
 #include <utility>
 
+#include "fmt/format.h"
 #include "Message.odb.h"
 #include "server/infrastructure/database/tables/MessageTable.h"
 

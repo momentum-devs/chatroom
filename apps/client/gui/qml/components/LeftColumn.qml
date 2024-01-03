@@ -76,15 +76,19 @@ Rectangle {
         function onAddChannel(channelName: string, channelId: string, isOwner: bool) {
             channelList.addChannel(channelName, channelId, isOwner);
         }
+
         function onAddChannelInvitation(channelName: string, channelId: string) {
             channelInvitationList.addChannelInvitation(channelName, channelId);
         }
+
         function onClearChannelInvitationList() {
             channelInvitationList.clearChannelInvitationList();
         }
+
         function onClearChannelList() {
             channelList.clearChannelList();
         }
+
         function onSetUserName(nickname: string) {
             settingsBox.setUserName(nickname);
         }

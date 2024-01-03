@@ -7,8 +7,10 @@ Item {
 
     property alias invitationName: nameText.text
 
-    signal accepted
-    signal rejected
+        signal
+    accepted
+        signal
+    rejected
 
     height: nameRectangle.height + reject.background.height / 2
 

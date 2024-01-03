@@ -1,12 +1,13 @@
-#include "fmt/format.h"
+#include "RejectFriendInvitationMessageHandler.h"
+
 #include <gtest/gtest.h>
 #include <regex>
 
 #include "server/application/commandHandlers/friend/rejectFriendInvitationCommandHandler/RejectFriendInvitationCommandHandlerMock.h"
 #include "server/application/services/tokenService/TokenServiceMock.h"
 
+#include "fmt/format.h"
 #include "nlohmann/json.hpp"
-#include "RejectFriendInvitationMessageHandler.h"
 
 using namespace ::testing;
 using namespace server::api;

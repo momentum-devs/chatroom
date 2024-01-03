@@ -1,8 +1,8 @@
 #include "FriendshipTestUtils.h"
 
-#include "fmt/format.h"
 #include <utility>
 
+#include "fmt/format.h"
 #include "Friendship.odb.h"
 #include "server/infrastructure/database/tables/FriendshipTable.h"
 

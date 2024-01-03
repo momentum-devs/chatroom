@@ -13,8 +13,7 @@ class AddUserToGroupCommandHandlerImpl : public AddUserToGroupCommandHandler
 {
 public:
     AddUserToGroupCommandHandlerImpl(std::shared_ptr<domain::UserGroupRepository>,
-                                       std::shared_ptr<domain::UserRepository>,
-                                       std::shared_ptr<domain::GroupRepository>);
+                                     std::shared_ptr<domain::UserRepository>, std::shared_ptr<domain::GroupRepository>);
 
     void execute(const AddUserToGroupCommandHandlerPayload&) const override;
 

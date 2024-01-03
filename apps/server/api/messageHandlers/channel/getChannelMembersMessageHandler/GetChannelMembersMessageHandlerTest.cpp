@@ -1,6 +1,5 @@
 #include "GetChannelMembersMessageHandler.h"
 
-#include "fmt/format.h"
 #include <gtest/gtest.h>
 #include <nlohmann/json.hpp>
 
@@ -12,6 +11,7 @@
 #include "faker-cxx/Image.h"
 #include "faker-cxx/Internet.h"
 #include "faker-cxx/String.h"
+#include "fmt/format.h"
 
 using namespace ::testing;
 using namespace server::api;

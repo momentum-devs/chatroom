@@ -1,8 +1,8 @@
 #include "UserGroupRepositoryImpl.h"
 
 #include <boost/date_time/posix_time/posix_time.hpp>
-#include "fmt/format.h"
 
+#include "fmt/format.h"
 #include "server/infrastructure/errors/ResourceNotFoundError.h"
 #include "server/infrastructure/errors/UserGroupRepositoryError.h"
 #include "UserGroup.odb.h"

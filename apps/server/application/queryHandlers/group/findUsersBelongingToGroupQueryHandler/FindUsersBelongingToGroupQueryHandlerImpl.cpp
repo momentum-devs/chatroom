@@ -10,8 +10,8 @@ FindUsersBelongingToGroupQueryHandlerImpl::FindUsersBelongingToGroupQueryHandler
 {
 }
 
-FindUsersBelongingToGroupQueryHandlerResult FindUsersBelongingToGroupQueryHandlerImpl::execute(
-    const FindUsersBelongingToGroupQueryHandlerPayload& payload) const
+FindUsersBelongingToGroupQueryHandlerResult
+FindUsersBelongingToGroupQueryHandlerImpl::execute(const FindUsersBelongingToGroupQueryHandlerPayload& payload) const
 {
     const auto usersGroups = userGroupRepository->findUsersGroupsByGroupId({payload.groupId});
 

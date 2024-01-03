@@ -1,9 +1,10 @@
 #include "RejectChannelInvitationMessageHandler.h"
 
-#include "fmt/format.h"
 #include <loguru.hpp>
 #include <nlohmann/json.hpp>
 #include <regex>
+
+#include "fmt/format.h"
 
 namespace server::api
 {

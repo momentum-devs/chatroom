@@ -9,6 +9,7 @@ ScrollView {
         channelInvitations.push([channelName, channelId]);
         channelInvitationsView.model = channelInvitations;
     }
+
     function clearChannelInvitationList() {
         channelInvitations = [];
         channelInvitationsView.model = channelInvitations;

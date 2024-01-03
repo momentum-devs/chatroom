@@ -1,6 +1,5 @@
 #include "GetMessagesFromChannelMessageHandler.h"
 
-#include "fmt/format.h"
 #include <gtest/gtest.h>
 
 #include "server/application/queryHandlers/message/findChannelMessagesQueryHandler/FindChannelMessagesQueryHandlerMock.h"
@@ -12,6 +11,7 @@
 #include "faker-cxx/Internet.h"
 #include "faker-cxx/Lorem.h"
 #include "faker-cxx/String.h"
+#include "fmt/format.h"
 #include "nlohmann/json.hpp"
 
 using namespace server::api;

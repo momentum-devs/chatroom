@@ -1,8 +1,8 @@
 #include "UpdateUserCommandHandlerImpl.h"
 
 #include <boost/uuid/uuid_io.hpp>
-#include "fmt/format.h"
 
+#include "fmt/format.h"
 #include "loguru.hpp"
 #include "server/application/errors/ResourceAlreadyExistsError.h"
 #include "server/application/errors/ResourceNotFoundError.h"

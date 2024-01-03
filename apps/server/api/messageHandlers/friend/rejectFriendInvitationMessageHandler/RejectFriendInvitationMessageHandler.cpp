@@ -1,9 +1,10 @@
-#include "fmt/format.h"
+#include "RejectFriendInvitationMessageHandler.h"
+
 #include <loguru.hpp>
 #include <nlohmann/json.hpp>
 #include <regex>
 
-#include "RejectFriendInvitationMessageHandler.h"
+#include "fmt/format.h"
 
 namespace server::api
 {

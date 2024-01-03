@@ -1,8 +1,8 @@
 #include "UserGroupTestUtils.h"
 
-#include "fmt/format.h"
 #include <utility>
 
+#include "fmt/format.h"
 #include "server/infrastructure/database/tables/GroupTable.h"
 #include "server/infrastructure/database/tables/UserGroupTable.h"
 #include "UserGroup.odb.h"

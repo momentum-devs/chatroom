@@ -71,8 +71,8 @@ public:
     server::application::CreateChannelMessageCommandHandlerMock* createChannelMessageCommandHandlerMock =
         createChannelMessageCommandHandlerMockInit.get();
 
-    SendMessageToChannelMessageHandler sendMessageToChannelMessageHandler{tokenServiceMock,
-                                                        std::move(createChannelMessageCommandHandlerMockInit)};
+    SendMessageToChannelMessageHandler sendMessageToChannelMessageHandler{
+        tokenServiceMock, std::move(createChannelMessageCommandHandlerMockInit)};
 };
 
 TEST_F(SendMessageToChannelMessageHandlerTest, handleValidSendChannelMessage)

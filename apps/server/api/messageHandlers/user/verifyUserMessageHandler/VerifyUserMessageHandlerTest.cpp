@@ -1,6 +1,5 @@
 #include "VerifyUserMessageHandler.h"
 
-#include "fmt/format.h"
 #include <gtest/gtest.h>
 #include <regex>
 
@@ -8,6 +7,7 @@
 #include "server/application/queryHandlers/user/findUserQueryHandler/FindUserQueryHandlerMock.h"
 #include "server/application/services/tokenService/TokenServiceMock.h"
 
+#include "fmt/format.h"
 #include "nlohmann/json.hpp"
 
 using namespace ::testing;

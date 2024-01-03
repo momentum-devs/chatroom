@@ -14,9 +14,9 @@ class CreateGroupMessageCommandHandlerImpl : public CreateGroupMessageCommandHan
 {
 public:
     CreateGroupMessageCommandHandlerImpl(std::shared_ptr<domain::GroupRepository>,
-                                           std::shared_ptr<domain::UserRepository>,
-                                           std::shared_ptr<domain::UserGroupRepository>,
-                                           std::shared_ptr<domain::MessageRepository>);
+                                         std::shared_ptr<domain::UserRepository>,
+                                         std::shared_ptr<domain::UserGroupRepository>,
+                                         std::shared_ptr<domain::MessageRepository>);
 
     CreateGroupMessageCommandHandlerResult execute(const CreateGroupMessageCommandHandlerPayload&) const override;
 

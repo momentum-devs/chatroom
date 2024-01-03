@@ -2,13 +2,13 @@
 
 #include <boost/algorithm/string.hpp>
 #include <filesystem>
-#include "fmt/format.h"
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <vector>
 
 #include "errors/FileNotFound.h"
+#include "fmt/format.h"
 
 namespace common::filesystem
 {

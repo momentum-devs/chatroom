@@ -1,12 +1,12 @@
 #include "RegisterMessageHandler.h"
 
-#include "fmt/format.h"
 #include <gtest/gtest.h>
 #include <regex>
 
 #include "server/application//commandHandlers/user/sendRegistrationVerificationEmailCommandHandler/SendRegistrationVerificationEmailCommandHandlerMock.h"
 #include "server/application/commandHandlers/user/registerUserCommandHandler/RegisterUserCommandHandlerMock.h"
 
+#include "fmt/format.h"
 #include "nlohmann/json.hpp"
 
 using namespace ::testing;

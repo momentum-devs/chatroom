@@ -12,7 +12,7 @@ class LeaveChannelCommandHandlerImpl : public LeaveChannelCommandHandler
 {
 public:
     LeaveChannelCommandHandlerImpl(std::shared_ptr<domain::UserChannelRepository>,
-                                            std::shared_ptr<domain::ChannelRepository>);
+                                   std::shared_ptr<domain::ChannelRepository>);
 
     void execute(const LeaveChannelCommandHandlerPayload&) override;
 

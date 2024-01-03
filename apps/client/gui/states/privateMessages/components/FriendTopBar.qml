@@ -12,6 +12,7 @@ Item {
         friendNickname.font.pointSize = 18;
         friendId = friend[1];
     }
+
     height: friendTopBar.height
 
     Column {
@@ -53,4 +54,3 @@ Item {
         }
     }
 }
-

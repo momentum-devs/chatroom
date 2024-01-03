@@ -1,8 +1,8 @@
+#include "SendFriendInvitationState.h"
+
 #include <loguru.hpp>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
-
-#include "SendFriendInvitationState.h"
 
 namespace client::gui
 {

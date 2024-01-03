@@ -3,7 +3,7 @@
 namespace server::domain
 {
 Reaction::Reaction(std::string idInit, std::string nameInit, std::shared_ptr<User> userInit,
-                         std::shared_ptr<Message> messageInit)
+                   std::shared_ptr<Message> messageInit)
     : id{std::move(idInit)}, name{std::move(nameInit)}, user{std::move(userInit)}, message{std::move(messageInit)}
 {
 }

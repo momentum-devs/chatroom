@@ -1,9 +1,10 @@
 #include "SendMessageToChannelMessageHandler.h"
 
-#include "fmt/format.h"
 #include <loguru.hpp>
 #include <nlohmann/json.hpp>
 #include <regex>
+
+#include "fmt/format.h"
 
 namespace server::api
 {
@@ -15,7 +16,8 @@ SendMessageToChannelMessageHandler::SendMessageToChannelMessageHandler(
 {
 }
 
-common::messages::Message SendMessageToChannelMessageHandler::handleMessage(const common::messages::Message& message) const
+common::messages::Message
+SendMessageToChannelMessageHandler::handleMessage(const common::messages::Message& message) const
 {
     try
     {

@@ -2,8 +2,8 @@
 
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
-#include "fmt/format.h"
 
+#include "fmt/format.h"
 #include "loguru.hpp"
 #include "server/application/errors/OperationNotValidError.h"
 #include "server/application/errors/ResourceNotFoundError.h"
@@ -53,8 +53,8 @@ CreateChannelMessageCommandHandlerImpl::execute(const CreateChannelMessageComman
 
     if (!userIsMemberOfChannel)
     {
-        throw errors::OperationNotValidError{
-            fmt::format("Sender {} is not a member of channel {}.", sender->get()->getEmail(), channel->get()->getName())};
+        throw errors::OperationNotValidError{fmt::format("Sender {} is not a member of channel {}.",
+                                                         sender->get()->getEmail(), channel->get()->getName())};
     }
 
     std::stringstream uuid;

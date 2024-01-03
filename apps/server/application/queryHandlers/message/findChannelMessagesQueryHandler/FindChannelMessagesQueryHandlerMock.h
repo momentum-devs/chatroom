@@ -9,7 +9,7 @@ namespace server::application
 class FindChannelMessagesQueryHandlerMock : public FindChannelMessagesQueryHandler
 {
 public:
-    MOCK_METHOD(FindChannelMessagesQueryHandlerResult, execute,
-                (const FindChannelMessagesQueryHandlerPayload&), (const override));
+    MOCK_METHOD(FindChannelMessagesQueryHandlerResult, execute, (const FindChannelMessagesQueryHandlerPayload&),
+                (const override));
 };
 }

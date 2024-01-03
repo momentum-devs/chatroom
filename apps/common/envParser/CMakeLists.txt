@@ -2,7 +2,7 @@ set(LIBRARY_NAME envParser)
 
 set(SOURCES
         EnvironmentParser.cpp
-        )
+)
 
 add_library(${LIBRARY_NAME} ${SOURCES})
 

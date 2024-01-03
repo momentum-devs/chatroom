@@ -1,8 +1,7 @@
 #include "MessageSerializerImpl.h"
 
-#include "fmt/format.h"
-
 #include "errors/InvalidChecksumError.h"
+#include "fmt/format.h"
 
 namespace common::messages
 {

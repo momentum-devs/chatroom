@@ -1,9 +1,8 @@
 #include "FileSystemServiceImpl.h"
 
-#include "fmt/format.h"
-
 #include "gtest/gtest.h"
 
+#include "fmt/format.h"
 #include "GetProjectPath.h"
 
 using namespace ::testing;

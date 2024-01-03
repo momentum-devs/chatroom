@@ -1,11 +1,11 @@
 #include "LoginMessageHandler.h"
 
-#include "fmt/format.h"
 #include <gtest/gtest.h>
 #include <regex>
 
 #include "server/application/commandHandlers/user/loginUserCommandHandler/LoginUserCommandHandlerMock.h"
 
+#include "fmt/format.h"
 #include "nlohmann/json.hpp"
 
 using namespace ::testing;

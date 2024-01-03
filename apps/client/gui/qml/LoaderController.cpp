@@ -24,7 +24,7 @@ LoaderController::LoaderController()
 void LoaderController::callLoadView(const QUrl& qUrl, std::function<void()> onFinished)
 {
     callbackOnFinished = onFinished;
-    
+
     emit loadView(qUrl);
 }
 

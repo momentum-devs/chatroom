@@ -1,9 +1,9 @@
 #include "ChannelInvitationTestUtils.h"
 
-#include "fmt/format.h"
 #include <utility>
 
 #include "ChannelInvitation.odb.h"
+#include "fmt/format.h"
 #include "server/infrastructure/database/tables/ChannelInvitationTable.h"
 
 namespace server::tests

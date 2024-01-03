@@ -9,6 +9,7 @@ namespace server::application
 class UpdateMessageCommandHandlerMock : public UpdateMessageCommandHandler
 {
 public:
-    MOCK_METHOD(UpdateMessageCommandHandlerResult, execute, (const UpdateMessageCommandHandlerPayload&), (const override));
+    MOCK_METHOD(UpdateMessageCommandHandlerResult, execute, (const UpdateMessageCommandHandlerPayload&),
+                (const override));
 };
 }

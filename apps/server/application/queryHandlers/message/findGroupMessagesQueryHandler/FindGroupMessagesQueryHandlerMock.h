@@ -9,7 +9,7 @@ namespace server::application
 class FindGroupMessagesQueryHandlerMock : public FindGroupMessagesQueryHandler
 {
 public:
-    MOCK_METHOD(FindGroupMessagesQueryHandlerResult, execute,
-                (const FindGroupMessagesQueryHandlerPayload&), (const override));
+    MOCK_METHOD(FindGroupMessagesQueryHandlerResult, execute, (const FindGroupMessagesQueryHandlerPayload&),
+                (const override));
 };
 }

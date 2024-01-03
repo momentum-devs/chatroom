@@ -1,8 +1,8 @@
 #include "ReactionTestUtils.h"
 
-#include "fmt/format.h"
 #include <utility>
 
+#include "fmt/format.h"
 #include "Reaction.odb.h"
 #include "server/infrastructure/database/tables/ChannelTable.h"
 #include "server/infrastructure/database/tables/ReactionTable.h"

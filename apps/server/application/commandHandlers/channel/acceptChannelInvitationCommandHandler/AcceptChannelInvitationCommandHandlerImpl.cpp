@@ -2,8 +2,8 @@
 
 #include <boost/uuid/random_generator.hpp>
 #include <boost/uuid/uuid_io.hpp>
-#include "fmt/format.h"
 
+#include "fmt/format.h"
 #include "loguru.hpp"
 #include "server/application/errors/OperationNotValidError.h"
 #include "server/application/errors/ResourceNotFoundError.h"
@@ -61,9 +61,9 @@ void AcceptChannelInvitationCommandHandlerImpl::addUserToChannel(const std::stri
 {
     const auto userChannels = userChannelRepository->findUsersChannelsByUserId({userId});
 
-    const auto userAlreadyInChannel = std::any_of(userChannels.begin(), userChannels.end(),
-                                                  [=](const domain::UserChannel& userChannel)
-                                                  { return userChannel.getChannel()->getId() == channelId; });
+    const auto userAlreadyInChannel =
+        std::any_of(userChannels.begin(), userChannels.end(), [=](const domain::UserChannel& userChannel)
+                    { return userChannel.getChannel()->getId() == channelId; });
 
     if (userAlreadyInChannel)
     {

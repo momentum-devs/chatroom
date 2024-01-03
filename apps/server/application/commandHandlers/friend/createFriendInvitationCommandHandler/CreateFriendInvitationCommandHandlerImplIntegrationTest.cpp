@@ -31,7 +31,7 @@ public:
         friendshipTestUtils.truncateTable();
 
         groupTestUtils.truncateTable();
-        
+
         userTestUtils.truncateTable();
     }
 

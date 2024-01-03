@@ -1,7 +1,8 @@
+#include "SendFriendInvitationController.h"
+
 #include <nlohmann/json.hpp>
 
 #include "loguru.hpp"
-#include "SendFriendInvitationController.h"
 
 namespace client::gui
 {

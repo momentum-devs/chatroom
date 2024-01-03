@@ -10,8 +10,7 @@ struct AddUserToGroupCommandHandlerPayload
     const std::string groupId;
 };
 
-inline bool operator==(const AddUserToGroupCommandHandlerPayload& lhs,
-                       const AddUserToGroupCommandHandlerPayload& rhs)
+inline bool operator==(const AddUserToGroupCommandHandlerPayload& lhs, const AddUserToGroupCommandHandlerPayload& rhs)
 {
     auto tieStruct = [](const AddUserToGroupCommandHandlerPayload& payload)
     { return std::tie(payload.userId, payload.groupId); };

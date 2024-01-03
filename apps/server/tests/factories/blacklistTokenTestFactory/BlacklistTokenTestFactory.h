@@ -2,8 +2,8 @@
 
 #include <memory>
 
-#include "server/domain/entities/blacklistToken/BlacklistToken.h"
 #include "BlacklistToken.h"
+#include "server/domain/entities/blacklistToken/BlacklistToken.h"
 
 namespace server::tests
 {

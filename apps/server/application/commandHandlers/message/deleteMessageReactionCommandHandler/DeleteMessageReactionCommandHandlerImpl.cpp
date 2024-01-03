@@ -1,7 +1,6 @@
 #include "DeleteMessageReactionCommandHandlerImpl.h"
 
 #include "fmt/format.h"
-
 #include "loguru.hpp"
 #include "server/application/errors/OperationNotValidError.h"
 #include "server/application/errors/ResourceNotFoundError.h"
@@ -55,7 +54,7 @@ void DeleteMessageReactionCommandHandlerImpl::execute(const DeleteMessageReactio
         throw errors::OperationNotValidError{fmt::format("Reaction with id {} is not associated with message id {}.",
                                                          reaction->getId(), message->get()->getId())};
     }
-    
+
     reactionRepository->deleteReaction({*reaction});
 
     LOG_S(INFO) << fmt::format(R"(Message reaction deleted. {{reactionId: "{}"}})", reaction->getId());

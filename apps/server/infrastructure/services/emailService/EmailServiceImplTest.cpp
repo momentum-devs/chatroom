@@ -1,7 +1,5 @@
 #include "EmailServiceImpl.h"
 
-#include "fmt/format.h"
-
 #include "gtest/gtest.h"
 
 #include "httpClient/HttpClientMock.h"
@@ -9,6 +7,7 @@
 #include "faker-cxx/Internet.h"
 #include "faker-cxx/Lorem.h"
 #include "faker-cxx/Word.h"
+#include "fmt/format.h"
 
 using namespace ::testing;
 using namespace server;

@@ -10,6 +10,7 @@ ScrollView {
         channelsView.model = channels;
         channelsView.height = 30 * channels.length;
     }
+
     function clearChannelList() {
         channels = [];
         channelsView.model = channels;

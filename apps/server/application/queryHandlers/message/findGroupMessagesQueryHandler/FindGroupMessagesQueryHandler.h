@@ -10,8 +10,7 @@ class FindGroupMessagesQueryHandler
 public:
     virtual ~FindGroupMessagesQueryHandler() = default;
 
-    virtual FindGroupMessagesQueryHandlerResult
-    execute(const FindGroupMessagesQueryHandlerPayload&) const = 0;
+    virtual FindGroupMessagesQueryHandlerResult execute(const FindGroupMessagesQueryHandlerPayload&) const = 0;
 };
 
 }

@@ -1,8 +1,8 @@
 #include "UserChannelTestUtils.h"
 
-#include "fmt/format.h"
 #include <utility>
 
+#include "fmt/format.h"
 #include "server/infrastructure/database/tables/UserChannelTable.h"
 #include "UserChannel.odb.h"
 

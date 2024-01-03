@@ -1,12 +1,12 @@
 #include "LeaveChannelMessageHandler.h"
 
-#include "fmt/format.h"
 #include <gtest/gtest.h>
 #include <regex>
 
 #include "server/application/commandHandlers/channel/leaveChannelCommandHandler/LeaveChannelCommandHandlerMock.h"
 #include "server/application/services/tokenService/TokenServiceMock.h"
 
+#include "fmt/format.h"
 #include "nlohmann/json.hpp"
 
 using namespace ::testing;

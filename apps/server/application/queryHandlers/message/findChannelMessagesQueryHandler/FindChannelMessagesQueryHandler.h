@@ -10,8 +10,7 @@ class FindChannelMessagesQueryHandler
 public:
     virtual ~FindChannelMessagesQueryHandler() = default;
 
-    virtual FindChannelMessagesQueryHandlerResult
-    execute(const FindChannelMessagesQueryHandlerPayload&) const = 0;
+    virtual FindChannelMessagesQueryHandlerResult execute(const FindChannelMessagesQueryHandlerPayload&) const = 0;
 };
 
 }

@@ -10,8 +10,7 @@ class FindMessageReactionsQueryHandler
 public:
     virtual ~FindMessageReactionsQueryHandler() = default;
 
-    virtual FindMessageReactionsQueryHandlerResult
-    execute(const FindMessageReactionsQueryHandlerPayload&) const = 0;
+    virtual FindMessageReactionsQueryHandlerResult execute(const FindMessageReactionsQueryHandlerPayload&) const = 0;
 };
 
 }

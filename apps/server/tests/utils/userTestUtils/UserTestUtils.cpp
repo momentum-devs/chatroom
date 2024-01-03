@@ -1,8 +1,8 @@
 #include "UserTestUtils.h"
 
-#include "fmt/format.h"
 #include <utility>
 
+#include "fmt/format.h"
 #include "server/infrastructure/database/tables/UserTable.h"
 #include "User.odb.h"
 
