@@ -1,6 +1,6 @@
 #include "DeleteChannelCommandHandlerImpl.h"
 
-#include <format>
+#include "fmt/format.h"
 
 #include "server/application/errors/OperationNotValidError.h"
 #include "server/application/errors/ResourceNotFoundError.h"
@@ -19,14 +19,14 @@ void DeleteChannelCommandHandlerImpl::execute(const DeleteChannelCommandHandlerP
 
     if (!existingChannel)
     {
-        throw errors::ResourceNotFoundError{std::format("Channel with id {} not found.", payload.channelId)};
+        throw errors::ResourceNotFoundError{fmt::format("Channel with id {} not found.", payload.channelId)};
     }
 
     const auto creatorId = existingChannel->get()->getCreator()->getId();
 
     if (payload.requesterUserId != creatorId)
     {
-        throw errors::OperationNotValidError{std::format("User with id {} is not creator of the channel with id {}.",
+        throw errors::OperationNotValidError{fmt::format("User with id {} is not creator of the channel with id {}.",
                                                          payload.requesterUserId, payload.channelId)};
     }
 

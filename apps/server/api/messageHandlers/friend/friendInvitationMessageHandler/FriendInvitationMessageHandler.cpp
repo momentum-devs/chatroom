@@ -1,4 +1,4 @@
-#include <format>
+#include "fmt/format.h"
 #include <loguru.hpp>
 #include <nlohmann/json.hpp>
 #include <regex>
@@ -33,7 +33,7 @@ common::messages::Message FriendInvitationMessageHandler::handleMessage(const co
 
         createFriendInvitationCommandHandler->execute({senderId, invitedId});
 
-        LOG_S(INFO) << std::format("Sent invitation to friend to user with id {} by user with id {}", invitedId,
+        LOG_S(INFO) << fmt::format("Sent invitation to friend to user with id {} by user with id {}", invitedId,
                                    senderId);
 
         common::messages::Message responseMessage{common::messages::MessageId::SendFriendInvitationResponse,

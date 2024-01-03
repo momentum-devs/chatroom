@@ -1,6 +1,6 @@
 #include "LoginUserCommandHandlerImpl.h"
 
-#include <format>
+#include "fmt/format.h"
 
 #include "loguru.hpp"
 #include "server/application/errors/ResourceNotFoundError.h"
@@ -18,20 +18,20 @@ LoginUserCommandHandlerImpl::LoginUserCommandHandlerImpl(std::shared_ptr<domain:
 
 LoginUserCommandHandlerResult LoginUserCommandHandlerImpl::execute(const LoginUserCommandHandlerPayload& payload) const
 {
-    LOG_S(INFO) << std::format("Logging user \"{}\" in...", payload.email);
+    LOG_S(INFO) << fmt::format("Logging user \"{}\" in...", payload.email);
 
     const auto existingUser = userRepository->findUserByEmail({payload.email});
 
     if (!existingUser)
     {
-        throw errors::ResourceNotFoundError{std::format("User with email \"{}\" not found.", payload.email)};
+        throw errors::ResourceNotFoundError{fmt::format("User with email \"{}\" not found.", payload.email)};
     }
 
     const auto passwordIsValid = hashService->compare(payload.password, existingUser->get()->getPassword());
 
     if (!passwordIsValid)
     {
-        throw errors::ResourceNotFoundError{std::format("User with email \"{}\" not found.", payload.email)};
+        throw errors::ResourceNotFoundError{fmt::format("User with email \"{}\" not found.", payload.email)};
     }
 
     existingUser->get()->setActive(true);
@@ -40,7 +40,7 @@ LoginUserCommandHandlerResult LoginUserCommandHandlerImpl::execute(const LoginUs
 
     const auto token = tokenService->createToken(existingUser->get()->getId());
 
-    LOG_S(INFO) << std::format("User with email \"{}\" logged in.", payload.email);
+    LOG_S(INFO) << fmt::format("User with email \"{}\" logged in.", payload.email);
 
     return {token};
 }

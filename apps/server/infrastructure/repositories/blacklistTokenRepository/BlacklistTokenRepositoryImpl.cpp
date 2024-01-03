@@ -1,6 +1,6 @@
 #include "BlacklistTokenRepositoryImpl.h"
 
-#include <format>
+#include "fmt/format.h"
 
 #include "BlacklistToken.odb.h"
 #include "server/infrastructure/errors/BlacklistTokenRepositoryError.h"

@@ -1,6 +1,6 @@
 #include "GetChannelMembersMessageHandler.h"
 
-#include <format>
+#include "fmt/format.h"
 #include <gtest/gtest.h>
 #include <nlohmann/json.hpp>
 
@@ -79,9 +79,9 @@ TEST_F(GetChannelMembersMessageHandlerTest, handleValidGetChannelMembersMessage)
 
     const auto validMessageResponsePayload =
         R"({"data":[)" +
-        std::format(R"({{"id":"{}","name":"{}","isActive":{}}},)", channelMember1.getId(), channelMember1.getNickname(),
+        fmt::format(R"({{"id":"{}","name":"{}","isActive":{}}},)", channelMember1.getId(), channelMember1.getNickname(),
                     channelMember1.isActive()) +
-        std::format(R"({{"id":"{}","name":"{}","isActive":{}}})", channelMember2.getId(), channelMember2.getNickname(),
+        fmt::format(R"({{"id":"{}","name":"{}","isActive":{}}})", channelMember2.getId(), channelMember2.getNickname(),
                     channelMember2.isActive()) +
         R"(]})";
 

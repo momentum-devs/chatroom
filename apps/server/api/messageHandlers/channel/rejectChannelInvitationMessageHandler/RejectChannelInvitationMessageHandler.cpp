@@ -1,6 +1,6 @@
 #include "RejectChannelInvitationMessageHandler.h"
 
-#include <format>
+#include "fmt/format.h"
 #include <loguru.hpp>
 #include <nlohmann/json.hpp>
 #include <regex>
@@ -30,7 +30,7 @@ RejectChannelInvitationMessageHandler::handleMessage(const common::messages::Mes
 
         rejectChannelInvitationCommandHandler->execute({recipientId, channelId});
 
-        LOG_S(INFO) << std::format("Reject invitation to channel {} by user with id {}", channelId, recipientId);
+        LOG_S(INFO) << fmt::format("Reject invitation to channel {} by user with id {}", channelId, recipientId);
 
         common::messages::Message responseMessage{common::messages::MessageId::ChangeChannelInvitationResponse,
                                                   common::bytes::Bytes{R"(["ok"])"}};

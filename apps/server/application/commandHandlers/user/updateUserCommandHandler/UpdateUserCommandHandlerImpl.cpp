@@ -1,7 +1,7 @@
 #include "UpdateUserCommandHandlerImpl.h"
 
 #include <boost/uuid/uuid_io.hpp>
-#include <format>
+#include "fmt/format.h"
 
 #include "loguru.hpp"
 #include "server/application/errors/ResourceAlreadyExistsError.h"
@@ -18,13 +18,13 @@ UpdateUserCommandHandlerImpl::UpdateUserCommandHandlerImpl(std::shared_ptr<domai
 UpdateUserCommandHandlerResult
 UpdateUserCommandHandlerImpl::execute(const UpdateUserCommandHandlerPayload& payload) const
 {
-    LOG_S(INFO) << std::format("Updating user with id \"{}\"...", payload.id);
+    LOG_S(INFO) << fmt::format("Updating user with id \"{}\"...", payload.id);
 
     auto existingUser = userRepository->findUserById({payload.id});
 
     if (!existingUser)
     {
-        throw errors::ResourceNotFoundError{std::format("User with id \"{}\" not found.", payload.id)};
+        throw errors::ResourceNotFoundError{fmt::format("User with id \"{}\" not found.", payload.id)};
     }
 
     if (payload.nickname)
@@ -41,7 +41,7 @@ UpdateUserCommandHandlerImpl::execute(const UpdateUserCommandHandlerPayload& pay
 
     const auto user = userRepository->updateUser({**existingUser});
 
-    LOG_S(INFO) << std::format("User with id \"{}\" updated.", payload.id);
+    LOG_S(INFO) << fmt::format("User with id \"{}\" updated.", payload.id);
 
     return {*user};
 }

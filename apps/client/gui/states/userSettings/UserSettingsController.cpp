@@ -87,7 +87,7 @@ void UserSettingsController::handleUpdateUserResponse(const common::messages::Me
 
     if (responseJson.contains("error"))
     {
-        auto errorMessage = std::format("Error while updating user: {}", responseJson.at("error").get<std::string>());
+        auto errorMessage = fmt::format("Error while updating user: {}", responseJson.at("error").get<std::string>());
 
         emit updateUserFailure(QString::fromStdString(errorMessage));
 
@@ -112,7 +112,7 @@ void UserSettingsController::handleDeleteUserResponse(const common::messages::Me
 
     if (responseJson.contains("error"))
     {
-        auto errorMessage = std::format("Error while updating user: {}", responseJson.at("error").get<std::string>());
+        auto errorMessage = fmt::format("Error while updating user: {}", responseJson.at("error").get<std::string>());
 
         emit deleteUserFailure(QString::fromStdString(errorMessage));
 
@@ -139,7 +139,7 @@ void UserSettingsController::handleGetUserDataResponse(const common::messages::M
 
     if (responseJson.contains("error"))
     {
-        LOG_S(ERROR) << std::format("Error while getting user data: {}", responseJson.at("error").get<std::string>());
+        LOG_S(ERROR) << fmt::format("Error while getting user data: {}", responseJson.at("error").get<std::string>());
     }
 
     if (responseJson.contains("data") and responseJson.at("data").contains("email") and

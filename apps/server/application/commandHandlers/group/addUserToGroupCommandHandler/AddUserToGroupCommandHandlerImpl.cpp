@@ -2,7 +2,7 @@
 
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
-#include <format>
+#include "fmt/format.h"
 
 #include "loguru.hpp"
 #include "server/application/errors/OperationNotValidError.h"
@@ -22,20 +22,20 @@ AddUserToGroupCommandHandlerImpl::AddUserToGroupCommandHandlerImpl(
 
 void AddUserToGroupCommandHandlerImpl::execute(const AddUserToGroupCommandHandlerPayload& payload) const
 {
-    LOG_S(INFO) << std::format("Adding user to group... {{userId: {}, groupId: {}}}", payload.userId, payload.groupId);
+    LOG_S(INFO) << fmt::format("Adding user to group... {{userId: {}, groupId: {}}}", payload.userId, payload.groupId);
 
     const auto user = userRepository->findUserById({payload.userId});
 
     if (!user)
     {
-        throw errors::ResourceNotFoundError{std::format("User with id {} not found.", payload.userId)};
+        throw errors::ResourceNotFoundError{fmt::format("User with id {} not found.", payload.userId)};
     }
 
     const auto group = groupRepository->findGroupById({payload.groupId});
 
     if (!group)
     {
-        throw errors::ResourceNotFoundError{std::format("Group with id {} not found.", payload.groupId)};
+        throw errors::ResourceNotFoundError{fmt::format("Group with id {} not found.", payload.groupId)};
     }
 
     const auto existingUserGroup = userGroupRepository->findUserGroup({payload.userId, payload.groupId});
@@ -43,7 +43,7 @@ void AddUserToGroupCommandHandlerImpl::execute(const AddUserToGroupCommandHandle
     if (existingUserGroup)
     {
         throw errors::OperationNotValidError{
-            std::format("User with id {} is already in group with id {}.", payload.userId, payload.groupId)};
+            fmt::format("User with id {} is already in group with id {}.", payload.userId, payload.groupId)};
     }
 
     std::stringstream uuid;
@@ -53,7 +53,7 @@ void AddUserToGroupCommandHandlerImpl::execute(const AddUserToGroupCommandHandle
 
     const auto userGroup = userGroupRepository->createUserGroup({userGroupId, *user, *group});
 
-    LOG_S(INFO) << std::format("User added to group. {{userId: {}, groupId: {}}}", userGroup.getUser()->getId(),
+    LOG_S(INFO) << fmt::format("User added to group. {{userId: {}, groupId: {}}}", userGroup.getUser()->getId(),
                                userGroup.getGroup()->getId());
 }
 }

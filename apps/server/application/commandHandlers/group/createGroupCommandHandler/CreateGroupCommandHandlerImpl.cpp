@@ -2,7 +2,7 @@
 
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
-#include <format>
+#include "fmt/format.h"
 
 #include "loguru.hpp"
 #include "server/application/errors/ResourceNotFoundError.h"
@@ -26,7 +26,7 @@ CreateGroupCommandHandlerResult CreateGroupCommandHandlerImpl::execute() const
 
     const auto group = groupRepository->createGroup({groupId});
 
-    LOG_S(INFO) << std::format("Group with id \"{}\" created.", group->getId());
+    LOG_S(INFO) << fmt::format("Group with id \"{}\" created.", group->getId());
 
     return {*group};
 }

@@ -1,6 +1,6 @@
 #include "DeleteUserCommandHandlerImpl.h"
 
-#include <format>
+#include "fmt/format.h"
 #include <unordered_map>
 
 #include "loguru.hpp"
@@ -20,16 +20,16 @@ DeleteUserCommandHandlerImpl::DeleteUserCommandHandlerImpl(
 
 void DeleteUserCommandHandlerImpl::execute(const DeleteUserCommandHandlerPayload& payload)
 {
-    LOG_S(INFO) << std::format("Deleting user with id \"{}\"...", payload.id);
+    LOG_S(INFO) << fmt::format("Deleting user with id \"{}\"...", payload.id);
 
     const auto existingUser = userRepository->findUserById({payload.id});
 
     if (!existingUser)
     {
-        throw errors::ResourceNotFoundError{std::format("User with id {} not found.", payload.id)};
+        throw errors::ResourceNotFoundError{fmt::format("User with id {} not found.", payload.id)};
     }
 
-    LOG_S(INFO) << std::format("Deleting user groups... {{userId: {}}}", payload.id);
+    LOG_S(INFO) << fmt::format("Deleting user groups... {{userId: {}}}", payload.id);
 
     const auto usersGroups = userGroupRepository->findUsersGroupsByUserId({payload.id});
 
@@ -52,18 +52,18 @@ void DeleteUserCommandHandlerImpl::execute(const DeleteUserCommandHandlerPayload
 
     if (groupsIdsToWhichUserBelongs.empty())
     {
-        LOG_S(INFO) << std::format("No groups to delete. {{userId: {}}}", payload.id);
+        LOG_S(INFO) << fmt::format("No groups to delete. {{userId: {}}}", payload.id);
 
         return;
     }
 
     groupRepository->deleteGroups({groupsIdsToWhichUserBelongs});
 
-    LOG_S(INFO) << std::format("User groups deleted. {{userId: {}, numberOfGroups: {}}}", payload.id,
+    LOG_S(INFO) << fmt::format("User groups deleted. {{userId: {}, numberOfGroups: {}}}", payload.id,
                                groupsIdsToWhichUserBelongs.size());
 
     userRepository->deleteUser({**existingUser});
 
-    LOG_S(INFO) << std::format("User with id \"{}\" deleted.", payload.id);
+    LOG_S(INFO) << fmt::format("User with id \"{}\" deleted.", payload.id);
 }
 }

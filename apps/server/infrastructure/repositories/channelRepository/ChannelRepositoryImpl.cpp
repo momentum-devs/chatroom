@@ -1,7 +1,7 @@
 #include "ChannelRepositoryImpl.h"
 
 #include <boost/date_time/posix_time/posix_time.hpp>
-#include <format>
+#include "fmt/format.h"
 
 #include "Channel.odb.h"
 #include "server/infrastructure/errors/ChannelRepositoryError.h"
@@ -85,7 +85,7 @@ std::shared_ptr<domain::Channel> ChannelRepositoryImpl::updateChannel(const doma
             if (!channel)
             {
                 throw errors::ResourceNotFoundError{
-                    std::format("Channel with id \"{}\" not found.", payload.channel.getId())};
+                    fmt::format("Channel with id \"{}\" not found.", payload.channel.getId())};
             }
 
             channel->setName(payload.channel.getName());

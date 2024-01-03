@@ -1,6 +1,6 @@
 #include "ReactionTestUtils.h"
 
-#include <format>
+#include "fmt/format.h"
 #include <utility>
 
 #include "Reaction.odb.h"
@@ -78,7 +78,7 @@ void ReactionTestUtils::truncateTable()
 {
     odb::transaction transaction(databaseClient->begin());
 
-    databaseClient->execute(std::format("DELETE FROM \"{}\";", infrastructure::reactionTableName));
+    databaseClient->execute(fmt::format("DELETE FROM \"{}\";", infrastructure::reactionTableName));
 
     transaction.commit();
 }

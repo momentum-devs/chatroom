@@ -2,7 +2,7 @@
 
 #include <boost/uuid/random_generator.hpp>
 #include <boost/uuid/uuid_io.hpp>
-#include <format>
+#include "fmt/format.h"
 
 #include "loguru.hpp"
 #include "server/application/errors/OperationNotValidError.h"
@@ -25,7 +25,7 @@ AcceptChannelInvitationCommandHandlerImpl::AcceptChannelInvitationCommandHandler
 void AcceptChannelInvitationCommandHandlerImpl::execute(
     const AcceptChannelInvitationCommandHandlerPayload& payload) const
 {
-    LOG_S(INFO) << std::format("Accepting channel invitation... {{recipientId: {}, channelInvitationId: {}}}",
+    LOG_S(INFO) << fmt::format("Accepting channel invitation... {{recipientId: {}, channelInvitationId: {}}}",
                                payload.recipientId, payload.channelInvitationId);
 
     const auto channelInvitation =
@@ -34,13 +34,13 @@ void AcceptChannelInvitationCommandHandlerImpl::execute(
     if (!channelInvitation)
     {
         throw errors::ResourceNotFoundError{
-            std::format("Channel invitation with id {} not found.", payload.channelInvitationId)};
+            fmt::format("Channel invitation with id {} not found.", payload.channelInvitationId)};
     }
 
     if (payload.recipientId != channelInvitation->getRecipient()->getId())
     {
         throw errors::OperationNotValidError{
-            std::format("User with id {} is not recipient of the channel invitation with id {}.", payload.recipientId,
+            fmt::format("User with id {} is not recipient of the channel invitation with id {}.", payload.recipientId,
                         payload.channelInvitationId)};
     }
 
@@ -53,7 +53,7 @@ void AcceptChannelInvitationCommandHandlerImpl::execute(
 
     channelInvitationRepository->deleteChannelInvitation({*channelInvitation});
 
-    LOG_S(INFO) << std::format("Channel invitation accepted. {{channelInvitationId: {}}}", channelInvitation->getId());
+    LOG_S(INFO) << fmt::format("Channel invitation accepted. {{channelInvitationId: {}}}", channelInvitation->getId());
 }
 
 void AcceptChannelInvitationCommandHandlerImpl::addUserToChannel(const std::string& userId,
@@ -68,23 +68,23 @@ void AcceptChannelInvitationCommandHandlerImpl::addUserToChannel(const std::stri
     if (userAlreadyInChannel)
     {
         throw errors::OperationNotValidError(
-            std::format("User already is a member of channel. {{userId: {}, channelId: {}}}", userId, channelId));
+            fmt::format("User already is a member of channel. {{userId: {}, channelId: {}}}", userId, channelId));
     }
 
-    LOG_S(INFO) << std::format("Adding user to channel... {{userId: {}, channelId: {}}}", userId, channelId);
+    LOG_S(INFO) << fmt::format("Adding user to channel... {{userId: {}, channelId: {}}}", userId, channelId);
 
     const auto user = userRepository->findUserById({userId});
 
     if (!user)
     {
-        throw errors::ResourceNotFoundError{std::format("User with id {} not found.", userId)};
+        throw errors::ResourceNotFoundError{fmt::format("User with id {} not found.", userId)};
     }
 
     const auto channel = channelRepository->findChannelById({channelId});
 
     if (!channel)
     {
-        throw errors::ResourceNotFoundError{std::format("Channel with id {} not found.", channelId)};
+        throw errors::ResourceNotFoundError{fmt::format("Channel with id {} not found.", channelId)};
     }
 
     std::stringstream uuid;
@@ -94,7 +94,7 @@ void AcceptChannelInvitationCommandHandlerImpl::addUserToChannel(const std::stri
 
     const auto userChannel = userChannelRepository->createUserChannel({userChannelId, *user, *channel});
 
-    LOG_S(INFO) << std::format("User added to channel. {{userId: {}, channelId: {}}}", userChannel.getUser()->getId(),
+    LOG_S(INFO) << fmt::format("User added to channel. {{userId: {}, channelId: {}}}", userChannel.getUser()->getId(),
                                userChannel.getChannel()->getId());
 }
 

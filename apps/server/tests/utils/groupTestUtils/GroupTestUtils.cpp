@@ -1,6 +1,6 @@
 #include "GroupTestUtils.h"
 
-#include <format>
+#include "fmt/format.h"
 #include <utility>
 
 #include "Group.odb.h"
@@ -68,7 +68,7 @@ void GroupTestUtils::truncateTable()
 {
     odb::transaction transaction(databaseClient->begin());
 
-    databaseClient->execute(std::format("DELETE FROM \"{}\";", infrastructure::groupTableName));
+    databaseClient->execute(fmt::format("DELETE FROM \"{}\";", infrastructure::groupTableName));
 
     transaction.commit();
 }

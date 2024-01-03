@@ -86,7 +86,7 @@ void LeftColumnController::handleGetUserChannelsResponse(const common::messages:
 
     if (responseJson.contains("error"))
     {
-        LOG_S(ERROR) << std::format("Error while getting user data: {}", responseJson.at("error").get<std::string>());
+        LOG_S(ERROR) << fmt::format("Error while getting user data: {}", responseJson.at("error").get<std::string>());
     }
 
     emit clearChannelList();
@@ -97,7 +97,7 @@ void LeftColumnController::handleGetUserChannelsResponse(const common::messages:
         {
             if (channel.contains("id") and channel.contains("name") and channel.contains("isOwner"))
             {
-                LOG_S(INFO) << std::format("Adding channel {} with id {} to list",
+                LOG_S(INFO) << fmt::format("Adding channel {} with id {} to list",
                                            channel.at("name").get<std::string>(), channel.at("id").get<std::string>());
 
                 emit addChannel(QString::fromStdString(channel.at("name").get<std::string>()),
@@ -128,7 +128,7 @@ void LeftColumnController::handleGetUserChannelInvitationsResponse(const common:
 
     if (responseJson.contains("error"))
     {
-        LOG_S(ERROR) << std::format("Error while getting user channel's invitations: {}",
+        LOG_S(ERROR) << fmt::format("Error while getting user channel's invitations: {}",
                                     responseJson.at("error").get<std::string>());
     }
 
@@ -138,7 +138,7 @@ void LeftColumnController::handleGetUserChannelInvitationsResponse(const common:
         {
             if (channel.contains("id") and channel.contains("name"))
             {
-                LOG_S(INFO) << std::format("Adding channel invitation {} with id {} to list",
+                LOG_S(INFO) << fmt::format("Adding channel invitation {} with id {} to list",
                                            channel.at("name").get<std::string>(), channel.at("id").get<std::string>());
 
                 emit addChannelInvitation(QString::fromStdString(channel.at("name").get<std::string>()),
@@ -166,7 +166,7 @@ void LeftColumnController::handleChangeChannelInvitationResponse(const common::m
 
     if (responseJson.contains("error"))
     {
-        LOG_S(ERROR) << std::format("Error while getting user channel's invitations: {}",
+        LOG_S(ERROR) << fmt::format("Error while getting user channel's invitations: {}",
                                     responseJson.at("error").get<std::string>());
     }
     else
@@ -178,7 +178,7 @@ void LeftColumnController::handleChangeChannelInvitationResponse(const common::m
 
 void LeftColumnController::acceptChannelInvitation(const QString& channelId)
 {
-    LOG_S(INFO) << std::format("Accept invitation to channel id {}", channelId.toStdString());
+    LOG_S(INFO) << fmt::format("Accept invitation to channel id {}", channelId.toStdString());
 
     nlohmann::json data{
         {"channelId", channelId.toStdString()},
@@ -189,7 +189,7 @@ void LeftColumnController::acceptChannelInvitation(const QString& channelId)
 
 void LeftColumnController::rejectChannelInvitation(const QString& channelId)
 {
-    LOG_S(INFO) << std::format("Reject invitation to channel id {}", channelId.toStdString());
+    LOG_S(INFO) << fmt::format("Reject invitation to channel id {}", channelId.toStdString());
 
     nlohmann::json data{
         {"channelId", channelId.toStdString()},

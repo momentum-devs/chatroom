@@ -2,7 +2,7 @@
 
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
-#include <format>
+#include "fmt/format.h"
 
 #include "loguru.hpp"
 #include "server/application/errors/OperationNotValidError.h"
@@ -25,12 +25,12 @@ CreateChannelInvitationCommandHandlerImpl::CreateChannelInvitationCommandHandler
 void CreateChannelInvitationCommandHandlerImpl::execute(
     const CreateChannelInvitationCommandHandlerPayload& payload) const
 {
-    LOG_S(INFO) << std::format("Creating channel invitation... {{senderId: {}, recipientId: {}, channelId: {}}}",
+    LOG_S(INFO) << fmt::format("Creating channel invitation... {{senderId: {}, recipientId: {}, channelId: {}}}",
                                payload.senderId, payload.recipientId, payload.channelId);
 
     if (payload.senderId == payload.recipientId)
     {
-        throw errors::OperationNotValidError{std::format(
+        throw errors::OperationNotValidError{fmt::format(
             "Channel invitation's sender and recipient cannot be the same user. {{senderId: {}, recipientId: {}}}.",
             payload.senderId, payload.recipientId)};
     }
@@ -41,34 +41,34 @@ void CreateChannelInvitationCommandHandlerImpl::execute(
     if (existingInvitation)
     {
         throw errors::OperationNotValidError{
-            std::format("Recipient {} is already invited to channel {}.", payload.recipientId, payload.channelId)};
+            fmt::format("Recipient {} is already invited to channel {}.", payload.recipientId, payload.channelId)};
     }
 
     const auto sender = userRepository->findUserById({payload.senderId});
 
     if (!sender)
     {
-        throw errors::ResourceNotFoundError{std::format("User with id {} not found.", payload.senderId)};
+        throw errors::ResourceNotFoundError{fmt::format("User with id {} not found.", payload.senderId)};
     }
 
     const auto recipient = userRepository->findUserById({payload.recipientId});
 
     if (!recipient)
     {
-        throw errors::ResourceNotFoundError{std::format("User with id {} not found.", payload.recipientId)};
+        throw errors::ResourceNotFoundError{fmt::format("User with id {} not found.", payload.recipientId)};
     }
 
     const auto channel = channelRepository->findChannelById({payload.channelId});
 
     if (!channel)
     {
-        throw errors::ResourceNotFoundError{std::format("Channel with id {} not found.", payload.channelId)};
+        throw errors::ResourceNotFoundError{fmt::format("Channel with id {} not found.", payload.channelId)};
     }
 
     if (channel->get()->getCreator()->getId() != sender->get()->getId())
     {
         throw errors::OperationNotValidError{
-            std::format("Sender with id {} cannot send invitation because he is not the creator of channel {}.",
+            fmt::format("Sender with id {} cannot send invitation because he is not the creator of channel {}.",
                         payload.recipientId, payload.channelId)};
     }
 
@@ -77,7 +77,7 @@ void CreateChannelInvitationCommandHandlerImpl::execute(
 
     if (userChannelWithRecipient)
     {
-        throw errors::OperationNotValidError{std::format("Recipient with id {} already is a member of channel {}.",
+        throw errors::OperationNotValidError{fmt::format("Recipient with id {} already is a member of channel {}.",
                                                          payload.recipientId, payload.channelId)};
     }
 
@@ -89,6 +89,6 @@ void CreateChannelInvitationCommandHandlerImpl::execute(
     const auto channelInvitation =
         channelInvitationRepository->createChannelInvitation({channelInvitationId, *sender, *recipient, *channel});
 
-    LOG_S(INFO) << std::format("Channel invitation created. {{channelInvitationId: {}}}", channelInvitation.getId());
+    LOG_S(INFO) << fmt::format("Channel invitation created. {{channelInvitationId: {}}}", channelInvitation.getId());
 }
 }

@@ -1,7 +1,7 @@
 #include "UpdateChannelCommandHandlerImpl.h"
 
 #include <boost/uuid/uuid_io.hpp>
-#include <format>
+#include "fmt/format.h"
 
 #include "loguru.hpp"
 #include "server/application/errors/OperationNotValidError.h"
@@ -19,20 +19,20 @@ UpdateChannelCommandHandlerImpl::UpdateChannelCommandHandlerImpl(
 UpdateChannelCommandHandlerResult
 UpdateChannelCommandHandlerImpl::execute(const UpdateChannelCommandHandlerPayload& payload) const
 {
-    LOG_S(INFO) << std::format(R"(Updating channel with id "{}" with name "{}"...)", payload.id, payload.name);
+    LOG_S(INFO) << fmt::format(R"(Updating channel with id "{}" with name "{}"...)", payload.id, payload.name);
 
     auto existingChannel = channelRepository->findChannelById({payload.id});
 
     if (!existingChannel)
     {
-        throw errors::ResourceNotFoundError{std::format("Channel with id \"{}\" not found.", payload.id)};
+        throw errors::ResourceNotFoundError{fmt::format("Channel with id \"{}\" not found.", payload.id)};
     }
 
     const auto creatorId = existingChannel->get()->getCreator()->getId();
 
     if (payload.requesterUserId != creatorId)
     {
-        throw errors::OperationNotValidError{std::format("User with id {} is not creator of the channel with id {}.",
+        throw errors::OperationNotValidError{fmt::format("User with id {} is not creator of the channel with id {}.",
                                                          payload.requesterUserId, payload.id)};
     }
 
@@ -40,7 +40,7 @@ UpdateChannelCommandHandlerImpl::execute(const UpdateChannelCommandHandlerPayloa
 
     const auto channel = channelRepository->updateChannel({**existingChannel});
 
-    LOG_S(INFO) << std::format("Channel with id \"{}\" updated.", payload.id);
+    LOG_S(INFO) << fmt::format("Channel with id \"{}\" updated.", payload.id);
 
     return {*channel};
 }

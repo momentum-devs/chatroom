@@ -54,7 +54,7 @@ void CreateChannelController::handleCreateChannelResponse(const common::messages
     if (responseJson.contains("error"))
     {
         auto errorMessage =
-            std::format("Error while creating channel: {}", responseJson.at("error").get<std::string>());
+            fmt::format("Error while creating channel: {}", responseJson.at("error").get<std::string>());
 
         emit createChannelFailure(QString::fromStdString(errorMessage));
 

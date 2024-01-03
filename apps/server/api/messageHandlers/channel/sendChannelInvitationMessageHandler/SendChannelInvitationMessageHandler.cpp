@@ -1,6 +1,6 @@
 #include "SendChannelInvitationMessageHandler.h"
 
-#include <format>
+#include "fmt/format.h"
 #include <loguru.hpp>
 #include <nlohmann/json.hpp>
 #include <regex>
@@ -36,7 +36,7 @@ SendChannelInvitationMessageHandler::handleMessage(const common::messages::Messa
 
         createChannelInvitationCommandHandler->execute({senderId, invitedId, channelId});
 
-        LOG_S(INFO) << std::format("Sent invitation to channel {} to user with id {} by user with id {}", channelId,
+        LOG_S(INFO) << fmt::format("Sent invitation to channel {} to user with id {} by user with id {}", channelId,
                                    invitedId, senderId);
 
         common::messages::Message responseMessage{common::messages::MessageId::SendChannelInvitationResponse,

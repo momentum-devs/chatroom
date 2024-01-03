@@ -1,6 +1,6 @@
 #include "VerifyUserEmailCommandHandlerImpl.h"
 
-#include <format>
+#include "fmt/format.h"
 
 #include "loguru.hpp"
 #include "server/application/errors/ResourceNotFoundError.h"
@@ -16,13 +16,13 @@ VerifyUserEmailCommandHandlerImpl::VerifyUserEmailCommandHandlerImpl(
 VerifyUserEmailCommandHandlerResult
 VerifyUserEmailCommandHandlerImpl::execute(const VerifyUserEmailCommandHandlerPayload& payload) const
 {
-    LOG_S(INFO) << std::format("Verifying user email \"{}\"...", payload.email);
+    LOG_S(INFO) << fmt::format("Verifying user email \"{}\"...", payload.email);
 
     const auto existingUser = userRepository->findUserByEmail({payload.email});
 
     if (!existingUser)
     {
-        throw errors::ResourceNotFoundError{std::format("User with email \"{}\" not found.", payload.email)};
+        throw errors::ResourceNotFoundError{fmt::format("User with email \"{}\" not found.", payload.email)};
     }
 
     if (existingUser->get()->isEmailVerified())
@@ -32,7 +32,7 @@ VerifyUserEmailCommandHandlerImpl::execute(const VerifyUserEmailCommandHandlerPa
 
     if (existingUser->get()->getVerificationCode() != payload.verificationCode)
     {
-        LOG_S(INFO) << std::format("User with email \"{}\" not verified.", payload.email);
+        LOG_S(INFO) << fmt::format("User with email \"{}\" not verified.", payload.email);
 
         return {false};
     }
@@ -41,7 +41,7 @@ VerifyUserEmailCommandHandlerImpl::execute(const VerifyUserEmailCommandHandlerPa
 
     userRepository->updateUser({**existingUser});
 
-    LOG_S(INFO) << std::format("User with email \"{}\" verified.", payload.email);
+    LOG_S(INFO) << fmt::format("User with email \"{}\" verified.", payload.email);
 
     return {true};
 }

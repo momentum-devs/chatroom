@@ -1,7 +1,7 @@
 #include "UpdateMessageCommandHandlerImpl.h"
 
 #include <boost/uuid/uuid_io.hpp>
-#include <format>
+#include "fmt/format.h"
 
 #include "loguru.hpp"
 #include "server/application/errors/OperationNotValidError.h"
@@ -19,20 +19,20 @@ UpdateMessageCommandHandlerImpl::UpdateMessageCommandHandlerImpl(
 UpdateMessageCommandHandlerResult
 UpdateMessageCommandHandlerImpl::execute(const UpdateMessageCommandHandlerPayload& payload) const
 {
-    LOG_S(INFO) << std::format(R"(Updating message with id "{}" with content "{}"...)", payload.id, payload.content);
+    LOG_S(INFO) << fmt::format(R"(Updating message with id "{}" with content "{}"...)", payload.id, payload.content);
 
     auto existingMessage = messageRepository->findMessageById({payload.id});
 
     if (!existingMessage)
     {
-        throw errors::ResourceNotFoundError{std::format("Message with id \"{}\" not found.", payload.id)};
+        throw errors::ResourceNotFoundError{fmt::format("Message with id \"{}\" not found.", payload.id)};
     }
 
     const auto senderId = existingMessage->get()->getSender()->getId();
 
     if (payload.requesterUserId != senderId)
     {
-        throw errors::OperationNotValidError{std::format("User with id {} is not sender of the message with id {}.",
+        throw errors::OperationNotValidError{fmt::format("User with id {} is not sender of the message with id {}.",
                                                          payload.requesterUserId, payload.id)};
     }
 
@@ -40,7 +40,7 @@ UpdateMessageCommandHandlerImpl::execute(const UpdateMessageCommandHandlerPayloa
 
     const auto message = messageRepository->updateMessage({**existingMessage});
 
-    LOG_S(INFO) << std::format(R"(Message with id "{}" updated with content "{}".)", payload.id, payload.content);
+    LOG_S(INFO) << fmt::format(R"(Message with id "{}" updated with content "{}".)", payload.id, payload.content);
 
     return {*message};
 }

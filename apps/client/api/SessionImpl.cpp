@@ -45,7 +45,7 @@ void SessionImpl::handleMessage(const common::messages::Message& message)
 {
     std::lock_guard<std::mutex> guard(lock);
 
-    LOG_S(INFO) << std::format("Received message: (id: {0:}, payload: {1:}), id {0:} has {2:} handlers",
+    LOG_S(INFO) << fmt::format("Received message: (id: {0:}, payload: {1:}), id {0:} has {2:} handlers",
                                toString(message.id), static_cast<std::string>(message.payload),
                                (messageHandlers.contains(message.id) ? messageHandlers.at(message.id).size() : 0));
 
@@ -72,7 +72,7 @@ void SessionImpl::handleMessage(const common::messages::Message& message)
 
 void SessionImpl::addMessageHandler(const MessageHandlerPayload& messageHandlerPayload)
 {
-    LOG_S(INFO) << std::format("Add handler for MessageID {} for name \"{}\"",
+    LOG_S(INFO) << fmt::format("Add handler for MessageID {} for name \"{}\"",
                                common::messages::toString(messageHandlerPayload.messageId), messageHandlerPayload.name);
 
     if (not messageHandlers.contains(messageHandlerPayload.messageId))
@@ -86,14 +86,14 @@ void SessionImpl::addMessageHandler(const MessageHandlerPayload& messageHandlerP
 
 void SessionImpl::removeMessageHandler(const MessageHandlerPayload& messageHandlerPayload)
 {
-    LOG_S(INFO) << std::format("Remove handler for MessageID {} for name \"{}\"",
+    LOG_S(INFO) << fmt::format("Remove handler for MessageID {} for name \"{}\"",
                                common::messages::toString(messageHandlerPayload.messageId), messageHandlerPayload.name);
 
     if (not messageHandlers.contains(messageHandlerPayload.messageId) or
         not messageHandlers.at(messageHandlerPayload.messageId).contains(messageHandlerPayload.name))
     {
         throw RemoveHandlerError{
-            std::format("Message handlers does not contain handler for MessageID {} for name \"{}\"",
+            fmt::format("Message handlers does not contain handler for MessageID {} for name \"{}\"",
                         common::messages::toString(messageHandlerPayload.messageId), messageHandlerPayload.name)};
     }
 

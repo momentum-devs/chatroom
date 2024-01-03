@@ -1,6 +1,6 @@
 #include "RegisterMessageHandler.h"
 
-#include <format>
+#include "fmt/format.h"
 #include <loguru.hpp>
 #include <nlohmann/json.hpp>
 #include <regex>
@@ -48,7 +48,7 @@ common::messages::Message RegisterMessageHandler::handleMessage(const common::me
 
         sendRegistrationVerificationEmailCommandHandler->execute({email});
 
-        LOG_S(INFO) << std::format("Register user {} with id {}", email,
+        LOG_S(INFO) << fmt::format("Register user {} with id {}", email,
                                    registerUserCommandHandlerResult->user.getId());
 
         return {common::messages::MessageId::RegisterResponse, common::bytes::Bytes{R"(["ok"])"}};

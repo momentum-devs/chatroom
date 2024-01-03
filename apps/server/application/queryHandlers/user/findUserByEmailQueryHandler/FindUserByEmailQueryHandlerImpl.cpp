@@ -1,6 +1,6 @@
 #include "FindUserByEmailQueryHandlerImpl.h"
 
-#include <format>
+#include "fmt/format.h"
 
 #include "server/application/errors/ResourceNotFoundError.h"
 #include "User.h"
@@ -20,7 +20,7 @@ FindUserByEmailQueryHandlerImpl::execute(const FindUserByEmailQueryHandlerPayloa
 
     if (!user)
     {
-        throw errors::ResourceNotFoundError{std::format("User with email \"{}\" not found.", payload.email)};
+        throw errors::ResourceNotFoundError{fmt::format("User with email \"{}\" not found.", payload.email)};
     }
 
     return {**user};

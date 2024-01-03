@@ -1,7 +1,7 @@
 #include "UserRepositoryImpl.h"
 
 #include <boost/date_time/posix_time/posix_time.hpp>
-#include <format>
+#include "fmt/format.h"
 
 #include "server/infrastructure/errors/ResourceNotFoundError.h"
 #include "server/infrastructure/errors/UserRepositoryError.h"
@@ -109,7 +109,7 @@ std::shared_ptr<domain::User> UserRepositoryImpl::updateUser(const domain::Updat
             if (!user)
             {
                 throw errors::ResourceNotFoundError{
-                    std::format("User with id \"{}\" not found.", payload.user.getId())};
+                    fmt::format("User with id \"{}\" not found.", payload.user.getId())};
             }
 
             user->setNickname(payload.user.getNickname());

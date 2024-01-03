@@ -1,7 +1,7 @@
 #include "MessageRepositoryImpl.h"
 
 #include <boost/date_time/posix_time/posix_time.hpp>
-#include <format>
+#include "fmt/format.h"
 
 #include "Message.odb.h"
 #include "server/infrastructure/errors/MessageRepositoryError.h"
@@ -89,7 +89,7 @@ MessageRepositoryImpl::findMessagesByChannelId(const domain::FindMessagesByChann
         typedef odb::query<Message> Query;
 
         auto result = db->query<Message>(
-            Query(std::format(R"(WHERE "channel"='{}' ORDER BY "created_at" DESC LIMIT {} OFFSET {})",
+            Query(fmt::format(R"(WHERE "channel"='{}' ORDER BY "created_at" DESC LIMIT {} OFFSET {})",
                               payload.channelId, payload.limit, payload.offset)));
 
         std::vector<std::shared_ptr<domain::Message>> domainMessages;
@@ -119,7 +119,7 @@ MessageRepositoryImpl::findMessagesByGroupId(const domain::FindMessagesByGroupId
         typedef odb::query<Message> Query;
 
         auto result =
-            db->query<Message>(Query(std::format(R"(WHERE "group"='{}' ORDER BY "created_at" DESC LIMIT {} OFFSET {})",
+            db->query<Message>(Query(fmt::format(R"(WHERE "group"='{}' ORDER BY "created_at" DESC LIMIT {} OFFSET {})",
                                                  payload.groupId, payload.limit, payload.offset)));
 
         std::vector<std::shared_ptr<domain::Message>> domainMessages;
@@ -153,7 +153,7 @@ std::shared_ptr<domain::Message> MessageRepositoryImpl::updateMessage(const doma
             if (!message)
             {
                 throw errors::ResourceNotFoundError{
-                    std::format("Message with id \"{}\" not found.", payload.message.getId())};
+                    fmt::format("Message with id \"{}\" not found.", payload.message.getId())};
             }
 
             message->setContent(payload.message.getContent());

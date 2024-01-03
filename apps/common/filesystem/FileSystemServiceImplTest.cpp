@@ -1,6 +1,6 @@
 #include "FileSystemServiceImpl.h"
 
-#include <format>
+#include "fmt/format.h"
 
 #include "gtest/gtest.h"
 
@@ -11,7 +11,7 @@ using namespace common::filesystem;
 
 namespace
 {
-const std::string testFilesDirectory{std::format("{}/apps/common/filesystem/testFiles", getProjectPath("chatroom"))};
+const std::string testFilesDirectory{fmt::format("{}/apps/common/filesystem/testFiles", getProjectPath("chatroom"))};
 const std::string textToWrite{"write method"};
 const std::basic_string<unsigned char> textToWriteAtPosition{reinterpret_cast<const unsigned char*>("position data")};
 const std::string textToWriteAtPositionAsString{"position data"};
@@ -20,10 +20,10 @@ const std::string textAfterWriteAndAppend{textToWrite + textToAppend};
 const std::string filenameForReading = "testReading.txt";
 const std::string filenameForWriting = "testWriting.txt";
 const std::string filenameForWritingAtPosition = "testWritingAtPosition.txt";
-const std::string pathForReading{std::format("{}/{}", testFilesDirectory, filenameForReading)};
-const std::string pathForWriting{std::format("{}/{}", testFilesDirectory, filenameForWriting)};
-const std::string nestedFilePath{std::format("{}/dir1/dir2/{}", testFilesDirectory, filenameForWriting)};
-const std::string pathForWritingAtPosition{std::format("{}/{}", testFilesDirectory, filenameForWritingAtPosition)};
+const std::string pathForReading{fmt::format("{}/{}", testFilesDirectory, filenameForReading)};
+const std::string pathForWriting{fmt::format("{}/{}", testFilesDirectory, filenameForWriting)};
+const std::string nestedFilePath{fmt::format("{}/dir1/dir2/{}", testFilesDirectory, filenameForWriting)};
+const std::string pathForWritingAtPosition{fmt::format("{}/{}", testFilesDirectory, filenameForWritingAtPosition)};
 const std::string exampleContent{"example data\n"};
 const std::string incorrectPath = "433\\UTzxxxx/fi123xtF";
 }

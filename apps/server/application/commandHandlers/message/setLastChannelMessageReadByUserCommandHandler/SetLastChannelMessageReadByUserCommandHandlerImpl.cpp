@@ -1,6 +1,6 @@
 #include "SetLastChannelMessageReadByUserCommandHandlerImpl.h"
 
-#include <format>
+#include "fmt/format.h"
 
 #include "loguru.hpp"
 #include "server/application/errors/OperationNotValidError.h"
@@ -23,7 +23,7 @@ SetLastChannelMessageReadByUserCommandHandlerImpl::SetLastChannelMessageReadByUs
 void SetLastChannelMessageReadByUserCommandHandlerImpl::execute(
     const SetLastChannelMessageReadByUserCommandHandlerPayload& payload) const
 {
-    LOG_S(INFO) << std::format(
+    LOG_S(INFO) << fmt::format(
         "Setting last channel message read by user... {{userId: {}, channelId: {}, messageId: {}}}", payload.userId,
         payload.channelId, payload.messageId);
 
@@ -31,21 +31,21 @@ void SetLastChannelMessageReadByUserCommandHandlerImpl::execute(
 
     if (!message)
     {
-        throw errors::ResourceNotFoundError{std::format("Message with id {} not found.", payload.messageId)};
+        throw errors::ResourceNotFoundError{fmt::format("Message with id {} not found.", payload.messageId)};
     }
 
     const auto user = userRepository->findUserById({payload.userId});
 
     if (!user)
     {
-        throw errors::ResourceNotFoundError{std::format("User with id {} not found.", payload.userId)};
+        throw errors::ResourceNotFoundError{fmt::format("User with id {} not found.", payload.userId)};
     }
 
     const auto channel = channelRepository->findChannelById({payload.channelId});
 
     if (!channel)
     {
-        throw errors::ResourceNotFoundError{std::format("Channel with id {} not found.", payload.channelId)};
+        throw errors::ResourceNotFoundError{fmt::format("Channel with id {} not found.", payload.channelId)};
     }
 
     auto userChannel = userChannelRepository->findUserChannel({payload.userId, payload.channelId});
@@ -53,14 +53,14 @@ void SetLastChannelMessageReadByUserCommandHandlerImpl::execute(
     if (!userChannel)
     {
         throw errors::ResourceNotFoundError{
-            std::format("UserChannel not found. {{userId: {}, channelId: {}}}", payload.userId, payload.channelId)};
+            fmt::format("UserChannel not found. {{userId: {}, channelId: {}}}", payload.userId, payload.channelId)};
     }
 
     userChannel->setLastReadMessageId(payload.messageId);
 
     userChannelRepository->updateUserChannel({*userChannel});
 
-    LOG_S(INFO) << std::format("Last read channel message set. {{userId: {}, channelId: {}, messageId: {}}}",
+    LOG_S(INFO) << fmt::format("Last read channel message set. {{userId: {}, channelId: {}, messageId: {}}}",
                                payload.userId, payload.channelId, payload.messageId);
 }
 

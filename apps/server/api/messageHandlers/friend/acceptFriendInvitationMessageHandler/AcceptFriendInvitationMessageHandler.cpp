@@ -1,4 +1,4 @@
-#include <format>
+#include "fmt/format.h"
 #include <loguru.hpp>
 #include <nlohmann/json.hpp>
 #include <regex>
@@ -30,7 +30,7 @@ AcceptFriendInvitationMessageHandler::handleMessage(const common::messages::Mess
 
         acceptFriendInvitationCommandHandler->execute({recipientId, requestId});
 
-        LOG_S(INFO) << std::format("Accept friend invitation with id {} by user with id {}", requestId, recipientId);
+        LOG_S(INFO) << fmt::format("Accept friend invitation with id {} by user with id {}", requestId, recipientId);
 
         common::messages::Message responseMessage{common::messages::MessageId::ChangeFriendInvitationsResponse,
                                                   common::bytes::Bytes{R"(["ok"])"}};

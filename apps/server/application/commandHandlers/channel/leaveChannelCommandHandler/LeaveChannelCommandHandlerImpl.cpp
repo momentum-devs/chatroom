@@ -1,6 +1,6 @@
 #include "LeaveChannelCommandHandlerImpl.h"
 
-#include <format>
+#include "fmt/format.h"
 
 #include "loguru.hpp"
 #include "server/application/errors/ResourceNotFoundError.h"
@@ -16,14 +16,14 @@ LeaveChannelCommandHandlerImpl::LeaveChannelCommandHandlerImpl(
 
 void LeaveChannelCommandHandlerImpl::execute(const LeaveChannelCommandHandlerPayload& payload)
 {
-    LOG_S(INFO) << std::format("Removing user from channel... {{userId: {}, channelId: {}}}", payload.userId,
+    LOG_S(INFO) << fmt::format("Removing user from channel... {{userId: {}, channelId: {}}}", payload.userId,
                                payload.channelId);
 
     const auto channel = channelRepository->findChannelById({payload.channelId});
 
     if (!channel)
     {
-        throw errors::ResourceNotFoundError{std::format("Channel not found. {{channelId: {}}}", payload.channelId)};
+        throw errors::ResourceNotFoundError{fmt::format("Channel not found. {{channelId: {}}}", payload.channelId)};
     }
 
     const auto existingUserChannel = userChannelRepository->findUserChannel({payload.userId, payload.channelId});
@@ -31,7 +31,7 @@ void LeaveChannelCommandHandlerImpl::execute(const LeaveChannelCommandHandlerPay
     if (!existingUserChannel)
     {
         throw errors::ResourceNotFoundError{
-            std::format("UserChannel not found. {{userId: {}, channelId: {}}}", payload.userId, payload.channelId)};
+            fmt::format("UserChannel not found. {{userId: {}, channelId: {}}}", payload.userId, payload.channelId)};
     }
 
     userChannelRepository->deleteUserChannel({*existingUserChannel});
@@ -42,10 +42,10 @@ void LeaveChannelCommandHandlerImpl::execute(const LeaveChannelCommandHandlerPay
     {
         channelRepository->deleteChannel({**channel});
 
-        LOG_S(INFO) << std::format("Channel deleted. {{channelId: {}}}", payload.channelId);
+        LOG_S(INFO) << fmt::format("Channel deleted. {{channelId: {}}}", payload.channelId);
     }
 
-    LOG_S(INFO) << std::format("User removed from channel. {{userId: {}, channelId: {}}}", payload.userId,
+    LOG_S(INFO) << fmt::format("User removed from channel. {{userId: {}, channelId: {}}}", payload.userId,
                                payload.channelId);
 }
 }

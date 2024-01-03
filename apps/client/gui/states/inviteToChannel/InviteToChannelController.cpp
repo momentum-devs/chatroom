@@ -39,7 +39,7 @@ void InviteToChannelController::goBack()
 
 void InviteToChannelController::sendChannelInvitation(const QString& email)
 {
-    LOG_S(INFO) << std::format("Sending request to user with email: {} to chat with id: {}", email.toStdString(),
+    LOG_S(INFO) << fmt::format("Sending request to user with email: {} to chat with id: {}", email.toStdString(),
                                channelId);
 
     nlohmann::json data{
@@ -52,7 +52,7 @@ void InviteToChannelController::sendChannelInvitation(const QString& email)
 
 void InviteToChannelController::handleSendChannelInvitationResponse(const common::messages::Message& message)
 {
-    LOG_S(INFO) << std::format("Handle send channel invitation response");
+    LOG_S(INFO) << fmt::format("Handle send channel invitation response");
 
     auto responsePayload = static_cast<std::string>(message.payload);
 
@@ -61,7 +61,7 @@ void InviteToChannelController::handleSendChannelInvitationResponse(const common
     if (responseJson.contains("error"))
     {
         auto errorMessage =
-            std::format("Error while sending invitation to channel: {}", responseJson.at("error").get<std::string>());
+            fmt::format("Error while sending invitation to channel: {}", responseJson.at("error").get<std::string>());
 
         emit sendChannelInvitationFailure(QString::fromStdString(errorMessage));
 

@@ -1,6 +1,6 @@
 #include "DeleteChannelMessageHandler.h"
 
-#include <format>
+#include "fmt/format.h"
 #include <loguru.hpp>
 #include <nlohmann/json.hpp>
 #include <regex>
@@ -28,7 +28,7 @@ common::messages::Message DeleteChannelMessageHandler::handleMessage(const commo
 
         deleteChannelCommandHandler->execute({channelId, userId});
 
-        LOG_S(INFO) << std::format("User with id: {} deleted channel with id {}", userId, channelId);
+        LOG_S(INFO) << fmt::format("User with id: {} deleted channel with id {}", userId, channelId);
 
         common::messages::Message responseMessage{common::messages::MessageId::DeleteTheChannelResponse,
                                                   common::bytes::Bytes{R"(["ok"])"}};

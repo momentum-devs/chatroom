@@ -1,7 +1,7 @@
 #include "UserGroupRepositoryImpl.h"
 
 #include <boost/date_time/posix_time/posix_time.hpp>
-#include <format>
+#include "fmt/format.h"
 
 #include "server/infrastructure/errors/ResourceNotFoundError.h"
 #include "server/infrastructure/errors/UserGroupRepositoryError.h"
@@ -173,7 +173,7 @@ domain::UserGroup UserGroupRepositoryImpl::updateUserGroup(const domain::UpdateU
             if (!userGroup)
             {
                 throw errors::ResourceNotFoundError{
-                    std::format("UserGroup with id \"{}\" not found.", payload.userGroup.getId())};
+                    fmt::format("UserGroup with id \"{}\" not found.", payload.userGroup.getId())};
             }
 
             const auto lastReadMessageId = payload.userGroup.getLastReadMessageId();

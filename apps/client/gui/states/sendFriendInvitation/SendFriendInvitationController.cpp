@@ -54,7 +54,7 @@ void SendFriendInvitationController::handleSendFriendInvitationResponse(const co
     if (responseJson.contains("error"))
     {
         auto errorMessage =
-            std::format("Error while sending friend request: {}", responseJson.at("error").get<std::string>());
+            fmt::format("Error while sending friend request: {}", responseJson.at("error").get<std::string>());
 
         emit sendFriendInvitationFailure(QString::fromStdString(errorMessage));
 

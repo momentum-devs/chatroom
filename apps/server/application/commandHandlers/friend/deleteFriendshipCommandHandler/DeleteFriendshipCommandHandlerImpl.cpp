@@ -1,6 +1,6 @@
 #include "DeleteFriendshipCommandHandlerImpl.h"
 
-#include <format>
+#include "fmt/format.h"
 
 #include "loguru.hpp"
 #include "server/application/errors/OperationNotValidError.h"
@@ -17,21 +17,21 @@ DeleteFriendshipCommandHandlerImpl::DeleteFriendshipCommandHandlerImpl(
 
 void DeleteFriendshipCommandHandlerImpl::execute(const DeleteFriendshipCommandHandlerPayload& payload) const
 {
-    LOG_S(INFO) << std::format("Deleting friendship... {{userId: {}, userFriendId: {}}}", payload.userId,
+    LOG_S(INFO) << fmt::format("Deleting friendship... {{userId: {}, userFriendId: {}}}", payload.userId,
                                payload.userFriendId);
 
     const auto user = userRepository->findUserById({payload.userId});
 
     if (!user)
     {
-        throw errors::ResourceNotFoundError{std::format("User with id {} not found.", payload.userId)};
+        throw errors::ResourceNotFoundError{fmt::format("User with id {} not found.", payload.userId)};
     }
 
     const auto userFriend = userRepository->findUserById({payload.userFriendId});
 
     if (!userFriend)
     {
-        throw errors::ResourceNotFoundError{std::format("User with id {} not found.", payload.userFriendId)};
+        throw errors::ResourceNotFoundError{fmt::format("User with id {} not found.", payload.userFriendId)};
     }
 
     const auto friendship = friendshipRepository->findFriendshipByUserIds({payload.userId, payload.userFriendId});
@@ -39,12 +39,12 @@ void DeleteFriendshipCommandHandlerImpl::execute(const DeleteFriendshipCommandHa
     if (!friendship)
     {
         throw errors::OperationNotValidError{
-            std::format("Friendship between user with id {} and user friend with id {} does not exist.", payload.userId,
+            fmt::format("Friendship between user with id {} and user friend with id {} does not exist.", payload.userId,
                         payload.userFriendId)};
     }
 
     friendshipRepository->deleteFriendship({*friendship});
 
-    LOG_S(INFO) << std::format("Friendship deleted. {{friendshipId: {}}}", friendship->getId());
+    LOG_S(INFO) << fmt::format("Friendship deleted. {{friendshipId: {}}}", friendship->getId());
 }
 }

@@ -1,6 +1,6 @@
 #include "UserChannelTestUtils.h"
 
-#include <format>
+#include "fmt/format.h"
 #include <utility>
 
 #include "server/infrastructure/database/tables/UserChannelTable.h"
@@ -75,7 +75,7 @@ void UserChannelTestUtils::truncateTable()
 {
     odb::transaction transaction(databaseClient->begin());
 
-    databaseClient->execute(std::format("DELETE FROM \"{}\";", infrastructure::userChannelTableName));
+    databaseClient->execute(fmt::format("DELETE FROM \"{}\";", infrastructure::userChannelTableName));
 
     transaction.commit();
 }

@@ -1,6 +1,6 @@
 #include "AcceptChannelInvitationMessageHandler.h"
 
-#include <format>
+#include "fmt/format.h"
 #include <loguru.hpp>
 #include <nlohmann/json.hpp>
 #include <regex>
@@ -30,7 +30,7 @@ AcceptChannelInvitationMessageHandler::handleMessage(const common::messages::Mes
 
         acceptChannelInvitationCommandHandler->execute({recipientId, channelId});
 
-        LOG_S(INFO) << std::format("Accept invitation to channel {} by user with id {}", channelId, recipientId);
+        LOG_S(INFO) << fmt::format("Accept invitation to channel {} by user with id {}", channelId, recipientId);
 
         common::messages::Message responseMessage{common::messages::MessageId::ChangeChannelInvitationResponse,
                                                   common::bytes::Bytes{R"(["ok"])"}};

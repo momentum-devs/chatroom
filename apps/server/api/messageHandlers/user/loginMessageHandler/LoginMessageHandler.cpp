@@ -1,6 +1,6 @@
 #include "LoginMessageHandler.h"
 
-#include <format>
+#include "fmt/format.h"
 #include <loguru.hpp>
 #include <nlohmann/json.hpp>
 #include <regex>
@@ -45,7 +45,7 @@ common::messages::Message LoginMessageHandler::handleMessage(const common::messa
 
     nlohmann::json responsePayload{{"token", loginUserCommandHandlerResult.token}};
 
-    LOG_S(INFO) << std::format("Logged in user {}", email);
+    LOG_S(INFO) << fmt::format("Logged in user {}", email);
 
     return {common::messages::MessageId::LoginResponse, common::bytes::Bytes{responsePayload.dump()}};
 }

@@ -1,6 +1,6 @@
 #include "MessageSerializerImpl.h"
 
-#include <format>
+#include "fmt/format.h"
 
 #include "errors/InvalidChecksumError.h"
 

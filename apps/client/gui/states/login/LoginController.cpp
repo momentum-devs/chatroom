@@ -23,7 +23,7 @@ void LoginController::loginRequest(const QString& email, const QString& password
 
     session->sendMessage(message);
 
-    LOG_S(INFO) << std::format("Sent login request for user {}", static_cast<std::string>(message.payload));
+    LOG_S(INFO) << fmt::format("Sent login request for user {}", static_cast<std::string>(message.payload));
 
     privateMessageState = stateFactory.createPrivateMessagesState();
     verificationState = stateFactory.createVerifyUserState();
@@ -60,7 +60,7 @@ void LoginController::handleLoginResponse(const common::messages::Message& messa
 
     if (responseJson.contains("error"))
     {
-        auto errorMessage = std::format("Error while logging: {}", responseJson.at("error").get<std::string>());
+        auto errorMessage = fmt::format("Error while logging: {}", responseJson.at("error").get<std::string>());
 
         emit loginFailure(QString::fromStdString(errorMessage));
 
@@ -87,7 +87,7 @@ void LoginController::handleGetUSerDataResponse(const common::messages::Message&
 
     if (responseJson.contains("error"))
     {
-        LOG_S(ERROR) << std::format("Error while getting user channels: {}",
+        LOG_S(ERROR) << fmt::format("Error while getting user channels: {}",
                                     responseJson.at("error").get<std::string>());
     }
 

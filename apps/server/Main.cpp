@@ -17,9 +17,9 @@ int main(int argc, char* argv[])
 {
     const auto projectPath = common::filesystem::getProjectPath("chatroom");
 
-    const auto serverRootPath = std::format("{}/apps/server", projectPath);
+    const auto serverRootPath = fmt::format("{}/apps/server", projectPath);
 
-    dotenv::init(std::format("{}/.env", serverRootPath).c_str());
+    dotenv::init(fmt::format("{}/.env", serverRootPath).c_str());
 
     loguru::g_preamble_date = false;
 
@@ -38,9 +38,9 @@ int main(int argc, char* argv[])
 
     const auto numberOfSupportedThreads = std::thread::hardware_concurrency();
 
-    const auto databaseFullPath = std::format("{}/{}", serverRootPath, databaseRelativePath);
+    const auto databaseFullPath = fmt::format("{}/{}", serverRootPath, databaseRelativePath);
 
-    const auto databaseMigrationsFilePath = std::format("{}/scripts/migrations.sql", serverRootPath);
+    const auto databaseMigrationsFilePath = fmt::format("{}/scripts/migrations.sql", serverRootPath);
 
     if (cxxEnv != "development")
     {

@@ -1,6 +1,6 @@
 #include "FindUserQueryHandlerImpl.h"
 
-#include <format>
+#include "fmt/format.h"
 
 #include "server/application/errors/ResourceNotFoundError.h"
 #include "User.h"
@@ -18,7 +18,7 @@ FindUserQueryHandlerResult FindUserQueryHandlerImpl::execute(const FindUserQuery
 
     if (!user)
     {
-        throw errors::ResourceNotFoundError{std::format("User with id \"{}\" not found.", payload.id)};
+        throw errors::ResourceNotFoundError{fmt::format("User with id \"{}\" not found.", payload.id)};
     }
 
     return {**user};

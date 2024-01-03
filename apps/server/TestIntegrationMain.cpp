@@ -1,4 +1,4 @@
-#include <format>
+#include "fmt/format.h"
 #include <gmock/gmock.h>
 
 #include "core/database/DatabaseMigrationsRunner.h"
@@ -10,17 +10,17 @@ int main(int argc, char** argv)
 {
     const auto projectPath = common::filesystem::getProjectPath("chatroom");
 
-    const auto serverRootPath = std::format("{}/apps/server", projectPath);
+    const auto serverRootPath = fmt::format("{}/apps/server", projectPath);
 
-    dotenv::init(std::format("{}/.env", serverRootPath).c_str());
+    dotenv::init(fmt::format("{}/.env", serverRootPath).c_str());
 
     server::config::ConfigProvider configProvider;
 
     const auto databaseRelativePath = configProvider.getDatabasePath();
 
-    const auto databaseFullPath = std::format("{}/{}", serverRootPath, databaseRelativePath);
+    const auto databaseFullPath = fmt::format("{}/{}", serverRootPath, databaseRelativePath);
 
-    const auto databaseMigrationsFilePath = std::format("{}/scripts/migrations.sql", serverRootPath);
+    const auto databaseMigrationsFilePath = fmt::format("{}/scripts/migrations.sql", serverRootPath);
 
     server::core::DatabaseMigrationsRunner::runMigrations(databaseFullPath, databaseMigrationsFilePath);
 

@@ -1,6 +1,6 @@
 #include "MessageFactoryImpl.h"
 
-#include <format>
+#include "fmt/format.h"
 #include <gtest/gtest.h>
 
 using namespace ::testing;
@@ -11,9 +11,9 @@ namespace
 common::messages::MessageId messageId = common::messages::MessageId::Error;
 nlohmann::json data{};
 std::string token = "token";
-std::string payloadWithoutToken{std::format(R"({{"data":{}}})", data.dump())};
+std::string payloadWithoutToken{fmt::format(R"({{"data":{}}})", data.dump())};
 common::messages::Message messageWithoutToken{messageId, common::bytes::Bytes(payloadWithoutToken)};
-std::string payloadWithToken{std::format(R"({{"data":{},"token":"{}"}})", data.dump(), token)};
+std::string payloadWithToken{fmt::format(R"({{"data":{},"token":"{}"}})", data.dump(), token)};
 common::messages::Message messageWithToken{messageId, common::bytes::Bytes(payloadWithToken)};
 }
 

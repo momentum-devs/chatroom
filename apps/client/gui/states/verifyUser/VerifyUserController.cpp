@@ -34,7 +34,7 @@ void VerifyUserController::verificationRequest(const QString& verificationCode)
 
     session->sendMessage(common::messages::MessageId::VerifyUser, data);
 
-    LOG_S(INFO) << std::format("Sent verification request with code {}", verificationCode.toStdString());
+    LOG_S(INFO) << fmt::format("Sent verification request with code {}", verificationCode.toStdString());
 }
 
 void VerifyUserController::goToLoginState()
@@ -54,7 +54,7 @@ void VerifyUserController::handleVerificationResponse(const common::messages::Me
 
     if (responseJson.contains("error"))
     {
-        auto errorMessage = std::format("Error while verifying user: {}", responseJson.at("error").get<std::string>());
+        auto errorMessage = fmt::format("Error while verifying user: {}", responseJson.at("error").get<std::string>());
 
         emit verificationFailure(QString::fromStdString(errorMessage));
 

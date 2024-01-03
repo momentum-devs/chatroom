@@ -1,6 +1,6 @@
 #include "BlacklistTokenTestUtils.h"
 
-#include <format>
+#include "fmt/format.h"
 #include <utility>
 
 #include "BlacklistToken.odb.h"
@@ -51,7 +51,7 @@ void BlacklistTokenTestUtils::truncateTable()
 {
     odb::transaction transaction(databaseClient->begin());
 
-    databaseClient->execute(std::format("DELETE FROM \"{}\";", infrastructure::blacklistTokenTableName));
+    databaseClient->execute(fmt::format("DELETE FROM \"{}\";", infrastructure::blacklistTokenTableName));
 
     transaction.commit();
 }

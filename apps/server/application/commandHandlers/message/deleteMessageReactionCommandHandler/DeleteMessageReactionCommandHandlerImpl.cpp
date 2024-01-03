@@ -1,6 +1,6 @@
 #include "DeleteMessageReactionCommandHandlerImpl.h"
 
-#include <format>
+#include "fmt/format.h"
 
 #include "loguru.hpp"
 #include "server/application/errors/OperationNotValidError.h"
@@ -20,45 +20,45 @@ DeleteMessageReactionCommandHandlerImpl::DeleteMessageReactionCommandHandlerImpl
 
 void DeleteMessageReactionCommandHandlerImpl::execute(const DeleteMessageReactionCommandHandlerPayload& payload) const
 {
-    LOG_S(INFO) << std::format(R"(Deleting message reaction... {{reactionId: "{}", messageId: "{}", userId: "{}"}})",
+    LOG_S(INFO) << fmt::format(R"(Deleting message reaction... {{reactionId: "{}", messageId: "{}", userId: "{}"}})",
                                payload.reactionId, payload.messageId, payload.userId);
 
     const auto user = userRepository->findUserById({payload.userId});
 
     if (!user)
     {
-        throw errors::ResourceNotFoundError{std::format("User with id {} not found.", payload.userId)};
+        throw errors::ResourceNotFoundError{fmt::format("User with id {} not found.", payload.userId)};
     }
 
     const auto message = messageRepository->findMessageById({payload.messageId});
 
     if (!message)
     {
-        throw errors::ResourceNotFoundError{std::format("Message with id {} not found.", payload.messageId)};
+        throw errors::ResourceNotFoundError{fmt::format("Message with id {} not found.", payload.messageId)};
     }
 
     const auto reaction = reactionRepository->findReactionById({payload.reactionId});
 
     if (!reaction)
     {
-        throw errors::ResourceNotFoundError{std::format("Reaction with id {} not found.", payload.reactionId)};
+        throw errors::ResourceNotFoundError{fmt::format("Reaction with id {} not found.", payload.reactionId)};
     }
 
     if (reaction->getUser()->getId() != user->get()->getId())
     {
-        throw errors::OperationNotValidError{std::format(
+        throw errors::OperationNotValidError{fmt::format(
             "User with id {} is not the creator of the reaction with id {}.", user->get()->getId(), reaction->getId())};
     }
 
     if (reaction->getMessage()->getId() != message->get()->getId())
     {
-        throw errors::OperationNotValidError{std::format("Reaction with id {} is not associated with message id {}.",
+        throw errors::OperationNotValidError{fmt::format("Reaction with id {} is not associated with message id {}.",
                                                          reaction->getId(), message->get()->getId())};
     }
     
     reactionRepository->deleteReaction({*reaction});
 
-    LOG_S(INFO) << std::format(R"(Message reaction deleted. {{reactionId: "{}"}})", reaction->getId());
+    LOG_S(INFO) << fmt::format(R"(Message reaction deleted. {{reactionId: "{}"}})", reaction->getId());
 }
 
 }

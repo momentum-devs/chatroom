@@ -1,6 +1,6 @@
 #include "LeaveChannelMessageHandler.h"
 
-#include <format>
+#include "fmt/format.h"
 #include <loguru.hpp>
 #include <nlohmann/json.hpp>
 #include <regex>
@@ -28,7 +28,7 @@ common::messages::Message LeaveChannelMessageHandler::handleMessage(const common
 
         leaveChannelCommandHandler->execute({userId, channelId});
 
-        LOG_S(INFO) << std::format("User with id: {} left the channel with id {}", userId, channelId);
+        LOG_S(INFO) << fmt::format("User with id: {} left the channel with id {}", userId, channelId);
 
         common::messages::Message responseMessage{common::messages::MessageId::LeftTheChannelResponse,
                                                   common::bytes::Bytes{R"(["ok"])"}};

@@ -1,6 +1,6 @@
 #include "SendRegistrationVerificationEmailCommandHandlerImpl.h"
 
-#include <format>
+#include "fmt/format.h"
 
 #include "loguru.hpp"
 #include "server/application/errors/ResourceNotFoundError.h"
@@ -17,19 +17,19 @@ SendRegistrationVerificationEmailCommandHandlerImpl::SendRegistrationVerificatio
 void SendRegistrationVerificationEmailCommandHandlerImpl::execute(
     const SendRegistrationVerificationEmailCommandHandlerPayload& payload) const
 {
-    LOG_S(INFO) << std::format("Sending registration verification email to \"{}\"...", payload.email);
+    LOG_S(INFO) << fmt::format("Sending registration verification email to \"{}\"...", payload.email);
 
     const auto existingUser = userRepository->findUserByEmail({payload.email});
 
     if (!existingUser)
     {
-        throw errors::ResourceNotFoundError{std::format("User with email \"{}\" not found.", payload.email)};
+        throw errors::ResourceNotFoundError{fmt::format("User with email \"{}\" not found.", payload.email)};
     }
 
     emailService->sendEmail(
         {payload.email, "Chatroom Registration Verification", existingUser->get()->getVerificationCode()});
 
-    LOG_S(INFO) << std::format("Registration verification email sent to \"{}\".", payload.email);
+    LOG_S(INFO) << fmt::format("Registration verification email sent to \"{}\".", payload.email);
 }
 
 }

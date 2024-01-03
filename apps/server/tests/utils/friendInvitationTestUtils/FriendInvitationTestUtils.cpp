@@ -1,6 +1,6 @@
 #include "FriendInvitationTestUtils.h"
 
-#include <format>
+#include "fmt/format.h"
 #include <utility>
 
 #include "FriendInvitation.odb.h"
@@ -74,7 +74,7 @@ void FriendInvitationTestUtils::truncateTable()
 {
     odb::transaction transaction(databaseClient->begin());
 
-    databaseClient->execute(std::format("DELETE FROM \"{}\";", infrastructure::friendInvitationTableName));
+    databaseClient->execute(fmt::format("DELETE FROM \"{}\";", infrastructure::friendInvitationTableName));
 
     transaction.commit();
 }

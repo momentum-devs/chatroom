@@ -1,6 +1,6 @@
 #include "CreateChannelMessageHandler.h"
 
-#include <format>
+#include "fmt/format.h"
 #include <gtest/gtest.h>
 #include <regex>
 

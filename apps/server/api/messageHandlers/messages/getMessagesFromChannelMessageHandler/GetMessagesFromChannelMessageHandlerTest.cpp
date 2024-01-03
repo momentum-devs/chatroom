@@ -1,6 +1,6 @@
 #include "GetMessagesFromChannelMessageHandler.h"
 
-#include <format>
+#include "fmt/format.h"
 #include <gtest/gtest.h>
 
 #include "server/application/queryHandlers/message/findChannelMessagesQueryHandler/FindChannelMessagesQueryHandlerMock.h"
@@ -74,9 +74,9 @@ public:
 
     const std::string validMessageResponsePayload =
         R"({"data":{"messages":[)" +
-        std::format(R"({{"id":"{}","senderName":"{}","sentAt":"{}","text":"{}"}},)", message1.getId(),
+        fmt::format(R"({{"id":"{}","senderName":"{}","sentAt":"{}","text":"{}"}},)", message1.getId(),
                     message1.getSender()->getNickname(), message1.getCreatedAt(), message1.getContent()) +
-        std::format(R"({{"id":"{}","senderName":"{}","sentAt":"{}","text":"{}"}})", message2.getId(),
+        fmt::format(R"({{"id":"{}","senderName":"{}","sentAt":"{}","text":"{}"}})", message2.getId(),
                     message2.getSender()->getNickname(), message2.getCreatedAt(), message2.getContent()) +
         R"(],"totalCount":2}})";
     const common::messages::Message validMessageResponse{common::messages::MessageId::GetChannelMessagesResponse,

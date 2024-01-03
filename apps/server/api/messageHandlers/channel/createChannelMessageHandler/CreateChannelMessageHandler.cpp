@@ -1,6 +1,6 @@
 #include "CreateChannelMessageHandler.h"
 
-#include <format>
+#include "fmt/format.h"
 #include <loguru.hpp>
 #include <nlohmann/json.hpp>
 #include <regex>
@@ -28,7 +28,7 @@ common::messages::Message CreateChannelMessageHandler::handleMessage(const commo
 
         createChannelCommandHandler->execute({channelName, creatorId});
 
-        LOG_S(INFO) << std::format("Created channel {} by user with id {}", channelName, creatorId);
+        LOG_S(INFO) << fmt::format("Created channel {} by user with id {}", channelName, creatorId);
 
         return {common::messages::MessageId::CreateChannelResponse, common::bytes::Bytes{R"(["ok"])"}};
     }

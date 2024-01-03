@@ -20,7 +20,7 @@ void MessageSenderImpl::sendMessage(const Message& message)
     asyncWrite(
         boost::asio::buffer(serializedMessageWithLength),
         [message](boost::system::error_code, std::size_t bytesTransferred)
-        { LOG_S(INFO) << std::format("Sent message {} with size: {} bytes", toString(message.id), bytesTransferred); });
+        { LOG_S(INFO) << fmt::format("Sent message {} with size: {} bytes", toString(message.id), bytesTransferred); });
 }
 
 void MessageSenderImpl::asyncWrite(boost::asio::const_buffer writeBuffer,

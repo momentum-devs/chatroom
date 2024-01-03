@@ -1,6 +1,6 @@
 #include "UserTestUtils.h"
 
-#include <format>
+#include "fmt/format.h"
 #include <utility>
 
 #include "server/infrastructure/database/tables/UserTable.h"
@@ -49,7 +49,7 @@ void UserTestUtils::truncateTable()
 {
     odb::transaction transaction(databaseClient->begin());
 
-    databaseClient->execute(std::format("DELETE FROM \"{}\";", infrastructure::userTableName));
+    databaseClient->execute(fmt::format("DELETE FROM \"{}\";", infrastructure::userTableName));
 
     transaction.commit();
 }

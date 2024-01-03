@@ -1,6 +1,6 @@
 #include "DeleteMessageCommandHandlerImpl.h"
 
-#include <format>
+#include "fmt/format.h"
 
 #include "server/application/errors/OperationNotValidError.h"
 #include "server/application/errors/ResourceNotFoundError.h"
@@ -19,14 +19,14 @@ void DeleteMessageCommandHandlerImpl::execute(const DeleteMessageCommandHandlerP
 
     if (!existingMessage)
     {
-        throw errors::ResourceNotFoundError{std::format("Message with id {} not found.", payload.messageId)};
+        throw errors::ResourceNotFoundError{fmt::format("Message with id {} not found.", payload.messageId)};
     }
 
     const auto senderId = existingMessage->get()->getSender()->getId();
 
     if (payload.requesterUserId != senderId)
     {
-        throw errors::OperationNotValidError{std::format("User with id {} is not sender of the message with id {}.",
+        throw errors::OperationNotValidError{fmt::format("User with id {} is not sender of the message with id {}.",
                                                          payload.requesterUserId, payload.messageId)};
     }
 

@@ -37,7 +37,7 @@ VerifyTokenResult TokenServiceImpl::verifyToken(const std::string& token) const
 
     if (blacklistToken)
     {
-        throw errors::InvalidTokenError{std::format("Invalid token `{}`", token)};
+        throw errors::InvalidTokenError{fmt::format("Invalid token `{}`", token)};
     }
 
     const auto decoded = jwt::decode(token, jwt::params::algorithms({"HS256"}), jwt::params::secret(jwtSecret),

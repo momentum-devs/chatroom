@@ -59,7 +59,7 @@ void PrivateMessagesController::deactivate()
 
 void PrivateMessagesController::goToChannel(const QString& channelName, const QString& channelId, bool isOwner)
 {
-    LOG_S(INFO) << std::format("PrivateMessagesController: Go to channel {} with id {}", channelName.toStdString(),
+    LOG_S(INFO) << fmt::format("PrivateMessagesController: Go to channel {} with id {}", channelName.toStdString(),
                                channelId.toStdString());
 
     stateMachine->addNextState(
@@ -80,7 +80,7 @@ void PrivateMessagesController::goToSendFriendInvitation()
 
 void PrivateMessagesController::acceptFriendInvitation(const QString& requestId)
 {
-    LOG_S(INFO) << std::format("Accept friend request with id {}", requestId.toStdString());
+    LOG_S(INFO) << fmt::format("Accept friend request with id {}", requestId.toStdString());
 
     nlohmann::json data{
         {"requestId", requestId.toStdString()},
@@ -91,7 +91,7 @@ void PrivateMessagesController::acceptFriendInvitation(const QString& requestId)
 
 void PrivateMessagesController::rejectFriendInvitation(const QString& requestId)
 {
-    LOG_S(INFO) << std::format("Reject friend request with id {}", requestId.toStdString());
+    LOG_S(INFO) << fmt::format("Reject friend request with id {}", requestId.toStdString());
 
     nlohmann::json data{
         {"requestId", requestId.toStdString()},
@@ -102,7 +102,7 @@ void PrivateMessagesController::rejectFriendInvitation(const QString& requestId)
 
 void PrivateMessagesController::setCurrentFriend(const QString& friendId, const QString& friendName)
 {
-    LOG_S(INFO) << std::format("Set current friend to {} with id {}", friendName.toStdString(), friendId.toStdString());
+    LOG_S(INFO) << fmt::format("Set current friend to {} with id {}", friendName.toStdString(), friendId.toStdString());
 
     if (currentFriendId != friendId.toStdString())
     {
@@ -128,7 +128,7 @@ void PrivateMessagesController::setCurrentFriend(const QString& friendId, const 
 
 void PrivateMessagesController::removeFromFriends()
 {
-    LOG_S(INFO) << std::format("Remove user with id {} from friends", currentFriendId);
+    LOG_S(INFO) << fmt::format("Remove user with id {} from friends", currentFriendId);
 
     nlohmann::json data{
         {"userFriendId", currentFriendId},
@@ -139,7 +139,7 @@ void PrivateMessagesController::removeFromFriends()
 
 void PrivateMessagesController::handleGetUserFriendsResponse(const common::messages::Message& message)
 {
-    LOG_S(INFO) << std::format("Received friend list");
+    LOG_S(INFO) << fmt::format("Received friend list");
 
     emit clearFriendList();
 
@@ -149,7 +149,7 @@ void PrivateMessagesController::handleGetUserFriendsResponse(const common::messa
 
     if (responseJson.contains("error"))
     {
-        LOG_S(ERROR) << std::format("Error while getting user friends: {}",
+        LOG_S(ERROR) << fmt::format("Error while getting user friends: {}",
                                     responseJson.at("error").get<std::string>());
     }
 
@@ -159,7 +159,7 @@ void PrivateMessagesController::handleGetUserFriendsResponse(const common::messa
         {
             if (userFriend.contains("id") and userFriend.contains("name") and userFriend.contains("isActive"))
             {
-                LOG_S(INFO) << std::format("Adding friend {} with id {} to list",
+                LOG_S(INFO) << fmt::format("Adding friend {} with id {} to list",
                                            userFriend.at("name").get<std::string>(),
                                            userFriend.at("id").get<std::string>());
 
@@ -191,7 +191,7 @@ void PrivateMessagesController::handleGetUserFriendInvitationsResponse(const com
 
     if (responseJson.contains("error"))
     {
-        LOG_S(ERROR) << std::format("Error while getting user friend requests: {}",
+        LOG_S(ERROR) << fmt::format("Error while getting user friend requests: {}",
                                     responseJson.at("error").get<std::string>());
     }
 
@@ -201,7 +201,7 @@ void PrivateMessagesController::handleGetUserFriendInvitationsResponse(const com
         {
             if (friendInvitation.contains("id") and friendInvitation.contains("name"))
             {
-                LOG_S(INFO) << std::format("Adding friend request {} with id {} to list",
+                LOG_S(INFO) << fmt::format("Adding friend request {} with id {} to list",
                                            friendInvitation.at("name").get<std::string>(),
                                            friendInvitation.at("id").get<std::string>());
 
@@ -230,7 +230,7 @@ void PrivateMessagesController::handleChangeFriendInvitationResponse(const commo
 
     if (responseJson.contains("error"))
     {
-        LOG_S(ERROR) << std::format("Error while change user friend request: {}",
+        LOG_S(ERROR) << fmt::format("Error while change user friend request: {}",
                                     responseJson.at("error").get<std::string>());
     }
     else
@@ -254,7 +254,7 @@ void PrivateMessagesController::handleRemoveFromFriendsResponse()
 
 void PrivateMessagesController::sendPrivateMessage(const QString& messageText)
 {
-    LOG_S(INFO) << std::format("Send private message: {} to {} with id {}", messageText.toStdString(),
+    LOG_S(INFO) << fmt::format("Send private message: {} to {} with id {}", messageText.toStdString(),
                                currentFriendName, currentFriendId);
 
     nlohmann::json data{
@@ -275,7 +275,7 @@ void PrivateMessagesController::handleSendPrivateMessageResponse(const common::m
 
     if (responseJson.contains("error"))
     {
-        LOG_S(ERROR) << std::format("Error while sending private message: {}",
+        LOG_S(ERROR) << fmt::format("Error while sending private message: {}",
                                     responseJson.at("error").get<std::string>());
     }
     else if (responseJson.contains("data") and responseJson.at("data").contains("message"))
@@ -291,7 +291,7 @@ void PrivateMessagesController::handleSendPrivateMessageResponse(const common::m
 
             auto date = QDateTime::fromString(dateText, "yyyyMMddThhmmss");
 
-            LOG_S(INFO) << std::format("Adding message {} with id {} sent at {} to list",
+            LOG_S(INFO) << fmt::format("Adding message {} with id {} sent at {} to list",
                                        message.at("text").get<std::string>(), message.at("id").get<std::string>(),
                                        message.at("sentAt").get<std::string>());
 
@@ -344,7 +344,7 @@ void PrivateMessagesController::handleGetPrivateMessagesResponse(const common::m
 
                 auto date = QDateTime::fromString(dateText, "yyyyMMddThhmmss");
 
-                LOG_S(INFO) << std::format("Adding message {} with id {} sent at {} to list",
+                LOG_S(INFO) << fmt::format("Adding message {} with id {} sent at {} to list",
                                            message.at("text").get<std::string>(), message.at("id").get<std::string>(),
                                            message.at("sentAt").get<std::string>());
 

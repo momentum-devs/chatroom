@@ -2,7 +2,7 @@
 
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
-#include <format>
+#include "fmt/format.h"
 
 #include "loguru.hpp"
 #include "random/StringGenerator.h"
@@ -19,13 +19,13 @@ RegisterUserCommandHandlerImpl::RegisterUserCommandHandlerImpl(
 RegisterUserCommandHandlerResult
 RegisterUserCommandHandlerImpl::execute(const RegisterUserCommandHandlerPayload& payload) const
 {
-    LOG_S(INFO) << std::format("Registering user with email \"{}\"...", payload.email);
+    LOG_S(INFO) << fmt::format("Registering user with email \"{}\"...", payload.email);
 
     const auto existingUser = userRepository->findUserByEmail({payload.email});
 
     if (existingUser)
     {
-        throw errors::ResourceAlreadyExistsError{std::format("User with email \"{}\" already exists.", payload.email)};
+        throw errors::ResourceAlreadyExistsError{fmt::format("User with email \"{}\" already exists.", payload.email)};
     }
 
     const auto hashedPassword = hashService->hash(payload.password);
@@ -40,7 +40,7 @@ RegisterUserCommandHandlerImpl::execute(const RegisterUserCommandHandlerPayload&
     const auto user = userRepository->createUser(
         {userId, payload.email, hashedPassword, payload.nickname, false, false, verificationCode, std::nullopt});
 
-    LOG_S(INFO) << std::format("User with email \"{}\" registered.", payload.email);
+    LOG_S(INFO) << fmt::format("User with email \"{}\" registered.", payload.email);
 
     return {*user};
 }

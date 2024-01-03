@@ -2,7 +2,7 @@
 
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
-#include <format>
+#include "fmt/format.h"
 
 #include "loguru.hpp"
 #include "server/application/errors/OperationNotValidError.h"
@@ -25,21 +25,21 @@ CreateGroupMessageCommandHandlerImpl::CreateGroupMessageCommandHandlerImpl(
 CreateGroupMessageCommandHandlerResult
 CreateGroupMessageCommandHandlerImpl::execute(const CreateGroupMessageCommandHandlerPayload& payload) const
 {
-    LOG_S(INFO) << std::format(R"(Creating group message "{}" by sender with id "{}" to group with id "{}"...)",
+    LOG_S(INFO) << fmt::format(R"(Creating group message "{}" by sender with id "{}" to group with id "{}"...)",
                                payload.content, payload.senderId, payload.groupId);
 
     const auto sender = userRepository->findUserById({payload.senderId});
 
     if (!sender)
     {
-        throw errors::ResourceNotFoundError{std::format("User with id {} not found.", payload.senderId)};
+        throw errors::ResourceNotFoundError{fmt::format("User with id {} not found.", payload.senderId)};
     }
 
     const auto group = groupRepository->findGroupById({payload.groupId});
 
     if (!group)
     {
-        throw errors::ResourceNotFoundError{std::format("Group with id {} not found.", payload.groupId)};
+        throw errors::ResourceNotFoundError{fmt::format("Group with id {} not found.", payload.groupId)};
     }
 
     const auto userGroups = userGroupRepository->findUsersGroupsByUserId({payload.senderId});
@@ -53,7 +53,7 @@ CreateGroupMessageCommandHandlerImpl::execute(const CreateGroupMessageCommandHan
     if (!userIsMemberOfGroup)
     {
         throw errors::OperationNotValidError{
-            std::format("Sender {} is not a member of group {}.", sender->get()->getEmail(), group->get()->getId())};
+            fmt::format("Sender {} is not a member of group {}.", sender->get()->getEmail(), group->get()->getId())};
     }
 
     std::stringstream uuid;
@@ -63,7 +63,7 @@ CreateGroupMessageCommandHandlerImpl::execute(const CreateGroupMessageCommandHan
 
     const auto message = messageRepository->createMessage({messageId, payload.content, *sender, std::nullopt, group});
 
-    LOG_S(INFO) << std::format(R"(Message from sender with id "{}" with content "{}" created.)", payload.senderId,
+    LOG_S(INFO) << fmt::format(R"(Message from sender with id "{}" with content "{}" created.)", payload.senderId,
                                payload.content);
 
     return {*message};

@@ -1,6 +1,6 @@
 #include "EmailServiceImpl.h"
 
-#include <format>
+#include "fmt/format.h"
 #include <utility>
 
 namespace server::application
@@ -20,11 +20,11 @@ EmailServiceImpl::EmailServiceImpl(std::shared_ptr<common::httpClient::HttpClien
 
 void EmailServiceImpl::sendEmail(const SendEmailPayload& payload) const
 {
-    const std::map<std::string, std::string> headers{{"Authorization", std::format("Bearer {}", sendGridApiKey)},
+    const std::map<std::string, std::string> headers{{"Authorization", fmt::format("Bearer {}", sendGridApiKey)},
                                                      {"Content-Type", "application/json"}};
 
     const auto data =
-        std::format("{{\"personalizations\": [{{\"to\": [{{\"email\": \"{}\"}}]}}],\"from\": {{\"email\": "
+        fmt::format("{{\"personalizations\": [{{\"to\": [{{\"email\": \"{}\"}}]}}],\"from\": {{\"email\": "
                     "\"{}\"}},\"subject\": \"{}\",\"content\": [{{\"type\": \"text/plain\", \"value\": \"{}\"}}]}}",
                     payload.to, sendGridEmail, payload.subject, payload.data);
 

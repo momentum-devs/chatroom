@@ -2,7 +2,7 @@
 
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
-#include <format>
+#include "fmt/format.h"
 
 #include "loguru.hpp"
 #include "server/application/errors/OperationNotValidError.h"
@@ -23,21 +23,21 @@ CreateMessageReactionCommandHandlerImpl::CreateMessageReactionCommandHandlerImpl
 CreateMessageReactionCommandHandlerResult
 CreateMessageReactionCommandHandlerImpl::execute(const CreateMessageReactionCommandHandlerPayload& payload) const
 {
-    LOG_S(INFO) << std::format(R"(Creating message reaction... {{reactionName: "{}", messageId: "{}", userId: "{}"}})",
+    LOG_S(INFO) << fmt::format(R"(Creating message reaction... {{reactionName: "{}", messageId: "{}", userId: "{}"}})",
                                payload.reactionName, payload.messageId, payload.userId);
 
     const auto user = userRepository->findUserById({payload.userId});
 
     if (!user)
     {
-        throw errors::ResourceNotFoundError{std::format("User with id {} not found.", payload.userId)};
+        throw errors::ResourceNotFoundError{fmt::format("User with id {} not found.", payload.userId)};
     }
 
     const auto message = messageRepository->findMessageById({payload.messageId});
 
     if (!message)
     {
-        throw errors::ResourceNotFoundError{std::format("Message with id {} not found.", payload.messageId)};
+        throw errors::ResourceNotFoundError{fmt::format("Message with id {} not found.", payload.messageId)};
     }
 
     std::stringstream uuid;
@@ -47,7 +47,7 @@ CreateMessageReactionCommandHandlerImpl::execute(const CreateMessageReactionComm
 
     const auto reaction = reactionRepository->createReaction({reactionId, payload.reactionName, *user, *message});
 
-    LOG_S(INFO) << std::format(R"(Message reaction created. {{reactionId: "{}"}})", reactionId);
+    LOG_S(INFO) << fmt::format(R"(Message reaction created. {{reactionId: "{}"}})", reactionId);
 
     return {reaction};
 }

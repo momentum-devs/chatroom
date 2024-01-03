@@ -2,7 +2,7 @@
 
 #include <boost/algorithm/string.hpp>
 #include <filesystem>
-#include <format>
+#include "fmt/format.h"
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -23,7 +23,7 @@ void FileSystemServiceImpl::write(const std::string& absolutePath, const std::st
 
     if (!fileStream.is_open())
     {
-        throw errors::FileNotFound(std::format("file not found: {}", absolutePath));
+        throw errors::FileNotFound(fmt::format("file not found: {}", absolutePath));
     }
 
     fileStream << content;
@@ -36,7 +36,7 @@ void FileSystemServiceImpl::writeAtPosition(const std::string& absolutePath,
 
     if (!fileStream.is_open())
     {
-        throw errors::FileNotFound(std::format("file not found: {}", absolutePath));
+        throw errors::FileNotFound(fmt::format("file not found: {}", absolutePath));
     }
 
     fileStream.seekp(position, std::ios::beg);
@@ -50,7 +50,7 @@ void FileSystemServiceImpl::append(const std::string& absolutePath, const std::s
 
     if (!fileStream.is_open())
     {
-        throw errors::FileNotFound(std::format("file not found: {}", absolutePath));
+        throw errors::FileNotFound(fmt::format("file not found: {}", absolutePath));
     }
 
     fileStream << content;
@@ -64,7 +64,7 @@ std::string FileSystemServiceImpl::read(const std::string& absolutePath) const
 
     if (!fileStream.is_open())
     {
-        throw errors::FileNotFound(std::format("file not found: {}", absolutePath));
+        throw errors::FileNotFound(fmt::format("file not found: {}", absolutePath));
     }
 
     buffer << fileStream.rdbuf();

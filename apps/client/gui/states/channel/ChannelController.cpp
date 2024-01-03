@@ -70,7 +70,7 @@ const QString& ChannelController::getName() const
 
 void ChannelController::goToChannel(const QString& channelName, const QString& channelId, bool isOwner)
 {
-    LOG_S(INFO) << std::format("Set channel {} with id {} as current", channelName.toStdString(),
+    LOG_S(INFO) << fmt::format("Set channel {} with id {} as current", channelName.toStdString(),
                                channelId.toStdString());
 
     if (not isActivated or currentChannelId != channelId.toStdString())
@@ -164,7 +164,7 @@ void ChannelController::handleGetChannelMembersResponse(const common::messages::
         {
             if (channelMember.contains("id") and channelMember.contains("name") and channelMember.contains("isActive"))
             {
-                LOG_S(INFO) << std::format("Adding member {} with id {} to list",
+                LOG_S(INFO) << fmt::format("Adding member {} with id {} to list",
                                            channelMember.at("name").get<std::string>(),
                                            channelMember.at("id").get<std::string>());
 
@@ -221,7 +221,7 @@ void ChannelController::handleSendChannelMessageResponse(const common::messages:
 
             auto date = QDateTime::fromString(dateText, "yyyyMMddThhmmss");
 
-            LOG_S(INFO) << std::format("Adding message {} with id {} sent at {} to list",
+            LOG_S(INFO) << fmt::format("Adding message {} with id {} sent at {} to list",
                                        message.at("text").get<std::string>(), message.at("id").get<std::string>(),
                                        message.at("sentAt").get<std::string>());
 
@@ -276,7 +276,7 @@ void ChannelController::handleGetChannelMessagesResponse(const common::messages:
 
                 auto date = QDateTime::fromString(dateText, "yyyyMMddThhmmss");
 
-                LOG_S(INFO) << std::format("Adding message {} with id {} sent at {} to list",
+                LOG_S(INFO) << fmt::format("Adding message {} with id {} sent at {} to list",
                                            message.at("text").get<std::string>(), message.at("id").get<std::string>(),
                                            message.at("sentAt").get<std::string>());
 

@@ -24,7 +24,7 @@ void RegisterController::registerRequest(const QString& email, const QString& ni
 
     session->sendMessage(message);
 
-    LOG_S(INFO) << std::format("Sent register request for user {}", nickname.toStdString());
+    LOG_S(INFO) << fmt::format("Sent register request for user {}", nickname.toStdString());
 }
 
 void RegisterController::goBack()
@@ -53,7 +53,7 @@ void RegisterController::handleRegisterResponse(const common::messages::Message&
 
     if (responseJson.contains("error"))
     {
-        auto errorMessage = std::format("Error while register user: {}", responseJson.at("error").get<std::string>());
+        auto errorMessage = fmt::format("Error while register user: {}", responseJson.at("error").get<std::string>());
 
         emit registerFailure(QString::fromStdString(errorMessage));
 

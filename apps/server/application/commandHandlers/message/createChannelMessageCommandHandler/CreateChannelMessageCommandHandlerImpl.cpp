@@ -2,7 +2,7 @@
 
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
-#include <format>
+#include "fmt/format.h"
 
 #include "loguru.hpp"
 #include "server/application/errors/OperationNotValidError.h"
@@ -25,21 +25,21 @@ CreateChannelMessageCommandHandlerImpl::CreateChannelMessageCommandHandlerImpl(
 CreateChannelMessageCommandHandlerResult
 CreateChannelMessageCommandHandlerImpl::execute(const CreateChannelMessageCommandHandlerPayload& payload) const
 {
-    LOG_S(INFO) << std::format(R"(Creating channel message "{}" by sender with id "{}" to channel with id "{}"...)",
+    LOG_S(INFO) << fmt::format(R"(Creating channel message "{}" by sender with id "{}" to channel with id "{}"...)",
                                payload.content, payload.senderId, payload.channelId);
 
     const auto sender = userRepository->findUserById({payload.senderId});
 
     if (!sender)
     {
-        throw errors::ResourceNotFoundError{std::format("User with id {} not found.", payload.senderId)};
+        throw errors::ResourceNotFoundError{fmt::format("User with id {} not found.", payload.senderId)};
     }
 
     const auto channel = channelRepository->findChannelById({payload.channelId});
 
     if (!channel)
     {
-        throw errors::ResourceNotFoundError{std::format("Channel with id {} not found.", payload.channelId)};
+        throw errors::ResourceNotFoundError{fmt::format("Channel with id {} not found.", payload.channelId)};
     }
 
     const auto userChannels = userChannelRepository->findUsersChannelsByUserId({payload.senderId});
@@ -54,7 +54,7 @@ CreateChannelMessageCommandHandlerImpl::execute(const CreateChannelMessageComman
     if (!userIsMemberOfChannel)
     {
         throw errors::OperationNotValidError{
-            std::format("Sender {} is not a member of channel {}.", sender->get()->getEmail(), channel->get()->getName())};
+            fmt::format("Sender {} is not a member of channel {}.", sender->get()->getEmail(), channel->get()->getName())};
     }
 
     std::stringstream uuid;
@@ -64,7 +64,7 @@ CreateChannelMessageCommandHandlerImpl::execute(const CreateChannelMessageComman
 
     const auto message = messageRepository->createMessage({messageId, payload.content, *sender, channel, std::nullopt});
 
-    LOG_S(INFO) << std::format(R"(Message from sender with id "{}" with content "{}" created.)", payload.senderId,
+    LOG_S(INFO) << fmt::format(R"(Message from sender with id "{}" with content "{}" created.)", payload.senderId,
                                payload.content);
 
     return {*message};

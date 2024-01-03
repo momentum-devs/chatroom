@@ -1,6 +1,6 @@
 #include "MessageTestUtils.h"
 
-#include <format>
+#include "fmt/format.h"
 #include <utility>
 
 #include "Message.odb.h"
@@ -105,7 +105,7 @@ void MessageTestUtils::truncateTable()
 {
     odb::transaction transaction(databaseClient->begin());
 
-    databaseClient->execute(std::format("DELETE FROM \"{}\";", infrastructure::messageTableName));
+    databaseClient->execute(fmt::format("DELETE FROM \"{}\";", infrastructure::messageTableName));
 
     transaction.commit();
 }

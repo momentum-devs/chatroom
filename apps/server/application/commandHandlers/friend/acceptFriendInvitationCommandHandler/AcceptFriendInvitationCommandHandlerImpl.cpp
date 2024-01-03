@@ -2,7 +2,7 @@
 
 #include <boost/uuid/random_generator.hpp>
 #include <boost/uuid/uuid_io.hpp>
-#include <format>
+#include "fmt/format.h"
 
 #include "loguru.hpp"
 #include "server/application/errors/OperationNotValidError.h"
@@ -24,7 +24,7 @@ AcceptFriendInvitationCommandHandlerImpl::AcceptFriendInvitationCommandHandlerIm
 
 void AcceptFriendInvitationCommandHandlerImpl::execute(const AcceptFriendInvitationCommandHandlerPayload& payload) const
 {
-    LOG_S(INFO) << std::format("Accepting friend invitation... {{recipientId: {}, friendInvitationId: {}}}",
+    LOG_S(INFO) << fmt::format("Accepting friend invitation... {{recipientId: {}, friendInvitationId: {}}}",
                                payload.recipientId, payload.friendInvitationId);
 
     const auto friendInvitation = friendInvitationRepository->findFriendInvitationById({payload.friendInvitationId});
@@ -32,13 +32,13 @@ void AcceptFriendInvitationCommandHandlerImpl::execute(const AcceptFriendInvitat
     if (!friendInvitation)
     {
         throw errors::ResourceNotFoundError{
-            std::format("Friend invitation with id {} not found.", payload.friendInvitationId)};
+            fmt::format("Friend invitation with id {} not found.", payload.friendInvitationId)};
     }
 
     if (payload.recipientId != friendInvitation->getRecipient()->getId())
     {
         throw errors::OperationNotValidError{
-            std::format("User with id {} is not recipient of the friend invitation with id {}.", payload.recipientId,
+            fmt::format("User with id {} is not recipient of the friend invitation with id {}.", payload.recipientId,
                         payload.friendInvitationId)};
     }
 
@@ -51,26 +51,26 @@ void AcceptFriendInvitationCommandHandlerImpl::execute(const AcceptFriendInvitat
 
     friendInvitationRepository->deleteFriendInvitation({*friendInvitation});
 
-    LOG_S(INFO) << std::format("Friend invitation accepted. {{friendInvitationId: {}}}", friendInvitation->getId());
+    LOG_S(INFO) << fmt::format("Friend invitation accepted. {{friendInvitationId: {}}}", friendInvitation->getId());
 }
 
 void AcceptFriendInvitationCommandHandlerImpl::createFriendship(const std::string& userId,
                                                                 const std::string& userFriendId) const
 {
-    LOG_S(INFO) << std::format("Creating friendship... {{userId: {}, userFriendId: {}}}", userId, userFriendId);
+    LOG_S(INFO) << fmt::format("Creating friendship... {{userId: {}, userFriendId: {}}}", userId, userFriendId);
 
     const auto user = userRepository->findUserById({userId});
 
     if (!user)
     {
-        throw errors::ResourceNotFoundError{std::format("User with id {} not found.", userId)};
+        throw errors::ResourceNotFoundError{fmt::format("User with id {} not found.", userId)};
     }
 
     const auto userFriend = userRepository->findUserById({userFriendId});
 
     if (!userFriend)
     {
-        throw errors::ResourceNotFoundError{std::format("User with id {} not found.", userFriendId)};
+        throw errors::ResourceNotFoundError{fmt::format("User with id {} not found.", userFriendId)};
     }
 
     std::stringstream groupUuid;
@@ -84,7 +84,7 @@ void AcceptFriendInvitationCommandHandlerImpl::createFriendship(const std::strin
 
     if (existingFriendship)
     {
-        throw errors::OperationNotValidError{std::format(
+        throw errors::OperationNotValidError{fmt::format(
             "Friendship between user with id {} and user friend with id {} already exists.", userId, userFriendId)};
     }
 
@@ -95,6 +95,6 @@ void AcceptFriendInvitationCommandHandlerImpl::createFriendship(const std::strin
 
     const auto friendship = friendshipRepository->createFriendship({friendshipId, *user, *userFriend, group});
 
-    LOG_S(INFO) << std::format("Friendship created. {{friendshipId: {}}}", friendship.getId());
+    LOG_S(INFO) << fmt::format("Friendship created. {{friendshipId: {}}}", friendship.getId());
 }
 }

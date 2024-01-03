@@ -1,6 +1,6 @@
 #include "FindChannelByIdQueryHandlerImpl.h"
 
-#include <format>
+#include "fmt/format.h"
 
 #include "server/application/errors/ResourceNotFoundError.h"
 
@@ -19,7 +19,7 @@ FindChannelByIdQueryHandlerImpl::execute(const FindChannelByIdQueryHandlerPayloa
 
     if (!channel)
     {
-        throw errors::ResourceNotFoundError{std::format("Channel with id \"{}\" not found.", payload.channelId)};
+        throw errors::ResourceNotFoundError{fmt::format("Channel with id \"{}\" not found.", payload.channelId)};
     }
 
     return {**channel};

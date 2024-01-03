@@ -1,6 +1,6 @@
 #include "RemoveFromFriendsMessageHandler.h"
 
-#include <format>
+#include "fmt/format.h"
 #include <loguru.hpp>
 #include <nlohmann/json.hpp>
 #include <regex>
@@ -29,7 +29,7 @@ common::messages::Message RemoveFromFriendsMessageHandler::handleMessage(const c
 
         deleteFriendshipCommandHandler->execute({userId, userFriendId});
 
-        LOG_S(INFO) << std::format("User with id: {} remove user with id: {} from friends", userId, userFriendId);
+        LOG_S(INFO) << fmt::format("User with id: {} remove user with id: {} from friends", userId, userFriendId);
 
         common::messages::Message responseMessage{common::messages::MessageId::RemoveFromFriendsResponse,
                                                   common::bytes::Bytes{R"(["ok"])"}};

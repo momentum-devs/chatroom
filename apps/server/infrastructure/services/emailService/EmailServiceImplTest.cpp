@@ -1,6 +1,6 @@
 #include "EmailServiceImpl.h"
 
-#include <format>
+#include "fmt/format.h"
 
 #include "gtest/gtest.h"
 
@@ -32,13 +32,13 @@ TEST_F(EmailServiceImplTest, shouldSendEmail)
     const auto subject = faker::Word::noun();
     const auto emailData = faker::Lorem::paragraph();
 
-    const std::map<std::string, std::string> headers{{"Authorization", std::format("Bearer {}", sendGridSecret)},
+    const std::map<std::string, std::string> headers{{"Authorization", fmt::format("Bearer {}", sendGridSecret)},
                                                      {"Content-Type", "application/json"}};
 
     const auto sendGridApiUrl = "https://api.sendgrid.com/v3/mail/send";
 
     const auto body =
-        std::format("{{\"personalizations\": [{{\"to\": [{{\"email\": \"{}\"}}]}}],\"from\": {{\"email\": "
+        fmt::format("{{\"personalizations\": [{{\"to\": [{{\"email\": \"{}\"}}]}}],\"from\": {{\"email\": "
                     "\"{}\"}},\"subject\": \"{}\",\"content\": [{{\"type\": \"text/plain\", \"value\": \"{}\"}}]}}",
                     to, sendGridEmail, subject, emailData);
 

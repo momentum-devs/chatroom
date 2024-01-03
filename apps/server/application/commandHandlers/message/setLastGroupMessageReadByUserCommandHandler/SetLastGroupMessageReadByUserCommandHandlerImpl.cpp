@@ -1,6 +1,6 @@
 #include "SetLastGroupMessageReadByUserCommandHandlerImpl.h"
 
-#include <format>
+#include "fmt/format.h"
 
 #include "loguru.hpp"
 #include "server/application/errors/OperationNotValidError.h"
@@ -23,7 +23,7 @@ SetLastGroupMessageReadByUserCommandHandlerImpl::SetLastGroupMessageReadByUserCo
 void SetLastGroupMessageReadByUserCommandHandlerImpl::execute(
     const SetLastGroupMessageReadByUserCommandHandlerPayload& payload) const
 {
-    LOG_S(INFO) << std::format(
+    LOG_S(INFO) << fmt::format(
         "Setting last group message read by user... {{userId: {}, groupId: {}, messageId: {}}}", payload.userId,
         payload.groupId, payload.messageId);
 
@@ -31,21 +31,21 @@ void SetLastGroupMessageReadByUserCommandHandlerImpl::execute(
 
     if (!message)
     {
-        throw errors::ResourceNotFoundError{std::format("Message with id {} not found.", payload.messageId)};
+        throw errors::ResourceNotFoundError{fmt::format("Message with id {} not found.", payload.messageId)};
     }
 
     const auto user = userRepository->findUserById({payload.userId});
 
     if (!user)
     {
-        throw errors::ResourceNotFoundError{std::format("User with id {} not found.", payload.userId)};
+        throw errors::ResourceNotFoundError{fmt::format("User with id {} not found.", payload.userId)};
     }
 
     const auto group = groupRepository->findGroupById({payload.groupId});
 
     if (!group)
     {
-        throw errors::ResourceNotFoundError{std::format("Group with id {} not found.", payload.groupId)};
+        throw errors::ResourceNotFoundError{fmt::format("Group with id {} not found.", payload.groupId)};
     }
 
     auto userGroup = userGroupRepository->findUserGroup({payload.userId, payload.groupId});
@@ -53,14 +53,14 @@ void SetLastGroupMessageReadByUserCommandHandlerImpl::execute(
     if (!userGroup)
     {
         throw errors::ResourceNotFoundError{
-            std::format("UserGroup not found. {{userId: {}, groupId: {}}}", payload.userId, payload.groupId)};
+            fmt::format("UserGroup not found. {{userId: {}, groupId: {}}}", payload.userId, payload.groupId)};
     }
 
     userGroup->setLastReadMessageId(payload.messageId);
 
     userGroupRepository->updateUserGroup({*userGroup});
 
-    LOG_S(INFO) << std::format("Last read group message set. {{userId: {}, groupId: {}, messageId: {}}}",
+    LOG_S(INFO) << fmt::format("Last read group message set. {{userId: {}, groupId: {}, messageId: {}}}",
                                payload.userId, payload.groupId, payload.messageId);
 }
 
