@@ -39,7 +39,6 @@ Rectangle {
                 width: messagesView.width
             }
             onContentYChanged: {
-                console.log(`scrollbar position: ${messagesScrollView.ScrollBar.vertical.position}`);
                 if (messagesScrollView.ScrollBar.vertical.position > 0.01) {
                     messagesView.previousScrollBarPosition = messagesScrollView.ScrollBar.vertical.position;
                 }
@@ -102,12 +101,6 @@ Rectangle {
 
                 let newScrollPosition = (1 - messagesView.previousMessagesCount / messagesController.messages.length)
                     + messagesView.previousScrollBarPosition * messagesView.previousMessagesCount / messagesController.messages.length;
-                console.log(`scrollbar position:  ${messagesView.previousScrollBarPosition} `
-                    + `new scroll position: ${newScrollPosition} `
-                    + `previous messages count: ${messagesView.previousMessagesCount} `
-                    + `previous scrollbar position: ${messagesView.previousScrollBarPosition} `
-                    + `messages count: ${messagesController.messages.length}`
-                    + `scrollbar size: ${messagesScrollView.ScrollBar.vertical.size}`);
                 messagesScrollView.ScrollBar.vertical.position = newScrollPosition * maxScrollPosition;
             }
             messagesView.previousMessagesCount = messagesController.messages.length;
