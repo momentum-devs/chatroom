@@ -3,7 +3,7 @@
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
 
-#include "fmt/format.h"
+#include <fmt/format.h>
 #include "loguru.hpp"
 #include "random/StringGenerator.h"
 #include "server/application/errors/ResourceAlreadyExistsError.h"

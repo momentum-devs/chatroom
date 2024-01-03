@@ -9,7 +9,7 @@
 #include "faker-cxx/Date.h"
 #include "faker-cxx/Image.h"
 #include "faker-cxx/String.h"
-#include "fmt/format.h"
+#include <fmt/format.h>
 #include "nlohmann/json.hpp"
 #include "server/tests/factories/friendshipTestFactory/FriendshipTestFactory.h"
 

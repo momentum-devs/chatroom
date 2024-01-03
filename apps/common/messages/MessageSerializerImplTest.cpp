@@ -3,7 +3,7 @@
 #include "gtest/gtest.h"
 
 #include "errors/InvalidChecksumError.h"
-#include "fmt/format.h"
+#include <fmt/format.h>
 
 using namespace common;
 using namespace common::messages;

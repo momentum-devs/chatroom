@@ -1,5 +1,7 @@
 #include "MessageSenderImpl.h"
 
+#include <fmt/format.h>
+
 #include "loguru.hpp"
 
 namespace common::messages

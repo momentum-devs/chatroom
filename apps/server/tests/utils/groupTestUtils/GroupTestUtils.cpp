@@ -2,7 +2,7 @@
 
 #include <utility>
 
-#include "fmt/format.h"
+#include <fmt/format.h>
 #include "Group.odb.h"
 #include "server/infrastructure/database/tables/GroupTable.h"
 

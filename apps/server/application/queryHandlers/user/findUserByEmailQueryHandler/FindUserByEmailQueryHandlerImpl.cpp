@@ -1,6 +1,6 @@
 #include "FindUserByEmailQueryHandlerImpl.h"
 
-#include "fmt/format.h"
+#include <fmt/format.h>
 #include "server/application/errors/ResourceNotFoundError.h"
 #include "User.h"
 

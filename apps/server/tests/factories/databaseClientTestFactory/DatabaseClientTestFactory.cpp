@@ -3,7 +3,7 @@
 #include <iostream>
 
 #include "filesystem/GetProjectPath.h"
-#include "fmt/format.h"
+#include <fmt/format.h>
 #include "server/config/ConfigProvider.h"
 
 namespace server::tests

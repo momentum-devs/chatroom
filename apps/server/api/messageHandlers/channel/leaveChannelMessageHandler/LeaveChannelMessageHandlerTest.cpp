@@ -6,7 +6,7 @@
 #include "server/application/commandHandlers/channel/leaveChannelCommandHandler/LeaveChannelCommandHandlerMock.h"
 #include "server/application/services/tokenService/TokenServiceMock.h"
 
-#include "fmt/format.h"
+#include <fmt/format.h>
 #include "nlohmann/json.hpp"
 
 using namespace ::testing;

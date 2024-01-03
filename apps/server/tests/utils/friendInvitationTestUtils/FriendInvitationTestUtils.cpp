@@ -2,7 +2,7 @@
 
 #include <utility>
 
-#include "fmt/format.h"
+#include <fmt/format.h>
 #include "FriendInvitation.odb.h"
 #include "server/infrastructure/database/tables/FriendInvitationTable.h"
 

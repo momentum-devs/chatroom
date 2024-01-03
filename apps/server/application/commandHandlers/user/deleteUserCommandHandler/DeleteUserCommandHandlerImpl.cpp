@@ -2,7 +2,7 @@
 
 #include <unordered_map>
 
-#include "fmt/format.h"
+#include <fmt/format.h>
 #include "loguru.hpp"
 #include "server/application/errors/ResourceNotFoundError.h"
 

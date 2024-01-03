@@ -6,7 +6,7 @@
 #include "server/application/commandHandlers/user/logoutUserCommandHandler/LogoutUserCommandHandlerMock.h"
 #include "server/application/services/tokenService/TokenServiceMock.h"
 
-#include "fmt/format.h"
+#include <fmt/format.h>
 #include "nlohmann/json.hpp"
 
 using namespace ::testing;

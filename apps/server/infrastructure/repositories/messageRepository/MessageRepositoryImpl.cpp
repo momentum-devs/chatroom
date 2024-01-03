@@ -2,7 +2,7 @@
 
 #include <boost/date_time/posix_time/posix_time.hpp>
 
-#include "fmt/format.h"
+#include <fmt/format.h>
 #include "Message.odb.h"
 #include "server/infrastructure/errors/MessageRepositoryError.h"
 #include "server/infrastructure/errors/ResourceNotFoundError.h"
