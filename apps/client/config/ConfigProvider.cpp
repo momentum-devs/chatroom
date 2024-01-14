@@ -6,11 +6,11 @@ namespace client::config
 {
 std::string ConfigProvider::getServerHost() const
 {
-    return common::envParser::EnvironmentParser::parseString("SERVER_HOST");
+    return common::envParser::EnvironmentParser::parseRequiredString("SERVER_HOST");
 }
 
 int ConfigProvider::getServerPort() const
 {
-    return common::envParser::EnvironmentParser::parseInt("SERVER_PORT");
+    return common::envParser::EnvironmentParser::parseRequiredInt("SERVER_PORT");
 }
 }

@@ -1,0 +1,8 @@
+{
+  "jwt": {
+    "secret": "JWT_SECRET"
+  },
+  "sendgrid": {
+    "apiKey": "SENDGRID_API_KEY"
+  }
+}

@@ -4,14 +4,14 @@
 
 #include "filesystem/GetProjectPath.h"
 #include "fmt/format.h"
-#include "server/config/ConfigProvider.h"
+#include "server/core/configProvider/ConfigProvider.h"
 
 namespace server::tests
 {
 
 std::shared_ptr<odb::sqlite::database> DatabaseClientTestFactory::create()
 {
-    server::config::ConfigProvider configProvider;
+    server::core::ConfigProvider configProvider;
 
     const auto projectPath = common::filesystem::getProjectPath("chatroom");
 

@@ -1,0 +1,19 @@
+{
+  "database": {
+    "path": "data/chatroom.db"
+  },
+  "server": {
+    "port": 3000
+  },
+  "jwt": {
+    "secret": null,
+    "expiresIn": 3600
+  },
+  "sendgrid": {
+    "apiKey": null,
+    "fromEmail": "michal.andrzej.cieslar@gmail.com"
+  },
+  "session": {
+    "refreshInterval": 1
+  }
+}

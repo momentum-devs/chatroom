@@ -5,7 +5,19 @@
 
 namespace common::envParser
 {
-std::string EnvironmentParser::parseString(const std::string& envName)
+std::optional<std::string> EnvironmentParser::parseString(const std::string& envName)
+{
+    auto envValue = std::getenv(envName.c_str());
+
+    if (!envValue)
+    {
+        return std::nullopt;
+    }
+
+    return envValue;
+}
+
+std::string EnvironmentParser::parseRequiredString(const std::string& envName)
 {
     auto envValue = std::getenv(envName.c_str());
 
@@ -17,7 +29,7 @@ std::string EnvironmentParser::parseString(const std::string& envName)
     return envValue;
 }
 
-int EnvironmentParser::parseInt(const std::string& envName)
+int EnvironmentParser::parseRequiredInt(const std::string& envName)
 {
     auto envValue = std::getenv(envName.c_str());
 
@@ -28,4 +40,5 @@ int EnvironmentParser::parseInt(const std::string& envName)
 
     return std::stoi(envValue);
 }
+
 }

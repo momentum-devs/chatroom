@@ -3,8 +3,7 @@
 #include "core/database/DatabaseMigrationsRunner.h"
 #include "filesystem/GetProjectPath.h"
 #include "fmt/format.h"
-#include "laserpants/dotenv/dotenv.h"
-#include "server/config/ConfigProvider.h"
+#include "server/core/configProvider/ConfigProvider.h"
 
 int main(int argc, char** argv)
 {
@@ -12,9 +11,7 @@ int main(int argc, char** argv)
 
     const auto serverRootPath = fmt::format("{}/apps/server", projectPath);
 
-    dotenv::init(fmt::format("{}/.env", serverRootPath).c_str());
-
-    server::config::ConfigProvider configProvider;
+    server::core::ConfigProvider configProvider;
 
     const auto databaseRelativePath = configProvider.getDatabasePath();
 

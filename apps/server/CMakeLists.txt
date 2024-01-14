@@ -5,7 +5,7 @@ include(ODB)
 set(EXECUTABLE_NAME server)
 
 set(SOURCES
-        config/ConfigProvider.cpp
+        core/configProvider/ConfigProvider.cpp
         core/session/SessionManager.cpp
         core/session/SessionImpl.cpp
         core/session/SessionFactoryImpl.cpp
@@ -331,6 +331,7 @@ target_link_libraries(${EXECUTABLE_NAME} PRIVATE
         envParser
         sqlite3
         fmt::fmt
+        config-cxx
 )
 
 target_include_directories(${EXECUTABLE_NAME} PRIVATE
@@ -393,6 +394,7 @@ target_link_libraries(${EXECUTABLE_NAME}IT PRIVATE
         gtest
         gmock
         fmt::fmt
+        config-cxx
 )
 
 target_include_directories(${EXECUTABLE_NAME}IT PUBLIC ${GMOCK_INCLUDE_DIR} ${DOTENV_INCLUDE_DIR})

@@ -1,12 +1,12 @@
 #include <boost/asio.hpp>
-#include "fmt/format.h"
 #include <odb/exception.hxx>
 #include <thread>
 
 #include "common/filesystem/GetProjectPath.h"
+#include "fmt/format.h"
 #include "laserpants/dotenv/dotenv.h"
 #include "loguru.hpp"
-#include "server/config/ConfigProvider.h"
+#include "server/core/configProvider/ConfigProvider.h"
 #include "server/core/database/DatabaseConnectionFactory.h"
 #include "server/core/database/DatabaseMigrationsRunner.h"
 #include "server/core/session/ConnectionAcceptorImpl.h"
@@ -20,22 +20,20 @@ int main(int argc, char* argv[])
 
     const auto serverRootPath = fmt::format("{}/apps/server", projectPath);
 
-    dotenv::init(fmt::format("{}/.env", serverRootPath).c_str());
-
     loguru::g_preamble_date = false;
 
     loguru::init(argc, argv);
 
-    server::config::ConfigProvider configProvider;
+    server::core::ConfigProvider configProvider;
 
     const auto databaseRelativePath = configProvider.getDatabasePath();
     const auto serverPort = configProvider.getServerPort();
     const auto jwtSecret = configProvider.getJwtSecret();
-    const auto jwtExpireIn = configProvider.getJwtExpireIn();
+    const auto jwtExpireIn = configProvider.getJwtExpiresIn();
     const auto sendGridApiKey = configProvider.getSendGridApiKey();
-    const auto sendGridEmail = configProvider.getSendGridEmail();
+    const auto sendGridEmail = configProvider.getSendGridFromEmail();
     const auto cxxEnv = configProvider.getCxxEnv();
-    const auto refreshSessionsInterval = boost::posix_time::seconds{configProvider.getRefreshSessionsInterval()};
+    const auto refreshSessionsInterval = boost::posix_time::seconds{configProvider.getSessionRefreshInterval()};
 
     const auto numberOfSupportedThreads = std::thread::hardware_concurrency();
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <optional>
 #include <string>
 
 namespace common::envParser
@@ -7,7 +8,8 @@ namespace common::envParser
 class EnvironmentParser
 {
 public:
-    static std::string parseString(const std::string& envName);
-    static int parseInt(const std::string& envName);
+    static std::optional<std::string> parseString(const std::string& envName);
+    static std::string parseRequiredString(const std::string& envName);
+    static int parseRequiredInt(const std::string& envName);
 };
 }
