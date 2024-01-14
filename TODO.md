@@ -3,7 +3,7 @@
 ### CLIENT
 
 * direct messages between users
-* user has history of direct messages and messages in channel
+* user has history of direct messages
 * reaction to messages
 * push messages, invitations, online/offline instead of polling
 * reconnection to server after losing connection

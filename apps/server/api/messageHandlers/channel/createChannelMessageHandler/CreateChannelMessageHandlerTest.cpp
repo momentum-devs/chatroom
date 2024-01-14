@@ -7,12 +7,9 @@
 #include "server/application/services/tokenService/TokenServiceMock.h"
 
 #include "faker-cxx/Datatype.h"
-#include "faker-cxx/Date.h"
-#include "faker-cxx/Image.h"
-#include "faker-cxx/Internet.h"
-#include "faker-cxx/String.h"
-#include "fmt/format.h"
 #include "nlohmann/json.hpp"
+#include "server/tests/factories/channelTestFactory/ChannelTestFactory.h"
+#include "server/tests/factories/userTestFactory/UserTestFactory.h"
 
 using namespace ::testing;
 using namespace server::api;
@@ -41,6 +38,9 @@ auto createChannelErrorMessageResponse = common::messages::Message{
 class CreateChannelMessageHandlerTest : public Test
 {
 public:
+    server::tests::UserTestFactory userTestFactory;
+    server::tests::ChannelTestFactory channelTestFactory;
+
     std::shared_ptr<server::application::TokenServiceMock> tokenServiceMock =
         std::make_shared<StrictMock<server::application::TokenServiceMock>>();
 
@@ -55,24 +55,14 @@ public:
 
 TEST_F(CreateChannelMessageHandlerTest, handleValidCreateChannelMessage)
 {
-    const auto userId = faker::String::uuid();
-    const auto email = faker::Internet::email();
-    const auto password = faker::Internet::password();
-    const auto nickname = faker::Internet::username();
-    const auto active = faker::Datatype::boolean();
-    const auto emailVerified = faker::Datatype::boolean();
-    const auto verificationCode = faker::String::numeric(6);
-    const auto createdAt = faker::Date::pastDate();
-    const auto updatedAt = faker::Date::recentDate();
-    const auto avatarUrl = faker::Image::imageUrl();
-
-    const auto user = std::make_shared<server::domain::User>(userId, email, password, nickname, active, emailVerified,
-                                                             verificationCode, createdAt, updatedAt, avatarUrl);
+    const auto user = userTestFactory.createDomainUser();
+    auto channel = channelTestFactory.createDomainChannel(user);
+    channel->setName(channelName);
 
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*createChannelCommandHandlerMock,
                 execute(server::application::CreateChannelCommandHandlerPayload{channelName, creatorId}))
-        .WillOnce(Return(server::application::CreateChannelCommandHandlerResult{{"", "", user, "", "", ""}}));
+        .WillOnce(Return(server::application::CreateChannelCommandHandlerResult{*channel}));
 
     auto responseMessage = createChannelMessageHandler.handleMessage(message);
 

@@ -7,11 +7,11 @@
 
 #include "faker-cxx/Datatype.h"
 #include "faker-cxx/Date.h"
+#include "faker-cxx/Number.h"
 #include "faker-cxx/String.h"
 #include "fmt/format.h"
 #include "nlohmann/json.hpp"
 #include "server/tests/factories/channelTestFactory/ChannelTestFactory.h"
-#include "server/tests/factories/groupTestFactory/GroupTestFactory.h"
 #include "server/tests/factories/messageTestFactory/MessageTestFactory.h"
 #include "server/tests/factories/userTestFactory/UserTestFactory.h"
 
@@ -32,25 +32,28 @@ public:
     UserTestFactory userFactory;
     ChannelTestFactory channelFactory;
     MessageTestFactory messageFactory;
-    GroupTestFactory groupFactory;
+
     const std::string token = faker::String::alphanumeric(40);
-    const std::string channelId = faker::String::uuid();
     const std::string senderId = faker::String::uuid();
+    const unsigned limit = faker::Number::integer(1, 100);
+    const unsigned offset = faker::Number::integer(1, 100);
     const server::application::VerifyTokenResult verifyTokenResult{senderId};
-    const std::shared_ptr<server::domain::Message> message1 = messageFactory.createDomainMessage(
-        userFactory.createDomainUser(), channelFactory.createDomainChannel(userFactory.createDomainUser()),
-        groupFactory.createDomainGroup());
-    const std::shared_ptr<server::domain::Message> message2 = messageFactory.createDomainMessage(
-        userFactory.createDomainUser(), channelFactory.createDomainChannel(userFactory.createDomainUser()),
-        groupFactory.createDomainGroup());
+    const std::shared_ptr<server::domain::Channel> channel =
+        channelFactory.createDomainChannel(userFactory.createDomainUser());
+    const std::shared_ptr<server::domain::Message> message1 =
+        messageFactory.createDomainMessage(userFactory.createDomainUser(), channel, nullptr);
+    const std::shared_ptr<server::domain::Message> message2 =
+        messageFactory.createDomainMessage(userFactory.createDomainUser(), channel, nullptr);
     const std::vector<server::domain::Message> messages{*message1, *message2};
     const unsigned totalCount = 2;
 
     const nlohmann::json validPayloadJson{
-        {"data", nlohmann::json{{"channelId", channelId}, {"limit", 10}, {"offset", 0}}}, {"token", token}};
+        {"data", nlohmann::json{{"channelId", channel->getId()}, {"limit", limit}, {"offset", offset}}},
+        {"token", token}};
     const common::bytes::Bytes validPayload{validPayloadJson.dump()};
     const common::messages::Message validMessage{common::messages::MessageId::GetChannelMessages, validPayload};
 
+    server::application::FindChannelMessagesQueryHandlerPayload queryPayload{channel->getId(), offset, limit};
     const std::string validMessageResponsePayload =
         R"({"data":{"messages":[)" +
         fmt::format(R"({{"id":"{}","senderName":"{}","sentAt":"{}","text":"{}"}},)", message1->getId(),
@@ -78,7 +81,8 @@ public:
 TEST_F(GetMessagesFromChannelMessageHandlerTest, handleMessage_shouldReturnValidMessageResponse)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
-    EXPECT_CALL(*findChannelMessagesQueryHandlerMock, execute(_)).WillOnce(Return(validCommandHandlerResponse));
+    EXPECT_CALL(*findChannelMessagesQueryHandlerMock, execute(queryPayload))
+        .WillOnce(Return(validCommandHandlerResponse));
 
     const auto messageResponse = getMessagesFromChannelMessageHandler.handleMessage(validMessage);
 
@@ -97,7 +101,7 @@ TEST_F(GetMessagesFromChannelMessageHandlerTest, handleMessage_shouldReturnInval
 TEST_F(GetMessagesFromChannelMessageHandlerTest, handleMessage_shouldReturnValidMessageResponseWithEmptyMessages)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
-    EXPECT_CALL(*findChannelMessagesQueryHandlerMock, execute(_))
+    EXPECT_CALL(*findChannelMessagesQueryHandlerMock, execute(queryPayload))
         .WillOnce(Return(server::application::FindChannelMessagesQueryHandlerResult{{}, 0}));
 
     const auto messageResponse = getMessagesFromChannelMessageHandler.handleMessage(validMessage);
@@ -111,7 +115,7 @@ TEST_F(GetMessagesFromChannelMessageHandlerTest, handleMessage_shouldReturnValid
 TEST_F(GetMessagesFromChannelMessageHandlerTest, handleMessage_shouldReturnErrorMessageResponse)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
-    EXPECT_CALL(*findChannelMessagesQueryHandlerMock, execute(_))
+    EXPECT_CALL(*findChannelMessagesQueryHandlerMock, execute(queryPayload))
         .WillOnce(Throw(std::runtime_error{"findChannelMessagesQueryHandlerError"}));
 
     const auto messageResponse = getMessagesFromChannelMessageHandler.handleMessage(validMessage);

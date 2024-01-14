@@ -6,8 +6,8 @@
 #include "server/application/commandHandlers/user/updateUserCommandHandler/UpdateUserCommandHandlerMock.h"
 #include "server/application/services/tokenService/TokenServiceMock.h"
 
-#include "fmt/format.h"
 #include "nlohmann/json.hpp"
+#include "server/tests/factories/userTestFactory/UserTestFactory.h"
 
 using namespace ::testing;
 using namespace server::api;
@@ -15,36 +15,33 @@ using namespace server::api;
 namespace
 {
 auto token = "token";
-auto userId = "id";
-auto userEmail = "userEmail";
-auto userPassword = "userPassword";
-auto userNickname = "userNickname";
-auto userIsActive = true;
-auto userEmailVerified = true;
-const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
-auto validPayloadJson =
-    nlohmann::json{{"data", {{"password", userPassword}, {"nickname", userNickname}}}, {"token", token}};
-auto validPayload = common::bytes::Bytes{validPayloadJson.dump()};
-auto message = common::messages::Message{common::messages::MessageId::UpdateUser, validPayload};
-
-auto validMessageResponsePayloadJson = nlohmann::json{"ok"};
-auto validMessageResponse = common::messages::Message{common::messages::MessageId::UpdateUserResponse,
-                                                      common::bytes::Bytes{validMessageResponsePayloadJson.dump()}};
+nlohmann::json validMessageResponsePayloadJson{"ok"};
+common::messages::Message validMessageResponse{common::messages::MessageId::UpdateUserResponse,
+                                               common::bytes::Bytes{validMessageResponsePayloadJson.dump()}};
 
 std::runtime_error invalidToken("invalidToken");
-auto invalidTokenMessageResponse = common::messages::Message{common::messages::MessageId::UpdateUserResponse,
-                                                             common::bytes::Bytes{R"({"error":"invalidToken"})"}};
+common::messages::Message invalidTokenMessageResponse{common::messages::MessageId::UpdateUserResponse,
+                                                      common::bytes::Bytes{R"({"error":"invalidToken"})"}};
 
 std::runtime_error updateUserDataError("updateUserDataError");
-auto updateUserDataErrorMessageResponse = common::messages::Message{
+common::messages::Message updateUserDataErrorMessageResponse{
     common::messages::MessageId::UpdateUserResponse, common::bytes::Bytes{R"({"error":"updateUserDataError"})"}};
 }
 
 class UpdateUserMessageHandlerTest : public Test
 {
 public:
+    server::tests::UserTestFactory userTestFactory;
+    std::shared_ptr<server::domain::User> user = userTestFactory.createDomainUser();
     std::shared_ptr<server::application::TokenServiceMock> tokenServiceMock =
         std::make_shared<StrictMock<server::application::TokenServiceMock>>();
+    const server::application::VerifyTokenResult verifyTokenResult{user->getId()};
+    nlohmann::json validPayloadJson{{"data", {{"password", user->getPassword()}, {"nickname", user->getNickname()}}},
+                                    {"token", token}};
+    common::bytes::Bytes validPayload{validPayloadJson.dump()};
+    common::messages::Message message{common::messages::MessageId::UpdateUser, validPayload};
+    server::application::UpdateUserCommandHandlerPayload commandPayload{user->getId(), user->getNickname(),
+                                                                        user->getPassword()};
 
     std::unique_ptr<server::application::UpdateUserCommandHandlerMock> updateUserCommandHandlerMockInit =
         std::make_unique<StrictMock<server::application::UpdateUserCommandHandlerMock>>();
@@ -57,11 +54,9 @@ public:
 TEST_F(UpdateUserMessageHandlerTest, handleValidUpdateUserMessage)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
-    EXPECT_CALL(*updateUserCommandHandlerMock,
-                execute(server::application::UpdateUserCommandHandlerPayload{userId, userNickname, userPassword}))
-        .WillOnce(Return(server::application::UpdateUserCommandHandlerResult{
-            {userId, userEmail, userPassword, userNickname, userIsActive, userEmailVerified, "123", "", "", ""}}));
-
+    EXPECT_CALL(*updateUserCommandHandlerMock, execute(commandPayload))
+        .WillOnce(Return(server::application::UpdateUserCommandHandlerResult{*user}));
+    
     auto responseMessage = updateUserMessageHandler.handleMessage(message);
 
     EXPECT_EQ(responseMessage, validMessageResponse);
@@ -79,9 +74,7 @@ TEST_F(UpdateUserMessageHandlerTest, handleUpdateUserMessageWithInvalidToken)
 TEST_F(UpdateUserMessageHandlerTest, handleUpdateUserMessageWithErrorWhileHandling)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
-    EXPECT_CALL(*updateUserCommandHandlerMock,
-                execute(server::application::UpdateUserCommandHandlerPayload{userId, userNickname, userPassword}))
-        .WillOnce(Throw(updateUserDataError));
+    EXPECT_CALL(*updateUserCommandHandlerMock, execute(commandPayload)).WillOnce(Throw(updateUserDataError));
 
     auto responseMessage = updateUserMessageHandler.handleMessage(message);
 

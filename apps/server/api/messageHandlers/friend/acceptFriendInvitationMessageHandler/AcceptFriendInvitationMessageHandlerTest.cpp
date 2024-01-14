@@ -6,7 +6,6 @@
 #include "server/application/commandHandlers/friend/acceptFriendInvitationCommandHandler/AcceptFriendInvitationCommandHandlerMock.h"
 #include "server/application/services/tokenService/TokenServiceMock.h"
 
-#include "fmt/format.h"
 #include "nlohmann/json.hpp"
 
 using namespace ::testing;

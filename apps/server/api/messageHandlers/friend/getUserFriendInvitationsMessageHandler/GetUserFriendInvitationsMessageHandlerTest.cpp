@@ -6,11 +6,10 @@
 #include "server/application/queryHandlers/friend/findReceivedFriendInvitationsQueryHandler/FindReceivedFriendInvitationsQueryHandlerMock.h"
 #include "server/application/services/tokenService/TokenServiceMock.h"
 
-#include "faker-cxx/Date.h"
-#include "faker-cxx/Image.h"
 #include "faker-cxx/String.h"
-#include "fmt/format.h"
 #include "nlohmann/json.hpp"
+#include "server/tests/factories/friendInvitationTestFactory/FriendInvitationTestFactory.h"
+#include "server/tests/factories/userTestFactory/UserTestFactory.h"
 
 using namespace ::testing;
 using namespace server::api;
@@ -27,18 +26,6 @@ auto noFriendInvitationMessageResponse =
     common::messages::Message{common::messages::MessageId::GetFriendInvitationsResponse,
                               common::bytes::Bytes{noFriendInvitationResponsePayloadJson.dump()}};
 
-auto requestId1 = "id1";
-auto friendName1 = "friendName1";
-auto requestId2 = "id2";
-auto friendName2 = "friendName2";
-auto fewFriendInvitationsResponsePayloadJson =
-    nlohmann::json{{"data", nlohmann::json::array({{{"id", requestId1}, {"name", friendName1}},
-                                                   {{"id", requestId2}, {"name", friendName2}}})}};
-
-auto fewFriendInvitationsMessageResponse =
-    common::messages::Message{common::messages::MessageId::GetFriendInvitationsResponse,
-                              common::bytes::Bytes{fewFriendInvitationsResponsePayloadJson.dump()}};
-
 std::runtime_error invalidToken("invalidToken");
 auto invalidTokenMessageResponse = common::messages::Message{common::messages::MessageId::GetFriendInvitationsResponse,
                                                              common::bytes::Bytes{R"({"error":"invalidToken"})"}};
@@ -52,6 +39,9 @@ auto getFriendInvitationsErrorMessageResponse =
 class GetUserFriendInvitationsMessageHandlerTest : public Test
 {
 public:
+    server::tests::UserTestFactory userTestFactory;
+    server::tests::FriendInvitationTestFactory friendInvitationTestFactory;
+
     std::shared_ptr<server::application::TokenServiceMock> tokenServiceMock =
         std::make_shared<StrictMock<server::application::TokenServiceMock>>();
 
@@ -83,35 +73,30 @@ TEST_F(GetUserFriendInvitationsMessageHandlerTest, handleValidGetUserFriendInvit
 
 TEST_F(GetUserFriendInvitationsMessageHandlerTest, handleValidGetUserFriendInvitationsMessageWithFewFriendInvitations)
 {
-    const auto userId = faker::String::uuid();
-    const auto email = "email";
-    const auto password = "password";
-    const auto active = true;
-    const auto emailVerified = true;
-    const auto verificationCode = faker::String::numeric(6);
-    const auto createdAt = faker::Date::pastDate();
-    const auto updatedAt = faker::Date::recentDate();
-    const auto avatarUrl = faker::Image::imageUrl();
+    const auto user = userTestFactory.createDomainUser();
+    const auto sender1 = userTestFactory.createDomainUser();
+    const auto sender2 = userTestFactory.createDomainUser();
 
-    const auto user1 = std::make_shared<server::domain::User>(
-        userId, email, password, friendName1, active, emailVerified, verificationCode, createdAt, updatedAt, avatarUrl);
-    const auto user2 = std::make_shared<server::domain::User>(
-        userId, email, password, friendName2, active, emailVerified, verificationCode, createdAt, updatedAt, avatarUrl);
+    const auto verifyTokenResult = server::application::VerifyTokenResult{user->getId()};
 
-    const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
-
-    const auto friendInvitation1 =
-        std::make_shared<server::domain::FriendInvitation>(requestId1, user1, user2, createdAt);
-    const auto friendInvitation2 =
-        std::make_shared<server::domain::FriendInvitation>(requestId2, user2, user2, createdAt);
+    const auto friendInvitation1 = friendInvitationTestFactory.createDomainFriendInvitation(sender1, user);
+    const auto friendInvitation2 = friendInvitationTestFactory.createDomainFriendInvitation(sender2, user);
 
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*findReceivedFriendInvitationsQueryHandlerMock,
-                execute(server::application::FindReceivedFriendInvitationsQueryHandlerPayload{userId}))
+                execute(server::application::FindReceivedFriendInvitationsQueryHandlerPayload{user->getId()}))
         .WillOnce(Return(server::application::FindReceivedFriendInvitationsQueryHandlerResult{
             {*friendInvitation1, *friendInvitation2}}));
 
     auto responseMessage = getUserFriendInvitationsMessageHandler.handleMessage(message);
+
+    auto fewFriendInvitationsResponsePayloadJson = nlohmann::json{
+        {"data", nlohmann::json::array({{{"id", friendInvitation1->getId()}, {"name", sender1->getNickname()}},
+                                        {{"id", friendInvitation2->getId()}, {"name", sender2->getNickname()}}})}};
+
+    auto fewFriendInvitationsMessageResponse =
+        common::messages::Message{common::messages::MessageId::GetFriendInvitationsResponse,
+                                  common::bytes::Bytes{fewFriendInvitationsResponsePayloadJson.dump()}};
 
     EXPECT_EQ(responseMessage, fewFriendInvitationsMessageResponse);
 }

@@ -6,12 +6,11 @@
 #include "server/application/queryHandlers/friend/findUserFriendshipsQueryHandler/FindUserFriendshipsQueryHandlerMock.h"
 #include "server/application/services/tokenService/TokenServiceMock.h"
 
-#include "faker-cxx/Date.h"
-#include "faker-cxx/Image.h"
 #include "faker-cxx/String.h"
-#include "fmt/format.h"
 #include "nlohmann/json.hpp"
 #include "server/tests/factories/friendshipTestFactory/FriendshipTestFactory.h"
+#include "server/tests/factories/groupTestFactory/GroupTestFactory.h"
+#include "server/tests/factories/userTestFactory/UserTestFactory.h"
 
 using namespace ::testing;
 using namespace server::api;
@@ -28,11 +27,6 @@ auto noFriendInvitationMessageResponse =
     common::messages::Message{common::messages::MessageId::GetUserFriendsResponse,
                               common::bytes::Bytes{noFriendInvitationResponsePayloadJson.dump()}};
 
-auto friendId1 = "id1";
-auto friendName1 = "friendName1";
-auto friendId2 = "id2";
-auto friendName2 = "friendName2";
-
 std::runtime_error invalidToken("invalidToken");
 auto invalidTokenMessageResponse = common::messages::Message{common::messages::MessageId::GetUserFriendsResponse,
                                                              common::bytes::Bytes{R"({"error":"invalidToken"})"}};
@@ -46,6 +40,8 @@ class GetUserFriendsMessageHandlerTest : public Test
 {
 public:
     server::tests::FriendshipTestFactory friendshipTestFactory;
+    server::tests::UserTestFactory userTestFactory;
+    server::tests::GroupTestFactory groupTestFactory;
 
     std::shared_ptr<server::application::TokenServiceMock> tokenServiceMock =
         std::make_shared<StrictMock<server::application::TokenServiceMock>>();
@@ -77,38 +73,28 @@ TEST_F(GetUserFriendsMessageHandlerTest, handleValidGetUserFriendsMessageWithNoF
 
 TEST_F(GetUserFriendsMessageHandlerTest, handleValidGetUserFriendsMessageWithFewFriends)
 {
-    const auto email = "email";
-    const auto password = "password";
-    const auto emailVerified = true;
-    const auto verificationCode = faker::String::numeric(6);
-    const auto createdAt = faker::Date::pastDate();
-    const auto updatedAt = faker::Date::recentDate();
-    const auto avatarUrl = faker::Image::imageUrl();
 
-    const auto user1 =
-        std::make_shared<server::domain::User>(friendId1, email, password, friendName1, false, emailVerified,
-                                               verificationCode, createdAt, updatedAt, avatarUrl);
-    const auto user2 =
-        std::make_shared<server::domain::User>(friendId2, email, password, friendName2, true, emailVerified,
-                                               verificationCode, createdAt, updatedAt, avatarUrl);
-
-    const auto groupId = faker::String::uuid();
-
-    const auto group = std::make_shared<server::domain::Group>(groupId, createdAt);
-
-    const auto verifyTokenResult = server::application::VerifyTokenResult{friendId1};
-
-    const auto friendship = friendshipTestFactory.createDomainFriendship(user1, user2, group);
+    const auto user = userTestFactory.createDomainUser();
+    const auto friend1 = userTestFactory.createDomainUser();
+    const auto friend2 = userTestFactory.createDomainUser();
+    const auto group1 = groupTestFactory.createDomainGroup();
+    const auto group2 = groupTestFactory.createDomainGroup();
+    const auto friendship1 = friendshipTestFactory.createDomainFriendship(user, friend1, group1);
+    const auto friendship2 = friendshipTestFactory.createDomainFriendship(user, friend2, group2);
+    const auto verifyTokenResult = server::application::VerifyTokenResult{user->getId()};
 
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*findUserFriendshipsQueryHandlerMock,
-                execute(server::application::FindUserFriendshipsQueryHandlerPayload{friendId1}))
-        .WillOnce(Return(server::application::FindUserFriendshipsQueryHandlerResult{{*friendship}}));
+                execute(server::application::FindUserFriendshipsQueryHandlerPayload{user->getId()}))
+        .WillOnce(Return(server::application::FindUserFriendshipsQueryHandlerResult{{*friendship1, *friendship2}}));
 
     auto responseMessage = getUserFriendsMessageHandler.handleMessage(message);
 
     auto expectedResponsePayloadJson = nlohmann::json{
-        {"data", nlohmann::json::array({{{"id", friendId2}, {"name", friendName2}, {"isActive", true}}})}};
+        {"data", nlohmann::json::array({
+                     {{"id", friend1->getId()}, {"name", friend1->getNickname()}, {"isActive", friend1->isActive()}},
+                     {{"id", friend2->getId()}, {"name", friend2->getNickname()}, {"isActive", friend2->isActive()}},
+                 })}};
 
     auto expectedMessageResponse = common::messages::Message{common::messages::MessageId::GetUserFriendsResponse,
                                                              common::bytes::Bytes{expectedResponsePayloadJson.dump()}};
