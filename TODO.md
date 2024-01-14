@@ -14,12 +14,12 @@
 * add caching information (e.g. channel list, avatars, etc.)
 * add pipelines for CI/CD for client
 
-
 * refactor tests with common code and faker library
 
 ### SERVER:
 
 * user avatars and channel avatars
+* reset password
 * transactions
 * infrastructure setup
 * deploy
