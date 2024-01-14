@@ -364,6 +364,7 @@ target_link_libraries(${EXECUTABLE_NAME}UT PRIVATE
         gmock
         sqlite3
         fmt::fmt
+        config-cxx
 )
 
 target_include_directories(${EXECUTABLE_NAME}UT PUBLIC ${GMOCK_INCLUDE_DIR})
