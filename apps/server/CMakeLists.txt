@@ -19,6 +19,7 @@ set(SOURCES
         infrastructure/repositories/userRepository/UserRepositoryImpl.cpp
         infrastructure/repositories/userRepository/userMapper/UserMapperImpl.cpp
         infrastructure/services/emailService/EmailServiceImpl.cpp
+        infrastructure/services/s3Service/S3ServiceImpl.cpp
         application/services/hashService/HashServiceImpl.cpp
         application/services/tokenService/TokenServiceImpl.cpp
         application/commandHandlers/user/registerUserCommandHandler/RegisterUserCommandHandlerImpl.cpp
@@ -207,6 +208,7 @@ set(IT_SOURCES
         infrastructure/repositories/userRepository/UserRepositoryImplIntegrationTest.cpp
         application/services/tokenService/TokenServiceImplIntegrationTest.cpp
         application/services/hashService/HashServiceImplIntegrationTest.cpp
+        infrastructure/services/s3Service/S3ServiceImplIntegrationTest.cpp
         application/commandHandlers/user/registerUserCommandHandler/RegisterUserCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/user/loginUserCommandHandler/LoginUserCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/user/deleteUserCommandHandler/DeleteUserCommandHandlerImplIntegrationTest.cpp
