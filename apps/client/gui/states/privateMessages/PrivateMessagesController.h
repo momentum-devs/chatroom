@@ -28,11 +28,11 @@ public:
     Q_INVOKABLE void goToSendFriendInvitation();
     Q_INVOKABLE void acceptFriendInvitation(const QString& requestId);
     Q_INVOKABLE void rejectFriendInvitation(const QString& requestId);
-    Q_INVOKABLE void setCurrentFriend(const QString& friendId, const QString& friendName);
+    Q_INVOKABLE void setCurrentFriend(const QString& friendId, const QString& friendName, const QString& groupId);
     Q_INVOKABLE void removeFromFriends();
 
 signals:
-    void addFriend(const QString& friendName, const QString& friendId, bool isActive);
+    void addFriend(const QString& friendName, const QString& friendId, const QString& groupId, bool isActive);
     void addFriendInvitation(const QString& friendName, const QString& requestId);
     void clearFriendList();
     void clearFriendInvitationList();
@@ -60,6 +60,7 @@ private:
     std::shared_ptr<storage::ConversationStorage> conversationStorage;
     std::string currentFriendId;
     std::string currentFriendName;
+    std::string currentFriendGroupId;
 
     inline static const QString name{"privateMessagesController"};
 

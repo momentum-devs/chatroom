@@ -52,8 +52,8 @@ Rectangle {
         }
     }
     Connections {
-        function onAddFriend(friendName: string, friendId: string, isActive: bool) {
-            friendsColumn.addFriend(friendName, friendId, isActive);
+        function onAddFriend(friendName: string, friendId: string, groupId: string, isActive: bool) {
+            friendsColumn.addFriend(friendName, friendId, groupId, isActive);
         }
 
         function onAddFriendInvitation(friendName: string, requestId: string) {

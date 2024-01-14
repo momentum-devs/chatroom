@@ -35,8 +35,10 @@ common::messages::Message GetUserFriendsMessageHandler::handleMessage(const comm
             const auto userFriend =
                 friendship.getUser()->getId() == userId ? *friendship.getUserFriend() : *friendship.getUser();
 
-            nlohmann::json friendJson{
-                {"id", userFriend.getId()}, {"name", userFriend.getNickname()}, {"isActive", userFriend.isActive()}};
+            nlohmann::json friendJson{{"id", userFriend.getId()},
+                                      {"groupId", friendship.getGroup()->getId()},
+                                      {"name", userFriend.getNickname()},
+                                      {"isActive", userFriend.isActive()}};
 
             friendsJsonArray.push_back(friendJson);
         }
