@@ -47,3 +47,5 @@ vcpkg_installed
 lib
 CMakeLists.txt.user
 coverage.txt
+
+**/local.json

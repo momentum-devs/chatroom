@@ -14,8 +14,5 @@ public:
 
     std::string getServerHost() const;
     int getServerPort() const;
-
-private:
-    std::unique_ptr<config::Config> config;
 };
 }

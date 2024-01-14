@@ -15,5 +15,11 @@
   },
   "session": {
     "refreshInterval": 1
+  },
+  "aws": {
+    "accessKeyId": null,
+    "secretAccessKey": null,
+    "region": "eu-central-1",
+    "bucket": "chatroom-users-avatars"
   }
 }

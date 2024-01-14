@@ -20,6 +20,10 @@ public:
     std::string getSendGridFromEmail() const;
     int getSessionRefreshInterval() const;
     std::string getCxxEnv() const;
+    std::string awsAccessKeyId() const;
+    std::string awsSecretAccessKey() const;
+    std::string awsRegion() const;
+    std::string awsBucket() const;
 
 private:
     std::unique_ptr<config::Config> config;
