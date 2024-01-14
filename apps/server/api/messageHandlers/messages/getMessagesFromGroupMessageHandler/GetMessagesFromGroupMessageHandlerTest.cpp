@@ -8,9 +8,9 @@
 
 #include "faker-cxx/Datatype.h"
 #include "faker-cxx/Date.h"
+#include "faker-cxx/Number.h"
 #include "faker-cxx/String.h"
 #include "nlohmann/json.hpp"
-#include "server/tests/factories/channelTestFactory/ChannelTestFactory.h"
 #include "server/tests/factories/groupTestFactory/GroupTestFactory.h"
 #include "server/tests/factories/messageTestFactory/MessageTestFactory.h"
 #include "server/tests/factories/userTestFactory/UserTestFactory.h"
@@ -30,24 +30,24 @@ class GetMessagesFromGroupMessageHandlerTest : public Test
 {
 public:
     UserTestFactory userFactory;
-    ChannelTestFactory channelFactory;
     MessageTestFactory messageFactory;
     GroupTestFactory groupFactory;
     const std::string token = faker::String::alphanumeric(40);
-    const std::string groupId = faker::String::uuid();
     const std::string senderId = faker::String::uuid();
+    const unsigned limit = faker::Number::integer(1, 100);
+    const unsigned offset = faker::Number::integer(1, 100);
     const server::application::VerifyTokenResult verifyTokenResult{senderId};
-    const std::shared_ptr<server::domain::Message> message1 = messageFactory.createDomainMessage(
-        userFactory.createDomainUser(), channelFactory.createDomainChannel(userFactory.createDomainUser()),
-        groupFactory.createDomainGroup());
-    const std::shared_ptr<server::domain::Message> message2 = messageFactory.createDomainMessage(
-        userFactory.createDomainUser(), channelFactory.createDomainChannel(userFactory.createDomainUser()),
-        groupFactory.createDomainGroup());
+    const std::shared_ptr<server::domain::Group> group = groupFactory.createDomainGroup();
+    const std::shared_ptr<server::domain::Message> message1 =
+        messageFactory.createDomainMessage(userFactory.createDomainUser(), nullptr, group);
+    const std::shared_ptr<server::domain::Message> message2 =
+        messageFactory.createDomainMessage(userFactory.createDomainUser(), nullptr, group);
     const std::vector<server::domain::Message> messages{*message1, *message2};
     const unsigned totalCount = 2;
+    server::application::FindGroupMessagesQueryHandlerPayload queryPayload{group->getId(), offset, limit};
 
-    const nlohmann::json validPayloadJson{{"data", nlohmann::json{{"groupId", groupId}, {"limit", 10}, {"offset", 0}}},
-                                          {"token", token}};
+    const nlohmann::json validPayloadJson{
+        {"data", nlohmann::json{{"groupId", group->getId()}, {"limit", limit}, {"offset", offset}}}, {"token", token}};
     const common::bytes::Bytes validPayload{validPayloadJson.dump()};
     const common::messages::Message validMessage{common::messages::MessageId::GetPrivateMessagesResponse, validPayload};
 
@@ -78,7 +78,8 @@ public:
 TEST_F(GetMessagesFromGroupMessageHandlerTest, handleMessage_shouldReturnValidMessageResponse)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
-    EXPECT_CALL(*findGroupMessagesQueryHandlerMock, execute(_)).WillOnce(Return(validCommandHandlerResponse));
+    EXPECT_CALL(*findGroupMessagesQueryHandlerMock, execute(queryPayload))
+        .WillOnce(Return(validCommandHandlerResponse));
 
     const auto messageResponse = getMessagesFromGroupMessageHandler.handleMessage(validMessage);
 
@@ -97,7 +98,7 @@ TEST_F(GetMessagesFromGroupMessageHandlerTest, handleMessage_shouldReturnInvalid
 TEST_F(GetMessagesFromGroupMessageHandlerTest, handleMessage_shouldReturnValidMessageResponseWithEmptyMessages)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
-    EXPECT_CALL(*findGroupMessagesQueryHandlerMock, execute(_))
+    EXPECT_CALL(*findGroupMessagesQueryHandlerMock, execute(queryPayload))
         .WillOnce(Return(server::application::FindGroupMessagesQueryHandlerResult{{}, 0}));
 
     const auto messageResponse = getMessagesFromGroupMessageHandler.handleMessage(validMessage);
@@ -111,7 +112,7 @@ TEST_F(GetMessagesFromGroupMessageHandlerTest, handleMessage_shouldReturnValidMe
 TEST_F(GetMessagesFromGroupMessageHandlerTest, handleMessage_shouldReturnErrorMessageResponse)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
-    EXPECT_CALL(*findGroupMessagesQueryHandlerMock, execute(_))
+    EXPECT_CALL(*findGroupMessagesQueryHandlerMock, execute(queryPayload))
         .WillOnce(Throw(std::runtime_error{"findChannelMessagesQueryHandlerError"}));
 
     const auto messageResponse = getMessagesFromGroupMessageHandler.handleMessage(validMessage);

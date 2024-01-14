@@ -6,31 +6,14 @@
 #include "server/application/queryHandlers/user/findUserQueryHandler/FindUserQueryHandlerMock.h"
 #include "server/application/services/tokenService/TokenServiceMock.h"
 
-#include "fmt/format.h"
 #include "nlohmann/json.hpp"
+#include "server/tests/factories/userTestFactory/UserTestFactory.h"
 
 using namespace ::testing;
 using namespace server::api;
 
 namespace
 {
-auto token = "token";
-auto userId = "id";
-const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
-auto validPayloadJson = nlohmann::json{{"token", token}};
-auto validPayload = common::bytes::Bytes{validPayloadJson.dump()};
-auto message = common::messages::Message{common::messages::MessageId::GetUserData, validPayload};
-auto userEmail = "userEmail";
-auto userPassword = "userPassword";
-auto userNickname = "userNickname";
-auto userIsActive = true;
-auto userEmailVerified = true;
-
-auto validMessageResponsePayloadJson =
-    nlohmann::json{{"data", {{"email", userEmail}, {"nickname", userNickname}, {"verified", true}}}};
-auto validMessageResponse = common::messages::Message{common::messages::MessageId::GetUserDataResponse,
-                                                      common::bytes::Bytes{validMessageResponsePayloadJson.dump()}};
-
 std::runtime_error invalidToken("invalidToken");
 auto invalidTokenMessageResponse = common::messages::Message{common::messages::MessageId::GetUserDataResponse,
                                                              common::bytes::Bytes{R"({"error":"invalidToken"})"}};
@@ -43,6 +26,22 @@ auto getUserDataErrorMessageResponse = common::messages::Message{
 class GetUserDataMessageHandlerTest : public Test
 {
 public:
+    server::tests::UserTestFactory userTestFactory;
+
+    std::string token = "token";
+    std::shared_ptr<server::domain::User> user = userTestFactory.createDomainUser();
+    const server::application::VerifyTokenResult verifyTokenResult{user->getId()};
+
+    nlohmann::json validPayloadJson{{"token", token}};
+    common::bytes::Bytes validPayload{validPayloadJson.dump()};
+    common::messages::Message message{common::messages::MessageId::GetUserData, validPayload};
+
+    nlohmann::json validMessageResponsePayloadJson{
+        {"data",
+         {{"email", user->getEmail()}, {"nickname", user->getNickname()}, {"verified", user->isEmailVerified()}}}};
+    common::messages::Message validMessageResponse{common::messages::MessageId::GetUserDataResponse,
+                                                   common::bytes::Bytes{validMessageResponsePayloadJson.dump()}};
+
     std::shared_ptr<server::application::TokenServiceMock> tokenServiceMock =
         std::make_shared<StrictMock<server::application::TokenServiceMock>>();
 
@@ -56,9 +55,8 @@ public:
 TEST_F(GetUserDataMessageHandlerTest, handleValidGetUserDataMessage)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
-    EXPECT_CALL(*findUserQueryHandlerMock, execute(server::application::FindUserQueryHandlerPayload{userId}))
-        .WillOnce(Return(server::application::FindUserQueryHandlerResult{
-            {userId, userEmail, userPassword, userNickname, userIsActive, userEmailVerified, "123", "", "", ""}}));
+    EXPECT_CALL(*findUserQueryHandlerMock, execute(server::application::FindUserQueryHandlerPayload{user->getId()}))
+        .WillOnce(Return(server::application::FindUserQueryHandlerResult{*user}));
 
     auto responseMessage = getUserDataMessageHandler.handleMessage(message);
 
@@ -77,7 +75,7 @@ TEST_F(GetUserDataMessageHandlerTest, handleGetUserDataMessageWithInvalidToken)
 TEST_F(GetUserDataMessageHandlerTest, handleGetUserDataMessageWithErrorWhileHandling)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
-    EXPECT_CALL(*findUserQueryHandlerMock, execute(server::application::FindUserQueryHandlerPayload{userId}))
+    EXPECT_CALL(*findUserQueryHandlerMock, execute(server::application::FindUserQueryHandlerPayload{user->getId()}))
         .WillOnce(Throw(getUserDataError));
 
     auto responseMessage = getUserDataMessageHandler.handleMessage(message);

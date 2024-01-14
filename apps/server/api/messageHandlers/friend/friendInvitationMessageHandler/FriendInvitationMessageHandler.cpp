@@ -24,11 +24,11 @@ common::messages::Message FriendInvitationMessageHandler::handleMessage(const co
     {
         auto payloadJson = nlohmann::json::parse(static_cast<std::string>(message.payload));
 
-        auto friendEmail = payloadJson["data"]["friend_email"].get<std::string>();
-
         auto token = payloadJson["token"].get<std::string>();
 
         auto [senderId] = tokenService->verifyToken(token);
+
+        auto friendEmail = payloadJson["data"]["friend_email"].get<std::string>();
 
         auto invitedId = findUserByEmailQueryHandler->execute({friendEmail}).user.getId();
 

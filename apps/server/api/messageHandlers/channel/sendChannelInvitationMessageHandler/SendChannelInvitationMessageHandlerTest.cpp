@@ -7,7 +7,6 @@
 #include "server/application/queryHandlers/user/findUserByEmailQueryHandler/FindUserByEmailQueryHandlerMock.h"
 #include "server/application/services/tokenService/TokenServiceMock.h"
 
-#include "fmt/format.h"
 #include "nlohmann/json.hpp"
 
 using namespace ::testing;

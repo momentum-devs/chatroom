@@ -6,48 +6,46 @@
 #include "server/application//commandHandlers/user/sendRegistrationVerificationEmailCommandHandler/SendRegistrationVerificationEmailCommandHandlerMock.h"
 #include "server/application/commandHandlers/user/registerUserCommandHandler/RegisterUserCommandHandlerMock.h"
 
-#include "fmt/format.h"
 #include "nlohmann/json.hpp"
+#include "server/tests/factories/userTestFactory/UserTestFactory.h"
 
 using namespace ::testing;
 using namespace server::api;
 
 namespace
 {
-auto userId = "id";
-auto userEmail = "userEmail@mail.com";
-auto userPassword = "userPassword";
-auto userNickname = "nickname";
-auto userIsActive = true;
-auto userEmailVerified = true;
-auto validPayloadJson = nlohmann::json{{"email", userEmail}, {"nickname", userNickname}, {"password", userPassword}};
-auto validPayload = common::bytes::Bytes{validPayloadJson.dump()};
-auto message = common::messages::Message{common::messages::MessageId::Register, validPayload};
-auto validMessageResponsePayloadJson = nlohmann::json{"ok"};
-auto validMessageResponse = common::messages::Message{common::messages::MessageId::RegisterResponse,
-                                                      common::bytes::Bytes{validMessageResponsePayloadJson.dump()}};
+nlohmann::json validMessageResponsePayloadJson{"ok"};
+common::messages::Message validMessageResponse{common::messages::MessageId::RegisterResponse,
+                                               common::bytes::Bytes{validMessageResponsePayloadJson.dump()}};
 
-auto invalidUserEmail = "invalidUserEmail";
-auto payloadJsonWithInvalidEmail = nlohmann::json{{"email", invalidUserEmail}, {"password", userPassword}};
-auto payloadWithInvalidEmail = common::bytes::Bytes{payloadJsonWithInvalidEmail.dump()};
-auto messageWithInvalidEmail =
-    common::messages::Message{common::messages::MessageId::Register, payloadWithInvalidEmail};
-auto invalidEmailMessageResponsePayloadJson = nlohmann::json{{"error", "wrong email address"}};
-auto invalidEmailMessageResponse = common::messages::Message{
+nlohmann::json invalidEmailMessageResponsePayloadJson{{"error", "wrong email address"}};
+common::messages::Message invalidEmailMessageResponse{
     common::messages::MessageId::RegisterResponse, common::bytes::Bytes{invalidEmailMessageResponsePayloadJson.dump()}};
 
 std::runtime_error registerUserError("registerUserError");
-auto registerUserErrorMessageResponse = common::messages::Message{
-    common::messages::MessageId::RegisterResponse, common::bytes::Bytes{R"({"error":"registerUserError"})"}};
+common::messages::Message registerUserErrorMessageResponse{common::messages::MessageId::RegisterResponse,
+                                                           common::bytes::Bytes{R"({"error":"registerUserError"})"}};
 }
 
 class RegisterMessageHandlerTest : public Test
 {
 public:
+    server::tests::UserTestFactory userTestFactory;
+    std::shared_ptr<server::domain::User> user = userTestFactory.createDomainUser();
+    nlohmann::json validPayloadJson{
+        {"email", user->getEmail()}, {"nickname", user->getNickname()}, {"password", user->getPassword()}};
+    common::bytes::Bytes validPayload{validPayloadJson.dump()};
+    common::messages::Message message{common::messages::MessageId::Register, validPayload};
+    std::string invalidUserEmail = "invalidUserEmail";
+    nlohmann::json payloadJsonWithInvalidEmail{{"email", invalidUserEmail}, {"password", user->getPassword()}};
+    common::bytes::Bytes payloadWithInvalidEmail{payloadJsonWithInvalidEmail.dump()};
+    common::messages::Message messageWithInvalidEmail{common::messages::MessageId::Register, payloadWithInvalidEmail};
     std::unique_ptr<server::application::RegisterUserCommandHandlerMock> registerUserCommandHandlerMockInit =
         std::make_unique<StrictMock<server::application::RegisterUserCommandHandlerMock>>();
     server::application::RegisterUserCommandHandlerMock* registerUserCommandHandlerMock =
         registerUserCommandHandlerMockInit.get();
+    server::application::RegisterUserCommandHandlerPayload commandPayload{user->getEmail(), user->getPassword(),
+                                                                          user->getNickname()};
 
     std::shared_ptr<server::application::SendRegistrationVerificationEmailCommandHandlerMock>
         sendRegistrationVerificationEmailCommandHandlerMock =
@@ -59,13 +57,11 @@ public:
 
 TEST_F(RegisterMessageHandlerTest, handleValidRegisterUserMessage)
 {
-    EXPECT_CALL(*registerUserCommandHandlerMock,
-                execute(server::application::RegisterUserCommandHandlerPayload{userEmail, userPassword, userNickname}))
-        .WillOnce(Return(server::application::RegisterUserCommandHandlerResult{
-            {userId, userEmail, userPassword, userNickname, userIsActive, userEmailVerified, "123", "", "", ""}}));
+    EXPECT_CALL(*registerUserCommandHandlerMock, execute(commandPayload))
+        .WillOnce(Return(server::application::RegisterUserCommandHandlerResult{*user}));
 
     EXPECT_CALL(*sendRegistrationVerificationEmailCommandHandlerMock,
-                execute(server::application::SendRegistrationVerificationEmailCommandHandlerPayload{userEmail}));
+                execute(server::application::SendRegistrationVerificationEmailCommandHandlerPayload{user->getEmail()}));
 
     auto responseMessage = registerMessageHandler.handleMessage(message);
 
@@ -81,9 +77,7 @@ TEST_F(RegisterMessageHandlerTest, handleRegisterUserMessageWithInvalidEmail)
 
 TEST_F(RegisterMessageHandlerTest, handleRegisterUserMessageWithErrorWhileHandling)
 {
-    EXPECT_CALL(*registerUserCommandHandlerMock,
-                execute(server::application::RegisterUserCommandHandlerPayload{userEmail, userPassword, userNickname}))
-        .WillOnce(Throw(registerUserError));
+    EXPECT_CALL(*registerUserCommandHandlerMock, execute(commandPayload)).WillOnce(Throw(registerUserError));
 
     auto responseMessage = registerMessageHandler.handleMessage(message);
 

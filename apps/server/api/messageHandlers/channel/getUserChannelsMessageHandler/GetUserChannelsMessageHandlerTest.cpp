@@ -6,13 +6,8 @@
 #include "server/application/queryHandlers/channel/findChannelsToWhichUserBelongsQueryHandler/FindChannelsToWhichUserBelongsQueryHandlerMock.h"
 #include "server/application/services/tokenService/TokenServiceMock.h"
 
-#include "faker-cxx/Datatype.h"
-#include "faker-cxx/Date.h"
-#include "faker-cxx/Image.h"
-#include "faker-cxx/Internet.h"
-#include "faker-cxx/String.h"
-#include "fmt/format.h"
 #include "nlohmann/json.hpp"
+#include "server/tests/factories/userTestFactory/UserTestFactory.h"
 
 using namespace ::testing;
 using namespace server::api;
@@ -52,6 +47,8 @@ auto getUserChannelsErrorMessageResponse = common::messages::Message{
 class GetUserChannelsMessageHandlerTest : public Test
 {
 public:
+    server::tests::UserTestFactory userTestFactory;
+
     std::shared_ptr<server::application::TokenServiceMock> tokenServiceMock =
         std::make_shared<StrictMock<server::application::TokenServiceMock>>();
 
@@ -67,25 +64,13 @@ public:
 
 TEST_F(GetUserChannelsMessageHandlerTest, handleValidGetUserChannelsMessageWithNoChannels)
 {
-    const auto userId = faker::String::uuid();
-    const auto email = faker::Internet::email();
-    const auto password = faker::Internet::password();
-    const auto nickname = faker::Internet::username();
-    const auto active = faker::Datatype::boolean();
-    const auto emailVerified = faker::Datatype::boolean();
-    const auto verificationCode = faker::String::numeric(6);
-    const auto createdAt = faker::Date::pastDate();
-    const auto updatedAt = faker::Date::recentDate();
-    const auto avatarUrl = faker::Image::imageUrl();
+    const auto user = userTestFactory.createDomainUser();
 
-    const auto user = std::make_shared<server::domain::User>(userId, email, password, nickname, active, emailVerified,
-                                                             verificationCode, createdAt, updatedAt, avatarUrl);
-
-    const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
+    const auto verifyTokenResult = server::application::VerifyTokenResult{user->getId()};
 
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*findChannelsToWhichUserBelongsQueryHandlerMock,
-                execute(server::application::FindChannelsToWhichUserBelongsQueryHandlerPayload{userId}))
+                execute(server::application::FindChannelsToWhichUserBelongsQueryHandlerPayload{user->getId()}))
         .WillOnce(Return(server::application::FindChannelsToWhichUserBelongsQueryHandlerResult{}));
 
     auto responseMessage = getUserChannelsMessageHandler.handleMessage(message);
@@ -95,25 +80,13 @@ TEST_F(GetUserChannelsMessageHandlerTest, handleValidGetUserChannelsMessageWithN
 
 TEST_F(GetUserChannelsMessageHandlerTest, handleValidGetUserChannelsMessageWithFewChannels)
 {
-    const auto userId = faker::String::uuid();
-    const auto email = faker::Internet::email();
-    const auto password = faker::Internet::password();
-    const auto nickname = faker::Internet::username();
-    const auto active = faker::Datatype::boolean();
-    const auto emailVerified = faker::Datatype::boolean();
-    const auto verificationCode = faker::String::numeric(6);
-    const auto createdAt = faker::Date::pastDate();
-    const auto updatedAt = faker::Date::recentDate();
-    const auto avatarUrl = faker::Image::imageUrl();
+    const auto user = userTestFactory.createDomainUser();
 
-    const auto user = std::make_shared<server::domain::User>(userId, email, password, nickname, active, emailVerified,
-                                                             verificationCode, createdAt, updatedAt, avatarUrl);
-
-    const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
+    const auto verifyTokenResult = server::application::VerifyTokenResult{user->getId()};
 
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*findChannelsToWhichUserBelongsQueryHandlerMock,
-                execute(server::application::FindChannelsToWhichUserBelongsQueryHandlerPayload{userId}))
+                execute(server::application::FindChannelsToWhichUserBelongsQueryHandlerPayload{user->getId()}))
         .WillOnce(Return(server::application::FindChannelsToWhichUserBelongsQueryHandlerResult{
             {{requestId1, friendName1, user, "", "", ""}, {channelId2, channelName2, user, "", "", ""}}}));
 
@@ -133,25 +106,13 @@ TEST_F(GetUserChannelsMessageHandlerTest, handleGetUserChannelsMessageWithInvali
 
 TEST_F(GetUserChannelsMessageHandlerTest, handleGetUserChannelsMessageWithErrorWhileHandling)
 {
-    const auto userId = faker::String::uuid();
-    const auto email = faker::Internet::email();
-    const auto password = faker::Internet::password();
-    const auto nickname = faker::Internet::username();
-    const auto active = faker::Datatype::boolean();
-    const auto emailVerified = faker::Datatype::boolean();
-    const auto verificationCode = faker::String::numeric(6);
-    const auto createdAt = faker::Date::pastDate();
-    const auto updatedAt = faker::Date::recentDate();
-    const auto avatarUrl = faker::Image::imageUrl();
+    const auto user = userTestFactory.createDomainUser();
 
-    const auto user = std::make_shared<server::domain::User>(userId, email, password, nickname, active, emailVerified,
-                                                             verificationCode, createdAt, updatedAt, avatarUrl);
-
-    const auto verifyTokenResult = server::application::VerifyTokenResult{userId};
+    const auto verifyTokenResult = server::application::VerifyTokenResult{user->getId()};
 
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*findChannelsToWhichUserBelongsQueryHandlerMock,
-                execute(server::application::FindChannelsToWhichUserBelongsQueryHandlerPayload{userId}))
+                execute(server::application::FindChannelsToWhichUserBelongsQueryHandlerPayload{user->getId()}))
         .WillOnce(Throw(getUserChannelsError));
 
     auto responseMessage = getUserChannelsMessageHandler.handleMessage(message);

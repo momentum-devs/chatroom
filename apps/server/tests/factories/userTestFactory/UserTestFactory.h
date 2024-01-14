@@ -10,7 +10,7 @@ namespace server::tests
 class UserTestFactory
 {
 public:
-    std::shared_ptr<domain::User> createDomainUser();
+    std::shared_ptr<domain::User> createDomainUser(std::size_t nicknameMaxLength = 12);
     std::shared_ptr<infrastructure::User> createPersistentUser();
 };
 }
