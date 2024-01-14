@@ -22,3 +22,6 @@
 [submodule "externals/config-cxx"]
 	path = externals/config-cxx
 	url = https://github.com/cieslarmichal/config-cxx.git
+[submodule "externals/aws-sdk-cpp"]
+	path = externals/aws-sdk-cpp
+	url = https://github.com/aws/aws-sdk-cpp.git
