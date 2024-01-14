@@ -33,10 +33,12 @@ signals:
     void newMessageToSend(const QString& messageText);
     void messagesUpdated();
     void scrollDown();
+    void getMoreMessages();
 
 public slots:
     void handleMessageUpdate(bool shouldScrollDown = false);
     void setMessageStorage(const std::shared_ptr<storage::MessageStorage>& messageStorage);
+    void requestMoreMessages();
 
 private:
     std::shared_ptr<api::Session> session;

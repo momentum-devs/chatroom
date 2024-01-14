@@ -101,6 +101,7 @@ set(SOURCES
         api/messageHandlers/friend/removeFromFriendsMessageHandler/RemoveFromFriendsMessageHandler.cpp
         api/messageHandlers/messages/sendMessageToChannelMessageHandler/SendMessageToChannelMessageHandler.cpp
         api/messageHandlers/messages/getMessagesFromChannelMessageHandler/GetMessagesFromChannelMessageHandler.cpp
+        api/messageHandlers/messages/getMessagesFromGroupMessageHandler/GetMessagesFromGroupMessageHandler.cpp
 
         domain/entities/message/Message.cpp
         infrastructure/repositories/messageRepository/MessageRepositoryImpl.cpp
@@ -184,6 +185,7 @@ set(UT_SOURCES
         api/messageHandlers/friend/removeFromFriendsMessageHandler/RemoveFromFriendsMessageHandlerTest.cpp
         api/messageHandlers/messages/sendMessageToChannelMessageHandler/SendMessageToChannelMessageHandlerTest.cpp
         api/messageHandlers/messages/getMessagesFromChannelMessageHandler/GetMessagesFromChannelMessageHandlerTest.cpp
+        api/messageHandlers/messages/getMessagesFromGroupMessageHandler/GetMessagesFromGroupMessageHandlerTest.cpp
 )
 
 set(IT_SOURCES

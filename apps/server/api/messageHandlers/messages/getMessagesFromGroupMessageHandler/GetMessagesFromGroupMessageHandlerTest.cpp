@@ -1,14 +1,14 @@
-#include "GetMessagesFromChannelMessageHandler.h"
+#include "GetMessagesFromGroupMessageHandler.h"
 
+#include <format>
 #include <gtest/gtest.h>
 
-#include "server/application/queryHandlers/message/findChannelMessagesQueryHandler/FindChannelMessagesQueryHandlerMock.h"
+#include "server/application/queryHandlers/message/findGroupMessagesQueryHandler/FindGroupMessagesQueryHandlerMock.h"
 #include "server/application/services/tokenService/TokenServiceMock.h"
 
 #include "faker-cxx/Datatype.h"
 #include "faker-cxx/Date.h"
 #include "faker-cxx/String.h"
-#include "fmt/format.h"
 #include "nlohmann/json.hpp"
 #include "server/tests/factories/channelTestFactory/ChannelTestFactory.h"
 #include "server/tests/factories/groupTestFactory/GroupTestFactory.h"
@@ -23,10 +23,10 @@ namespace
 {
 const auto invalidTokenError = std::runtime_error{"invalidToken"};
 const auto invalidTokenMessageResponse = common::messages::Message{
-    common::messages::MessageId::GetChannelMessagesResponse, common::bytes::Bytes{R"({"error":"invalidToken"})"}};
+    common::messages::MessageId::GetPrivateMessagesResponse, common::bytes::Bytes{R"({"error":"invalidToken"})"}};
 }
 
-class GetMessagesFromChannelMessageHandlerTest : public Test
+class GetMessagesFromGroupMessageHandlerTest : public Test
 {
 public:
     UserTestFactory userFactory;
@@ -34,7 +34,7 @@ public:
     MessageTestFactory messageFactory;
     GroupTestFactory groupFactory;
     const std::string token = faker::String::alphanumeric(40);
-    const std::string channelId = faker::String::uuid();
+    const std::string groupId = faker::String::uuid();
     const std::string senderId = faker::String::uuid();
     const server::application::VerifyTokenResult verifyTokenResult{senderId};
     const std::shared_ptr<server::domain::Message> message1 = messageFactory.createDomainMessage(
@@ -46,78 +46,78 @@ public:
     const std::vector<server::domain::Message> messages{*message1, *message2};
     const unsigned totalCount = 2;
 
-    const nlohmann::json validPayloadJson{
-        {"data", nlohmann::json{{"channelId", channelId}, {"limit", 10}, {"offset", 0}}}, {"token", token}};
+    const nlohmann::json validPayloadJson{{"data", nlohmann::json{{"groupId", groupId}, {"limit", 10}, {"offset", 0}}},
+                                          {"token", token}};
     const common::bytes::Bytes validPayload{validPayloadJson.dump()};
-    const common::messages::Message validMessage{common::messages::MessageId::GetChannelMessages, validPayload};
+    const common::messages::Message validMessage{common::messages::MessageId::GetPrivateMessagesResponse, validPayload};
 
     const std::string validMessageResponsePayload =
         R"({"data":{"messages":[)" +
-        fmt::format(R"({{"id":"{}","senderName":"{}","sentAt":"{}","text":"{}"}},)", message1->getId(),
+        std::format(R"({{"id":"{}","senderName":"{}","sentAt":"{}","text":"{}"}},)", message1->getId(),
                     message1->getSender()->getNickname(), message1->getCreatedAt(), message1->getContent()) +
-        fmt::format(R"({{"id":"{}","senderName":"{}","sentAt":"{}","text":"{}"}})", message2->getId(),
+        std::format(R"({{"id":"{}","senderName":"{}","sentAt":"{}","text":"{}"}})", message2->getId(),
                     message2->getSender()->getNickname(), message2->getCreatedAt(), message2->getContent()) +
         R"(],"totalCount":2}})";
-    const common::messages::Message validMessageResponse{common::messages::MessageId::GetChannelMessagesResponse,
+    const common::messages::Message validMessageResponse{common::messages::MessageId::GetPrivateMessagesResponse,
                                                          common::bytes::Bytes{validMessageResponsePayload}};
-    const server::application::FindChannelMessagesQueryHandlerResult validCommandHandlerResponse{messages, totalCount};
+    const server::application::FindGroupMessagesQueryHandlerResult validCommandHandlerResponse{messages, totalCount};
 
     std::shared_ptr<server::application::TokenServiceMock> tokenServiceMock =
         std::make_shared<StrictMock<server::application::TokenServiceMock>>();
 
-    std::unique_ptr<server::application::FindChannelMessagesQueryHandlerMock> findChannelMessagesQueryHandlerMockInit =
-        std::make_unique<StrictMock<server::application::FindChannelMessagesQueryHandlerMock>>();
+    std::unique_ptr<server::application::FindGroupMessagesQueryHandlerMock> findGroupMessagesQueryHandlerMockInit =
+        std::make_unique<StrictMock<server::application::FindGroupMessagesQueryHandlerMock>>();
 
-    server::application::FindChannelMessagesQueryHandlerMock* findChannelMessagesQueryHandlerMock =
-        findChannelMessagesQueryHandlerMockInit.get();
+    server::application::FindGroupMessagesQueryHandlerMock* findGroupMessagesQueryHandlerMock =
+        findGroupMessagesQueryHandlerMockInit.get();
 
-    GetMessagesFromChannelMessageHandler getMessagesFromChannelMessageHandler{
-        tokenServiceMock, std::move(findChannelMessagesQueryHandlerMockInit)};
+    GetMessagesFromGroupMessageHandler getMessagesFromGroupMessageHandler{
+        tokenServiceMock, std::move(findGroupMessagesQueryHandlerMockInit)};
 };
 
-TEST_F(GetMessagesFromChannelMessageHandlerTest, handleMessage_shouldReturnValidMessageResponse)
+TEST_F(GetMessagesFromGroupMessageHandlerTest, handleMessage_shouldReturnValidMessageResponse)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
-    EXPECT_CALL(*findChannelMessagesQueryHandlerMock, execute(_)).WillOnce(Return(validCommandHandlerResponse));
+    EXPECT_CALL(*findGroupMessagesQueryHandlerMock, execute(_)).WillOnce(Return(validCommandHandlerResponse));
 
-    const auto messageResponse = getMessagesFromChannelMessageHandler.handleMessage(validMessage);
+    const auto messageResponse = getMessagesFromGroupMessageHandler.handleMessage(validMessage);
 
     ASSERT_EQ(messageResponse, validMessageResponse);
 }
 
-TEST_F(GetMessagesFromChannelMessageHandlerTest, handleMessage_shouldReturnInvalidTokenMessageResponse)
+TEST_F(GetMessagesFromGroupMessageHandlerTest, handleMessage_shouldReturnInvalidTokenMessageResponse)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Throw(invalidTokenError));
 
-    const auto messageResponse = getMessagesFromChannelMessageHandler.handleMessage(validMessage);
+    const auto messageResponse = getMessagesFromGroupMessageHandler.handleMessage(validMessage);
 
     ASSERT_EQ(messageResponse, invalidTokenMessageResponse);
 }
 
-TEST_F(GetMessagesFromChannelMessageHandlerTest, handleMessage_shouldReturnValidMessageResponseWithEmptyMessages)
+TEST_F(GetMessagesFromGroupMessageHandlerTest, handleMessage_shouldReturnValidMessageResponseWithEmptyMessages)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
-    EXPECT_CALL(*findChannelMessagesQueryHandlerMock, execute(_))
-        .WillOnce(Return(server::application::FindChannelMessagesQueryHandlerResult{{}, 0}));
+    EXPECT_CALL(*findGroupMessagesQueryHandlerMock, execute(_))
+        .WillOnce(Return(server::application::FindGroupMessagesQueryHandlerResult{{}, 0}));
 
-    const auto messageResponse = getMessagesFromChannelMessageHandler.handleMessage(validMessage);
+    const auto messageResponse = getMessagesFromGroupMessageHandler.handleMessage(validMessage);
 
     const auto validMessageResponse =
-        common::messages::Message{common::messages::MessageId::GetChannelMessagesResponse,
+        common::messages::Message{common::messages::MessageId::GetPrivateMessagesResponse,
                                   common::bytes::Bytes{R"({"data":{"messages":[],"totalCount":0}})"}};
     ASSERT_EQ(messageResponse, validMessageResponse);
 }
 
-TEST_F(GetMessagesFromChannelMessageHandlerTest, handleMessage_shouldReturnErrorMessageResponse)
+TEST_F(GetMessagesFromGroupMessageHandlerTest, handleMessage_shouldReturnErrorMessageResponse)
 {
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
-    EXPECT_CALL(*findChannelMessagesQueryHandlerMock, execute(_))
+    EXPECT_CALL(*findGroupMessagesQueryHandlerMock, execute(_))
         .WillOnce(Throw(std::runtime_error{"findChannelMessagesQueryHandlerError"}));
 
-    const auto messageResponse = getMessagesFromChannelMessageHandler.handleMessage(validMessage);
+    const auto messageResponse = getMessagesFromGroupMessageHandler.handleMessage(validMessage);
 
     const auto validMessageResponse =
-        common::messages::Message{common::messages::MessageId::GetChannelMessagesResponse,
+        common::messages::Message{common::messages::MessageId::GetPrivateMessagesResponse,
                                   common::bytes::Bytes{R"({"error":"findChannelMessagesQueryHandlerError"})"}};
     ASSERT_EQ(messageResponse, validMessageResponse);
 }

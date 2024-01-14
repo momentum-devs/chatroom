@@ -5,6 +5,9 @@ import "../../common/settings.js" as Settings
 Rectangle {
     id: messagesView
     color: Settings.backgroundColor
+    property bool requestedMoreMessages: false
+    property int previousMessagesCount: 0
+    property var previousScrollBarPosition: 0
 
     function setTextPlaceholder(text: string) {
         messageInput.placeholderText = text;
@@ -35,6 +38,20 @@ Rectangle {
                 messageData: modelData
                 width: messagesView.width
             }
+            onContentYChanged: {
+                if (messagesScrollView.ScrollBar.vertical.position > 0.01) {
+                    messagesView.previousScrollBarPosition = messagesScrollView.ScrollBar.vertical.position;
+                }
+                if (messagesScrollView.ScrollBar.vertical.position > 0.4) {
+                    messagesView.requestedMoreMessages = false;
+                }
+                if (messagesScrollView.contentHeight > messagesScrollView.height
+                    && messagesScrollView.ScrollBar.vertical.position < 0.3
+                    && messagesView.requestedMoreMessages === false) {
+                    messagesView.requestedMoreMessages = true;
+                    messagesController.requestMoreMessages();
+                }
+            }
         }
     }
 
@@ -58,9 +75,9 @@ Rectangle {
             Keys.onReturnPressed: (event) => {
                 if (event.modifiers & Qt.ShiftModifier) {
                     text += "\n"
-                    messageInput.cursorPosition = messageInput.length
+                    messageInput.cursorPosition = messageInput.length;
                 } else {
-                    sendMessage()
+                    sendMessage();
                 }
             }
             background: Rectangle {
@@ -75,7 +92,22 @@ Rectangle {
         target: messagesController
 
         function onScrollDown() {
-            messagesScrollView.ScrollBar.vertical.position = messagesScrollView.contentHeight
+            messagesScrollView.ScrollBar.vertical.position = 1 - messagesScrollView.ScrollBar.vertical.size;
+        }
+
+        function onMessagesChanged() {
+            if (messagesView.previousMessagesCount !== 0 && messagesController.messages.length !== messagesView.previousMessagesCount) {
+                let maxScrollPosition = 1 - messagesScrollView.ScrollBar.vertical.size;
+
+                let newScrollPosition = (1 - messagesView.previousMessagesCount / messagesController.messages.length)
+                    + messagesView.previousScrollBarPosition * messagesView.previousMessagesCount / messagesController.messages.length;
+                messagesScrollView.ScrollBar.vertical.position = newScrollPosition * maxScrollPosition;
+            }
+            messagesView.previousMessagesCount = messagesController.messages.length;
+
+            if (messagesScrollView.ScrollBar.vertical.position > 0.4) {
+                messagesView.requestedMoreMessages = false;
+            }
         }
     }
 }
