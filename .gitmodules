@@ -4,9 +4,6 @@
 [submodule "externals/loguru"]
 	path = externals/loguru
 	url = https://github.com/emilk/loguru.git
-[submodule "externals/dotenv-cpp"]
-	path = externals/dotenv-cpp
-	url = https://github.com/laserpants/dotenv-cpp.git
 [submodule "externals/json"]
 	path = externals/json
 	url = https://github.com/nlohmann/json.git

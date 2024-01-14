@@ -8,11 +8,10 @@
 #include "api/SessionImpl.h"
 #include "api/SocketConnectorImpl.h"
 #include "common/filesystem/GetProjectPath.h"
-#include "config/ConfigProvider.h"
+#include "core/configProvider/ConfigProvider.h"
 #include "gui/qml/LoaderController.h"
 #include "gui/states/StateFactory.h"
 #include "gui/states/StateMachine.h"
-#include "laserpants/dotenv/dotenv.h"
 #include "loguru.hpp"
 #include "messages/MessageReaderImpl.h"
 #include "messages/MessageSenderImpl.h"
@@ -20,15 +19,11 @@
 
 int main(int argc, char* argv[])
 {
-    auto dotEnvPath = common::filesystem::getProjectPath("chatroom") + "/apps/client/.env";
-
-    dotenv::init(dotEnvPath.c_str());
-
     loguru::g_preamble_date = false;
 
     loguru::init(argc, argv);
 
-    client::config::ConfigProvider configProvider;
+    client::core::ConfigProvider configProvider;
 
     const auto serverHost = configProvider.getServerHost();
 
@@ -65,5 +60,5 @@ int main(int argc, char* argv[])
 
     std::thread api{[&] { context.run(); }};
 
-    return app.exec();
+    return QGuiApplication::exec();
 }

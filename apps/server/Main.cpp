@@ -4,7 +4,6 @@
 
 #include "common/filesystem/GetProjectPath.h"
 #include "fmt/format.h"
-#include "laserpants/dotenv/dotenv.h"
 #include "loguru.hpp"
 #include "server/core/configProvider/ConfigProvider.h"
 #include "server/core/database/DatabaseConnectionFactory.h"
