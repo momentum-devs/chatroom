@@ -20,6 +20,7 @@
 #include "server/api/messageHandlers/messages/getMessagesFromChannelMessageHandler/GetMessagesFromChannelMessageHandler.h"
 #include "server/api/messageHandlers/messages/getMessagesFromGroupMessageHandler/GetMessagesFromGroupMessageHandler.h"
 #include "server/api/messageHandlers/messages/sendMessageToChannelMessageHandler/SendMessageToChannelMessageHandler.h"
+#include "server/api/messageHandlers/messages/sendMessageToGroupMessageHandler/SendMessageToGroupMessageHandler.h"
 #include "server/api/messageHandlers/user/deleteUserMessageHandler/DeleteUserMessageHandler.h"
 #include "server/api/messageHandlers/user/getUserDataMessageHandler/GetUserDataMessageHandler.h"
 #include "server/api/messageHandlers/user/loginMessageHandler/LoginMessageHandler.h"
@@ -38,6 +39,7 @@
 #include "server/application/commandHandlers/friend/deleteFriendshipCommandHandler/DeleteFriendshipCommandHandlerImpl.h"
 #include "server/application/commandHandlers/friend/rejectFriendInvitationCommandHandler/RejectFriendInvitationCommandHandlerImpl.h"
 #include "server/application/commandHandlers/message/createChannelMessageCommandHandler/CreateChannelMessageCommandHandlerImpl.h"
+#include "server/application/commandHandlers/message/createGroupMessageCommandHandler/CreateGroupMessageCommandHandlerImpl.h"
 #include "server/application/commandHandlers/user/deleteUserCommandHandler/DeleteUserCommandHandlerImpl.h"
 #include "server/application/commandHandlers/user/loginUserCommandHandler/LoginUserCommandHandlerImpl.h"
 #include "server/application/commandHandlers/user/logoutUserCommandHandler/LogoutUserCommandHandlerImpl.h"
@@ -302,6 +304,12 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
     auto getMessagesFromGroupMessageHandler = std::make_shared<server::api::GetMessagesFromGroupMessageHandler>(
         tokenService, std::move(findGroupMessagesQueryHandler));
 
+    auto createGroupMessageCommandHandler = std::make_unique<server::application::CreateGroupMessageCommandHandlerImpl>(
+        groupRepository, userRepository, userGroupRepository, messageRepository);
+
+    auto sendMessageToGroupMessageHandler = std::make_shared<server::api::SendMessageToGroupMessageHandler>(
+        tokenService, std::move(createGroupMessageCommandHandler));
+
     std::unordered_map<common::messages::MessageId, std::shared_ptr<api::MessageHandler>> messageHandlers{
         {common::messages::MessageId::CreateChannel, createChannelMessageHandler},
         {common::messages::MessageId::GetUserChannels, getUserChannelsMessageHandler},
@@ -328,6 +336,7 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
         {common::messages::MessageId::SendChannelMessage, sendMessageToChannelMessageHandler},
         {common::messages::MessageId::GetChannelMessages, getMessageFromChannelMessageHandler},
         {common::messages::MessageId::GetPrivateMessages, getMessagesFromGroupMessageHandler},
+        {common::messages::MessageId::SendPrivateMessage, sendMessageToGroupMessageHandler},
     };
 
     return std::make_unique<MessageRouterImpl>(std::move(messageHandlers));

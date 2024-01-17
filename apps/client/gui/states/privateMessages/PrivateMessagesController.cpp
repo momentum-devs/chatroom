@@ -265,7 +265,7 @@ void PrivateMessagesController::sendPrivateMessage(const QString& messageText)
 
     nlohmann::json data{
         {"groupId", currentFriendGroupId},
-        {"message", messageText.toStdString()},
+        {"text", messageText.toStdString()},
     };
 
     session->sendMessage(common::messages::MessageId::SendPrivateMessage, data);
