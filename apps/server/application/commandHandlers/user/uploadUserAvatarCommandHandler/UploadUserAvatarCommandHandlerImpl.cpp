@@ -8,8 +8,11 @@
 namespace server::application
 {
 UploadUserAvatarCommandHandlerImpl::UploadUserAvatarCommandHandlerImpl(
-    std::shared_ptr<domain::UserRepository> userRepositoryInit, std::shared_ptr<HashService> hashServiceInit)
-    : userRepository{std::move(userRepositoryInit)}, hashService{std::move(hashServiceInit)}
+    std::shared_ptr<domain::UserRepository> userRepositoryInit, std::shared_ptr<S3Service> s3ServiceInit,
+    std::shared_ptr<core::ConfigProvider> configProviderInit)
+    : userRepository{std::move(userRepositoryInit)},
+      s3Service{std::move(s3ServiceInit)},
+      configProvider{std::move(configProviderInit)}
 {
 }
 
@@ -25,7 +28,10 @@ UploadUserAvatarCommandHandlerImpl::execute(const UploadUserAvatarCommandHandler
         throw errors::ResourceNotFoundError{fmt::format("User with id \"{}\" not found.", payload.id)};
     }
 
-    const auto avatarUrl = "";
+    const auto objectKey = fmt::format("{}{}", payload.id, payload.avatarName);
+
+    const auto avatarUrl = fmt::format("https://{}.s3-{}.amazonaws.com/avatars/{}", configProvider->getAwsBucket(),
+                                       configProvider->getAwsRegion(), objectKey);
 
     existingUser->get()->setAvatarUrl(avatarUrl);
 

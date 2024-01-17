@@ -53,17 +53,22 @@ std::string ConfigProvider::getCxxEnv() const
     return *cxxEnv;
 }
 
-std::string ConfigProvider::awsAccessKeyId() const
+std::string ConfigProvider::getAwsAccessKeyId() const
 {
     return config->get<std::string>("aws.accessKeyId");
 }
 
-std::string ConfigProvider::awsSecretAccessKey() const
+std::string ConfigProvider::getAwsSecretAccessKey() const
 {
     return config->get<std::string>("aws.secretAccessKey");
 }
 
-std::string ConfigProvider::awsBucket() const
+std::string ConfigProvider::getAwsRegion() const
+{
+    return config->get<std::string>("aws.region");
+}
+
+std::string ConfigProvider::getAwsBucket() const
 {
     return config->get<std::string>("aws.bucket");
 }
