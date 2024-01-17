@@ -7,44 +7,66 @@
 #include "faker-cxx/Word.h"
 #include "fmt/format.h"
 #include "S3ServiceImpl.h"
+#include "server/application/services/s3Service/S3ServiceFactory.h"
 
 using namespace ::testing;
 using namespace server;
 using namespace server::application;
 
-class EmailServiceImplTest : public Test
+class S3ServiceImplIntegrationTest : public Test
 {
 public:
-    std::shared_ptr<common::httpClient::HttpClientMock> httpClient =
-        std::make_shared<StrictMock<common::httpClient::HttpClientMock>>();
+    const std::string awsAccountId = "test";
+    const std::string awsAccountSecretKey = "test";
+    const std::string s3Endpoint = "http://127.0.0.1:4566";
 
-    const std::string sendGridSecret = faker::Internet::password();
-    const std::string sendGridEmail = faker::Internet::email();
-
-    EmailServiceImpl emailService{httpClient, sendGridSecret, sendGridEmail};
+    const std::shared_ptr<S3Service> s3Service =
+        S3ServiceFactory::create({awsAccountId, awsAccountSecretKey, s3Endpoint});
 };
 
-TEST_F(EmailServiceImplTest, shouldSendEmail)
+TEST_F(S3ServiceImplIntegrationTest, shouldGetObject)
 {
-    const auto to = faker::Internet::email();
-    const auto subject = faker::Word::noun();
-    const auto emailData = faker::Lorem::paragraph();
+    const auto bucketName = faker::Internet::domainName();
+    const auto objectKey = faker::Internet::domainName();
+    const auto objectData = faker::Lorem::paragraph();
 
-    const std::map<std::string, std::string> headers{{"Authorization", fmt::format("Bearer {}", sendGridSecret)},
-                                                     {"Content-Type", "application/json"}};
+    const auto s3Client = Aws::S3::S3Client(Aws::Auth::AWSCredentials(awsAccountId, awsAccountSecretKey),
+                                            Aws::Client::ClientConfiguration().WithEndpointOverride(s3Endpoint));
 
-    const auto sendGridApiUrl = "https://api.sendgrid.com/v3/mail/send";
+    Aws::S3::Model::CreateBucketRequest createBucketRequest;
+    createBucketRequest.SetBucket(bucketName.c_str());
+    s3Client.CreateBucket(createBucketRequest);
 
-    const auto body =
-        fmt::format("{{\"personalizations\": [{{\"to\": [{{\"email\": \"{}\"}}]}}],\"from\": {{\"email\": "
-                    "\"{}\"}},\"subject\": \"{}\",\"content\": [{{\"type\": \"text/plain\", \"value\": \"{}\"}}]}}",
-                    to, sendGridEmail, subject, emailData);
+    Aws::S3::Model::PutObjectRequest putObjectRequest;
+    putObjectRequest.SetBucket(bucketName.c_str());
+    putObjectRequest.SetKey(objectKey.c_str());
+    putObjectRequest.SetBody(objectData.c_str());
+    s3Client.PutObject(putObjectRequest);
 
-    const common::httpClient::HttpPostRequestPayload postRequestPayload{sendGridApiUrl, headers, body};
+    const auto getObjectPayload = GetObjectPayload{bucketName, objectKey};
 
-    const common::httpClient::HttpResponse response{200, ""};
+    const auto result = s3Service->getObject(getObjectPayload);
 
-    EXPECT_CALL(*httpClient, post(postRequestPayload)).WillOnce(Return(response));
+    EXPECT_EQ(result, objectData);
+}
 
-    emailService.sendEmail({to, subject, emailData});
+TEST_F(S3ServiceImplIntegrationTest, shouldPutObject)
+{
+    const auto bucketName = faker::Internet::domainName();
+    const auto objectKey = faker::Internet::domainName();
+    const auto objectData = faker::Lorem::paragraph();
+
+    const auto putObjectPayload = PutObjectPayload{bucketName, objectKey, objectData};
+
+    s3Service->putObject(putObjectPayload);
+
+    const auto s3Client = Aws::S3::S3Client(Aws::Auth::AWSCredentials(awsAccountId, awsAccountSecretKey),
+                                            Aws::Client::ClientConfiguration().WithEndpointOverride(s3Endpoint));
+
+    Aws::S3::Model::GetObjectRequest getObjectRequest;
+    getObjectRequest.SetBucket(bucketName.c_str());
+    getObjectRequest.SetKey(objectKey.c_str());
+    const auto result = s3Client.GetObject(getObjectRequest);
+
+    EXPECT_EQ(result.IsSuccess(), true);
 }

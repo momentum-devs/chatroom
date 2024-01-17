@@ -14,6 +14,7 @@ public:
 
     void putObject(const PutObjectPayload& payload) const;
     std::string getObject(const GetObjectPayload& payload) const;
+    bool objectExists(const ObjectExistsPayload& payload) const;
 
 private:
     std::unique_ptr<Aws::S3::S3Client> s3Client;

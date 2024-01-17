@@ -1,6 +1,7 @@
 #include "S3ServiceImpl.h"
 
 #include <aws/s3/model/GetObjectRequest.h>
+#include <aws/s3/model/HeadObjectRequest.h>
 #include <aws/s3/model/PutObjectRequest.h>
 #include <aws/s3/S3Client.h>
 
@@ -58,6 +59,32 @@ std::string S3ServiceImpl::getObject(const GetObjectPayload& payload) const
         LOG_S(ERROR) << "Error downloading file from S3: " << result.GetError().GetMessage();
 
         throw std::runtime_error{result.GetError().GetMessage()};
+    }
+}
+
+bool S3ServiceImpl::objectExists(const ObjectExistsPayload& payload) const
+{
+    Aws::S3::Model::HeadObjectRequest request;
+
+    request.SetBucket(payload.bucketName);
+    request.SetKey(payload.objectKey);
+
+    auto result = s3Client->HeadObject(request);
+
+    if (result.IsSuccess())
+    {
+        return true;
+    }
+
+    const auto& error = result.GetError();
+
+    if (error.GetErrorType() == Aws::S3::S3Errors::NO_SUCH_KEY)
+    {
+        return false;
+    }
+    else
+    {
+        throw std::runtime_error{error.GetMessage()};
     }
 }
 }
