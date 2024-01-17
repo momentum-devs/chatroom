@@ -13,6 +13,7 @@ find_package(Qt6 6.2 COMPONENTS Core Gui Widgets Quick QuickControls2 LinguistTo
 find_package(nlohmann_json 3.2.0 REQUIRED)
 find_package(cpp-jwt REQUIRED)
 find_package(GTest REQUIRED)
+find_package(AWSSDK REQUIRED COMPONENTS s3)
 
 add_subdirectory(externals)
 

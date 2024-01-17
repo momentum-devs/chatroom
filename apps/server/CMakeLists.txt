@@ -20,6 +20,7 @@ set(SOURCES
         infrastructure/repositories/userRepository/userMapper/UserMapperImpl.cpp
         infrastructure/services/emailService/EmailServiceImpl.cpp
         infrastructure/services/s3Service/S3ServiceImpl.cpp
+        infrastructure/services/s3Service/S3ServiceFactory.cpp
         application/services/hashService/HashServiceImpl.cpp
         application/services/tokenService/TokenServiceImpl.cpp
         application/commandHandlers/user/registerUserCommandHandler/RegisterUserCommandHandlerImpl.cpp
@@ -340,6 +341,7 @@ target_link_libraries(${EXECUTABLE_NAME} PRIVATE
         sqlite3
         fmt::fmt
         config-cxx
+        ${AWSSDK_LINK_LIBRARIES}
 )
 
 target_include_directories(${EXECUTABLE_NAME} PRIVATE

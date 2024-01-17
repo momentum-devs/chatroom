@@ -1,3 +1,4 @@
+#include <aws/core/Aws.h>
 #include <boost/asio.hpp>
 #include <odb/exception.hxx>
 #include <thread>
@@ -15,6 +16,9 @@
 // TODO: add application class
 int main(int argc, char* argv[])
 {
+    Aws::SDKOptions options;
+    Aws::InitAPI(options);
+
     const auto projectPath = common::filesystem::getProjectPath("chatroom");
 
     const auto serverRootPath = fmt::format("{}/apps/server", projectPath);
@@ -89,6 +93,8 @@ int main(int argc, char* argv[])
             thread.join();
         }
     }
+
+    Aws::ShutdownAPI(options);
 
     return 0;
 }

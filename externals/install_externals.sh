@@ -32,13 +32,11 @@ ninja
 ninja install
 cd ../..
 
-#cd aws-sdk-cpp || exit
-#rm -rf build
-#mkdir build
-#cd build || exit
-#eval cmake ..  -DCMAKE_BUILD_TYPE=Debug \
-#               -DCMAKE_INSTALL_PREFIX=<path-to-install> \
-#               -DBUILD_ONLY="s3"
-#ninja
-#ninja install
-#cd ../..
+cd aws-sdk-cpp || exit
+rm -rf build
+mkdir build
+cd build || exit
+cmake ..  -DCMAKE_BUILD_TYPE=Debug -DBUILD_ONLY="s3" -DCMAKE_CXX_COMPILER=/usr/bin/clang++-16 -DAUTORUN_UNIT_TESTS=OFF
+cmake --build . --config=Debug
+cmake --install . --config=Debug
+cd ../..
