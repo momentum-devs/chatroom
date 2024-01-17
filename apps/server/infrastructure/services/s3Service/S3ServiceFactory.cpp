@@ -8,15 +8,15 @@
 
 namespace server::application
 {
-std::shared_ptr<S3Service> S3ServiceFactory::create(const AwsConfig& awsConfig)
+std::shared_ptr<S3Service> S3ServiceFactory::create(const S3ClientConfig& config)
 {
-    Aws::Auth::AWSCredentials credentials(awsConfig.accessKeyId, awsConfig.secretAccessKey);
+    Aws::Auth::AWSCredentials credentials(config.accessKeyId, config.secretAccessKey);
 
     Aws::Client::ClientConfiguration clientConfig;
 
-    if (awsConfig.endpoint)
+    if (config.endpoint)
     {
-        clientConfig.endpointOverride = *awsConfig.endpoint;
+        clientConfig.endpointOverride = *config.endpoint;
     }
 
     return std::make_shared<S3ServiceImpl>(std::make_unique<Aws::S3::S3Client>(

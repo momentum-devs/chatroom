@@ -7,7 +7,7 @@
 
 namespace server::application
 {
-struct AwsConfig
+struct S3ClientConfig
 {
     std::string accessKeyId;
     std::string secretAccessKey;
@@ -17,6 +17,6 @@ struct AwsConfig
 class S3ServiceFactory
 {
 public:
-    static std::shared_ptr<S3Service> create(const AwsConfig& awsConfig);
+    static std::shared_ptr<S3Service> create(const S3ClientConfig& config);
 };
 }
