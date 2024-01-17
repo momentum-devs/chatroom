@@ -46,3 +46,10 @@ TEST_F(S3ServiceImplIntegrationTest, shouldPutObject)
 
     EXPECT_EQ(object, objectData);
 }
+
+TEST_F(S3ServiceImplIntegrationTest, givenExistingObject_shouldReturnTrue)
+{
+    const auto objectExists = s3Service->objectExists({bucketName, existingObjectKey});
+
+    EXPECT_TRUE(objectExists);
+}
