@@ -12,7 +12,9 @@ Rectangle {
 
     property string baseColor: Settings.backgroundColor
     color: baseColor
-    property string hoverColor: "#2e2f35"
+    property string hoverColor: Settings.hoverMessageColor
+
+    signal addReactionToMessage(messageId: string)
 
     Column {
         id: messageColumn
@@ -85,6 +87,19 @@ Rectangle {
         }
     }
 
+    ReactionBox {
+        id: reactionBox
+        anchors {
+            right: messageColumn.right
+            rightMargin: 10
+            verticalCenter: messageColumn.top
+        }
+
+        onAddReaction: {
+            message.addReactionToMessage(message.messageData.messageId)
+        }
+    }
+
     MouseArea {
         anchors.fill: parent
         cursorShape: Qt.PointingHandCursor
@@ -93,9 +108,13 @@ Rectangle {
 
         onEntered: {
             message.color = message.hoverColor
+            reactionBox.visible = true
+            reactionBox.enabled = true
         }
         onExited: {
             message.color = message.baseColor
+            reactionBox.visible = false
+            reactionBox.enabled = false
         }
     }
 }

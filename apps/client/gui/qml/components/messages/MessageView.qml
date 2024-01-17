@@ -37,6 +37,11 @@ Rectangle {
             delegate: Message {
                 messageData: modelData
                 width: messagesView.width
+
+                onAddReactionToMessage: (messageId) => {
+                    console.log("Add reaction to message " + messageId);
+                    messagesController.startChoosingReactions(messageId);
+                }
             }
             onContentYChanged: {
                 if (messagesScrollView.ScrollBar.vertical.position > 0.01) {

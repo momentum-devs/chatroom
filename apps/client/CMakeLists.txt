@@ -67,8 +67,10 @@ set(QML_SOURCES
         gui/qml/components/SettingsButton.qml
         gui/qml/components/CustomButton.qml
         gui/qml/components/Invitation.qml
+
         gui/qml/components/messages/MessageView.qml
         gui/qml/components/messages/Message.qml
+        gui/qml/components/messages/ReactionBox.ui.qml
 
         gui/states/register/RegisterView.qml
         gui/states/login/LoginView.qml
@@ -100,6 +102,7 @@ set(RESOURCES
         resources/svg/close.svg
         resources/svg/check.svg
         resources/svg/cross.svg
+        resources/svg/happy-face.svg
 )
 
 qt_add_executable(${EXECUTABLE_NAME} Main.cpp ${SOURCES})

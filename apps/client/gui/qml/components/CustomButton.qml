@@ -10,10 +10,9 @@ Button {
     property string hoverColor: "#d8d9da"
     property int size: 45
 
-        signal
-    mouseEnteredArea
-        signal
-    mouseExitedArea
+    signal mouseEnteredArea()
+
+    signal mouseExitedArea()
 
     hoverEnabled: true
 
