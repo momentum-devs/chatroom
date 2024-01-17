@@ -24,7 +24,7 @@ void S3ServiceImpl::putObject(const PutObjectPayload& payload) const
 
     if (result.IsSuccess())
     {
-        LOG_S(INFO) << "Successfully uploaded to S3.";
+        LOG_S(INFO) << "Successfully uploaded file to S3.";
     }
     else
     {
