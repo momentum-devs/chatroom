@@ -1,3 +1,4 @@
+#include <aws/core/Aws.h>
 #include <gmock/gmock.h>
 
 #include "core/database/DatabaseMigrationsRunner.h"
@@ -7,6 +8,9 @@
 
 int main(int argc, char** argv)
 {
+    Aws::SDKOptions options;
+    Aws::InitAPI(options);
+
     const auto projectPath = common::filesystem::getProjectPath("chatroom");
 
     const auto serverRootPath = fmt::format("{}/apps/server", projectPath);
@@ -22,5 +26,10 @@ int main(int argc, char** argv)
     server::core::DatabaseMigrationsRunner::runMigrations(databaseFullPath, databaseMigrationsFilePath);
 
     ::testing::InitGoogleMock(&argc, argv);
-    return RUN_ALL_TESTS();
+
+    const auto result = RUN_ALL_TESTS();
+
+    Aws::ShutdownAPI(options);
+
+    return result;
 }

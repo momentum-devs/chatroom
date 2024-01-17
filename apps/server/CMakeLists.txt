@@ -406,6 +406,7 @@ target_link_libraries(${EXECUTABLE_NAME}IT PRIVATE
         gmock
         fmt::fmt
         config-cxx
+        ${AWSSDK_LINK_LIBRARIES}
 )
 
 target_include_directories(${EXECUTABLE_NAME}IT PUBLIC ${GMOCK_INCLUDE_DIR} ${DOTENV_INCLUDE_DIR})
