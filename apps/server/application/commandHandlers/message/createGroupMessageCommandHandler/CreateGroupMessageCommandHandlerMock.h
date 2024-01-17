@@ -2,13 +2,14 @@
 
 #include <gmock/gmock.h>
 
-#include "CreateGroupCommandHandler.h"
+#include "CreateGroupMessageCommandHandler.h"
 
 namespace server::application
 {
-class CreateGroupCommandHandlerMock : public CreateGroupCommandHandler
+class CreateGroupMessageCommandHandlerMock : public CreateGroupMessageCommandHandler
 {
 public:
-    MOCK_METHOD(CreateGroupCommandHandlerResult, execute, (const CreateGroupCommandHandlerPayload&), (const override));
+    MOCK_METHOD(CreateGroupMessageCommandHandlerResult, execute, (const CreateGroupMessageCommandHandlerPayload&),
+                (const override));
 };
 }

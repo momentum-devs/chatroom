@@ -127,6 +127,7 @@ set(SOURCES
         domain/entities/blacklistToken/BlacklistToken.cpp
         infrastructure/repositories/blacklistTokenRepository/blacklistTokenMapper/BlacklistTokenMapperImpl.cpp
         infrastructure/repositories/blacklistTokenRepository/BlacklistTokenRepositoryImpl.cpp
+        api/messageHandlers/messages/sendMessageToGroupMessageHandler/SendMessageToGroupMessageHandler.cpp
 )
 
 set(TEST_COMMON_SOURCES
@@ -188,6 +189,7 @@ set(UT_SOURCES
         api/messageHandlers/messages/sendMessageToChannelMessageHandler/SendMessageToChannelMessageHandlerTest.cpp
         api/messageHandlers/messages/getMessagesFromChannelMessageHandler/GetMessagesFromChannelMessageHandlerTest.cpp
         api/messageHandlers/messages/getMessagesFromGroupMessageHandler/GetMessagesFromGroupMessageHandlerTest.cpp
+        api/messageHandlers/messages/sendMessageToGroupMessageHandler/SendMessageToGroupMessageHandlerTest.cpp
 )
 
 set(IT_SOURCES
