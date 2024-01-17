@@ -31,3 +31,14 @@ eval cmake ..  -DCPP_JWT_BUILD_EXAMPLES=OFF -DCPP_JWT_BUILD_TESTS=OFF "$COMMON_C
 ninja
 ninja install
 cd ../..
+
+#cd aws-sdk-cpp || exit
+#rm -rf build
+#mkdir build
+#cd build || exit
+#eval cmake ..  -DCMAKE_BUILD_TYPE=Debug \
+#               -DCMAKE_INSTALL_PREFIX=<path-to-install> \
+#               -DBUILD_ONLY="s3"
+#ninja
+#ninja install
+#cd ../..

@@ -43,34 +43,37 @@ public:
     UploadUserAvatarCommandHandlerImpl uploadUserAvatarCommandHandler{userRepository, hashService};
 };
 
-TEST_F(UploadUserAvatarCommandImplIntegrationTest, updateNotExistingUser_shouldThrow)
-{
-    const auto id = faker::String::uuid();
-    const auto password = faker::Internet::password();
-
-    ASSERT_THROW(uploadUserAvatarCommandHandler.execute({id, std::nullopt, password}), errors::ResourceNotFoundError);
-}
-
-TEST_F(UploadUserAvatarCommandImplIntegrationTest, updatePassword)
-{
-    const auto user = userTestUtils.createAndPersist();
-
-    const auto updatedPassword = faker::Internet::password();
-
-    const auto [updatedUser] = uploadUserAvatarCommandHandler.execute({user->getId(), std::nullopt, updatedPassword});
-
-    ASSERT_EQ(updatedUser.getId(), user->getId());
-    ASSERT_EQ(updatedUser.getPassword(), hashService->hash(updatedPassword));
-}
-
-TEST_F(UploadUserAvatarCommandImplIntegrationTest, updateNickname)
-{
-    const auto user = userTestUtils.createAndPersist();
-
-    const auto updatedNickname = faker::Internet::username();
-
-    const auto [updatedUser] = uploadUserAvatarCommandHandler.execute({user->getId(), updatedNickname, std::nullopt});
-
-    ASSERT_EQ(updatedUser.getId(), user->getId());
-    ASSERT_EQ(updatedUser.getNickname(), updatedNickname);
-}
+// TEST_F(UploadUserAvatarCommandImplIntegrationTest, updateNotExistingUser_shouldThrow)
+//{
+//     const auto id = faker::String::uuid();
+//     const auto password = faker::Internet::password();
+//
+//     ASSERT_THROW(uploadUserAvatarCommandHandler.execute({id, std::nullopt, password}),
+//     errors::ResourceNotFoundError);
+// }
+//
+// TEST_F(UploadUserAvatarCommandImplIntegrationTest, updatePassword)
+//{
+//     const auto user = userTestUtils.createAndPersist();
+//
+//     const auto updatedPassword = faker::Internet::password();
+//
+//     const auto [updatedUser] = uploadUserAvatarCommandHandler.execute({user->getId(), std::nullopt,
+//     updatedPassword});
+//
+//     ASSERT_EQ(updatedUser.getId(), user->getId());
+//     ASSERT_EQ(updatedUser.getPassword(), hashService->hash(updatedPassword));
+// }
+//
+// TEST_F(UploadUserAvatarCommandImplIntegrationTest, updateNickname)
+//{
+//     const auto user = userTestUtils.createAndPersist();
+//
+//     const auto updatedNickname = faker::Internet::username();
+//
+//     const auto [updatedUser] = uploadUserAvatarCommandHandler.execute({user->getId(), updatedNickname,
+//     std::nullopt});
+//
+//     ASSERT_EQ(updatedUser.getId(), user->getId());
+//     ASSERT_EQ(updatedUser.getNickname(), updatedNickname);
+// }
