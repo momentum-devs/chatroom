@@ -28,6 +28,7 @@ public:
     QList<QObject*> getMessages();
 
     Q_INVOKABLE void sendMessage(const QString& text);
+    Q_INVOKABLE void startChoosingReactions(const QString& messageId);
 
 signals:
     void newMessageToSend(const QString& messageText);
@@ -45,6 +46,7 @@ private:
     const StateFactory& stateFactory;
     std::shared_ptr<StateMachine> stateMachine;
     std::shared_ptr<storage::MessageStorage> messageStorage;
+    std::string currentMessageIdToChooseReaction;
 
     inline static const QString name{"messagesController"};
 };

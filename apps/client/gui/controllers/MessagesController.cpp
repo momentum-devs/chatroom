@@ -65,4 +65,9 @@ void MessagesController::requestMoreMessages()
 
     emit getMoreMessages();
 }
+
+void MessagesController::startChoosingReactions(const QString& messageId)
+{
+    currentMessageIdToChooseReaction = messageId.toStdString();
+}
 }

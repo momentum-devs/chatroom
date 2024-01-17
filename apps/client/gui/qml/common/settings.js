@@ -25,3 +25,5 @@ const buttonColor = "#313338"
 const settingsButtonColor = "#b5bac1"
 
 const boxColor = "#232428"
+
+const hoverMessageColor = "#2e2f35"
