@@ -22,7 +22,6 @@ public:
     std::string getCxxEnv() const;
     std::string awsAccessKeyId() const;
     std::string awsSecretAccessKey() const;
-    std::string awsRegion() const;
     std::string awsBucket() const;
 
 private:

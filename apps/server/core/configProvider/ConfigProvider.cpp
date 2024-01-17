@@ -63,11 +63,6 @@ std::string ConfigProvider::awsSecretAccessKey() const
     return config->get<std::string>("aws.secretAccessKey");
 }
 
-std::string ConfigProvider::awsRegion() const
-{
-    return config->get<std::string>("aws.region");
-}
-
 std::string ConfigProvider::awsBucket() const
 {
     return config->get<std::string>("aws.bucket");
