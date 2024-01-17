@@ -39,7 +39,7 @@ jobs:
         working-directory: ${{github.workspace}}/build
         run: |
           docker run -v ${{github.workspace}}:/home/chatroom -w /home/chatroom/build wsekta/chatroom-builder \
-              ./../scripts/runCoverage.sh
+              ./../scripts/run-coverage.sh
 
       - name: Codecov
         uses: codecov/codecov-action@v3.1.4

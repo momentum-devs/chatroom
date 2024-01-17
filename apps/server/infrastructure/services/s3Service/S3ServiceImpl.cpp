@@ -8,7 +8,6 @@
 
 namespace server::application
 {
-
 S3ServiceImpl::S3ServiceImpl(std::unique_ptr<Aws::S3::S3Client> s3ClientInit) : s3Client{std::move(s3ClientInit)} {}
 
 void S3ServiceImpl::putObject(const PutObjectPayload& payload) const
