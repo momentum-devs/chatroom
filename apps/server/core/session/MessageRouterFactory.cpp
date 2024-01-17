@@ -247,7 +247,7 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
 
     auto acceptFriendInvitationCommandHandler =
         std::make_unique<server::application::AcceptFriendInvitationCommandHandlerImpl>(
-            friendInvitationRepository, userRepository, friendshipRepository, groupRepository);
+            friendInvitationRepository, userRepository, friendshipRepository, groupRepository, userGroupRepository);
 
     auto acceptFriendInvitationMessageHandler = std::make_shared<api::AcceptFriendInvitationMessageHandler>(
         tokenService, std::move(acceptFriendInvitationCommandHandler));

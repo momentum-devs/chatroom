@@ -14,11 +14,13 @@ AcceptFriendInvitationCommandHandlerImpl::AcceptFriendInvitationCommandHandlerIm
     std::shared_ptr<domain::FriendInvitationRepository> friendInvitationRepositoryInit,
     std::shared_ptr<domain::UserRepository> userRepositoryInit,
     std::shared_ptr<domain::FriendshipRepository> friendshipRepositoryInit,
-    std::shared_ptr<domain::GroupRepository> groupRepositoryInit)
+    std::shared_ptr<domain::GroupRepository> groupRepositoryInit,
+    std::shared_ptr<domain::UserGroupRepository> userGroupRepositoryInit)
     : friendInvitationRepository{std::move(friendInvitationRepositoryInit)},
       userRepository{std::move(userRepositoryInit)},
       friendshipRepository{std::move(friendshipRepositoryInit)},
-      groupRepository{std::move(groupRepositoryInit)}
+      groupRepository{std::move(groupRepositoryInit)},
+      userGroupRepository{std::move(userGroupRepositoryInit)}
 {
 }
 
@@ -96,5 +98,24 @@ void AcceptFriendInvitationCommandHandlerImpl::createFriendship(const std::strin
     const auto friendship = friendshipRepository->createFriendship({friendshipId, *user, *userFriend, group});
 
     LOG_S(INFO) << fmt::format("Friendship created. {{friendshipId: {}}}", friendship.getId());
+
+    createUserGroup(*user, group);
+    
+    createUserGroup(*userFriend, group);
+}
+
+void AcceptFriendInvitationCommandHandlerImpl::createUserGroup(const std::shared_ptr<domain::User>& user,
+                                                               const std::shared_ptr<domain::Group>& group) const
+{
+    LOG_S(INFO) << fmt::format("Creating user group... {{userId: {}, groupId: {}}}", user->getId(), group->getId());
+
+    std::stringstream uuid;
+    uuid << boost::uuids::random_generator()();
+
+    const auto userGroupId = uuid.str();
+
+    const auto userGroup = userGroupRepository->createUserGroup({userGroupId, user, group});
+
+    LOG_S(INFO) << fmt::format("User group created. {{userGroupId: {}}}", userGroup.getId());
 }
 }
