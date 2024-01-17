@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <optional>
 
 #include "S3Service.h"
 
@@ -10,6 +11,7 @@ struct AwsConfig
 {
     std::string accessKeyId;
     std::string secretAccessKey;
+    std::optional<std::string> endpoint;
 };
 
 class S3ServiceFactory
