@@ -9,8 +9,8 @@ Rectangle {
     property var friendInvitations: []
     property var friends: []
 
-    function addFriend(friendName: string, friendId: string, isActive: bool) {
-        friends.push([friendName, friendId, isActive]);
+    function addFriend(friendName: string, friendId: string, groupId: string, isActive: bool) {
+        friends.push([friendName, friendId, groupId, isActive]);
         friendsView.model = friends;
         friendsView.height = 36 * friends.length;
     }
@@ -78,7 +78,7 @@ Rectangle {
                             width: parent.width - firendActive.width - 5
 
                             onClicked: {
-                                privateMessagesController.setCurrentFriend(modelData[1], modelData[0]);
+                                privateMessagesController.setCurrentFriend(modelData[1], modelData[0], modelData[2]);
                             }
                         }
                         ActivityIndicator {

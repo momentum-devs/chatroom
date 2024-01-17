@@ -101,7 +101,8 @@ void PrivateMessagesController::rejectFriendInvitation(const QString& requestId)
     session->sendMessage(common::messages::MessageId::RejectFriendInvitations, data);
 }
 
-void PrivateMessagesController::setCurrentFriend(const QString& friendId, const QString& friendName)
+void PrivateMessagesController::setCurrentFriend(const QString& friendId, const QString& friendName,
+                                                 const QString& groupId)
 {
     LOG_S(INFO) << fmt::format("Set current friend to {} with id {}", friendName.toStdString(), friendId.toStdString());
 
@@ -121,10 +122,12 @@ void PrivateMessagesController::setCurrentFriend(const QString& friendId, const 
 
     currentFriendId = friendId.toStdString();
     currentFriendName = friendName.toStdString();
+    currentFriendGroupId = groupId.toStdString();
 
     emit setCurrentFriendName(friendName);
 
-    session->sendMessage(common::messages::MessageId::GetPrivateMessages, {{"friendId", currentFriendId}});
+    session->sendMessage(common::messages::MessageId::GetPrivateMessages,
+                         {{"groupId", currentFriendGroupId}, {"limit", 50}, {"offset", 0}});
 }
 
 void PrivateMessagesController::removeFromFriends()
@@ -158,7 +161,8 @@ void PrivateMessagesController::handleGetUserFriendsResponse(const common::messa
     {
         for (const auto& userFriend : responseJson.at("data"))
         {
-            if (userFriend.contains("id") and userFriend.contains("name") and userFriend.contains("isActive"))
+            if (userFriend.contains("id") and userFriend.contains("name") and userFriend.contains("isActive") and
+                userFriend.contains("groupId"))
             {
                 LOG_S(INFO) << fmt::format("Adding friend {} with id {} to list",
                                            userFriend.at("name").get<std::string>(),
@@ -166,6 +170,7 @@ void PrivateMessagesController::handleGetUserFriendsResponse(const common::messa
 
                 emit addFriend(QString::fromStdString(userFriend.at("name").get<std::string>()),
                                QString::fromStdString(userFriend.at("id").get<std::string>()),
+                               QString::fromStdString(userFriend.at("groupId").get<std::string>()),
                                userFriend.at("isActive").get<bool>());
             }
             else
@@ -259,7 +264,7 @@ void PrivateMessagesController::sendPrivateMessage(const QString& messageText)
                                currentFriendName, currentFriendId);
 
     nlohmann::json data{
-        {"receiverId", currentFriendId},
+        {"groupId", currentFriendGroupId},
         {"message", messageText.toStdString()},
     };
 

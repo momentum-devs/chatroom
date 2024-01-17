@@ -90,11 +90,16 @@ TEST_F(GetUserFriendsMessageHandlerTest, handleValidGetUserFriendsMessageWithFew
 
     auto responseMessage = getUserFriendsMessageHandler.handleMessage(message);
 
-    auto expectedResponsePayloadJson = nlohmann::json{
-        {"data", nlohmann::json::array({
-                     {{"id", friend1->getId()}, {"name", friend1->getNickname()}, {"isActive", friend1->isActive()}},
-                     {{"id", friend2->getId()}, {"name", friend2->getNickname()}, {"isActive", friend2->isActive()}},
-                 })}};
+    auto expectedResponsePayloadJson = nlohmann::json{{"data", nlohmann::json::array({
+                                                                   {{"id", friend1->getId()},
+                                                                    {"name", friend1->getNickname()},
+                                                                    {"isActive", friend1->isActive()},
+                                                                    {"groupId", group1->getId()}},
+                                                                   {{"id", friend2->getId()},
+                                                                    {"name", friend2->getNickname()},
+                                                                    {"isActive", friend2->isActive()},
+                                                                    {"groupId", group2->getId()}},
+                                                               })}};
 
     auto expectedMessageResponse = common::messages::Message{common::messages::MessageId::GetUserFriendsResponse,
                                                              common::bytes::Bytes{expectedResponsePayloadJson.dump()}};
