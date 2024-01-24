@@ -3,6 +3,7 @@
 #include "CreateMessageReactionCommandHandlerImpl.h"
 #include "faker-cxx/String.h"
 #include "faker-cxx/Word.h"
+#include "server/application/errors/OperationNotValidError.h"
 #include "server/application/errors/ResourceNotFoundError.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
 #include "server/infrastructure/repositories/groupRepository/groupMapper/GroupMapperImpl.h"
@@ -129,4 +130,18 @@ TEST_F(CreateMessageReactionCommandImplIntegrationTest, givenNotExistingMessage_
 
     ASSERT_THROW(createMessageReactionCommandHandler.execute({reactionName, user->getId(), messageId}),
                  errors::ResourceNotFoundError);
+}
+
+TEST_F(CreateMessageReactionCommandImplIntegrationTest, givenUserAlreadyReactedToMessage_shouldThrow)
+{
+    const auto user = userTestUtils.createAndPersist();
+
+    const auto channel = channelTestUtils.createAndPersist(user);
+
+    const auto message = messageTestUtils.createAndPersist(user, channel);
+
+    const auto reaction = reactionTestUtils.createAndPersist(user, message);
+
+    ASSERT_THROW(createMessageReactionCommandHandler.execute({reaction->getName(), user->getId(), message->getId()}),
+                 errors::OperationNotValidError);
 }

@@ -40,6 +40,18 @@ CreateMessageReactionCommandHandlerImpl::execute(const CreateMessageReactionComm
         throw errors::ResourceNotFoundError{fmt::format("Message with id {} not found.", payload.messageId)};
     }
 
+    const auto userReactionsForMessage = reactionRepository->findReactions({payload.userId, payload.messageId});
+
+    for (const auto& reaction : userReactionsForMessage)
+    {
+        if (reaction.getName() == payload.reactionName)
+        {
+            throw errors::OperationNotValidError{
+                fmt::format("User with id {} already reacted with {} to message with id {}.", payload.userId,
+                            payload.reactionName, payload.messageId)};
+        }
+    }
+
     std::stringstream uuid;
     uuid << boost::uuids::random_generator()();
 

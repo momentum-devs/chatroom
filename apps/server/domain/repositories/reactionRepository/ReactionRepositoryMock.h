@@ -10,7 +10,7 @@ class ReactionRepositoryMock : public ReactionRepository
 {
 public:
     MOCK_METHOD(Reaction, createReaction, (const CreateReactionPayload&), (const override));
-    MOCK_METHOD(std::optional<Reaction>, findReaction, (const FindReactionPayload&), (const override));
+    MOCK_METHOD(std::vector<Reaction>, findReactions, (const FindReactionsPayload&), (const override));
     MOCK_METHOD(std::optional<Reaction>, findReactionById, (const FindReactionByIdPayload&), (const override));
     MOCK_METHOD(std::vector<Reaction>, findReactionsByMessageId, (const FindReactionsByMessageIdPayload&),
                 (const override));

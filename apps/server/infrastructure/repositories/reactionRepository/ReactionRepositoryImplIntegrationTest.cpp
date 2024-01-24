@@ -176,10 +176,10 @@ TEST_F(ReactionRepositoryIntegrationTest, shouldFindReactionByUserIdAndMessageId
 
     const auto reaction = reactionTestUtils.createAndPersist(user, message);
 
-    const auto foundReaction = reactionRepository->findReaction({user->getId(), message->getId()});
+    const auto foundReactions = reactionRepository->findReactions({user->getId(), message->getId()});
 
-    ASSERT_TRUE(foundReaction);
-    ASSERT_EQ(foundReaction->getId(), reaction->getId());
+    ASSERT_FALSE(foundReactions.empty());
+    ASSERT_EQ(foundReactions[0].getId(), reaction->getId());
 }
 
 TEST_F(ReactionRepositoryIntegrationTest, shouldUpdateExistingReaction)

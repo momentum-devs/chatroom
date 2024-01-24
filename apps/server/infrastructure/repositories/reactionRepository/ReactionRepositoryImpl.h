@@ -19,7 +19,7 @@ public:
                            std::shared_ptr<UserMapper>, std::shared_ptr<MessageMapper>);
 
     domain::Reaction createReaction(const domain::CreateReactionPayload&) const;
-    std::optional<domain::Reaction> findReaction(const domain::FindReactionPayload&) const;
+    std::vector<domain::Reaction> findReactions(const domain::FindReactionsPayload&) const;
     std::optional<domain::Reaction> findReactionById(const domain::FindReactionByIdPayload&) const;
     std::vector<domain::Reaction> findReactionsByMessageId(const domain::FindReactionsByMessageIdPayload&) const;
     domain::Reaction updateReaction(const domain::UpdateReactionPayload&) const;
