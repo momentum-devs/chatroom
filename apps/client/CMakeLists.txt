@@ -72,6 +72,9 @@ set(QML_SOURCES
         gui/qml/components/messages/Message.qml
         gui/qml/components/messages/ReactionBox.ui.qml
         gui/qml/components/messages/ChoosingReactionBox.qml
+        gui/qml/components/messages/ReactionButton.qml
+        gui/qml/components/messages/ReactionButtonsRow.qml
+        gui/qml/components/messages/ReactionList.qml
 
         gui/states/register/RegisterView.qml
         gui/states/login/LoginView.qml
@@ -104,6 +107,13 @@ set(RESOURCES
         resources/svg/check.svg
         resources/svg/cross.svg
         resources/svg/happy-face.svg
+        resources/svg/reactions/dislike.svg
+        resources/svg/reactions/like.svg
+        resources/svg/reactions/sad.svg
+        resources/svg/reactions/laugh-beam.svg
+        resources/svg/reactions/laugh-squint.svg
+        resources/svg/reactions/laugh.svg
+        resources/svg/reactions/heart.svg
 )
 
 qt_add_executable(${EXECUTABLE_NAME} Main.cpp ${SOURCES})

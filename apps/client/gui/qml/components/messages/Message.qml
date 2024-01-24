@@ -110,23 +110,23 @@ Rectangle {
         onStartChoosingReaction: {
             choosingReactionBox.visible = true
             choosingReactionBox.enabled = true
-            message.addReactionToMessage(message.messageData.messageId)
-            message.isSelected = true
+
         }
     }
 
     ChoosingReactionBox {
         id: choosingReactionBox
-        x: reactionBox.x + reactionBox.width - choosingReactionBox.width * 2
+        x: reactionBox.x - choosingReactionBox.width - 20
         y: reactionBox.y - 10
         visible: false
         enabled: false
         onClosed: {
             message.unselect()
         }
-        // onReactionChosen: {
-        //     message.addReactionToMessage(message.messageData.messageId)
-        // }
+        onOpened: {
+            message.addReactionToMessage(message.messageData.messageId)
+            message.isSelected = true
+        }
     }
 
     MouseArea {

@@ -4,16 +4,34 @@ import "../../common/settings.js" as Settings
 import ".."
 
 Popup {
-    width: 120
-    height: 250
+    id: chooseReactionBox
+    width: 180
+    height: 200
+    Text {
+        id: headerText
+        anchors {
+            horizontalCenter: parent.horizontalCenter
+            top: parent.top
+            topMargin: 10
+        }
 
-    Rectangle {
+        text: qsTr("Choose reaction:")
+        color: Settings.textColor
+    }
+
+    ReactionList {
+        height: parent.height - headerText.height - 20
+        width: parent.width - 20
+        anchors {
+            horizontalCenter: parent.horizontalCenter
+            top: headerText.bottom
+            topMargin: 10
+        }
+    }
+
+
+    background: Rectangle {
         anchors.fill: parent
-        z: 1
-        property bool isMouseInside: false
-        id: chooseReactionBox
-        visible: false
-        enabled: false
         radius: 5
         color: Settings.hoverMessageColor
         border.color: Settings.boxColor
