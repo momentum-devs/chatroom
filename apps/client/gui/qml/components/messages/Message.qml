@@ -4,15 +4,27 @@ import "../../common/settings.js" as Settings
 import ".."
 
 Rectangle {
+    z: 0
     id: message
 
     height: messageColumn.height + 10
 
     property var messageData
+    property bool isSelected: false
 
     property string baseColor: Settings.backgroundColor
     color: baseColor
     property string hoverColor: Settings.hoverMessageColor
+
+    function unselect() {
+        console.log("unselecting message " + messageData.messageId)
+        isSelected = false
+        color = baseColor
+        reactionBox.visible = false
+        reactionBox.enabled = false
+        choosingReactionBox.visible = false
+        choosingReactionBox.enabled = false
+    }
 
     signal addReactionToMessage(messageId: string)
 
@@ -95,9 +107,26 @@ Rectangle {
             verticalCenter: messageColumn.top
         }
 
-        onAddReaction: {
+        onStartChoosingReaction: {
+            choosingReactionBox.visible = true
+            choosingReactionBox.enabled = true
             message.addReactionToMessage(message.messageData.messageId)
+            message.isSelected = true
         }
+    }
+
+    ChoosingReactionBox {
+        id: choosingReactionBox
+        anchors {
+            right: reactionBox.left
+            rightMargin: 5
+            verticalCenter: messageColumn.bottom
+        }
+        visible: false
+        enabled: false
+        // onReactionChosen: {
+        //     message.addReactionToMessage(message.messageData.messageId)
+        // }
     }
 
     MouseArea {
@@ -112,9 +141,11 @@ Rectangle {
             reactionBox.enabled = true
         }
         onExited: {
-            message.color = message.baseColor
-            reactionBox.visible = false
-            reactionBox.enabled = false
+            if (!message.isSelected) {
+                message.color = message.baseColor
+                reactionBox.visible = false
+                reactionBox.enabled = false
+            }
         }
     }
 }

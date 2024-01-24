@@ -14,8 +14,8 @@ Rectangle {
     border.color: Settings.boxColor
     border.width: 1
 
-        signal
-    addReaction
+    signal
+    startChoosingReaction()
 
     CustomButton {
         id: reactionButton
@@ -32,22 +32,8 @@ Rectangle {
         width: size
         enabled: true
 
-        background: Rectangle {
-            height: reactionButton.size
-            opacity: 0.5
-            radius: 3
-            visible: false
-            width: reactionButton.size
-        }
-
-        onMouseEnteredArea: {
-            background.visible = true;
-        }
-        onMouseExitedArea: {
-            background.visible = false;
-        }
         onClicked: {
-            reactionBox.addReaction();
+            reactionBox.startChoosingReaction();
         }
     }
 }

@@ -71,6 +71,7 @@ set(QML_SOURCES
         gui/qml/components/messages/MessageView.qml
         gui/qml/components/messages/Message.qml
         gui/qml/components/messages/ReactionBox.ui.qml
+        gui/qml/components/messages/ChoosingReactionBox.qml
 
         gui/states/register/RegisterView.qml
         gui/states/login/LoginView.qml

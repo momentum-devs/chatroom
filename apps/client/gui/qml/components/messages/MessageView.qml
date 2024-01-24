@@ -58,6 +58,18 @@ Rectangle {
                 }
             }
         }
+        MouseArea {
+            anchors.fill: parent
+            cursorShape: Qt.PointingHandCursor
+            hoverEnabled: true
+            propagateComposedEvents: true
+            onClicked: {
+                console.log("Clicked on messages view")
+                for (var i = 0; i < messagesRepeater.rowCount; i++) {
+                    console.log(messagesRepeater.get(i).isSelected);
+                }
+            }
+        }
     }
 
     Rectangle {
