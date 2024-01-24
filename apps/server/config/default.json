@@ -20,6 +20,6 @@
     "accessKeyId": null,
     "secretAccessKey": null,
     "region": "eu-central-1",
-    "bucket": "chatroom-users-avatars"
+    "bucket": "avatars"
   }
 }

@@ -28,7 +28,11 @@ UploadUserAvatarCommandHandlerImpl::execute(const UploadUserAvatarCommandHandler
         throw errors::ResourceNotFoundError{fmt::format("User with id \"{}\" not found.", payload.id)};
     }
 
+    const auto bucketName = configProvider->getAwsBucket();
+
     const auto objectKey = fmt::format("{}{}", payload.id, payload.avatarName);
+
+    s3Service->putObject({bucketName, objectKey, payload.avatarData});
 
     const auto avatarUrl = fmt::format("https://{}.s3-{}.amazonaws.com/avatars/{}", configProvider->getAwsBucket(),
                                        configProvider->getAwsRegion(), objectKey);

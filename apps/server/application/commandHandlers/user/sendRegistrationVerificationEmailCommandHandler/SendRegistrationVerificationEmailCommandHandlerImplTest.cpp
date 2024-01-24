@@ -6,9 +6,7 @@
 #include "server/domain/repositories/userRepository/UserRepositoryMock.h"
 
 #include "faker-cxx/Datatype.h"
-#include "faker-cxx/Date.h"
 #include "faker-cxx/Internet.h"
-#include "faker-cxx/String.h"
 #include "server/application/errors/ResourceNotFoundError.h"
 #include "server/tests/factories/userTestFactory/UserTestFactory.h"
 #include "User.h"

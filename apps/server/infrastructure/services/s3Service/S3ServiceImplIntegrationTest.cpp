@@ -1,13 +1,22 @@
+#include <fstream>
+
 #include "gtest/gtest.h"
 
-#include "faker-cxx/Internet.h"
 #include "faker-cxx/Lorem.h"
+#include "faker-cxx/Word.h"
+#include "filesystem/GetProjectPath.h"
+#include "fmt/format.h"
 #include "S3ServiceImpl.h"
 #include "server/application/services/s3Service/S3ServiceFactory.h"
 
 using namespace ::testing;
 using namespace server;
 using namespace server::application;
+
+namespace
+{
+const std::string resourcesDirectory{fmt::format("{}/resources", common::filesystem::getProjectPath("chatroom"))};
+}
 
 class S3ServiceImplIntegrationTest : public Test
 {
@@ -37,8 +46,15 @@ TEST_F(S3ServiceImplIntegrationTest, givenNonExistingObjectKey_shouldThrow)
 
 TEST_F(S3ServiceImplIntegrationTest, shouldPutObject)
 {
-    const auto objectKey = faker::Internet::password();
-    const auto objectData = faker::Lorem::paragraph();
+    const auto objectKey = faker::Word::noun();
+
+    std::ifstream fileStream{fmt::format("{}/{}", resourcesDirectory, existingObjectKey)};
+
+    std::stringstream buffer;
+
+    buffer << fileStream.rdbuf();
+
+    const auto objectData = buffer.str();
 
     s3Service->putObject({bucketName, objectKey, objectData});
 
