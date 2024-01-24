@@ -26,8 +26,6 @@ Rectangle {
         choosingReactionBox.enabled = false
     }
 
-    signal addReactionToMessage(messageId: string)
-
     Column {
         id: messageColumn
         anchors {
@@ -110,23 +108,23 @@ Rectangle {
         onStartChoosingReaction: {
             choosingReactionBox.visible = true
             choosingReactionBox.enabled = true
-            message.addReactionToMessage(message.messageData.messageId)
-            message.isSelected = true
+
         }
     }
 
     ChoosingReactionBox {
         id: choosingReactionBox
-        anchors {
-            right: reactionBox.left
-            rightMargin: 5
-            verticalCenter: messageColumn.bottom
-        }
+        x: reactionBox.x - choosingReactionBox.width - 20
+        y: reactionBox.y - 10
         visible: false
         enabled: false
-        // onReactionChosen: {
-        //     message.addReactionToMessage(message.messageData.messageId)
-        // }
+        onClosed: {
+            message.unselect()
+        }
+        onOpened: {
+            messagesController.startChoosingReactions(message.messageData.messageId)
+            message.isSelected = true
+        }
     }
 
     MouseArea {

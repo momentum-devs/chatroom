@@ -17,6 +17,7 @@
 #include "server/api/messageHandlers/friend/getUserFriendsMessageHandler/GetUserFriendsMessageHandler.h"
 #include "server/api/messageHandlers/friend/rejectFriendInvitationMessageHandler/RejectFriendInvitationMessageHandler.h"
 #include "server/api/messageHandlers/friend/removeFromFriendsMessageHandler/RemoveFromFriendsMessageHandler.h"
+#include "server/api/messageHandlers/messages/addReactionMessageHandler/AddReactionMessageHandler.h"
 #include "server/api/messageHandlers/messages/getMessagesFromChannelMessageHandler/GetMessagesFromChannelMessageHandler.h"
 #include "server/api/messageHandlers/messages/getMessagesFromGroupMessageHandler/GetMessagesFromGroupMessageHandler.h"
 #include "server/api/messageHandlers/messages/sendMessageToChannelMessageHandler/SendMessageToChannelMessageHandler.h"
@@ -40,6 +41,7 @@
 #include "server/application/commandHandlers/friend/rejectFriendInvitationCommandHandler/RejectFriendInvitationCommandHandlerImpl.h"
 #include "server/application/commandHandlers/message/createChannelMessageCommandHandler/CreateChannelMessageCommandHandlerImpl.h"
 #include "server/application/commandHandlers/message/createGroupMessageCommandHandler/CreateGroupMessageCommandHandlerImpl.h"
+#include "server/application/commandHandlers/message/createMessageReactionCommandHandler/CreateMessageReactionCommandHandlerImpl.h"
 #include "server/application/commandHandlers/user/deleteUserCommandHandler/DeleteUserCommandHandlerImpl.h"
 #include "server/application/commandHandlers/user/loginUserCommandHandler/LoginUserCommandHandlerImpl.h"
 #include "server/application/commandHandlers/user/logoutUserCommandHandler/LogoutUserCommandHandlerImpl.h"
@@ -70,6 +72,8 @@
 #include "server/infrastructure/repositories/groupRepository/GroupRepositoryImpl.h"
 #include "server/infrastructure/repositories/messageRepository/messageMapper/MessageMapperImpl.h"
 #include "server/infrastructure/repositories/messageRepository/MessageRepositoryImpl.h"
+#include "server/infrastructure/repositories/reactionRepository/reactionMapper/ReactionMapperImpl.h"
+#include "server/infrastructure/repositories/reactionRepository/ReactionRepositoryImpl.h"
 #include "server/infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapperImpl.h"
 #include "server/infrastructure/repositories/userChannelRepository/UserChannelRepositoryImpl.h"
 #include "server/infrastructure/repositories/userGroupRepository/userGroupMapper/UserGroupMapperImpl.h"
@@ -313,6 +317,18 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
     auto sendMessageToGroupMessageHandler = std::make_shared<server::api::SendMessageToGroupMessageHandler>(
         tokenService, std::move(createGroupMessageCommandHandler));
 
+    auto reactionMapper = std::make_shared<server::infrastructure::ReactionMapperImpl>(userMapper, messageMapper);
+
+    auto reactionRepository =
+        std::make_shared<server::infrastructure::ReactionRepositoryImpl>(db, reactionMapper, userMapper, messageMapper);
+
+    auto createMessageReactionCommandHandler =
+        std::make_unique<server::application::CreateMessageReactionCommandHandlerImpl>(
+            userRepository, messageRepository, reactionRepository);
+
+    auto addReactionMessageHandler = std::make_shared<server::api::AddReactionMessageHandler>(
+        tokenService, std::move(createMessageReactionCommandHandler));
+
     std::unordered_map<common::messages::MessageId, std::shared_ptr<api::MessageHandler>> messageHandlers{
         {common::messages::MessageId::CreateChannel, createChannelMessageHandler},
         {common::messages::MessageId::GetUserChannels, getUserChannelsMessageHandler},
@@ -340,6 +356,7 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
         {common::messages::MessageId::GetChannelMessages, getMessageFromChannelMessageHandler},
         {common::messages::MessageId::GetPrivateMessages, getMessagesFromGroupMessageHandler},
         {common::messages::MessageId::SendPrivateMessage, sendMessageToGroupMessageHandler},
+        {common::messages::MessageId::AddReaction, addReactionMessageHandler},
     };
 
     return std::make_unique<MessageRouterImpl>(std::move(messageHandlers));

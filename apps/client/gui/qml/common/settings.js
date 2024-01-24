@@ -27,3 +27,5 @@ const settingsButtonColor = "#b5bac1"
 const boxColor = "#232428"
 
 const hoverMessageColor = "#2e2f35"
+
+const reactionButtonSize = 31

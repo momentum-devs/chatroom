@@ -58,6 +58,12 @@ enum class MessageId : unsigned char
     GetPrivateMessagesResponse,
     SendPrivateMessage,
     SendPrivateMessageResponse,
+    AddReaction,
+    AddReactionResponse,
+    RemoveReaction,
+    RemoveReactionResponse,
+    GetReactions,
+    GetReactionsResponse,
 };
 
 inline std::string toString(MessageId messageId)
@@ -113,6 +119,12 @@ inline std::string toString(MessageId messageId)
         {MessageId::GetPrivateMessagesResponse, "GetPrivateMessagesResponse"},
         {MessageId::SendPrivateMessage, "SendPrivateMessage"},
         {MessageId::SendPrivateMessageResponse, "SendPrivateMessageResponse"},
+        {MessageId::AddReaction, "AddReaction"},
+        {MessageId::AddReactionResponse, "AddReactionResponse"},
+        {MessageId::RemoveReaction, "RemoveReaction"},
+        {MessageId::RemoveReactionResponse, "RemoveReactionResponse"},
+        {MessageId::GetReactions, "GetReactions"},
+        {MessageId::GetReactionsResponse, "GetReactionsResponse"},
     };
 
     try
