@@ -14,6 +14,7 @@ public:
     MOCK_METHOD(std::optional<Reaction>, findReactionById, (const FindReactionByIdPayload&), (const override));
     MOCK_METHOD(std::vector<Reaction>, findReactionsByMessageId, (const FindReactionsByMessageIdPayload&),
                 (const override));
+    MOCK_METHOD(Reaction, updateReaction, (const UpdateReactionPayload&), (const override));
     MOCK_METHOD(void, deleteReaction, (const DeleteReactionPayload&), (const override));
 };
 }

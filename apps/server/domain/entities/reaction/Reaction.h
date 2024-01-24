@@ -18,6 +18,7 @@ public:
     std::string getName() const;
     std::shared_ptr<User> getUser() const;
     std::shared_ptr<Message> getMessage() const;
+    void setName(const std::string& name);
 
 private:
     std::string id;

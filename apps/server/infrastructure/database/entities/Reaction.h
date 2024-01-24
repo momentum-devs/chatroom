@@ -41,6 +41,11 @@ public:
         return message;
     }
 
+    void setName(const std::string& nameInit)
+    {
+        name = nameInit;
+    }
+
 private:
     Reaction() = default;
 

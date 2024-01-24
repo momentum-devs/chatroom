@@ -6,6 +6,7 @@
 #include "faker-cxx/String.h"
 #include "faker-cxx/Word.h"
 #include "ReactionRepositoryImpl.h"
+#include "server/infrastructure/errors/ReactionRepositoryError.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
 #include "server/infrastructure/repositories/groupRepository/groupMapper/GroupMapperImpl.h"
 #include "server/infrastructure/repositories/messageRepository/messageMapper/MessageMapperImpl.h"
@@ -179,4 +180,47 @@ TEST_F(ReactionRepositoryIntegrationTest, shouldFindReactionByUserIdAndMessageId
 
     ASSERT_TRUE(foundReaction);
     ASSERT_EQ(foundReaction->getId(), reaction->getId());
+}
+
+TEST_F(ReactionRepositoryIntegrationTest, shouldUpdateExistingReaction)
+{
+    const auto updatedName = faker::Word::noun();
+
+    const auto user = userTestUtils.createAndPersist();
+
+    const auto channel = channelTestUtils.createAndPersist(user);
+
+    const auto message = messageTestUtils.createAndPersist(user, channel);
+
+    const auto reaction = reactionTestUtils.createAndPersist(user, message);
+
+    auto domainReaction = reactionMapper->mapToDomainReaction(*reaction);
+
+    domainReaction.setName(updatedName);
+
+    reactionRepository->updateReaction({domainReaction});
+
+    const auto foundReaction = reactionTestUtils.findById(reaction->getId());
+
+    ASSERT_TRUE(foundReaction);
+    ASSERT_EQ(foundReaction->getName(), updatedName);
+}
+
+TEST_F(ReactionRepositoryIntegrationTest, update_givenNonExistingReaction_shouldThrowError)
+{
+    const auto user = userTestUtils.createAndPersist();
+
+    const auto domainUser = userMapper->mapToDomainUser(user);
+
+    const auto channel = channelTestUtils.createAndPersist(user);
+
+    const auto domainChannel = channelMapper->mapToDomainChannel(channel);
+
+    const auto message = messageTestUtils.createAndPersist(user, channel);
+
+    const auto domainMessage = messageMapper->mapToDomainMessage(message);
+
+    const auto domainReaction = reactionTestFactory.createDomainReaction(domainUser, domainMessage);
+
+    ASSERT_THROW(reactionRepository->updateReaction({*domainReaction}), errors::ReactionRepositoryError);
 }

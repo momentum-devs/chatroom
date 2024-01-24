@@ -22,6 +22,7 @@ public:
     std::optional<domain::Reaction> findReaction(const domain::FindReactionPayload&) const;
     std::optional<domain::Reaction> findReactionById(const domain::FindReactionByIdPayload&) const;
     std::vector<domain::Reaction> findReactionsByMessageId(const domain::FindReactionsByMessageIdPayload&) const;
+    domain::Reaction updateReaction(const domain::UpdateReactionPayload&) const;
     void deleteReaction(const domain::DeleteReactionPayload&) const;
 
 private:

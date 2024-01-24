@@ -5,6 +5,7 @@
 #include "fmt/format.h"
 #include "Reaction.odb.h"
 #include "server/infrastructure/errors/ReactionRepositoryError.h"
+#include "server/infrastructure/errors/ResourceNotFoundError.h"
 
 namespace server::infrastructure
 {
@@ -120,6 +121,40 @@ ReactionRepositoryImpl::findReactionsByMessageId(const domain::FindReactionsByMe
         transaction.commit();
 
         return domainReactions;
+    }
+    catch (const std::exception& error)
+    {
+        throw errors::ReactionRepositoryError{error.what()};
+    }
+}
+
+domain::Reaction ReactionRepositoryImpl::updateReaction(const domain::UpdateReactionPayload& payload) const
+{
+    try
+    {
+        {
+            odb::transaction transaction(db->begin());
+
+            typedef odb::query<Reaction> query;
+
+            std::shared_ptr<Reaction> reaction(db->query_one<Reaction>(query::id == payload.reaction.getId()));
+
+            if (!reaction)
+            {
+                throw errors::ResourceNotFoundError{
+                    fmt::format("Reaction with id \"{}\" not found.", payload.reaction.getId())};
+            }
+
+            reaction->setName(payload.reaction.getName());
+
+            const auto currentDate = to_iso_string(boost::posix_time::second_clock::universal_time());
+
+            db->update(*reaction);
+
+            transaction.commit();
+        }
+
+        return *findReactionById({payload.reaction.getId()});
     }
     catch (const std::exception& error)
     {

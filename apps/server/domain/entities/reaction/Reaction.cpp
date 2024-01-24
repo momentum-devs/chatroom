@@ -27,4 +27,9 @@ std::shared_ptr<Message> Reaction::getMessage() const
 {
     return message;
 }
+
+void Reaction::setName(const std::string& nameInit)
+{
+    name = nameInit;
+}
 }
