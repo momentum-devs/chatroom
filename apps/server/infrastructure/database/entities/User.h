@@ -13,7 +13,8 @@ class User
 {
 public:
     User(std::string idInit, std::string emailInit, std::string passwordInit, std::string nicknameInit, bool activeInit,
-         bool emailVerifiedInit, std::string verificationCodeInit, std::string createdAtInit, std::string updatedAtInit,
+         bool emailVerifiedInit, std::string verificationCodeInit,
+         const odb::nullable<std::string>& resetPasswordCodeInit, std::string createdAtInit, std::string updatedAtInit,
          const odb::nullable<std::string>& avatarUrlInit)
         : id{std::move(idInit)},
           email{std::move(emailInit)},
@@ -22,6 +23,7 @@ public:
           active{activeInit},
           email_verified{emailVerifiedInit},
           verification_code(std::move(verificationCodeInit)),
+          reset_password_code(std::move(resetPasswordCodeInit)),
           created_at{std::move(createdAtInit)},
           updated_at{std::move(updatedAtInit)},
           avatar_url{avatarUrlInit}
@@ -61,6 +63,11 @@ public:
     [[nodiscard]] std::string getVerificationCode() const
     {
         return verification_code;
+    }
+
+    [[nodiscard]] odb::nullable<std::string> getResetPasswordCode() const
+    {
+        return reset_password_code;
     }
 
     [[nodiscard]] std::string getCreatedAt() const
@@ -103,6 +110,11 @@ public:
         verification_code = verificationCodeInit;
     }
 
+    void setResetPasswordCode(const std::string& resetPasswordCodeInit)
+    {
+        reset_password_code = resetPasswordCodeInit;
+    }
+
     void setAvatarUrl(const std::string& avatarUrlInit)
     {
         avatar_url = avatarUrlInit;
@@ -118,7 +130,8 @@ public:
         auto tieStruct = [](const User& user)
         {
             return std::tie(user.id, user.email, user.password, user.nickname, user.created_at, user.updated_at,
-                            user.avatar_url, user.active, user.email_verified, user.verification_code);
+                            user.avatar_url, user.active, user.email_verified, user.verification_code,
+                            user.reset_password_code);
         };
 
         return tieStruct(*this) == tieStruct(user);
@@ -137,6 +150,7 @@ private:
     bool active{false};
     bool email_verified{false};
     std::string verification_code;
+    odb::nullable<std::string> reset_password_code;
     std::string created_at;
     std::string updated_at;
     odb::nullable<std::string> avatar_url;

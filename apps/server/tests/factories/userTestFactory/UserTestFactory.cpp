@@ -21,12 +21,13 @@ std::shared_ptr<domain::User> UserTestFactory::createDomainUser(std::size_t nick
     const auto active = faker::Datatype::boolean();
     const auto emailVerified = faker::Datatype::boolean();
     const auto verificationCode = faker::String::numeric(6);
+    const auto resetPasswordCode = faker::String::numeric(6);
     const auto createdAt = faker::Date::pastDate();
     const auto updatedAt = faker::Date::recentDate();
     const auto avatarUrl = faker::Image::imageUrl();
 
     return std::make_shared<domain::User>(id, email, password, nickname, active, emailVerified, verificationCode,
-                                          createdAt, updatedAt, avatarUrl);
+                                          resetPasswordCode, createdAt, updatedAt, avatarUrl);
 }
 
 std::shared_ptr<infrastructure::User> UserTestFactory::createPersistentUser()
@@ -38,11 +39,12 @@ std::shared_ptr<infrastructure::User> UserTestFactory::createPersistentUser()
     const auto active = faker::Datatype::boolean();
     const auto emailVerified = faker::Datatype::boolean();
     const auto verificationCode = faker::String::numeric(6);
+    const auto resetPasswordCode = faker::String::numeric(6);
     const auto createdAt = faker::Date::pastDate();
     const auto updatedAt = faker::Date::recentDate();
     const auto avatarUrl = faker::Image::imageUrl();
 
     return std::make_shared<infrastructure::User>(id, email, password, email, active, emailVerified, verificationCode,
-                                                  createdAt, updatedAt, avatarUrl);
+                                                  resetPasswordCode, createdAt, updatedAt, avatarUrl);
 }
 }

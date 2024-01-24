@@ -52,12 +52,13 @@ TEST_F(UserRepositoryIntegrationTest, shouldCreateUser)
     const auto active = faker::Datatype::boolean();
     const auto emailVerified = faker::Datatype::boolean();
     const auto verificationCode = faker::String::numeric(6);
+    const auto resetPasswordCode = faker::String::numeric(6);
     const auto createdAt = faker::Date::pastDate();
     const auto updatedAt = faker::Date::recentDate();
     const auto avatarUrl = faker::Image::imageUrl();
 
     const auto user = userRepository->createUser(
-        {userId, email, password, nickname, active, emailVerified, verificationCode, avatarUrl});
+        {userId, email, password, nickname, active, emailVerified, verificationCode, resetPasswordCode, avatarUrl});
 
     ASSERT_EQ(user->getEmail(), email);
     ASSERT_EQ(user->getPassword(), password);
@@ -129,6 +130,7 @@ TEST_F(UserRepositoryIntegrationTest, shouldUpdateExistingUser)
     const auto updatedActive = faker::Datatype::boolean();
     const auto updatedEmailVerified = faker::Datatype::boolean();
     const auto updatedVerificationCode = faker::String::numeric(6);
+    const auto updatedResetPasswordCode = faker::String::numeric(6);
     const auto updatedAvatarUrl = faker::Image::imageUrl();
 
     const auto user = userTestUtils.createAndPersist();
@@ -140,6 +142,7 @@ TEST_F(UserRepositoryIntegrationTest, shouldUpdateExistingUser)
     domainUser->setActive(updatedActive);
     domainUser->setEmailVerified(updatedEmailVerified);
     domainUser->setVerificationCode(updatedVerificationCode);
+    domainUser->setResetPasswordCode(updatedResetPasswordCode);
     domainUser->setAvatarUrl(updatedAvatarUrl);
 
     userRepository->updateUser({*domainUser});
@@ -152,6 +155,7 @@ TEST_F(UserRepositoryIntegrationTest, shouldUpdateExistingUser)
     ASSERT_EQ((*updatedUser)->isActive(), updatedActive);
     ASSERT_EQ((*updatedUser)->isEmailVerified(), updatedEmailVerified);
     ASSERT_EQ((*updatedUser)->getVerificationCode(), updatedVerificationCode);
+    ASSERT_EQ((*updatedUser)->getResetPasswordCode(), updatedResetPasswordCode);
     ASSERT_EQ((*updatedUser)->getAvatarUrl(), updatedAvatarUrl);
 }
 

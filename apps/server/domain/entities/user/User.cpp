@@ -5,8 +5,9 @@
 namespace server::domain
 {
 User::User(std::string idInit, std::string emailInit, std::string passwordInit, std::string nicknameInit,
-           bool activeInit, bool emailVerifiedInit, std::string verificationCodeInit, std::string createdAtInit,
-           std::string updatedAtInit, std::optional<std::string> avatarUrlInit)
+           bool activeInit, bool emailVerifiedInit, std::string verificationCodeInit,
+           std::optional<std::string> resetPasswordCodeInit, std::string createdAtInit, std::string updatedAtInit,
+           std::optional<std::string> avatarUrlInit)
     : id{std::move(idInit)},
       email{std::move(emailInit)},
       password{std::move(passwordInit)},
@@ -14,6 +15,7 @@ User::User(std::string idInit, std::string emailInit, std::string passwordInit, 
       active{activeInit},
       emailVerified{emailVerifiedInit},
       verificationCode{std::move(verificationCodeInit)},
+      resetPasswordCode{std::move(resetPasswordCodeInit)},
       createdAt{std::move(createdAtInit)},
       updatedAt{std::move(updatedAtInit)},
       avatarUrl{std::move(avatarUrlInit)}
@@ -53,6 +55,11 @@ bool User::isEmailVerified() const
 std::string User::getVerificationCode() const
 {
     return verificationCode;
+}
+
+std::optional<std::string> User::getResetPasswordCode() const
+{
+    return resetPasswordCode;
 }
 
 std::string User::getCreatedAt() const
@@ -95,6 +102,11 @@ void User::setVerificationCode(const std::string& newVerificationCode)
     verificationCode = newVerificationCode;
 }
 
+void User::setResetPasswordCode(const std::string& newResetPasswordCode)
+{
+    resetPasswordCode = newResetPasswordCode;
+}
+
 void User::setAvatarUrl(const std::string& avatarUrlInit)
 {
     avatarUrl = avatarUrlInit;
@@ -105,7 +117,7 @@ bool User::operator==(const User& user) const
     auto tieStruct = [](const User& user)
     {
         return std::tie(user.id, user.email, user.password, user.nickname, user.emailVerified, user.active,
-                        user.verificationCode, user.createdAt, user.updatedAt);
+                        user.verificationCode, user.createdAt, user.updatedAt, user.resetPasswordCode);
     };
 
     return tieStruct(*this) == tieStruct(user);

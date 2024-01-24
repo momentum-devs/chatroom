@@ -42,8 +42,8 @@ RegisterUserCommandHandlerImpl::execute(const RegisterUserCommandHandlerPayload&
 
     const auto verificationCode = common::random::StringGenerator::numeric(6);
 
-    const auto user = userRepository->createUser(
-        {userId, payload.email, hashedPassword, payload.nickname, false, false, verificationCode, std::nullopt});
+    const auto user = userRepository->createUser({userId, payload.email, hashedPassword, payload.nickname, false, false,
+                                                  verificationCode, std::nullopt, std::nullopt});
 
     LOG_S(INFO) << fmt::format("User with email \"{}\" registered.", payload.email);
 

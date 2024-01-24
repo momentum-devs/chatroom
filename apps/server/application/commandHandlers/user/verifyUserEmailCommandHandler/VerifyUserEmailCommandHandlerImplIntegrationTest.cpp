@@ -58,6 +58,7 @@ TEST_F(VerifyUserEmailCommandImplIntegrationTest, verifyExistingUserWithInvalidV
     const auto active = faker::Datatype::boolean();
     const auto emailVerified = false;
     const auto verificationCode = faker::String::numeric(6);
+    const auto resetPasswordCode = faker::String::numeric(6);
     const auto createdAt = faker::Date::pastDate();
     const auto updatedAt = faker::Date::recentDate();
     const auto avatarUrl = faker::Image::imageUrl();
@@ -65,7 +66,8 @@ TEST_F(VerifyUserEmailCommandImplIntegrationTest, verifyExistingUserWithInvalidV
     const auto invalidVerificationCode = faker::String::numeric(5);
 
     const auto user = std::make_shared<server::infrastructure::User>(id, email, password, email, active, emailVerified,
-                                                                     verificationCode, createdAt, updatedAt, avatarUrl);
+                                                                     verificationCode, resetPasswordCode, createdAt,
+                                                                     updatedAt, avatarUrl);
 
     userTestUtils.persist(user);
 
@@ -82,13 +84,15 @@ TEST_F(VerifyUserEmailCommandImplIntegrationTest, verifyAlreadyVerifiedUser)
     const auto active = faker::Datatype::boolean();
     const auto emailVerified = true;
     const auto verificationCode = faker::String::numeric(6);
+    const auto resetPasswordCode = faker::String::numeric(6);
     const auto invalidVerificationCode = faker::String::numeric(5);
     const auto createdAt = faker::Date::pastDate();
     const auto updatedAt = faker::Date::recentDate();
     const auto avatarUrl = faker::Image::imageUrl();
 
     const auto user = std::make_shared<server::infrastructure::User>(id, email, password, email, active, emailVerified,
-                                                                     verificationCode, createdAt, updatedAt, avatarUrl);
+                                                                     verificationCode, resetPasswordCode, createdAt,
+                                                                     updatedAt, avatarUrl);
 
     userTestUtils.persist(user);
 
@@ -105,12 +109,14 @@ TEST_F(VerifyUserEmailCommandImplIntegrationTest, verifyExistingUserWithValidVer
     const auto active = faker::Datatype::boolean();
     const auto emailVerified = false;
     const auto verificationCode = faker::String::numeric(6);
+    const auto resetPasswordCode = faker::String::numeric(6);
     const auto createdAt = faker::Date::pastDate();
     const auto updatedAt = faker::Date::recentDate();
     const auto avatarUrl = faker::Image::imageUrl();
 
     const auto user = std::make_shared<server::infrastructure::User>(id, email, password, email, active, emailVerified,
-                                                                     verificationCode, createdAt, updatedAt, avatarUrl);
+                                                                     verificationCode, resetPasswordCode, createdAt,
+                                                                     updatedAt, avatarUrl);
 
     userTestUtils.persist(user);
 

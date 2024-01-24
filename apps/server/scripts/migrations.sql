@@ -17,16 +17,17 @@ PRAGMA foreign_keys=on;
 
 CREATE TABLE users
 (
-    id                TEXT    NOT NULL PRIMARY KEY,
-    email             TEXT    NOT NULL,
-    password          TEXT    NOT NULL,
-    nickname          TEXT    NOT NULL,
-    active            INTEGER NOT NULL,
-    email_verified    INTEGER NOT NULL,
-    verification_code TEXT    NOT NULL,
-    created_at        TEXT    NOT NULL,
-    updated_at        TEXT    NOT NULL,
-    avatar_url        TEXT    NULL
+    id                  TEXT    NOT NULL PRIMARY KEY,
+    email               TEXT    NOT NULL,
+    password            TEXT    NOT NULL,
+    nickname            TEXT    NOT NULL,
+    active              INTEGER NOT NULL,
+    email_verified      INTEGER NOT NULL,
+    verification_code   TEXT    NOT NULL,
+    reset_password_code TEXT    NULL,
+    created_at          TEXT    NOT NULL,
+    updated_at          TEXT    NOT NULL,
+    avatar_url          TEXT    NULL
 );
 
 CREATE TABLE channels

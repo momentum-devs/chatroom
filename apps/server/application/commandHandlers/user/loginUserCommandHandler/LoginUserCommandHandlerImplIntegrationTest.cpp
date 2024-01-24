@@ -70,12 +70,14 @@ TEST_F(LoginUserCommandImplIntegrationTest, loginExistingUserWithValidPassword)
     const auto active = faker::Datatype::boolean();
     const auto emailVerified = faker::Datatype::boolean();
     const auto verificationCode = faker::String::numeric(8);
+    const auto resetPasswordCode = faker::String::numeric(8);
     const auto createdAt = faker::Date::pastDate();
     const auto updatedAt = faker::Date::recentDate();
     const auto avatarUrl = faker::Image::imageUrl();
 
-    const auto user = std::make_shared<server::infrastructure::User>(
-        id, email, hashedPassword, email, active, emailVerified, verificationCode, createdAt, updatedAt, avatarUrl);
+    const auto user = std::make_shared<server::infrastructure::User>(id, email, hashedPassword, email, active,
+                                                                     emailVerified, verificationCode, resetPasswordCode,
+                                                                     createdAt, updatedAt, avatarUrl);
 
     userTestUtils.persist(user);
 
@@ -101,12 +103,14 @@ TEST_F(LoginUserCommandImplIntegrationTest, loginExistingUserWithInvalidPassword
     const auto active = faker::Datatype::boolean();
     const auto emailVerified = faker::Datatype::boolean();
     const auto verificationCode = faker::String::numeric(8);
+    const auto resetPasswordCode = faker::String::numeric(8);
     const auto createdAt = faker::Date::pastDate();
     const auto updatedAt = faker::Date::recentDate();
     const auto avatarUrl = faker::Image::imageUrl();
 
-    const auto user = std::make_shared<server::infrastructure::User>(
-        id, email, hashedPassword, email, active, emailVerified, verificationCode, createdAt, updatedAt, avatarUrl);
+    const auto user = std::make_shared<server::infrastructure::User>(id, email, hashedPassword, email, active,
+                                                                     emailVerified, verificationCode, resetPasswordCode,
+                                                                     createdAt, updatedAt, avatarUrl);
 
     userTestUtils.persist(user);
 

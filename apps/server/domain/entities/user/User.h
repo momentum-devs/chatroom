@@ -9,8 +9,8 @@ class User
 {
 public:
     User(std::string id, std::string email, std::string password, std::string nickname, bool active, bool emailVerified,
-         std::string verificationCode, std::string createdAt, std::string updatedAt,
-         std::optional<std::string> avatarUrl);
+         std::string verificationCode, std::optional<std::string> resetPasswordCode, std::string createdAt,
+         std::string updatedAt, std::optional<std::string> avatarUrl);
 
     [[nodiscard]] std::string getId() const;
     [[nodiscard]] std::string getEmail() const;
@@ -19,6 +19,7 @@ public:
     [[nodiscard]] bool isActive() const;
     [[nodiscard]] bool isEmailVerified() const;
     [[nodiscard]] std::string getVerificationCode() const;
+    [[nodiscard]] std::optional<std::string> getResetPasswordCode() const;
     [[nodiscard]] std::string getCreatedAt() const;
     [[nodiscard]] std::string getUpdatedAt() const;
     [[nodiscard]] std::optional<std::string> getAvatarUrl() const;
@@ -28,6 +29,7 @@ public:
     void setActive(bool);
     void setEmailVerified(bool);
     void setVerificationCode(const std::string& verificationCode);
+    void setResetPasswordCode(const std::string& resetPasswordCode);
     void setAvatarUrl(const std::string& avatarUrl);
     bool operator==(const User&) const;
 
@@ -39,6 +41,7 @@ private:
     bool active;
     bool emailVerified;
     std::string verificationCode;
+    std::optional<std::string> resetPasswordCode;
     std::string createdAt;
     std::string updatedAt;
     std::optional<std::string> avatarUrl;
