@@ -68,6 +68,18 @@ void MessagesController::requestMoreMessages()
 
 void MessagesController::startChoosingReactions(const QString& messageId)
 {
+    LOG_S(INFO) << "Starting choosing reactions for message " << messageId.toStdString();
+
     currentMessageIdToChooseReaction = messageId.toStdString();
+}
+
+void MessagesController::chooseReaction(const QString& reaction)
+{
+    LOG_S(INFO) << "Choosing reaction " << reaction.toStdString() << " for message "
+                << currentMessageIdToChooseReaction;
+
+    //    session->addReaction(currentMessageIdToChooseReaction, reaction.toStdString());
+    //
+    //    currentMessageIdToChooseReaction = "";
 }
 }

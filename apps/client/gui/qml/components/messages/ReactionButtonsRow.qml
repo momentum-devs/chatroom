@@ -16,7 +16,7 @@ ListView {
         icon.height: Settings.reactionButtonSize
         icon.width: Settings.reactionButtonSize
         onClicked: {
-            console.log("Clicked reaction button ", modelData.name)
+            messagesController.chooseReaction(modelData.name)
         }
     }
 }

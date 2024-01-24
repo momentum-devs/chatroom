@@ -29,6 +29,7 @@ public:
 
     Q_INVOKABLE void sendMessage(const QString& text);
     Q_INVOKABLE void startChoosingReactions(const QString& messageId);
+    Q_INVOKABLE void chooseReaction(const QString& reaction);
 
 signals:
     void newMessageToSend(const QString& messageText);

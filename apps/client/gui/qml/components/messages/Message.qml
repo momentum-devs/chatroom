@@ -26,8 +26,6 @@ Rectangle {
         choosingReactionBox.enabled = false
     }
 
-    signal addReactionToMessage(messageId: string)
-
     Column {
         id: messageColumn
         anchors {
@@ -124,7 +122,7 @@ Rectangle {
             message.unselect()
         }
         onOpened: {
-            message.addReactionToMessage(message.messageData.messageId)
+            messagesController.startChoosingReactions(message.messageData.messageId)
             message.isSelected = true
         }
     }
