@@ -11,8 +11,11 @@
 namespace server::application
 {
 RegisterUserCommandHandlerImpl::RegisterUserCommandHandlerImpl(
-    std::shared_ptr<domain::UserRepository> userRepositoryInit, std::shared_ptr<HashService> hashServiceInit)
-    : userRepository{std::move(userRepositoryInit)}, hashService{std::move(hashServiceInit)}
+    std::shared_ptr<domain::UserRepository> userRepositoryInit, std::shared_ptr<HashService> hashServiceInit,
+    std::shared_ptr<PasswordValidationService> passwordValidationServiceInit)
+    : userRepository{std::move(userRepositoryInit)},
+      hashService{std::move(hashServiceInit)},
+      passwordValidationService{std::move(passwordValidationServiceInit)}
 {
 }
 
@@ -27,6 +30,8 @@ RegisterUserCommandHandlerImpl::execute(const RegisterUserCommandHandlerPayload&
     {
         throw errors::ResourceAlreadyExistsError{fmt::format("User with email \"{}\" already exists.", payload.email)};
     }
+
+    passwordValidationService->validate(payload.password);
 
     const auto hashedPassword = hashService->hash(payload.password);
 

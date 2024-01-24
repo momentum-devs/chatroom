@@ -4,6 +4,7 @@
 #include "faker-cxx/String.h"
 #include "server/application/errors/ResourceNotFoundError.h"
 #include "server/application/services/hashService/HashServiceImpl.h"
+#include "server/application/services/passwordValidationService/PasswordValidationServiceImpl.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
 #include "server/infrastructure/repositories/userRepository/UserRepositoryImpl.h"
 #include "server/tests/factories/databaseClientTestFactory/DatabaseClientTestFactory.h"
@@ -40,7 +41,10 @@ public:
 
     std::shared_ptr<HashServiceImpl> hashService = std::make_shared<HashServiceImpl>();
 
-    UpdateUserCommandHandlerImpl updateUserCommandHandler{userRepository, hashService};
+    std::shared_ptr<PasswordValidationService> passwordValidationService =
+        std::make_shared<PasswordValidationServiceImpl>();
+
+    UpdateUserCommandHandlerImpl updateUserCommandHandler{userRepository, hashService, passwordValidationService};
 };
 
 TEST_F(UpdateUserCommandImplIntegrationTest, updateNotExistingUser_shouldThrow)

@@ -57,6 +57,7 @@
 #include "server/application/queryHandlers/user/findUserByEmailQueryHandler/FindUserByEmailQueryHandlerImpl.h"
 #include "server/application/queryHandlers/user/findUserQueryHandler/FindUserQueryHandlerImpl.h"
 #include "server/application/services/hashService/HashServiceImpl.h"
+#include "server/application/services/passwordValidationService/PasswordValidationServiceImpl.h"
 #include "server/infrastructure/repositories/channelInvitationRepository/channelInvitationMapper/ChannelInvitationMapperImpl.h"
 #include "server/infrastructure/repositories/channelInvitationRepository/ChannelInvitationRepositoryImpl.h"
 #include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
@@ -106,8 +107,10 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
     auto userGroupRepository =
         std::make_shared<server::infrastructure::UserGroupRepositoryImpl>(db, userGroupMapper, userMapper, groupMapper);
 
-    auto registerUserCommandHandler =
-        std::make_unique<server::application::RegisterUserCommandHandlerImpl>(userRepository, hashService);
+    auto passwordValidationService = std::make_shared<application::PasswordValidationServiceImpl>();
+
+    auto registerUserCommandHandler = std::make_unique<server::application::RegisterUserCommandHandlerImpl>(
+        userRepository, hashService, passwordValidationService);
 
     auto loginUserCommandHandler =
         std::make_unique<server::application::LoginUserCommandHandlerImpl>(userRepository, hashService, tokenService);
@@ -160,8 +163,8 @@ std::unique_ptr<MessageRouter> MessageRouterFactory::createMessageRouter() const
     auto getUserDataMessageHandler =
         std::make_shared<api::GetUserDataMessageHandler>(tokenService, findUserQueryHandler);
 
-    auto updateUserCommandHandler =
-        std::make_unique<server::application::UpdateUserCommandHandlerImpl>(userRepository, hashService);
+    auto updateUserCommandHandler = std::make_unique<server::application::UpdateUserCommandHandlerImpl>(
+        userRepository, hashService, passwordValidationService);
 
     auto updateUserMessageHandler =
         std::make_shared<api::UpdateUserMessageHandler>(tokenService, std::move(updateUserCommandHandler));

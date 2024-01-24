@@ -1,7 +1,5 @@
 #include "UpdateUserCommandHandlerImpl.h"
 
-#include <boost/uuid/uuid_io.hpp>
-
 #include "fmt/format.h"
 #include "loguru.hpp"
 #include "server/application/errors/ResourceAlreadyExistsError.h"
@@ -9,9 +7,12 @@
 
 namespace server::application
 {
-UpdateUserCommandHandlerImpl::UpdateUserCommandHandlerImpl(std::shared_ptr<domain::UserRepository> userRepositoryInit,
-                                                           std::shared_ptr<HashService> hashServiceInit)
-    : userRepository{std::move(userRepositoryInit)}, hashService{std::move(hashServiceInit)}
+UpdateUserCommandHandlerImpl::UpdateUserCommandHandlerImpl(
+    std::shared_ptr<domain::UserRepository> userRepositoryInit, std::shared_ptr<HashService> hashServiceInit,
+    std::shared_ptr<PasswordValidationService> passwordValidationServiceInit)
+    : userRepository{std::move(userRepositoryInit)},
+      hashService{std::move(hashServiceInit)},
+      passwordValidationService{std::move(passwordValidationServiceInit)}
 {
 }
 
@@ -34,6 +35,8 @@ UpdateUserCommandHandlerImpl::execute(const UpdateUserCommandHandlerPayload& pay
 
     if (payload.password)
     {
+        passwordValidationService->validate(*payload.password);
+        
         const auto hashedPassword = hashService->hash(*payload.password);
 
         existingUser->get()->setPassword(hashedPassword);
