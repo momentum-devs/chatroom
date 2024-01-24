@@ -8,11 +8,12 @@
 #include "fmt/format.h"
 #include "server/application/errors/ResourceNotFoundError.h"
 #include "server/application/services/s3Service/S3ServiceFactory.h"
+#include "server/infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImpl.h"
+#include "server/infrastructure/repositories/channelRepository/ChannelRepositoryImpl.h"
 #include "server/infrastructure/repositories/userRepository/userMapper/UserMapperImpl.h"
-#include "server/infrastructure/repositories/userRepository/UserRepositoryImpl.h"
 #include "server/tests/factories/databaseClientTestFactory/DatabaseClientTestFactory.h"
-#include "server/tests/utils/userTestUtils/UserTestUtils.h"
-#include "UploadUserAvatarCommandHandlerImpl.h"
+#include "server/tests/utils/channelTestUtils/ChannelTestUtils.h"
+#include "UploadChannelAvatarCommandHandlerImpl.h"
 
 using namespace ::testing;
 using namespace server;
@@ -26,26 +27,29 @@ namespace
 const std::string resourcesDirectory{fmt::format("{}/resources", common::filesystem::getProjectPath("chatroom"))};
 }
 
-class UploadUserAvatarCommandImplIntegrationTest : public Test
+class UploadChannelAvatarCommandImplIntegrationTest : public Test
 {
 public:
     void SetUp() override
     {
-        userTestUtils.truncateTable();
+        channelTestUtils.truncateTable();
     }
 
     void TearDown() override
     {
-        userTestUtils.truncateTable();
+        channelTestUtils.truncateTable();
     }
 
     std::shared_ptr<odb::sqlite::database> db = DatabaseClientTestFactory::create();
 
-    UserTestUtils userTestUtils{db};
+    ChannelTestUtils channelTestUtils{db};
 
     std::shared_ptr<UserMapper> userMapper = std::make_shared<UserMapperImpl>();
 
-    std::shared_ptr<UserRepository> userRepository = std::make_shared<UserRepositoryImpl>(db, userMapper);
+    std::shared_ptr<ChannelMapper> channelMapper = std::make_shared<ChannelMapperImpl>(userMapper);
+
+    std::shared_ptr<ChannelRepository> channelRepository =
+        std::make_shared<ChannelRepositoryImpl>(db, channelMapper, userMapper);
 
     std::shared_ptr<core::ConfigProvider> configProvider = std::make_shared<core::ConfigProvider>();
 
@@ -57,21 +61,24 @@ public:
 
     std::shared_ptr<S3Service> s3Service = S3ServiceFactory::create({accessKeyId, secretAccessKey, s3Endpoint});
 
-    UploadUserAvatarCommandHandlerImpl uploadUserAvatarCommandHandler{userRepository, s3Service, configProvider};
+    UploadChannelAvatarCommandHandlerImpl uploadChannelAvatarCommandHandler{channelRepository, s3Service,
+                                                                            configProvider};
 };
 
-TEST_F(UploadUserAvatarCommandImplIntegrationTest, givenNotExistingUser_shouldThrow)
+TEST_F(UploadChannelAvatarCommandImplIntegrationTest, givenNotExistingChannel_shouldThrow)
 {
     const auto id = faker::String::uuid();
 
     const auto data = faker::String::alphanumeric(100);
 
-    ASSERT_THROW(uploadUserAvatarCommandHandler.execute({id, data}), errors::ResourceNotFoundError);
+    ASSERT_THROW(uploadChannelAvatarCommandHandler.execute({id, data}), errors::ResourceNotFoundError);
 }
 
-TEST_F(UploadUserAvatarCommandImplIntegrationTest, uploadsUserAvatarAndUpdatesAvatarUrl)
+TEST_F(UploadChannelAvatarCommandImplIntegrationTest, uploadsChannelAvatarAndUpdatesAvatarUrl)
 {
-    const auto user = userTestUtils.createAndPersist();
+    const auto channel = channelTestUtils.createAndPersist();
+
+    const auto avatarName = faker::Word::noun();
 
     std::ifstream fileStream{fmt::format("{}/{}", resourcesDirectory, "example_avatar.jpg")};
 
@@ -81,16 +88,16 @@ TEST_F(UploadUserAvatarCommandImplIntegrationTest, uploadsUserAvatarAndUpdatesAv
 
     const auto avatarData = buffer.str();
 
-    uploadUserAvatarCommandHandler.execute({user->getId(), avatarData});
+    uploadChannelAvatarCommandHandler.execute({channel->getId(), avatarData});
 
-    const auto foundUser = userTestUtils.findById(user->getId());
+    const auto foundChannel = channelTestUtils.findById(channel->getId());
 
-    const auto expectedObjectKey = user->getId();
+    const auto expectedObjectKey = channel->getId();
 
     const auto expectedAvatarUrl =
         fmt::format("https://{}.s3-{}.amazonaws.com/avatars/{}", bucketName, region, expectedObjectKey);
 
-    ASSERT_EQ(foundUser->getAvatarUrl().get(), expectedAvatarUrl);
+    ASSERT_EQ(foundChannel->getAvatarUrl().get(), expectedAvatarUrl);
 
     const auto actualAvatarData = s3Service->getObject({bucketName, expectedObjectKey});
 

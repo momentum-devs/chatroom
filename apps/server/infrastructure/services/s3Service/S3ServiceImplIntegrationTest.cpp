@@ -24,7 +24,8 @@ public:
     const std::string awsAccountId = "test";
     const std::string awsAccountSecretKey = "test";
     const std::string bucketName = "avatars";
-    const std::string existingObjectKey = "example_avatar.jpg";
+    const std::string existingObjectKey1 = "example_avatar.jpg";
+    const std::string existingObjectKey2 = "example_avatar.jpg";
     const std::string nonExistingObjectKey = "another_avatar.jpg";
     const std::string s3Endpoint = "http://127.0.0.1:4566";
 
@@ -34,7 +35,7 @@ public:
 
 TEST_F(S3ServiceImplIntegrationTest, shouldGetObject)
 {
-    const auto object = s3Service->getObject({bucketName, existingObjectKey});
+    const auto object = s3Service->getObject({bucketName, existingObjectKey1});
 
     EXPECT_FALSE(object.empty());
 }
@@ -48,7 +49,7 @@ TEST_F(S3ServiceImplIntegrationTest, shouldPutObject)
 {
     const auto objectKey = faker::Word::noun();
 
-    std::ifstream fileStream{fmt::format("{}/{}", resourcesDirectory, existingObjectKey)};
+    std::ifstream fileStream{fmt::format("{}/{}", resourcesDirectory, existingObjectKey1)};
 
     std::stringstream buffer;
 
@@ -63,9 +64,38 @@ TEST_F(S3ServiceImplIntegrationTest, shouldPutObject)
     EXPECT_EQ(object, objectData);
 }
 
+TEST_F(S3ServiceImplIntegrationTest, shouldReplaceExistingObject)
+{
+    const auto objectKey = faker::Word::noun();
+
+    std::ifstream fileStream1{fmt::format("{}/{}", resourcesDirectory, existingObjectKey1)};
+
+    std::stringstream buffer1;
+
+    buffer1 << fileStream1.rdbuf();
+
+    const auto objectData1 = buffer1.str();
+
+    std::ifstream fileStream2{fmt::format("{}/{}", resourcesDirectory, existingObjectKey2)};
+
+    std::stringstream buffer2;
+
+    buffer1 << fileStream2.rdbuf();
+
+    const auto objectData2 = buffer2.str();
+
+    s3Service->putObject({bucketName, objectKey, objectData1});
+
+    s3Service->putObject({bucketName, objectKey, objectData2});
+
+    const auto object = s3Service->getObject({bucketName, objectKey});
+
+    EXPECT_EQ(object, objectData2);
+}
+
 TEST_F(S3ServiceImplIntegrationTest, givenExistingObject_shouldReturnTrue)
 {
-    const auto objectExists = s3Service->objectExists({bucketName, existingObjectKey});
+    const auto objectExists = s3Service->objectExists({bucketName, existingObjectKey1});
 
     EXPECT_TRUE(objectExists);
 }

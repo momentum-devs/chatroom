@@ -30,7 +30,7 @@ UploadUserAvatarCommandHandlerImpl::execute(const UploadUserAvatarCommandHandler
 
     const auto bucketName = configProvider->getAwsBucket();
 
-    const auto objectKey = fmt::format("{}{}", payload.id, payload.avatarName);
+    const auto objectKey = payload.id;
 
     s3Service->putObject({bucketName, objectKey, payload.avatarData});
 

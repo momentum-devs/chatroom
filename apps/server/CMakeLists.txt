@@ -55,6 +55,7 @@ set(SOURCES
         application/commandHandlers/channel/acceptChannelInvitationCommandHandler/AcceptChannelInvitationCommandHandlerImpl.cpp
         application/commandHandlers/channel/rejectChannelInvitationCommandHandler/RejectChannelInvitationCommandHandlerImpl.cpp
         application/commandHandlers/channel/updateChannelCommandHandler/UpdateChannelCommandHandlerImpl.cpp
+        application/commandHandlers/channel/uploadChannelAvatarCommandHandler/UploadChannelAvatarCommandHandlerImpl.cpp
 
         domain/entities/friendInvitation/FriendInvitation.cpp
         domain/entities/friendship/Friendship.cpp
@@ -237,6 +238,7 @@ set(IT_SOURCES
         application/commandHandlers/channel/acceptChannelInvitationCommandHandler/AcceptChannelInvitationCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/channel/rejectChannelInvitationCommandHandler/RejectChannelInvitationCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/channel/updateChannelCommandHandler/UpdateChannelCommandHandlerImplIntegrationTest.cpp
+        application/commandHandlers/channel/uploadChannelAvatarCommandHandler/UploadChannelAvatarCommandHandlerImplIntegrationTest.cpp
 
         infrastructure/repositories/friendInvitationRepository/FriendInvitationRepositoryImplIntegrationTest.cpp
         infrastructure/repositories/friendshipRepository/FriendshipRepositoryImplIntegrationTest.cpp

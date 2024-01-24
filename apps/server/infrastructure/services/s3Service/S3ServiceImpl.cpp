@@ -20,6 +20,10 @@ void S3ServiceImpl::putObject(const PutObjectPayload& payload) const
 
     request.SetBody(std::make_shared<Aws::StringStream>(payload.data));
 
+    Aws::Map<Aws::String, Aws::String> metadata;
+    metadata.emplace("x-amz-metadata-directive", "REPLACE");
+    request.SetMetadata(metadata);
+
     auto result = s3Client->PutObject(request);
 
     if (result.IsSuccess())
