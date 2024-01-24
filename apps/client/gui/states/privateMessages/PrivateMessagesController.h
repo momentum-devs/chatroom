@@ -44,6 +44,7 @@ signals:
 public slots:
     void goToChannel(const QString& channelName, const QString& channelId, bool isOwner);
     void sendPrivateMessage(const QString& messageText);
+    void getMoreMessages();
 
 private:
     void handleGetUserFriendsResponse(const common::messages::Message& message);

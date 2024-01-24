@@ -34,6 +34,14 @@ void PrivateMessagesController::activate()
                                 removeFromFriendsResponseHandlerName,
                                 [this](const auto&) { handleRemoveFromFriendsResponse(); }});
 
+    session->addMessageHandler({common::messages::MessageId::SendPrivateMessageResponse,
+                                sendPrivateMessageResponseHandlerName,
+                                [this](const auto& msg) { handleSendPrivateMessageResponse(msg); }});
+
+    session->addMessageHandler({common::messages::MessageId::GetPrivateMessagesResponse,
+                                getPrivateMessagesResponseHandlerName,
+                                [this](const auto& msg) { handleGetPrivateMessagesResponse(msg); }});
+
     session->sendMessage(common::messages::MessageId::GetUserFriends, {});
     session->sendMessage(common::messages::MessageId::GetFriendInvitations, {});
 
@@ -56,6 +64,12 @@ void PrivateMessagesController::deactivate()
 
     session->removeMessageHandler(
         {common::messages::MessageId::RemoveFromFriendsResponse, removeFromFriendsResponseHandlerName});
+
+    session->removeMessageHandler(
+        {common::messages::MessageId::SendPrivateMessageResponse, sendPrivateMessageResponseHandlerName});
+
+    session->removeMessageHandler(
+        {common::messages::MessageId::GetPrivateMessagesResponse, getPrivateMessagesResponseHandlerName});
 }
 
 void PrivateMessagesController::goToChannel(const QString& channelName, const QString& channelId, bool isOwner)
@@ -382,5 +396,12 @@ void PrivateMessagesController::handleGetPrivateMessagesResponse(const common::m
     {
         LOG_S(ERROR) << "Response without messages";
     }
+}
+void PrivateMessagesController::getMoreMessages()
+{
+    auto offset = messageStorage->getMessages().size();
+
+    session->sendMessage(common::messages::MessageId::GetPrivateMessages,
+                         nlohmann::json{{"groupId", currentFriendGroupId}, {"offset", offset}, {"limit", 50}});
 }
 }
