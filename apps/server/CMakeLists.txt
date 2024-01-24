@@ -23,6 +23,7 @@ set(SOURCES
         infrastructure/services/s3Service/S3ServiceFactory.cpp
         application/services/hashService/HashServiceImpl.cpp
         application/services/tokenService/TokenServiceImpl.cpp
+        application/services/passwordValidationService/PasswordValidationServiceImpl.cpp
         application/commandHandlers/user/registerUserCommandHandler/RegisterUserCommandHandlerImpl.cpp
         application/commandHandlers/user/deleteUserCommandHandler/DeleteUserCommandHandlerImpl.cpp
         application/commandHandlers/user/loginUserCommandHandler/LoginUserCommandHandlerImpl.cpp
@@ -153,6 +154,7 @@ set(UT_SOURCES
         core/session/MessageRouterImplTest.cpp
 
         infrastructure/services/emailService/EmailServiceImplTest.cpp
+        application/services/passwordValidationService/PasswordValidationServiceImplTest.cpp
         infrastructure/repositories/userRepository/userMapper/UserMapperImplTest.cpp
         infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImplTest.cpp
         infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapperImplTest.cpp
@@ -375,6 +377,7 @@ target_link_libraries(${EXECUTABLE_NAME}UT PRIVATE
         sqlite3
         fmt::fmt
         config-cxx
+        ${AWSSDK_LINK_LIBRARIES}
 )
 
 target_include_directories(${EXECUTABLE_NAME}UT PUBLIC ${GMOCK_INCLUDE_DIR})

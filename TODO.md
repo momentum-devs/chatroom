@@ -19,8 +19,8 @@
 ### SERVER:
 
 * restructuring of the server directory (src, config)
-* user avatars and channel avatars
 * reset password
+* password validation
 * transactions
 * infrastructure setup
 * deploy
