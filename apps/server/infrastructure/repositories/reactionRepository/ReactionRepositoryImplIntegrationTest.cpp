@@ -148,3 +148,35 @@ TEST_F(ReactionRepositoryIntegrationTest, shouldFindReactionsByMessageId)
     ASSERT_TRUE(foundReactions.size());
     ASSERT_EQ(foundReactions[0].getId(), reaction->getId());
 }
+
+TEST_F(ReactionRepositoryIntegrationTest, shouldFindReactionById)
+{
+    const auto user = userTestUtils.createAndPersist();
+
+    const auto channel = channelTestUtils.createAndPersist(user);
+
+    const auto message = messageTestUtils.createAndPersist(user, channel);
+
+    const auto reaction = reactionTestUtils.createAndPersist(user, message);
+
+    const auto foundReaction = reactionRepository->findReactionById({reaction->getId()});
+
+    ASSERT_TRUE(foundReaction);
+    ASSERT_EQ(foundReaction->getId(), reaction->getId());
+}
+
+TEST_F(ReactionRepositoryIntegrationTest, shouldFindReactionByUserIdAndMessageId)
+{
+    const auto user = userTestUtils.createAndPersist();
+
+    const auto channel = channelTestUtils.createAndPersist(user);
+
+    const auto message = messageTestUtils.createAndPersist(user, channel);
+
+    const auto reaction = reactionTestUtils.createAndPersist(user, message);
+
+    const auto foundReaction = reactionRepository->findReaction({user->getId(), message->getId()});
+
+    ASSERT_TRUE(foundReaction);
+    ASSERT_EQ(foundReaction->getId(), reaction->getId());
+}

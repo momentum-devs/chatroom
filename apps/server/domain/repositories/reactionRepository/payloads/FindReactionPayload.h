@@ -4,8 +4,9 @@
 
 namespace server::domain
 {
-struct FindReactionsByMessageIdPayload
+struct FindReactionPayload
 {
+    std::string userId;
     std::string messageId;
 };
 }

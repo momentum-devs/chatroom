@@ -45,6 +45,32 @@ domain::Reaction ReactionRepositoryImpl::createReaction(const domain::CreateReac
     }
 }
 
+std::optional<domain::Reaction> ReactionRepositoryImpl::findReaction(const domain::FindReactionPayload& payload) const
+{
+    try
+    {
+        odb::transaction transaction(db->begin());
+
+        typedef odb::query<Reaction> Query;
+
+        std::shared_ptr<Reaction> reaction(
+            db->query_one<Reaction>(Query::user->id == payload.userId && Query::message->id == payload.messageId));
+
+        transaction.commit();
+
+        if (!reaction)
+        {
+            return std::nullopt;
+        }
+
+        return reactionMapper->mapToDomainReaction(*reaction);
+    }
+    catch (const std::exception& error)
+    {
+        throw errors::ReactionRepositoryError{error.what()};
+    }
+}
+
 std::optional<domain::Reaction>
 ReactionRepositoryImpl::findReactionById(const domain::FindReactionByIdPayload& payload) const
 {
