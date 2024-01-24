@@ -1,6 +1,7 @@
 #include "MessagesController.h"
 
 #include <loguru.hpp>
+#include <nlohmann/json.hpp>
 #include <ranges>
 
 namespace client::gui
@@ -78,8 +79,11 @@ void MessagesController::chooseReaction(const QString& reaction)
     LOG_S(INFO) << "Choosing reaction " << reaction.toStdString() << " for message "
                 << currentMessageIdToChooseReaction;
 
-    //    session->addReaction(currentMessageIdToChooseReaction, reaction.toStdString());
-    //
-    //    currentMessageIdToChooseReaction = "";
+    nlohmann::json payload{
+        {"messageId", currentMessageIdToChooseReaction},
+        {"reactionName", reaction.toStdString()},
+    };
+
+    session->sendMessage(common::messages::MessageId::AddReaction, payload);
 }
 }

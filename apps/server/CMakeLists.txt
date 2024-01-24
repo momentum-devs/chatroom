@@ -107,6 +107,8 @@ set(SOURCES
         api/messageHandlers/messages/sendMessageToChannelMessageHandler/SendMessageToChannelMessageHandler.cpp
         api/messageHandlers/messages/getMessagesFromChannelMessageHandler/GetMessagesFromChannelMessageHandler.cpp
         api/messageHandlers/messages/getMessagesFromGroupMessageHandler/GetMessagesFromGroupMessageHandler.cpp
+        api/messageHandlers/messages/sendMessageToGroupMessageHandler/SendMessageToGroupMessageHandler.cpp
+        api/messageHandlers/messages/addReactionMessageHandler/AddReactionMessageHandler.cpp
 
         domain/entities/message/Message.cpp
         infrastructure/repositories/messageRepository/MessageRepositoryImpl.cpp
@@ -130,7 +132,6 @@ set(SOURCES
         domain/entities/blacklistToken/BlacklistToken.cpp
         infrastructure/repositories/blacklistTokenRepository/blacklistTokenMapper/BlacklistTokenMapperImpl.cpp
         infrastructure/repositories/blacklistTokenRepository/BlacklistTokenRepositoryImpl.cpp
-        api/messageHandlers/messages/sendMessageToGroupMessageHandler/SendMessageToGroupMessageHandler.cpp
 )
 
 set(TEST_COMMON_SOURCES
@@ -194,6 +195,7 @@ set(UT_SOURCES
         api/messageHandlers/messages/getMessagesFromChannelMessageHandler/GetMessagesFromChannelMessageHandlerTest.cpp
         api/messageHandlers/messages/getMessagesFromGroupMessageHandler/GetMessagesFromGroupMessageHandlerTest.cpp
         api/messageHandlers/messages/sendMessageToGroupMessageHandler/SendMessageToGroupMessageHandlerTest.cpp
+        api/messageHandlers/messages/addReactionMessageHandler/AddReactionMessageHandlerTest.cpp
 )
 
 set(IT_SOURCES
