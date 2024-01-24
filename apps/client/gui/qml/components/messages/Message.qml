@@ -117,13 +117,13 @@ Rectangle {
 
     ChoosingReactionBox {
         id: choosingReactionBox
-        anchors {
-            right: reactionBox.left
-            rightMargin: 5
-            verticalCenter: messageColumn.bottom
-        }
+        x: reactionBox.x + reactionBox.width - choosingReactionBox.width * 2
+        y: reactionBox.y - 10
         visible: false
         enabled: false
+        onClosed: {
+            message.unselect()
+        }
         // onReactionChosen: {
         //     message.addReactionToMessage(message.messageData.messageId)
         // }
