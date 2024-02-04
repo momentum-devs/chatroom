@@ -30,6 +30,7 @@ set(SOURCES
         application/commandHandlers/user/updateUserCommandHandler/UpdateUserCommandHandlerImpl.cpp
         application/commandHandlers/user/logoutUserCommandHandler/LogoutUserCommandHandlerImpl.cpp
         application/commandHandlers/user/verifyUserEmailCommandHandler/VerifyUserEmailCommandHandlerImpl.cpp
+        application/commandHandlers/user/changeUserPasswordCommandHandler/ChangeUserPasswordCommandHandlerImpl.cpp
         application/commandHandlers/user/sendRegistrationVerificationEmailCommandHandler/SendRegistrationVerificationEmailCommandHandlerImpl.cpp
         application/queryHandlers/user/findUserQueryHandler/FindUserQueryHandlerImpl.cpp
         application/queryHandlers/user/findUserByEmailQueryHandler/FindUserByEmailQueryHandlerImpl.cpp
@@ -225,6 +226,7 @@ set(IT_SOURCES
         application/commandHandlers/user/updateUserCommandHandler/UpdateUserCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/user/logoutUserCommandHandler/LogoutUserCommandHandlerImplIntegrationTest.cpp
         application/commandHandlers/user/verifyUserEmailCommandHandler/VerifyUserEmailCommandHandlerImplIntegrationTest.cpp
+        application/commandHandlers/user/changeUserPasswordCommandHandler/ChangeUserPasswordCommandHandlerImplIntegrationTest.cpp
         application/queryHandlers/user/findUserQueryHandler/FindUserQueryHandlerImplIntegrationTest.cpp
         application/queryHandlers/user/findUserByEmailQueryHandler/FindUserByEmailQueryHandlerImplIntegrationTest.cpp
         application/commandHandlers/user/uploadUserAvatarCommandHandler/UploadUserAvatarCommandHandlerImplIntegrationTest.cpp

@@ -2,6 +2,7 @@
 
 #include "fmt/format.h"
 #include "loguru.hpp"
+#include "server/application/errors/OperationNotValidError.h"
 #include "server/application/errors/ResourceNotFoundError.h"
 
 namespace server::application
@@ -31,9 +32,7 @@ VerifyUserEmailCommandHandlerImpl::execute(const VerifyUserEmailCommandHandlerPa
 
     if (existingUser->get()->getVerificationCode() != payload.verificationCode)
     {
-        LOG_S(INFO) << fmt::format("User with email \"{}\" not verified.", payload.email);
-
-        return {false};
+        throw errors::OperationNotValidError{"Invalid email verification code."};
     }
 
     existingUser->get()->setEmailVerified(true);
