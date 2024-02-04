@@ -50,7 +50,7 @@ public:
 TEST_F(UpdateUserCommandImplIntegrationTest, updateNotExistingUser_shouldThrow)
 {
     const auto id = faker::String::uuid();
-    const auto password = faker::Internet::password();
+    const auto password = faker::Internet::password(16, {true, true, true, true});
 
     ASSERT_THROW(updateUserCommandHandler.execute({id, std::nullopt, password}), errors::ResourceNotFoundError);
 }
@@ -59,7 +59,7 @@ TEST_F(UpdateUserCommandImplIntegrationTest, updatePassword)
 {
     const auto user = userTestUtils.createAndPersist();
 
-    const auto updatedPassword = faker::Internet::password();
+    const auto updatedPassword = faker::Internet::password(15, {true, true, true, true});
 
     const auto [updatedUser] = updateUserCommandHandler.execute({user->getId(), std::nullopt, updatedPassword});
 

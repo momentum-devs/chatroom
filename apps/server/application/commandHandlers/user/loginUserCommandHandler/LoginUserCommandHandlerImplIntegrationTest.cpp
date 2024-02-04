@@ -120,7 +120,7 @@ TEST_F(LoginUserCommandImplIntegrationTest, loginExistingUserWithInvalidPassword
 TEST_F(LoginUserCommandImplIntegrationTest, loginNotExistingUser)
 {
     const auto email = faker::Internet::email();
-    const auto password = faker::Internet::password();
+    const auto password = faker::Internet::password(16, {true, true, true, true});
 
     ASSERT_THROW(loginUserCommandHandler.execute({email, password}), errors::ResourceNotFoundError);
 }

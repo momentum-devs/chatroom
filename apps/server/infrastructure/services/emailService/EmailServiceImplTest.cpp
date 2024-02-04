@@ -19,7 +19,7 @@ public:
     std::shared_ptr<common::httpClient::HttpClientMock> httpClient =
         std::make_shared<StrictMock<common::httpClient::HttpClientMock>>();
 
-    const std::string sendGridSecret = faker::Internet::password();
+    const std::string sendGridSecret = faker::Internet::password(16, {true, true, true, true});
     const std::string sendGridEmail = faker::Internet::email();
 
     EmailServiceImpl emailService{httpClient, sendGridSecret, sendGridEmail};

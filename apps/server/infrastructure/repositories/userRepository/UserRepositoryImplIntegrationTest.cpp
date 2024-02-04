@@ -47,7 +47,7 @@ TEST_F(UserRepositoryIntegrationTest, shouldCreateUser)
 {
     const auto userId = faker::String::uuid();
     const auto email = faker::Internet::email();
-    const auto password = faker::Internet::password();
+    const auto password = faker::Internet::password(16, {true, true, true, true});
     const auto nickname = faker::Internet::username();
     const auto active = faker::Datatype::boolean();
     const auto emailVerified = faker::Datatype::boolean();
@@ -125,7 +125,7 @@ TEST_F(UserRepositoryIntegrationTest, givenNonExistingUser_shouldNotFindAnyUserB
 
 TEST_F(UserRepositoryIntegrationTest, shouldUpdateExistingUser)
 {
-    const auto updatedPassword = faker::Internet::password();
+    const auto updatedPassword = faker::Internet::password(16, {true, true, true, true});
     const auto updatedNickname = faker::Internet::username();
     const auto updatedActive = faker::Datatype::boolean();
     const auto updatedEmailVerified = faker::Datatype::boolean();

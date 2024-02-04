@@ -54,7 +54,7 @@ TEST_F(VerifyUserEmailCommandImplIntegrationTest, verifyExistingUserWithInvalidV
 {
     const auto id = faker::String::uuid();
     const auto email = faker::Internet::email();
-    const auto password = faker::Internet::password();
+    const auto password = faker::Internet::password(16, {true, true, true, true});
     const auto active = faker::Datatype::boolean();
     const auto emailVerified = false;
     const auto verificationCode = faker::String::numeric(6);
@@ -71,16 +71,14 @@ TEST_F(VerifyUserEmailCommandImplIntegrationTest, verifyExistingUserWithInvalidV
 
     userTestUtils.persist(user);
 
-    const auto [verified] = verifyUserEmailCommandHandler.execute({email, invalidVerificationCode});
-
-    ASSERT_FALSE(verified);
+    ASSERT_ANY_THROW(verifyUserEmailCommandHandler.execute({email, invalidVerificationCode}));
 }
 
 TEST_F(VerifyUserEmailCommandImplIntegrationTest, verifyAlreadyVerifiedUser)
 {
     const auto id = faker::String::uuid();
     const auto email = faker::Internet::email();
-    const auto password = faker::Internet::password();
+    const auto password = faker::Internet::password(16, {true, true, true, true});
     const auto active = faker::Datatype::boolean();
     const auto emailVerified = true;
     const auto verificationCode = faker::String::numeric(6);
@@ -105,7 +103,7 @@ TEST_F(VerifyUserEmailCommandImplIntegrationTest, verifyExistingUserWithValidVer
 {
     const auto id = faker::String::uuid();
     const auto email = faker::Internet::email();
-    const auto password = faker::Internet::password();
+    const auto password = faker::Internet::password(16, {true, true, true, true});
     const auto active = faker::Datatype::boolean();
     const auto emailVerified = false;
     const auto verificationCode = faker::String::numeric(6);

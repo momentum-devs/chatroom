@@ -12,7 +12,7 @@ std::shared_ptr<domain::User> UserTestFactory::createDomainUser(std::size_t nick
 {
     const auto id = faker::String::uuid();
     const auto email = faker::Internet::email();
-    const auto password = faker::Internet::password();
+    const auto password = faker::Internet::password(16, {true, true, true, true});
     auto nickname = faker::Internet::username();
     if (nickname.size() > nicknameMaxLength)
     {
@@ -34,7 +34,7 @@ std::shared_ptr<infrastructure::User> UserTestFactory::createPersistentUser()
 {
     const auto id = faker::String::uuid();
     const auto email = faker::Internet::email();
-    const auto password = faker::Internet::password();
+    const auto password = faker::Internet::password(16, {true, true, true, true});
     const auto nickname = faker::Internet::username();
     const auto active = faker::Datatype::boolean();
     const auto emailVerified = faker::Datatype::boolean();

@@ -55,8 +55,8 @@ TEST_F(ChangeUserPasswordCommandImplIntegrationTest, resetPasswordNotExistingUse
 {
     const auto id = faker::String::uuid();
     const auto resetPasswordCode = faker::String::numeric(6);
-    const auto oldPassword = faker::Internet::password();
-    const auto newPassword = faker::Internet::password();
+    const auto oldPassword = faker::Internet::password(16, {true, true, true, true});
+    const auto newPassword = faker::Internet::password(16, {true, true, true, true});
 
     ASSERT_THROW(changeUserPasswordCommandHandler.execute({id, resetPasswordCode, oldPassword, newPassword}),
                  errors::ResourceNotFoundError);
@@ -66,9 +66,9 @@ TEST_F(ChangeUserPasswordCommandImplIntegrationTest, resetExistingUserPasswordWi
 {
     const auto id = faker::String::uuid();
     const auto email = faker::Internet::email();
-    const auto password = faker::Internet::password();
+    const auto password = faker::Internet::password(16, {true, true, true, true});
     const auto hashedPassword = hashService->hash(password);
-    const auto newPassword = faker::Internet::password();
+    const auto newPassword = faker::Internet::password(16, {true, true, true, true});
     const auto active = faker::Datatype::boolean();
     const auto emailVerified = false;
     const auto verificationCode = faker::String::numeric(6);
@@ -92,7 +92,7 @@ TEST_F(ChangeUserPasswordCommandImplIntegrationTest, resetExistingUserPasswordWi
 {
     const auto id = faker::String::uuid();
     const auto email = faker::Internet::email();
-    const auto password = faker::Internet::password();
+    const auto password = faker::Internet::password(16, {true, true, true, true});
     const auto hashedPassword = hashService->hash(password);
     const auto newPassword = password + "2";
     const auto active = faker::Datatype::boolean();
@@ -121,7 +121,7 @@ TEST_F(ChangeUserPasswordCommandImplIntegrationTest, resetExistingUserPasswordWi
 {
     const auto id = faker::String::uuid();
     const auto email = faker::Internet::email();
-    const auto password = faker::Internet::password();
+    const auto password = faker::Internet::password(16, {true, true, true, true});
     const auto hashedPassword = hashService->hash(password);
     const auto active = faker::Datatype::boolean();
     const auto emailVerified = false;
@@ -145,9 +145,9 @@ TEST_F(ChangeUserPasswordCommandImplIntegrationTest, resetExistingUserPasswordWi
 {
     const auto id = faker::String::uuid();
     const auto email = faker::Internet::email();
-    const auto password = faker::Internet::password();
+    const auto password = faker::Internet::password(16, {true, true, true, true});
     const auto hashedPassword = hashService->hash(password);
-    const auto newPassword = faker::Internet::password();
+    const auto newPassword = faker::Internet::password(16, {true, true, true, true});
     const auto active = faker::Datatype::boolean();
     const auto emailVerified = false;
     const auto verificationCode = faker::String::numeric(6);
@@ -162,7 +162,7 @@ TEST_F(ChangeUserPasswordCommandImplIntegrationTest, resetExistingUserPasswordWi
 
     userTestUtils.persist(user);
 
-    ASSERT_THROW(
-        changeUserPasswordCommandHandler.execute({id, resetPasswordCode, faker::Internet::password(), newPassword}),
-        errors::OperationNotValidError);
+    ASSERT_THROW(changeUserPasswordCommandHandler.execute(
+                     {id, resetPasswordCode, faker::Internet::password(16, {true, true, true, true}), newPassword}),
+                 errors::OperationNotValidError);
 }
