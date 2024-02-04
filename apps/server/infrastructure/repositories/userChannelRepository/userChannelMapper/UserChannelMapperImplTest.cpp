@@ -33,7 +33,8 @@ TEST_F(UserChannelMapperTest, givenPersistenceUserChannel_shouldMapToDomainUserC
 
     const auto domainUser = std::make_shared<domain::User>(
         user->getId(), user->getEmail(), user->getPassword(), user->getNickname(), user->isActive(),
-        user->isEmailVerified(), user->getVerificationCode(), user->getCreatedAt(), user->getUpdatedAt(),
+        user->isEmailVerified(), user->getVerificationCode(), user->getResetPasswordCode().get(), user->getCreatedAt(),
+        user->getUpdatedAt(),
         user->getAvatarUrl().null() ? std::optional<std::string>(std::nullopt) : user->getAvatarUrl().get());
 
     const auto channel = channelTestFactory.createPersistentChannel(user);

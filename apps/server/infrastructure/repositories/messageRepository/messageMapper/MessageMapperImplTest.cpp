@@ -37,7 +37,8 @@ TEST_F(MessageMapperTest, givenPersistenceMessageWithChannel_shouldMapToDomainMe
 
     const auto domainSender = std::make_shared<domain::User>(
         sender->getId(), sender->getEmail(), sender->getPassword(), sender->getNickname(), sender->isActive(),
-        sender->isEmailVerified(), sender->getVerificationCode(), sender->getCreatedAt(), sender->getUpdatedAt(),
+        sender->isEmailVerified(), sender->getVerificationCode(), sender->getResetPasswordCode().get(),
+        sender->getCreatedAt(), sender->getUpdatedAt(),
         sender->getAvatarUrl().null() ? std::optional<std::string>(std::nullopt) : sender->getAvatarUrl().get());
 
     const auto channel = channelTestFactory.createPersistentChannel(sender);
@@ -69,7 +70,8 @@ TEST_F(MessageMapperTest, givenPersistenceMessageWithGroup_shouldMapToDomainMess
 
     const auto domainSender = std::make_shared<domain::User>(
         sender->getId(), sender->getEmail(), sender->getPassword(), sender->getNickname(), sender->isActive(),
-        sender->isEmailVerified(), sender->getVerificationCode(), sender->getCreatedAt(), sender->getUpdatedAt(),
+        sender->isEmailVerified(), sender->getVerificationCode(), sender->getResetPasswordCode().get(),
+        sender->getCreatedAt(), sender->getUpdatedAt(),
         sender->getAvatarUrl().null() ? std::optional<std::string>(std::nullopt) : sender->getAvatarUrl().get());
 
     const auto group = groupTestFactory.createPersistentGroup();
@@ -99,7 +101,8 @@ TEST_F(MessageMapperTest, givenDomainMessageWithChannel_shouldMapToPersistenceMe
 
     const auto domainSender = std::make_shared<domain::User>(
         sender->getId(), sender->getEmail(), sender->getPassword(), sender->getNickname(), sender->isActive(),
-        sender->isEmailVerified(), sender->getVerificationCode(), sender->getCreatedAt(), sender->getUpdatedAt(),
+        sender->isEmailVerified(), sender->getVerificationCode(), sender->getResetPasswordCode().get(),
+        sender->getCreatedAt(), sender->getUpdatedAt(),
         sender->getAvatarUrl().null() ? std::optional<std::string>(std::nullopt) : sender->getAvatarUrl().get());
 
     const auto channel = channelTestFactory.createPersistentChannel(sender);

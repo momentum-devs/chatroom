@@ -33,7 +33,8 @@ TEST_F(ChannelInvitationMapperTest, givenPersistenceChannelInvitation_shouldMapT
 
     const auto domainSender = std::make_shared<domain::User>(
         sender->getId(), sender->getEmail(), sender->getPassword(), sender->getNickname(), sender->isActive(),
-        sender->isEmailVerified(), sender->getVerificationCode(), sender->getCreatedAt(), sender->getUpdatedAt(),
+        sender->isEmailVerified(), sender->getVerificationCode(), sender->getResetPasswordCode().get(),
+        sender->getCreatedAt(), sender->getUpdatedAt(),
         sender->getAvatarUrl().null() ? std::optional<std::string>(std::nullopt) : sender->getAvatarUrl().get());
 
     const auto recipient = userTestFactory.createPersistentUser();
@@ -41,7 +42,7 @@ TEST_F(ChannelInvitationMapperTest, givenPersistenceChannelInvitation_shouldMapT
     const auto domainRecipient = std::make_shared<domain::User>(
         recipient->getId(), recipient->getEmail(), recipient->getPassword(), recipient->getNickname(),
         recipient->isActive(), recipient->isEmailVerified(), recipient->getVerificationCode(),
-        recipient->getCreatedAt(), recipient->getUpdatedAt(),
+        recipient->getResetPasswordCode().get(), recipient->getCreatedAt(), recipient->getUpdatedAt(),
         recipient->getAvatarUrl().null() ? std::optional<std::string>(std::nullopt) : recipient->getAvatarUrl().get());
 
     const auto channel = channelTestFactory.createPersistentChannel(sender);

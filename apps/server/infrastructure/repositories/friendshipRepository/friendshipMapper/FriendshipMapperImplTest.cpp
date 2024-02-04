@@ -34,7 +34,8 @@ TEST_F(FriendshipMapperTest, givenPersistenceFriendship_shouldMapToDomainFriends
 
     const auto domainUser = std::make_shared<domain::User>(
         user->getId(), user->getEmail(), user->getPassword(), user->getNickname(), user->isActive(),
-        user->isEmailVerified(), user->getVerificationCode(), user->getCreatedAt(), user->getUpdatedAt(),
+        user->isEmailVerified(), user->getVerificationCode(), user->getResetPasswordCode().get(), user->getCreatedAt(),
+        user->getUpdatedAt(),
         user->getAvatarUrl().null() ? std::optional<std::string>(std::nullopt) : user->getAvatarUrl().get());
 
     const auto userFriend = userTestFactory.createPersistentUser();
@@ -42,7 +43,7 @@ TEST_F(FriendshipMapperTest, givenPersistenceFriendship_shouldMapToDomainFriends
     const auto domainUserFriend = std::make_shared<domain::User>(
         userFriend->getId(), userFriend->getEmail(), userFriend->getPassword(), userFriend->getNickname(),
         userFriend->isActive(), userFriend->isEmailVerified(), userFriend->getVerificationCode(),
-        userFriend->getCreatedAt(), userFriend->getUpdatedAt(),
+        user->getResetPasswordCode().get(), userFriend->getCreatedAt(), userFriend->getUpdatedAt(),
         userFriend->getAvatarUrl().null() ? std::optional<std::string>(std::nullopt) :
                                             userFriend->getAvatarUrl().get());
 

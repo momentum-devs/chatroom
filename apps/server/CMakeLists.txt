@@ -34,6 +34,7 @@ set(SOURCES
         application/queryHandlers/user/findUserQueryHandler/FindUserQueryHandlerImpl.cpp
         application/queryHandlers/user/findUserByEmailQueryHandler/FindUserByEmailQueryHandlerImpl.cpp
         application/commandHandlers/user/uploadUserAvatarCommandHandler/UploadUserAvatarCommandHandlerImpl.cpp
+        application/commandHandlers/user/sendResetPasswordEmailCommandHandler/SendResetPasswordEmailCommandHandlerImpl.cpp
 
         domain/entities/channel/Channel.cpp
         domain/entities/userChannel/UserChannel.cpp
@@ -160,6 +161,7 @@ set(UT_SOURCES
         infrastructure/repositories/channelRepository/channelMapper/ChannelMapperImplTest.cpp
         infrastructure/repositories/userChannelRepository/userChannelMapper/UserChannelMapperImplTest.cpp
         application/commandHandlers/user/sendRegistrationVerificationEmailCommandHandler/SendRegistrationVerificationEmailCommandHandlerImplTest.cpp
+        application/commandHandlers/user/sendResetPasswordEmailCommandHandler/SendResetPasswordEmailCommandHandlerImplTest.cpp
         infrastructure/repositories/channelInvitationRepository/channelInvitationMapper/ChannelInvitationMapperImplTest.cpp
         infrastructure/repositories/friendInvitationRepository/friendInvitationMapper/FriendInvitationMapperImplTest.cpp
         infrastructure/repositories/friendshipRepository/friendshipMapper/FriendshipMapperImplTest.cpp

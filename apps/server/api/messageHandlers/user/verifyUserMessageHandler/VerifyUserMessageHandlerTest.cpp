@@ -69,7 +69,7 @@ TEST_F(VerifyUserMessageHandlerTest, handleValidUserVerifyRequest)
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*findUserQueryHandlerMock, execute(server::application::FindUserQueryHandlerPayload{userId}))
         .WillOnce(Return(server::application::FindUserQueryHandlerResult{
-            {userId, userEmail, "", "", false, false, "123", "", "", ""}}));
+            {userId, userEmail, "", "", false, false, "123", "123", "", "", ""}}));
     EXPECT_CALL(*verifyUserEmailCommandHandler,
                 execute(server::application::VerifyUserEmailCommandHandlerPayload{userEmail, validVerificationCode}))
         .WillOnce(Return(server::application::VerifyUserEmailCommandHandlerResult{true}));
@@ -104,7 +104,7 @@ TEST_F(VerifyUserMessageHandlerTest, handleUserVerifyRequestWithInvalidCode)
     EXPECT_CALL(*tokenServiceMock, verifyToken(token)).WillOnce(Return(verifyTokenResult));
     EXPECT_CALL(*findUserQueryHandlerMock, execute(server::application::FindUserQueryHandlerPayload{userId}))
         .WillOnce(Return(server::application::FindUserQueryHandlerResult{
-            {userId, userEmail, "", "", false, false, "123", "", "", ""}}));
+            {userId, userEmail, "", "", false, false, "123", "123", "", "", ""}}));
     EXPECT_CALL(*verifyUserEmailCommandHandler,
                 execute(server::application::VerifyUserEmailCommandHandlerPayload{userEmail, invalidVerificationCode}))
         .WillOnce(Return(server::application::VerifyUserEmailCommandHandlerResult{false}));
